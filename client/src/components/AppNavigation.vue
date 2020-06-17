@@ -138,8 +138,7 @@ export default {
       } else if (title === 'Sign Up') {
         this.openSignup();
       } else if (title === 'Logout') {
-        this.logout();
-        this.$router.push({ path: '/' });
+        this.redirectHome();
       } else if (title === 'Account') {
         this.openAccount();
       }
@@ -147,6 +146,11 @@ export default {
     isLoggedIn(accountOnly) {
       return (this.account.email && accountOnly) || (!this.account.email && !accountOnly);
     },
+    // logout needs to finish before redirecting
+    async redirectHome() {
+      const result = await this.logout();
+      this.$router.push({ path: '/' });
+    }
   },
 };
 </script>

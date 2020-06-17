@@ -90,7 +90,12 @@ export default new Vuex.Store({
     logout({ commit }) {
       localStorage.clear();
       this.state.loggedIn = false;
+      this.state.account.firstName = null;
+      this.state.account.lastName = null;
+      this.state.account.email = null;
       commit('updateAccessToken', null);
+
+      return true;
     },
     // Open and Close Dialogs
     openLogin({ commit }) {
