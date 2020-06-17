@@ -24,9 +24,9 @@
         >
           <v-card height="100%">
             <v-card-text>
-              <div>Last feed time:</div>
+              <div>Test Card</div>
               <p class="display-1 text--primary">
-                11:59 PM 16 September 2019
+                This is a test card
               </p>
             </v-card-text>
           </v-card>
@@ -37,9 +37,9 @@
         >
           <v-card height="100%">
             <v-card-text>
-              <div>Next feed time:</div>
+              <div>Another Test Card</div>
               <p class="display-1 text--primary">
-                11:59 PM 17 September 2019
+                This is another test card
               </p>
             </v-card-text>
           </v-card>

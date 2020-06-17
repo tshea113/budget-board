@@ -4,7 +4,9 @@
       <v-content transition="slide-x-transition">
         <router-view></router-view>
       </v-content>
-      <app-tabs></app-tabs>
+      <app-tabs
+        v-if="isLoggedIn(true)"
+      ></app-tabs>
     </v-app>
 </template>
 
@@ -23,7 +25,12 @@ export default {
     ...mapState([
       'account',
     ]),
-  }
+  },
+  methods: {
+    isLoggedIn(accountOnly) {
+      return (this.account.email && accountOnly) || (!this.account.email && !accountOnly);
+    },
+  },
 };
 </script>
 

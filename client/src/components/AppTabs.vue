@@ -10,7 +10,7 @@
       <v-icon>mdi-view-dashboard</v-icon>
     </v-btn>
     <v-btn to='/workout'>
-      <span>Workout</span>
+      <span>Test</span>
       <v-icon>mdi-weight-lifter</v-icon>
     </v-btn>
   </v-bottom-navigation>

@@ -9,7 +9,7 @@
           text-xs-center
           mb-3"
       >
-        REP NOTES
+        FINANCE MANAGER
       </div>
       <div
         id="content"
@@ -18,7 +18,7 @@
           white--text
           text-xs-center"
       >
-        A simplistic solution to fitness logging.
+        A simplistic solution to finance management.
       </div>
       <v-snackbar
         v-model="snackbar"
@@ -63,7 +63,7 @@ export default {
 
 <style scoped>
 #welcome {
-    background-color: orangered;
+    background-color: green;
     background-size: cover;
     width: 100%;
     height: 100%;
