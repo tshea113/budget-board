@@ -8,7 +8,7 @@
       transition="dialog-bottom-transition"
     >
       <v-card>
-        <v-toolbar dark color="deep-orange darken-4">
+        <v-toolbar dark color="grey darken-4">
           <v-btn icon dark @click="this.closeAccount">
             <v-icon>mdi-close</v-icon>
           </v-btn>
