@@ -9,10 +9,10 @@
       <span>Dashboard</span>
       <v-icon>mdi-view-dashboard</v-icon>
     </v-btn>
-    <v-btn to='/workout'>
+    <!-- <v-btn to='/workout'>
       <span>Test</span>
       <v-icon>mdi-weight-lifter</v-icon>
-    </v-btn>
+    </v-btn> -->
   </v-bottom-navigation>
 </template>
 
