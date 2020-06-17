@@ -1,7 +1,7 @@
 <template>
-  <v-dialog v-model="this.loginScreen" persistent max-width="600px">
+  <v-dialog v-model="this.loginScreen" :fullscreen="$vuetify.breakpoint.smAndDown" persistent max-width="600px">
     <v-card>
-      <v-toolbar color="deep-orange darken-4" class="elevation-5" prominent dark>
+      <v-toolbar color="grey darken-4" class="elevation-5" dark>
         <v-toolbar-title class="display-1 mx-4">Login</v-toolbar-title>
       </v-toolbar>
       <v-alert

@@ -2,7 +2,7 @@
   <span>
     <v-navigation-drawer
       app v-model="drawer"
-      class="deep-orange darken-4"
+      class="gray"
       dark
       disable-resize-watcher
     >
