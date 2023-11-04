@@ -1,10 +1,10 @@
-# __init__.py
+# server/__init__.py
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 from flask_cors import CORS
-from server.config import *
+from server.config.config import *
 
 db = SQLAlchemy()
 mail = Mail()
@@ -15,7 +15,7 @@ def create_app():
     app = Flask(__name__)
 
     # Configure app
-    app.config.from_object('server.DevelopmentConfig')
+    app.config.from_object('server.Config')
 
     # Initialize the components
     db.init_app(app)
