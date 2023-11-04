@@ -5,7 +5,7 @@ from werkzeug.security import check_password_hash
 from datetime import datetime, timedelta
 from .models import User
 from . import db
-from backend.config import Config
+from server.config import Config
 from functools import wraps
 
 import jwt
