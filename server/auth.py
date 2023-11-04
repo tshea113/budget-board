@@ -5,7 +5,7 @@ from werkzeug.security import check_password_hash
 from datetime import datetime, timedelta
 from .models import User
 from . import db
-from server.config import Config
+from server.config.config import Config
 from functools import wraps
 
 import jwt
@@ -48,7 +48,7 @@ def token_required(f):
 def register():
     # Get the registration data from the request
     data = request.json
-    
+
     first_name = data.get('first_name')
     last_name = data.get('last_name')
     email = data.get('email')
