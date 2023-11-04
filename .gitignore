@@ -20,8 +20,8 @@ $RECYCLE.BIN/
 # Excluded directories/files
 .vscode
 **/db.sqlite3
-**/config.py
 **/__pycache__/
+.env
 
 # Distribution / packaging
 .Python
