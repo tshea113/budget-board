@@ -23,6 +23,11 @@ $RECYCLE.BIN/
 **/config.py
 **/__pycache__/
 
+# Distribution / packaging
+.Python
+env/
+build/
+
 # =========================
 # Operating System Files
 # =========================
