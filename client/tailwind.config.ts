@@ -4,10 +4,18 @@ export default {
   content: [
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
+    "./node_modules/flowbite/**/*.js"
   ],
   theme: {
-    extend: {},
+    extend: {
+      container: {
+        padding: "2rem",
+        center: true,
+      }
+    },
   },
-  plugins: [],
+  plugins: [
+    require('flowbite/plugin')
+  ],
 } satisfies Config
 
