@@ -1,21 +1,14 @@
 import type { Config } from 'tailwindcss'
 
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{vue,js,ts,jsx,tsx}",
-    "./node_modules/flowbite/**/*.js"
-  ],
+  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     extend: {
       container: {
-        padding: "2rem",
-        center: true,
+        padding: '2rem',
+        center: true
       }
-    },
+    }
   },
-  plugins: [
-    require('flowbite/plugin')
-  ],
+  plugins: []
 } satisfies Config
-
