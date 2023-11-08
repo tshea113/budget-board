@@ -18,7 +18,7 @@
             </button>
             <button
               class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              @click="openSignupModal"
+              @click="openSignUpModal"
             >
               Sign Up
             </button>
@@ -30,11 +30,15 @@
   <BaseModal :modalActive="loginModalActive" @close-modal="closeLoginModal">
     <LoginContent></LoginContent>
   </BaseModal>
+  <BaseModal :modalActive="signUpModalActive" @close-modal="closeSignUpModal">
+    <SignUpContent></SignUpContent>
+  </BaseModal>
 </template>
 
 <script setup lang="ts">
 import BaseModal from '../components/BaseModal.vue'
 import LoginContent from '../components/LoginContent.vue'
+import SignUpContent from '../components/SignUpContent.vue'
 import { ref } from 'vue'
 
 const loginModalActive = ref(false)
@@ -45,8 +49,11 @@ const closeLoginModal = () => {
   loginModalActive.value = false
 }
 
-const signupModalActive = ref(false)
-const openSignupModal = () => {
-  signupModalActive.value = true
+const signUpModalActive = ref(false)
+const openSignUpModal = () => {
+  signUpModalActive.value = true
+}
+const closeSignUpModal = () => {
+  signUpModalActive.value = false
 }
 </script>
