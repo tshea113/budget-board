@@ -10,23 +10,24 @@
             A simple app for managing monthly budgets.
           </p>
           <div class="mt-10 flex items-center justify-center gap-x-6">
-            <a
-              href="#"
+            <button
               class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              @click="toggleModal"
-              >Login</a
+              @click="openLoginModal"
             >
-            <a
-              href="#"
+              Login
+            </button>
+            <button
               class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >Sign Up</a
+              @click="openSignupModal"
             >
+              Sign Up
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <BaseModal :modalActive="modalActive" @close-modal="toggleModal">
+  <BaseModal :modalActive="loginModalActive" @close-modal="closeLoginModal">
     <LoginContent></LoginContent>
   </BaseModal>
 </template>
@@ -36,8 +37,16 @@ import BaseModal from '../components/BaseModal.vue'
 import LoginContent from '../components/LoginContent.vue'
 import { ref } from 'vue'
 
-const modalActive = ref(false)
-const toggleModal = () => {
-  modalActive.value = !modalActive.value
+const loginModalActive = ref(false)
+const openLoginModal = () => {
+  loginModalActive.value = true
+}
+const closeLoginModal = () => {
+  loginModalActive.value = false
+}
+
+const signupModalActive = ref(false)
+const openSignupModal = () => {
+  signupModalActive.value = true
 }
 </script>
