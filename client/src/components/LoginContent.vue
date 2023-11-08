@@ -1,11 +1,10 @@
 <template>
-  <div class="flex min-h-full flex-col justify-center px-12 py-12">
-    <div class="sm:mx-auto sm:w-full sm:max-w-lg">
+  <div class="flex min-h-full flex-col justify-center px-12 pb-12">
+    <div class="pb-4 pt-2 sm:mx-auto sm:w-full sm:max-w-lg">
       <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
         Log in to your account
       </h2>
     </div>
-
     <div class="mt-5">
       <form class="group space-y-5" novalidate>
         <div class="mb-2">
@@ -49,7 +48,7 @@
           </span>
         </label>
         <div class="flex items-center justify-between">
-          <label class="text-sm font-semibold text-indigo-600 hover:text-indigo-500">
+          <label class="select-none text-sm font-semibold text-indigo-600 hover:text-indigo-500">
             <input
               id="remember-checkbox"
               type="checkbox"
@@ -57,7 +56,7 @@
             />
             <span>Remember Me</span>
           </label>
-          <a href="#" class="text-sm font-semibold text-indigo-600 hover:text-indigo-500"
+          <a class="select-none text-sm font-semibold text-indigo-600 hover:text-indigo-500"
             >Forgot password?</a
           >
         </div>
