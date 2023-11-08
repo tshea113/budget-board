@@ -6,7 +6,7 @@
       </h2>
     </div>
     <div class="mt-5">
-      <form class="group space-y-5" novalidate>
+      <div class="group space-y-5">
         <div class="mb-2">
           <label class="text-sm">
             <span>Email</span>
@@ -35,7 +35,7 @@
             name="password"
             type="password"
             autocomplete="current-password"
-            required
+            novalidate
             class="peer block w-full rounded-md border-0 px-1.5 py-1.5 leading-6 ring-1 ring-inset ring-gray-300 focus:accent-indigo-600 invalid:[&:not(:placeholder-shown):not(:focus)]:ring-red-500"
             placeholder=" "
             pattern=".{7,}"
@@ -68,7 +68,7 @@
         >
           Sign in
         </button>
-      </form>
+      </div>
     </div>
   </div>
 </template>
