@@ -13,25 +13,15 @@ export const useSessionStore = defineStore('userSession', () => {
   }
 
   const handleSignUp = async ({ email, password }: { email: string; password: string }) => {
-    try {
-      // prompt user if they have not filled populated their credentials
-      if (!email || !password) {
-        alert('Please provide both your email and password.')
-        return
-      }
-      const { error } = await supabase.auth.signUp({ email, password })
-      if (error) {
-        alert(error.message)
-        console.error(error, error.message)
-        return error
-      }
-      alert('Signup successful, confirmation mail should be sent soon!')
-    } catch (err) {
-      alert('Fatal error signing up')
-      console.error('signup error', err)
-      return err
-    }
+    return await supabase.auth.signUp({
+      email: email,
+      password: password
+    })
   }
 
-  return { session, handleLogin, handleSignUp }
+  const handleLogOut = async () => {
+    return await supabase.auth.signOut()
+  }
+
+  return { session, handleLogin, handleSignUp, handleLogOut }
 })
