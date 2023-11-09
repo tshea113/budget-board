@@ -19,5 +19,9 @@ export const useSessionStore = defineStore('userSession', () => {
     })
   }
 
-  return { session, handleLogin, handleSignUp }
+  const handleLogOut = async () => {
+    return await supabase.auth.signOut()
+  }
+
+  return { session, handleLogin, handleSignUp, handleLogOut }
 })
