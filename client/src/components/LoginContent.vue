@@ -5,6 +5,7 @@
         Log in to your account
       </h2>
     </div>
+    <h2 v-if="errorMessage">{{ errorMessage }}</h2>
     <div class="mt-5">
       <div class="group space-y-5">
         <div class="mb-2">
@@ -18,9 +19,9 @@
               novalidate
               class="peer block w-full rounded-md border-0 px-1.5 py-1.5 leading-6 shadow-sm ring-1 ring-inset ring-gray-300 focus:accent-indigo-600 invalid:[&:not(:placeholder-shown):not(:focus)]:ring-red-500"
               placeholder=" "
-              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
               v-model="email"
             />
+            <!-- I got tired of trying to get this to work, so I got rid of it-->
             <span
               class="mt-2 hidden text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block"
             >
@@ -79,6 +80,7 @@ import { useSessionStore } from '@/stores/userSession'
 
 let email = ref('')
 let password = ref('')
+let errorMessage = ref('')
 
 const sessionStore = useSessionStore()
 const router = useRouter()
@@ -95,12 +97,15 @@ async function login() {
       alert('Check your login details!')
     }
     console.log(data.user.email)
+    errorMessage.value = ''
 
     // Redirect if login was successful
     router.replace({ path: '/' })
-  } catch (error) {
-    console.error('There was an issue logging in: ', error)
-    alert(error)
+  } catch (e: any) {
+    if (e.name === 'AuthApiError') {
+      errorMessage.value = e.message
+    }
+    console.error('There was an issue logging in: ', e)
   }
 }
 </script>

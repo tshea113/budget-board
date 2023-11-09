@@ -1,5 +1,8 @@
 <template>
-  <div class="flex min-h-full flex-col justify-center px-12 pb-12">
+  <div v-if="signUpSuccess" class="m-12 flex">
+    <h2 class="">Account successfully created! Check your email for confirmation.</h2>
+  </div>
+  <div v-else class="flex min-h-full flex-col justify-center px-12 pb-12">
     <div class="pb-4 pt-2 sm:mx-auto sm:w-full sm:max-w-lg">
       <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
         Create a new account
@@ -67,6 +70,8 @@ import { useSessionStore } from '@/stores/userSession'
 let email = ref('')
 let password = ref('')
 
+let signUpSuccess = ref(false)
+
 const sessionStore = useSessionStore()
 const router = useRouter()
 
@@ -81,7 +86,7 @@ async function signUp() {
     if (!data) {
       alert('Check your account details!')
     }
-    console.log(data.user.email)
+    signUpSuccess.value = true
 
     // Redirect if login was successful
     router.replace({ path: '/' })
