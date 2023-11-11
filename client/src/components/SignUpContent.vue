@@ -43,6 +43,7 @@
             placeholder=" "
             pattern=".{7,}"
             v-model="password"
+            v-on:keyup.enter="signUp"
           />
           <span
             class="mt-2 hidden text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block"
