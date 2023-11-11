@@ -100,7 +100,7 @@ async function login() {
     errorMessage.value = ''
 
     // Redirect if login was successful
-    router.replace({ path: '/' })
+    router.replace({ path: '/dashboard' })
   } catch (e: any) {
     if (e.name === 'AuthApiError') {
       errorMessage.value = e.message

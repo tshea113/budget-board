@@ -1,23 +1,26 @@
 import * as vRouter from 'vue-router'
 import { useSessionStore } from '../stores/userSession'
 
-function loadPage(view) {
+function loadPage(view: string) {
   return () => import(/* webpackChunkName: "view-[request]" */ `@/pages/${view}.vue`)
 }
 
 const _routes: Array<vRouter.RouteRecordRaw> = [
   {
     path: '/',
+    name: 'Home',
+    component: loadPage('WelcomeScreen'),
+    meta: {
+      hideForAuth: true
+    }
+  },
+  {
+    path: '/dashboard',
     name: 'dashboard',
     component: loadPage('DashboardScreen'),
     meta: {
       needsAuth: true
     }
-  },
-  {
-    path: '/welcome',
-    name: 'welcome',
-    component: loadPage('WelcomeScreen')
   }
 ]
 
@@ -33,8 +36,15 @@ router.beforeEach((to, from, next) => {
     if (userSession.session) {
       return next()
     } else {
-      return next('/welcome')
+      console.log('Route requires auth!')
+      return next('/')
     }
+  } else if (to.meta.hideForAuth) {
+    if (userSession.session) {
+      console.log('Route hidden from auth!')
+      return next('/dashboard')
+    }
+    return next()
   }
   return next()
 })
