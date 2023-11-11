@@ -19,7 +19,7 @@ const router = useRouter()
 async function logOut() {
   try {
     await sessionStore.handleLogOut()
-    router.replace({ path: '/welcome' })
+    router.replace({ path: '/' })
   } catch (err) {
     console.error('There was an errror logging out: ', err)
   }
