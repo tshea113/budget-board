@@ -1,38 +1,21 @@
 <template>
-    <v-app>
-      <app-navigation></app-navigation>
-      <v-content transition="slide-x-transition">
-        <router-view></router-view>
-      </v-content>
-      <app-tabs
-        v-if="isLoggedIn(true)"
-      ></app-tabs>
-    </v-app>
+  <div class="flex min-h-screen flex-col">
+    <RouterView />
+  </div>
 </template>
 
-<script>
-import { mapActions, mapState } from 'vuex';
-import AppNavigation from '@/components/AppNavigation.vue';
-import AppTabs from '@/components/AppTabs.vue';
+<script setup lang="ts">
+import { RouterView } from 'vue-router'
+import { useSessionStore } from './stores/userSession'
+import { supabase } from './utils/supabase'
 
-export default {
-  name: 'App',
-  components: {
-    AppNavigation,
-    AppTabs,
-  },
-  computed: {
-    ...mapState([
-      'account',
-    ]),
-  },
-  methods: {
-    isLoggedIn(accountOnly) {
-      return (this.account.email && accountOnly) || (!this.account.email && !accountOnly);
-    },
-  },
-};
+// init the userSession store
+const sessionStore = useSessionStore()
+
+// listen for auth events (e.g. sign in, sign out, refresh)
+// set session based on the auth event
+supabase.auth.onAuthStateChange((event: any, session: any) => {
+  console.log(event)
+  sessionStore.session = session
+})
 </script>
-
-<style>
-</style>
