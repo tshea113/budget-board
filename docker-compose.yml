@@ -3,7 +3,7 @@
 version: '3.4'
 
 services:
-  moneyminder-server:
+  backend:
     image: moneyminder-server
     restart: unless-stopped
     build:
@@ -12,16 +12,16 @@ services:
     environment:
       - Logging__LogLevel__Default=Information
     ports:
-      - "8080:80"
-  moneyminder-client:
+      - 8080:80
+  client:
     image: moneyminder-client
     restart: unless-stopped
     build:
       context: .
       dockerfile: ./client/Dockerfile
       args:
-        VITE_API_URL: http://localhost:8080
+        VITE_API_URL: http://0.0.0.0:8080
     ports:
-      - "8081:80"
+      - 80:80
     depends_on:
-      - moneyminder-server
+      - backend
