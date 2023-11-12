@@ -16,16 +16,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseStaticFiles();
-
 app.UseHttpsRedirection();
 
 app.MapControllers();
-
-app.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Spa}");
-
-app.MapFallbackToFile("index.html");
 
 app.Run();

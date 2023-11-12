@@ -1,0 +1,27 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
+
+version: '3.4'
+
+services:
+  moneyminder-server:
+    image: moneyminder-server
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+    environment:
+      - Logging__LogLevel__Default=Information
+    ports:
+      - "8080:80"
+  moneyminder-client:
+    image: moneyminder-client
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./client/Dockerfile
+      args:
+        VITE_API_URL: http://localhost:8080
+    ports:
+      - "8081:80"
+    depends_on:
+      - moneyminder-server
