@@ -5,12 +5,14 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>MoneyMinder</RootNamespace>
+    <StaticWebAssetsEnabled>false</StaticWebAssetsEnabled>
+    <UserSecretsId>23b824e9-5a44-4fa5-b8f2-e84a19a59819</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.13" />
+    <PackageReference Include="supabase-csharp" Version="0.13.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="Vite.AspNetCore" Version="1.4.0" />
   </ItemGroup>
-
+  
 </Project>
