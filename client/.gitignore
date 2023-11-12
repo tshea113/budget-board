@@ -1,4 +1,5 @@
 # Excluded directories/files
+**/dist
 **/node_modules/
 **/yarn-error.log
 *.local
