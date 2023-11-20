@@ -25,11 +25,13 @@ const router = useRouter()
 async function logOut() {
   try {
     await sessionStore.handleLogOut()
-    router.replace({ path: '/' })
+    if (sessionStore.userData === null) {
+      router.push({ path: '/' })
+    } else {
+      alert('There was an error logging out')
+    }
   } catch (err) {
-    console.error('There was an errror logging out: ', err)
+    console.error('There was an error logging out: ', err)
   }
 }
 </script>
-
-<style scoped></style>

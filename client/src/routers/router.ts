@@ -33,20 +33,22 @@ router.beforeEach((to, from, next) => {
   const userSession = useSessionStore()
 
   if (to.meta.needsAuth) {
-    if (userSession.session) {
-      return next()
-    } else {
+    if (userSession.userData === null) {
       console.log('Route requires auth!')
       return next('/')
+    } else {
+      return next()
     }
   } else if (to.meta.hideForAuth) {
-    if (userSession.session) {
+    if (userSession.userData === null) {
+      return next()
+    } else {
       console.log('Route hidden from auth!')
       return next('/dashboard')
     }
+  } else {
     return next()
   }
-  return next()
 })
 
 export default router

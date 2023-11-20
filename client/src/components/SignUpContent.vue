@@ -21,7 +21,6 @@
               novalidate
               class="peer block w-full rounded-md border-0 px-1.5 py-1.5 leading-6 shadow-sm ring-1 ring-inset ring-gray-300 focus:accent-indigo-600 invalid:[&:not(:placeholder-shown):not(:focus)]:ring-red-500"
               placeholder=" "
-              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
               v-model="email"
             />
             <span
@@ -79,18 +78,13 @@ const router = useRouter()
 async function signUp() {
   try {
     // The store handles the login through supabase
-    const { data, error } = await sessionStore.handleSignUp({
-      email: email.value,
-      password: password.value
-    })
-    if (error) throw error
-    if (!data) {
-      alert('Check your account details!')
+    await sessionStore.handleSignUp(email.value, password.value)
+    if (sessionStore.userData != null) {
+      // Redirect if login was successful
+      router.push({ path: '/dashboard' })
+    } else {
+      console.error('No user session detected')
     }
-    signUpSuccess.value = true
-
-    // Redirect if login was successful
-    router.replace({ path: '/' })
   } catch (error) {
     console.error('There was an issue creating an account: ', error)
     alert(error)
