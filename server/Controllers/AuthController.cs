@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MoneyMinder.Models;
-using Supabase.Gotrue;
 
 namespace MoneyMinder.Controllers
 {
@@ -9,31 +7,15 @@ namespace MoneyMinder.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly Supabase.Client _client;
-
-        public AuthController(Supabase.Client client)
+        public AuthController()
         {
-            _client = client;
         }
 
-        [HttpPost]
-        public async Task<Session?> LoginAsync(UserDetails user)
+        [HttpGet]
+        [Authorize]
+        public IActionResult Test()
         {
-            var session = await _client.Auth.SignIn(user.Email, user.Password);
-            return session;
+            return Ok("bongus");
         }
-
-        [HttpPost]
-        public bool Register()
-        {
-            return _client != null;
-        }
-
-        [HttpPost]
-        public bool Logout()
-        {
-            return _client != null;
-        }
-
     }
 }
