@@ -8,7 +8,7 @@ function loadPage(view: string) {
 const _routes: Array<vRouter.RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Home',
+    name: 'home',
     component: loadPage('WelcomeScreen'),
     meta: {
       hideForAuth: true
@@ -35,7 +35,7 @@ router.beforeEach((to, from, next) => {
   if (to.meta.needsAuth) {
     if (userSession.userData === null) {
       console.log('Route requires auth!')
-      return next('/')
+      return next({ name: 'home' })
     } else {
       return next()
     }
@@ -44,7 +44,7 @@ router.beforeEach((to, from, next) => {
       return next()
     } else {
       console.log('Route hidden from auth!')
-      return next('/dashboard')
+      return next({ name: 'dashboard' })
     }
   } else {
     return next()

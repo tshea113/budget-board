@@ -1,21 +1,33 @@
 import { defineStore } from 'pinia'
-import { firebaseAuth } from '@/utils/firebase'
+import { firebaseApp } from '@/utils/firebase'
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  type User
+  getAuth,
+  setPersistence,
+  type User,
+  browserLocalPersistence
 } from 'firebase/auth'
 
 export const useSessionStore = defineStore('userSession', {
-  state: () => ({ userData: null as unknown, loadingUser: false, loadingSession: false }),
+  state: () => {
+    return {
+      userData: null as unknown,
+      loadingUser: false,
+      loadingSession: false
+    }
+  },
   actions: {
     async handleLogin(email: string, password: string) {
       this.loadingUser = true
       try {
-        const { user } = await signInWithEmailAndPassword(firebaseAuth, email, password)
-        this.userData = { email: user.email, uid: user.uid }
+        const firebaseAuth = getAuth(firebaseApp)
+        setPersistence(firebaseAuth, browserLocalPersistence).then(async () => {
+          const { user } = await signInWithEmailAndPassword(firebaseAuth, email, password)
+          this.userData = { email: user.email, uid: user.uid }
+        })
       } catch (error: any) {
         // Handle Errors here.
         let errorMessage = ''
@@ -45,6 +57,7 @@ export const useSessionStore = defineStore('userSession', {
     async handleSignUp(email: string, password: string) {
       this.loadingUser = true
       try {
+        const firebaseAuth = getAuth(firebaseApp)
         const { user } = await createUserWithEmailAndPassword(firebaseAuth, email, password)
         this.userData = { email: user.email, uid: user.uid }
       } catch (error: any) {
@@ -55,6 +68,7 @@ export const useSessionStore = defineStore('userSession', {
     },
     async handleLogOut() {
       try {
+        const firebaseAuth = getAuth(firebaseApp)
         await signOut(firebaseAuth)
         this.userData = null
       } catch (error: any) {
@@ -64,10 +78,11 @@ export const useSessionStore = defineStore('userSession', {
     setUser(user: User) {
       this.userData = { email: user.email, uid: user.uid }
     }
-  }
+  },
+  persist: true
 })
 
-onAuthStateChanged(firebaseAuth, async (user) => {
+onAuthStateChanged(getAuth(firebaseApp), async (user) => {
   const store = useSessionStore()
   store.setUser(user as User)
 })
