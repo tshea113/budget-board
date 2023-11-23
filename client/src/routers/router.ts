@@ -5,48 +5,46 @@ function loadPage(view: string) {
   return () => import(/* webpackChunkName: "view-[request]" */ `@/pages/${view}.vue`)
 }
 
+// Checks if the user isn't authenticated before proceeding
+const ifNotAuthenticated = (to, from, next) => {
+  const userSession = useSessionStore()
+  if (!userSession.isUserLoggedIn()) {
+    next()
+    return
+  }
+  console.log('User is authenticated, redirecting to dashboard')
+  next('/dashboard')
+}
+
+// Checks if the user is authenticated before proceeding
+const ifAuthenticated = (to, from, next) => {
+  const userSession = useSessionStore()
+  if (userSession.isUserLoggedIn()) {
+    next()
+    return
+  }
+  console.log('User is not authenticated, redirecting to home')
+  next('/')
+}
+
 const _routes: Array<vRouter.RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Home',
+    name: 'home',
     component: loadPage('WelcomeScreen'),
-    meta: {
-      hideForAuth: true
-    }
+    beforeEnter: ifNotAuthenticated
   },
   {
     path: '/dashboard',
     name: 'dashboard',
     component: loadPage('DashboardScreen'),
-    meta: {
-      needsAuth: true
-    }
+    beforeEnter: ifAuthenticated
   }
 ]
 
 const router = vRouter.createRouter({
   history: vRouter.createWebHistory(import.meta.env.BASE_URL),
   routes: _routes
-})
-
-router.beforeEach((to, from, next) => {
-  const userSession = useSessionStore()
-
-  if (to.meta.needsAuth) {
-    if (userSession.session) {
-      return next()
-    } else {
-      console.log('Route requires auth!')
-      return next('/')
-    }
-  } else if (to.meta.hideForAuth) {
-    if (userSession.session) {
-      console.log('Route hidden from auth!')
-      return next('/dashboard')
-    }
-    return next()
-  }
-  return next()
 })
 
 export default router

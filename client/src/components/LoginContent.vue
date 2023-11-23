@@ -89,23 +89,14 @@ const router = useRouter()
 async function login() {
   try {
     // The store handles the login through supabase
-    const { data, error } = await sessionStore.handleLogin({
-      email: email.value,
-      password: password.value
-    })
-    if (error) throw error
-    if (!data) {
-      alert('Check your login details!')
+    await sessionStore.handleLogin(email.value, password.value)
+    if (sessionStore.userData.email !== null && sessionStore.userData.uid !== null) {
+      // Redirect if login was successful
+      router.push({ path: '/dashboard' })
+    } else {
+      console.error('No user session detected')
     }
-    console.log(data.user.email)
-    errorMessage.value = ''
-
-    // Redirect if login was successful
-    router.replace({ path: '/dashboard' })
   } catch (e: any) {
-    if (e.name === 'AuthApiError') {
-      errorMessage.value = e.message
-    }
     console.error('There was an issue logging in: ', e)
   }
 }
