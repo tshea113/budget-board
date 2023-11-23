@@ -4,17 +4,15 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
-  onAuthStateChanged,
   getAuth,
-  setPersistence,
-  type User,
-  browserLocalPersistence
+  type User
 } from 'firebase/auth'
+import { type iUserData } from '@/types/iUserData'
 
 export const useSessionStore = defineStore('userSession', {
   state: () => {
     return {
-      userData: null as unknown,
+      userData: { email: null, uid: null } as iUserData,
       loadingUser: false,
       loadingSession: false
     }
@@ -24,10 +22,8 @@ export const useSessionStore = defineStore('userSession', {
       this.loadingUser = true
       try {
         const firebaseAuth = getAuth(firebaseApp)
-        setPersistence(firebaseAuth, browserLocalPersistence).then(async () => {
-          const { user } = await signInWithEmailAndPassword(firebaseAuth, email, password)
-          this.userData = { email: user.email, uid: user.uid }
-        })
+        const { user } = await signInWithEmailAndPassword(firebaseAuth, email, password)
+        this.userData = { email: user.email, uid: user.uid }
       } catch (error: any) {
         // Handle Errors here.
         let errorMessage = ''
@@ -70,19 +66,17 @@ export const useSessionStore = defineStore('userSession', {
       try {
         const firebaseAuth = getAuth(firebaseApp)
         await signOut(firebaseAuth)
-        this.userData = null
+        this.userData = { email: null, uid: null }
       } catch (error: any) {
         console.log(error)
       }
     },
-    setUser(user: User) {
+    setUser(user: User | iUserData) {
       this.userData = { email: user.email, uid: user.uid }
+    },
+    isUserLoggedIn() {
+      return this.userData.email !== null && this.userData.uid !== null
     }
   },
   persist: true
-})
-
-onAuthStateChanged(getAuth(firebaseApp), async (user) => {
-  const store = useSessionStore()
-  store.setUser(user as User)
 })

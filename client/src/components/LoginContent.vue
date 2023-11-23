@@ -90,7 +90,7 @@ async function login() {
   try {
     // The store handles the login through supabase
     await sessionStore.handleLogin(email.value, password.value)
-    if (sessionStore.userData != null) {
+    if (sessionStore.userData.email !== null && sessionStore.userData.uid !== null) {
       // Redirect if login was successful
       router.push({ path: '/dashboard' })
     } else {

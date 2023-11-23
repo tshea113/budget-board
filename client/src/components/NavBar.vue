@@ -25,7 +25,7 @@ const router = useRouter()
 async function logOut() {
   try {
     await sessionStore.handleLogOut()
-    if (sessionStore.userData === null) {
+    if (sessionStore.userData.email === null && sessionStore.userData.uid === null) {
       router.push({ path: '/' })
     } else {
       alert('There was an error logging out')
