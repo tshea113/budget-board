@@ -6,7 +6,7 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import App from './App.vue'
 import router from './routers/router'
 import { firebaseApp } from '@/utils/firebase'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { getAuth, onAuthStateChanged, type User } from 'firebase/auth'
 import { useSessionStore } from '@/stores/userSession'
 
 const _pinia = createPinia()
