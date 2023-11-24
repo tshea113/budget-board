@@ -13,7 +13,7 @@ const _pinia = createPinia()
 
 _pinia.use(piniaPluginPersistedstate)
 
-let app
+let app: any
 onAuthStateChanged(getAuth(firebaseApp), async (user) => {
   if (!app) {
     app = createApp(App)
