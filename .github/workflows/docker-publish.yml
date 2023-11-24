@@ -22,9 +22,9 @@ jobs:
       matrix:
         include:
           - dockerfile: ./client/Dockerfile
-            image: ghcr.io/tshea113/client
+            image: ghcr.io/tshea113/money-minder/client
           - dockerfile: ./server/Dockerfile
-            image: ghcr.io/tshea113/server
+            image: ghcr.io/tshea113/money-minder/server
     permissions:
       packages: write
       contents: read
@@ -33,13 +33,13 @@ jobs:
         uses: actions/checkout@v4
       
       - name: Log in to Docker Hub
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        uses: docker/login-action@v3.0.0
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       
       - name: Log in to the Container registry
-        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        uses: docker/login-action@v3.0.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -47,14 +47,15 @@ jobs:
       
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        uses: docker/metadata-action@v5.0.0
+            
         with:
           images: |
-            my-docker-hub-namespace/my-docker-hub-repository
+            tshea113/money-minder
             ${{ matrix.image }}
       
       - name: Build and push Docker images
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v5.1.0
         with:
           context: .
           file: ${{ matrix.dockerfile }}
