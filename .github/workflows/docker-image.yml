@@ -1,0 +1,24 @@
+name: Docker Image CI
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - dockerfile: ./client/Dockerfile
+            image: money-minderclient
+          - dockerfile: ./server/Dockerfile
+            image: money-minder-server
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file {{ matrix.dockerfile }} --tag {{ matrix.image }}:$(date +%s)
