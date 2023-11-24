@@ -78,5 +78,5 @@ export const useSessionStore = defineStore('userSession', {
       return this.userData.email !== null && this.userData.uid !== null
     }
   },
-  persist: true
+  persist: false
 })
