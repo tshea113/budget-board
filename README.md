@@ -1,1 +1,1 @@
-# finance-manager
+# money-minder
