@@ -4,23 +4,32 @@ version: '3.4'
 
 services:
   backend:
-    image: moneyminder-server
+    image: ghcr.io/tshea113/money-minder/server:main
     restart: unless-stopped
     build:
       context: .
       dockerfile: ./server/Dockerfile
     environment:
       - Logging__LogLevel__Default=Information
+      - FIREBASE_CONFIG=${FIREBASE_CONFIG}
     ports:
       - 8080:80
   client:
-    image: moneyminder-client
+    image: ghcr.io/tshea113/money-minder/client:main
     restart: unless-stopped
     build:
       context: .
       dockerfile: ./client/Dockerfile
       args:
-        VITE_API_URL: http://0.0.0.0:8080
+        VITE_API_URL: ${VITE_API_URL}
+    environment:
+      - VITE_FIREBASE_API_KEY=${VITE_FIREBASE_API_KEY}
+      - VITE_FIREBASE_AUTH_DOMAIN=${VITE_FIREBASE_AUTH_DOMAIN}
+      - VITE_FIREBASE_PROJECT_ID=${VITE_FIREBASE_PROJECT_ID}
+      - VITE_FIREBASE_STORAGE_BUCKET=${VITE_FIREBASE_STORAGE_BUCKET}
+      - VITE_FIREBASE_MESSAGING_SENDER_ID=${VITE_FIREBASE_MESSAGING_SENDER_ID}
+      - VITE_FIREBASE_APP_ID=${VITE_FIREBASE_APP_ID}
+      - VITE_FIREBASE_MEASUREMENT_ID=${VITE_FIREBASE_MEASUREMENT_ID}
     ports:
       - 80:80
     depends_on:
