@@ -6,7 +6,7 @@ function loadPage(view: string) {
 }
 
 // Checks if the user isn't authenticated before proceeding
-const ifNotAuthenticated = (next: any) => {
+const ifNotAuthenticated = (to: any, from: any, next: any) => {
   const userSession = useSessionStore()
   if (!userSession.isUserLoggedIn()) {
     next()
@@ -17,7 +17,7 @@ const ifNotAuthenticated = (next: any) => {
 }
 
 // Checks if the user is authenticated before proceeding
-const ifAuthenticated = (next: any) => {
+const ifAuthenticated = (to: any, from: any, next: any) => {
   const userSession = useSessionStore()
   if (userSession.isUserLoggedIn()) {
     next()
