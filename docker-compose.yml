@@ -4,7 +4,7 @@ version: '3.4'
 
 services:
   backend:
-    image: ghcr.io/tshea113/money-minder/server:main
+    image: money-minder-server
     restart: unless-stopped
     build:
       context: .
@@ -15,7 +15,7 @@ services:
     ports:
       - 8080:80
   client:
-    image: ghcr.io/tshea113/money-minder/client:main
+    image: money-minder-client
     restart: unless-stopped
     build:
       context: .
