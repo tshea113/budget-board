@@ -6,6 +6,9 @@ services:
   backend:
     image: ghcr.io/tshea113/money-minder/server:main
     restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
     environment:
       - Logging__LogLevel__Default=Information
       - FIREBASE_CONFIG=${FIREBASE_CONFIG}
@@ -14,6 +17,11 @@ services:
   client:
     image: ghcr.io/tshea113/money-minder/client:main
     restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./client/Dockerfile
+      args:
+        VITE_API_URL: http://0.0.0.0:8080
     environment:
       - VITE_FIREBASE_API_KEY=${VITE_FIREBASE_API_KEY}
       - VITE_FIREBASE_AUTH_DOMAIN=${VITE_FIREBASE_AUTH_DOMAIN}
