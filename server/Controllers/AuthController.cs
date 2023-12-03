@@ -13,9 +13,15 @@ namespace MoneyMinder.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult Test()
+        public IActionResult AuthTest()
         {
             return Ok("bongus");
+        }
+
+        [HttpGet]
+        public IActionResult Test()
+        {
+            return Ok("bingus");
         }
     }
 }
