@@ -2,6 +2,7 @@
 {
     public class User
     {
-        public int Uid { get; set; }
+        public int Id { get; set; }
+        public required string Uid { get; set; }
     }
 }
