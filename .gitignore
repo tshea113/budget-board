@@ -21,7 +21,7 @@ $RECYCLE.BIN/
 .vscode
 **/db.sqlite3
 **/__pycache__/
-.env
+.env*
 **/node_modules/
 
 # Distribution / packaging
