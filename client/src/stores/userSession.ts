@@ -76,6 +76,10 @@ export const useSessionStore = defineStore('userSession', {
     },
     isUserLoggedIn() {
       return this.userData.email !== null && this.userData.uid !== null
+    },
+    async getUserToken() {
+      const firebaseAuth = getAuth(firebaseApp)
+      return await firebaseAuth.currentUser?.getIdToken()
     }
   },
   persist: false

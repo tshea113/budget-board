@@ -78,12 +78,14 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSessionStore } from '@/stores/userSession'
+import { useInfoStore } from '@/stores/userInfo'
 
 let email = ref('')
 let password = ref('')
 let errorMessage = ref('')
 
 const sessionStore = useSessionStore()
+const userInfoStore = useInfoStore()
 const router = useRouter()
 
 async function login() {
@@ -91,8 +93,15 @@ async function login() {
     // The store handles the login through supabase
     await sessionStore.handleLogin(email.value, password.value)
     if (sessionStore.userData.email !== null && sessionStore.userData.uid !== null) {
-      // Redirect if login was successful
-      router.push({ path: '/dashboard' })
+      const token = await sessionStore.getUserToken()
+      if (token === undefined) throw new DOMException() // Do something better here
+      await userInfoStore.getUser({ uid: sessionStore.userData.uid }, token)
+      if (userInfoStore.userInfo.uid !== null) {
+        // Redirect if login was successful
+        router.push({ path: '/dashboard' })
+      } else {
+        console.error('There was an issue retrieving user data')
+      }
     } else {
       console.error('No user session detected')
     }

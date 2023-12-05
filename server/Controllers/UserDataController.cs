@@ -15,9 +15,7 @@ namespace MoneyMinder.Controllers
             _userDataContext = context;
         }
 
-        [HttpPost]
-        [Authorize]
-        public IActionResult CreateUser(UserDetails user)
+        private IActionResult CreateUser(UserDetails user)
         {
             var newUser = new User
             {
@@ -30,15 +28,26 @@ namespace MoneyMinder.Controllers
             return Ok();
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize]
-        public IActionResult GetUser(string uid)
+        public IActionResult GetUser([FromBody] UserDetails reqUser)
         {
-            var user = _userDataContext.Users.First(x => x.Uid == uid);
+            var user = _userDataContext.Users.FirstOrDefault(x => x.Uid == reqUser.Uid);
 
             if (user == null)
             {
-                return BadRequest("User not found!");
+                var userDetails = new UserDetails { Uid = reqUser.Uid };
+
+                // Push the new user to the db
+                CreateUser(userDetails);
+
+                // We need to throw an error if the user isn't pushed to the db correctly
+                user = _userDataContext.Users.First(x => x.Uid == reqUser.Uid);
+                if (user == null)
+                {
+                    return BadRequest("There was an issue creating a new user!");
+                }
+                return Ok(userDetails);
             }
 
             return Ok(user);
