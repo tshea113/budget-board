@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import http from '@/services/api'
-import { type APIResponse, type UserInfo } from '@/types/types'
+import { type UserInfo } from '@/types/types'
 
 export const useInfoStore = defineStore('userInfo', {
   state: () => {
@@ -13,9 +13,10 @@ export const useInfoStore = defineStore('userInfo', {
       const config = {
         headers: { Authorization: 'Bearer ' + token }
       }
-      const response = await http.post<APIResponse<UserInfo>>('api/userdata/getuser', user, config)
+      const response = await http.post('api/userdata/getuser', user, config)
       if (response?.data) {
-        this.userInfo = response.data?.uid
+        const resUserInfo = response.data as UserInfo
+        this.userInfo.uid = resUserInfo.uid
       }
     }
   },

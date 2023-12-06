@@ -41,12 +41,13 @@ builder.Services.AddFirebaseAuthentication();
 builder.Services.AddAuthorization();
 
 var clientUrl = Environment.GetEnvironmentVariable("CLIENT_URL");
-if (!string.IsNullOrEmpty(clientUrl)) throw new Exception("Client URL environment variable not found");
+if (string.IsNullOrEmpty(clientUrl)) throw new Exception("Client URL environment variable not found");
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
         policy =>
         {
+            // TODO: Audit this
             policy.WithOrigins(clientUrl);
             policy.AllowAnyMethod();
             policy.AllowCredentials();

@@ -94,7 +94,7 @@ async function login() {
     await sessionStore.handleLogin(email.value, password.value)
     if (sessionStore.userData.email !== null && sessionStore.userData.uid !== null) {
       const token = await sessionStore.getUserToken()
-      if (token === undefined) throw new DOMException() // Do something better here
+      if (token === undefined) throw new DOMException()
       await userInfoStore.getUser({ uid: sessionStore.userData.uid }, token)
       if (userInfoStore.userInfo.uid !== null) {
         // Redirect if login was successful
