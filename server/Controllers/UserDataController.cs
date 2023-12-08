@@ -33,10 +33,11 @@ namespace MoneyMinder.Controllers
         public IActionResult GetUser([FromBody] UserDetails reqUser)
         {
             var user = _userDataContext.Users.FirstOrDefault(x => x.Uid == reqUser.Uid);
+            UserDetails userDetails;
 
             if (user == null)
             {
-                var userDetails = new UserDetails { Uid = reqUser.Uid };
+                userDetails = new UserDetails { Uid = reqUser.Uid };
 
                 // Push the new user to the db
                 CreateUser(userDetails);
@@ -49,9 +50,11 @@ namespace MoneyMinder.Controllers
                 }
                 return Ok(userDetails);
             }
-
-            return Ok(user);
-
+            else
+            {
+                userDetails = new UserDetails { Uid = user.Uid };
+                return Ok(userDetails);
+            }
         }
     }
 }

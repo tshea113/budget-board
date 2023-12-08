@@ -8,28 +8,21 @@ var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Set the environment variable using the project secrets
-if (builder.Environment.IsDevelopment())
-{
-    var firebaseConfigSecret = builder.Configuration.GetValue<string>("FIREBASE_CONFIG");
-    Environment.SetEnvironmentVariable("FIREBASE_CONFIG", firebaseConfigSecret);
-
-    var dbConfigSecret = builder.Configuration.GetValue<string>("CONNECTION_STRING_USERS");
-    Environment.SetEnvironmentVariable("CONNECTION_STRING_USERS", dbConfigSecret);
-
-    var clientUrlSecret = builder.Configuration.GetValue<string>("CLIENT_URL");
-    Environment.SetEnvironmentVariable("CLIENT_URL", clientUrlSecret);
-
-}
+builder.Configuration.AddEnvironmentVariables();
 
 // Add services to the container.
-var firebaseConfig = Environment.GetEnvironmentVariable("FIREBASE_CONFIG");
-if (firebaseConfig == null)
+var firebaseConfig = builder.Configuration.GetValue<string>("FIREBASE_CONFIG");
+if (string.IsNullOrEmpty(firebaseConfig))
 {
     throw new ArgumentNullException(nameof(firebaseConfig));
 }
 
-var dbConfig = Environment.GetEnvironmentVariable("CONNECTION_STRING_USERS");
+var dbConfig = builder.Configuration.GetValue<string>("CONNECTION_STRING_USERS");
+if (string.IsNullOrEmpty(dbConfig))
+{
+    throw new ArgumentNullException(nameof(dbConfig));
+}
+
 builder.Services.AddDbContext<UserDataContext>(
     o => o.UseNpgsql(dbConfig));
 
@@ -40,8 +33,12 @@ builder.Services.AddSingleton(FirebaseApp.Create(new AppOptions()
 builder.Services.AddFirebaseAuthentication();
 builder.Services.AddAuthorization();
 
-var clientUrl = Environment.GetEnvironmentVariable("CLIENT_URL");
-if (string.IsNullOrEmpty(clientUrl)) throw new Exception("Client URL environment variable not found");
+var clientUrl = builder.Configuration.GetValue<string>("CLIENT_URL");
+if (string.IsNullOrEmpty(clientUrl))
+{
+    throw new ArgumentNullException(nameof(clientUrl));
+}
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
