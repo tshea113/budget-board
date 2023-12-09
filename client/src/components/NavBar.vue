@@ -17,9 +17,11 @@
 
 <script setup lang="ts">
 import { useSessionStore } from '@/stores/userSession'
+import { useInfoStore } from '@/stores/userInfo'
 import { useRouter } from 'vue-router'
 
 const sessionStore = useSessionStore()
+const userInfoStore = useInfoStore()
 const router = useRouter()
 
 async function logOut() {

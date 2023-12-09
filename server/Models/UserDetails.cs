@@ -4,17 +4,14 @@
     {
         public UserDetails()
         {
-            Email = string.Empty;
-            Password = string.Empty;
+            Uid = string.Empty;
         }
 
-        public UserDetails(string email, string password)
+        public UserDetails(string uid)
         {
-            Email = email;
-            Password = password;
+            Uid = uid;
         }
 
-        public string Email { get; set; }
-        public string Password { get; set; }
+        public string Uid { get; set; }
     }
 }
