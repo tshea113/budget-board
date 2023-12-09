@@ -47,7 +47,6 @@ builder.Services.AddCors(options =>
             // TODO: Audit this
             policy.WithOrigins(clientUrl);
             policy.AllowAnyMethod();
-            policy.AllowCredentials();
             policy.AllowAnyHeader();
         });
 });
