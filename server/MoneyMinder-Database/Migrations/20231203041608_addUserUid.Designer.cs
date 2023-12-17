@@ -3,16 +3,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MoneyMinder.Data;
+using MoneyMinder.Database.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace MoneyMinder.Data.Migrations
+namespace MoneyMinder.Database.Migrations
 {
     [DbContext(typeof(UserDataContext))]
-    [Migration("20231203034903_InitialDatabase")]
-    partial class InitialDatabase
+    [Migration("20231203041608_addUserUid")]
+    partial class addUserUid
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,13 +24,17 @@ namespace MoneyMinder.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseSerialColumns(modelBuilder);
 
-            modelBuilder.Entity("MoneyMinder.Data.User", b =>
+            modelBuilder.Entity("MoneyMinder.Database.User", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseSerialColumn(b.Property<int>("id"));
+
+                    b.Property<string>("Uid")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("id");
 

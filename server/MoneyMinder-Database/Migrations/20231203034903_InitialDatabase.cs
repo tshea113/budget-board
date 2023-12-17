@@ -3,7 +3,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace MoneyMinder.Data.Migrations
+namespace MoneyMinder.Database.Migrations
 {
     /// <inheritdoc />
     public partial class InitialDatabase : Migration
