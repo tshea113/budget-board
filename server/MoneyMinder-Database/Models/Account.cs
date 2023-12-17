@@ -23,6 +23,7 @@ public enum Subtype
 public class Account
 {
     public int ID { get; set; }
+    public int UserID { get; set; }
     public required string Name { get; set; }
     public required string Institution { get; set; }
     public Type Type { get; set; }

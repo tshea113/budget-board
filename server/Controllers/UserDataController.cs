@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MoneyMinder.Data;
-using MoneyMinder.Models;
+using MoneyMinder.Database.Data;
+using MoneyMinder.Database.Models;
 
 namespace MoneyMinder.Controllers
 {
@@ -15,11 +15,11 @@ namespace MoneyMinder.Controllers
             _userDataContext = context;
         }
 
-        private IActionResult CreateUser(UserDetails user)
+        private IActionResult CreateUser(string uid)
         {
             var newUser = new User
             {
-                Uid = user.Uid,
+                Uid = uid,
             };
 
             _userDataContext.Users.Add(newUser);
@@ -30,30 +30,39 @@ namespace MoneyMinder.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult GetUser([FromBody] UserDetails reqUser)
+        public IActionResult GetUser()
         {
-            var user = _userDataContext.Users.FirstOrDefault(x => x.Uid == reqUser.Uid);
-            UserDetails userDetails;
+            string uid;
+            try
+            {
+                uid = User.Claims.Single(c => c.Type == "id").Value;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            User? user = _userDataContext.Users.FirstOrDefault(x => x.Uid == uid);
 
             if (user == null)
             {
-                userDetails = new UserDetails { Uid = reqUser.Uid };
-
                 // Push the new user to the db
-                CreateUser(userDetails);
+                CreateUser(uid);
 
                 // We need to throw an error if the user isn't pushed to the db correctly
-                user = _userDataContext.Users.First(x => x.Uid == reqUser.Uid);
-                if (user == null)
+                try
                 {
-                    return BadRequest("There was an issue creating a new user!");
+                    user = _userDataContext.Users.Single(x => x.Uid == uid);
+                    return Ok(uid);
                 }
-                return Ok(userDetails);
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
             else
             {
-                userDetails = new UserDetails { Uid = user.Uid };
-                return Ok(userDetails);
+                return Ok(uid);
             }
         }
     }
