@@ -24,11 +24,9 @@ namespace MoneyMinder.Database.Migrations
 
             modelBuilder.Entity("MoneyMinder.Database.Models.Account", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Institution")
                         .IsRequired()
@@ -44,8 +42,8 @@ namespace MoneyMinder.Database.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
-                    b.Property<int>("UserID")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("UserID")
+                        .HasColumnType("uuid");
 
                     b.HasKey("ID");
 
@@ -56,14 +54,12 @@ namespace MoneyMinder.Database.Migrations
 
             modelBuilder.Entity("MoneyMinder.Database.Models.Transaction", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
-
-                    b.Property<int>("AccountID")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("AccountID")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("Amount")
                         .HasColumnType("integer");
@@ -93,11 +89,9 @@ namespace MoneyMinder.Database.Migrations
 
             modelBuilder.Entity("MoneyMinder.Database.Models.User", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Uid")
                         .IsRequired()
