@@ -24,13 +24,14 @@ public class AccountController : ControllerBase
         try
         {
             string uid = User.Claims.Single(c => c.Type == "id").Value;
-            User? user = await _userDataContext.Users.FirstOrDefaultAsync(u => u.Uid == uid);
-            if (user == null)
-            {
-                return NotFound();
-            }
+            var users = await _userDataContext.Users.Include(user => user.Accounts).ToListAsync();
+            var user = users.First(u => u.Uid == uid);
 
-            return Ok(user);
+            return Ok(user.Accounts);
+        }
+        catch (InvalidOperationException invalidEx)
+        {
+            return NotFound(invalidEx.Message);
         }
         catch (Exception ex)
         {
@@ -45,13 +46,12 @@ public class AccountController : ControllerBase
         try
         {
             string uid = User.Claims.Single(c => c.Type == "id").Value;
-            User? user = await _userDataContext.Users.FirstOrDefaultAsync(u => u.Uid == uid);
-            if (user == null)
-            {
-                return NotFound();
-            }
+            var users = await _userDataContext.Users.Include(user => user.Accounts).ToListAsync();
+            var user = users.First(u => u.Uid == uid);
 
-            return Ok(user);
+            var accounts = user.Accounts.First<Account>(a => a.ID == guid);
+
+            return Ok(accounts);
         }
         catch (Exception ex)
         {
