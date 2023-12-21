@@ -21,52 +21,42 @@ public class AccountController : ControllerBase
     [Authorize]
     public async Task<IActionResult> Get()
     {
-        try
-        {
-            string uid = User.Claims.Single(c => c.Type == "id").Value;
-            var users = await _userDataContext.Users.Include(user => user.Accounts).ToListAsync();
-            var user = users.First(u => u.Uid == uid);
 
-            return Ok(user.Accounts);
-        }
-        catch (InvalidOperationException invalidEx)
+        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+
+        if (user == null)
         {
-            return NotFound(invalidEx.Message);
+            return NotFound();
         }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+
+        return Ok(user.Accounts);
+
     }
 
     [HttpGet("{guid}")]
     [Authorize]
     public async Task<IActionResult> Get(Guid guid)
     {
-        try
-        {
-            string uid = User.Claims.Single(c => c.Type == "id").Value;
-            var users = await _userDataContext.Users.Include(user => user.Accounts).ToListAsync();
-            var user = users.First(u => u.Uid == uid);
+        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
 
-            var accounts = user.Accounts.First<Account>(a => a.ID == guid);
-
-            return Ok(accounts);
-        }
-        catch (Exception ex)
+        if (user == null)
         {
-            return BadRequest(ex.Message);
+            return NotFound();
         }
+
+        var account = user.Accounts.First<Account>(a => a.ID == guid);
+
+        return Ok(account);
     }
 
     [HttpPost]
     [Authorize]
-    public IActionResult Add([FromBody] Account account)
+    public async Task<IActionResult> Add([FromBody] Account account)
     {
         try
         {
-            string uid = User.Claims.Single(c => c.Type == "id").Value;
-            User? user = _userDataContext.Users.Single(u => u.Uid == uid);
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+
             if (user == null)
             {
                 return NotFound();
@@ -87,16 +77,24 @@ public class AccountController : ControllerBase
     [Authorize]
     public async Task<IActionResult> Delete(Guid guid)
     {
-        Account? account = await _userDataContext.Accounts.FindAsync(guid);
-        if (account == null)
-        {
-            return NotFound();
-        }
-
         try
         {
-            _userDataContext.Accounts.Remove(account);
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            Account? account = await _userDataContext.Accounts.FindAsync(guid);
+            if (account == null)
+            {
+                return NotFound();
+            }
+
+            user.Accounts.Remove(account);
             await _userDataContext.SaveChangesAsync();
+
             return Ok();
         }
         catch (Exception ex)
@@ -109,19 +107,48 @@ public class AccountController : ControllerBase
     [Authorize]
     public async Task<IActionResult> Edit([FromBody] Account newAccount)
     {
-        Account? account = await _userDataContext.Accounts.FindAsync(newAccount.ID);
-        if (account == null)
+        try
         {
-            return NotFound();
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            Account? account = await _userDataContext.Accounts.FindAsync(newAccount.ID);
+            if (account == null)
+            {
+                return NotFound();
+            }
+
+            account.Name = newAccount.Name;
+            account.Institution = newAccount.Institution;
+            account.Type = newAccount.Type;
+            account.Subtype = newAccount.Subtype;
+
+            await _userDataContext.SaveChangesAsync();
+
+            return Ok();
         }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 
-        account.Name = newAccount.Name;
-        account.Institution = newAccount.Institution;
-        account.Type = newAccount.Type;
-        account.Subtype = newAccount.Subtype;
+    private async Task<User?> GetCurrentUser(string uid)
+    {
+        try
+        {
+            var users = await _userDataContext.Users.Include(user => user.Accounts).ToListAsync();
+            var user = users.First(u => u.Uid == uid);
 
-        await _userDataContext.SaveChangesAsync();
-
-        return Ok();
+            return user;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
     }
 }
