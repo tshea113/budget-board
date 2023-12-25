@@ -8,11 +8,11 @@ namespace MoneyMinder.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AccountController : ControllerBase
+public class TransactionController : ControllerBase
 {
     private readonly UserDataContext _userDataContext;
 
-    public AccountController(UserDataContext context)
+    public TransactionController(UserDataContext context)
     {
         _userDataContext = context;
     }
@@ -29,7 +29,9 @@ public class AccountController : ControllerBase
             return NotFound();
         }
 
-        return Ok(user.Accounts);
+        var transactions = user.Accounts.SelectMany(t => t.Transactions).ToList();
+
+        return Ok(transactions);
 
     }
 
@@ -37,32 +39,51 @@ public class AccountController : ControllerBase
     [Authorize]
     public async Task<IActionResult> Get(Guid guid)
     {
-        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
-
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        var account = user.Accounts.First<Account>(a => a.ID == guid);
-
-        return Ok(account);
-    }
-
-    [HttpPost]
-    [Authorize]
-    public async Task<IActionResult> Add([FromBody] Account account)
-    {
         try
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+            User? user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            user.Accounts.Add(account);
+            Transaction transaction = user.Accounts
+                .SelectMany(a => a.Transactions)
+                .Single(t => t.ID == guid);
+
+            return Ok(transaction);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> Add([FromBody] Transaction transaction)
+    {
+        try
+        {
+            User? user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            Account? account = await _userDataContext.Accounts.FindAsync(transaction.AccountID);
+            if (account == null)
+            {
+                return NotFound();
+            }
+
+            account.Transactions.Add(transaction);
             _userDataContext.SaveChanges();
 
             return Ok();
@@ -116,7 +137,7 @@ public class AccountController : ControllerBase
                 return NotFound();
             }
 
-            Account? account = user.Accounts.Single(a => a.ID == newAccount.ID);
+            Account? account = await _userDataContext.Accounts.FindAsync(newAccount.ID);
             if (account == null)
             {
                 return NotFound();
@@ -141,7 +162,10 @@ public class AccountController : ControllerBase
     {
         try
         {
-            var users = await _userDataContext.Users.Include(user => user.Accounts).ToListAsync();
+            var users = await _userDataContext.Users
+                .Include(u => u.Accounts)
+                .ThenInclude(a => a.Transactions)
+                .ToListAsync();
             var user = users.Single(u => u.Uid == uid);
 
             return user;
