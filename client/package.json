@@ -42,5 +42,6 @@
     "typescript": "~5.2.0",
     "vue-tsc": "^1.8.19"
   },
-  "type": "module"
+  "type": "module",
+  "packageManager": "yarn@4.0.2"
 }

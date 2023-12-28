@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -10,10 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="MoneyMinder-Data\**" />
-    <Content Remove="MoneyMinder-Data\**" />
-    <EmbeddedResource Remove="MoneyMinder-Data\**" />
-    <None Remove="MoneyMinder-Data\**" />
+    <Compile Remove="MoneyMinder-Database\**" />
+    <Content Remove="MoneyMinder-Database\**" />
+    <EmbeddedResource Remove="MoneyMinder-Database\**" />
+    <None Remove="MoneyMinder-Database\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="MoneyMinder-Data\MoneyMinder.Data.csproj" />
+    <ProjectReference Include="MoneyMinder-Database\MoneyMinder.Database.csproj" />
   </ItemGroup>
 
 </Project>
