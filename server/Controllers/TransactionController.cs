@@ -98,64 +98,62 @@ public class TransactionController : ControllerBase
     [Authorize]
     public async Task<IActionResult> Delete(Guid guid)
     {
-        try
+        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+
+        if (user == null)
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            Account? account = await _userDataContext.Accounts.FindAsync(guid);
-            if (account == null)
-            {
-                return NotFound();
-            }
-
-            user.Accounts.Remove(account);
-            await _userDataContext.SaveChangesAsync();
-
-            return Ok();
+            return NotFound();
         }
-        catch (Exception ex)
+
+        Transaction? transaction = await _userDataContext.Transactions.FindAsync(guid);
+        if (transaction == null)
         {
-            return BadRequest(ex.Message);
+            return NotFound();
         }
+
+        if (user.Accounts.Single(a => a.ID == transaction.AccountID) == null)
+        {
+            return BadRequest();
+        }
+
+        _userDataContext.Entry(transaction).State = EntityState.Deleted;
+        await _userDataContext.SaveChangesAsync();
+
+        return Ok();
     }
 
     [HttpPut]
     [Authorize]
-    public async Task<IActionResult> Edit([FromBody] Account newAccount)
+    public async Task<IActionResult> Edit([FromBody] Transaction newTransaction)
     {
-        try
+        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+
+        if (user == null)
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            Account? account = await _userDataContext.Accounts.FindAsync(newAccount.ID);
-            if (account == null)
-            {
-                return NotFound();
-            }
-
-            account.Name = newAccount.Name;
-            account.Institution = newAccount.Institution;
-            account.Type = newAccount.Type;
-            account.Subtype = newAccount.Subtype;
-
-            await _userDataContext.SaveChangesAsync();
-
-            return Ok();
+            return NotFound();
         }
-        catch (Exception ex)
+
+        Transaction? transaction = await _userDataContext.Transactions.FindAsync(newTransaction.ID);
+        if (transaction == null)
         {
-            return BadRequest(ex.Message);
+            return NotFound();
         }
+
+        if (user.Accounts.Single(a => a.ID == transaction.AccountID) == null)
+        {
+            return BadRequest();
+        }
+
+        transaction.Amount = newTransaction.Amount;
+        transaction.Date = newTransaction.Date;
+        transaction.Category = newTransaction.Category;
+        transaction.MerchantName = newTransaction.MerchantName;
+        transaction.Pending = newTransaction.Pending;
+        transaction.Source = newTransaction.Source;
+
+        await _userDataContext.SaveChangesAsync();
+
+        return Ok();
     }
 
     private async Task<User?> GetCurrentUser(string uid)
