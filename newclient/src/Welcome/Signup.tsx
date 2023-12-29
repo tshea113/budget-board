@@ -1,19 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
-function Login() {
+function Signup() {
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button>
-          Login
+          Sign Up
         </Button>
       </DialogTrigger>
       <DialogContent>
-        Bingus
+        Bongus
       </DialogContent>
     </Dialog>
   )
 }
 
-export default Login
+export default Signup
