@@ -12,6 +12,11 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import * as z from "zod"
+import { useState } from "react";
+import ResponsiveButton from "@/components/custom/ResponsiveButton";
+import { useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { firebaseAuth } from "@/lib/firebase";
 
 function Login() {
   return (
@@ -28,17 +33,20 @@ function Login() {
   )
 }
 
-const formSchema = z.object({
-  email: z
-    .string()
-    .min(1, { message: "This field must be filled." })
-    .email("This is not a valid email"),
-  password: z
-    .string()
-    .min(7, { message: "Password must be at least 7 characters"})
-})
-
 function LoginForm() {
+  const navigate = useNavigate()
+  const [loggingIn, setLoggingIn] = useState(false)
+
+  const formSchema = z.object({
+    email: z
+      .string()
+      .min(1, { message: "This field must be filled." })
+      .email("This is not a valid email"),
+    password: z
+      .string()
+      .min(7, { message: "Password must be at least 7 characters"})
+  })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,8 +55,17 @@ function LoginForm() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoggingIn(true)
+    try {
+      const { user } = await signInWithEmailAndPassword(firebaseAuth, values.email, values.password)
+      console.log(user)
+      navigate('/dashboard')
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setLoggingIn(false)
+    }
   }
 
   return (
@@ -83,7 +100,7 @@ function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <ResponsiveButton waiting={loggingIn}/>
       </form>
     </Form>
   )
