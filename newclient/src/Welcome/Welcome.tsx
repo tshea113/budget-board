@@ -1,3 +1,4 @@
+import Modal from "@/components/custom/Modal";
 import Login from "./Login";
 import Signup from "./Signup";
 
@@ -14,8 +15,12 @@ function Welcome() {
         A simple app for managing monthly budgets.
       </p>
       <div className="mt-10 flex items-center justify-center gap-x-6">
-        <Login />
-        <Signup />
+        <Modal button="Login">
+          <Login />
+        </Modal>
+        <Modal button="Sign Up">
+          <Signup />
+        </Modal>
       </div>
     </div>
   )

@@ -1,6 +1,5 @@
+import { AuthContext } from "@/Misc/AuthProvider";
 import ResponsiveButton from "@/components/custom/ResponsiveButton";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -10,32 +9,14 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input";
-import { firebaseAuth } from "@/lib/firebase";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { useState } from "react";
+import { UserCredential } from "firebase/auth";
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import * as z from "zod"
 
 function Signup() {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button>
-          Sign Up
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <SignupForm />
-      </DialogContent>
-    </Dialog>
-  )
-}
-
-function SignupForm() {
-  const navigate = useNavigate()
-  const [signingUp, setSigningUp] = useState(false)
+  const { createUser } = useContext<any>(AuthContext)
 
   const formSchema = z.object({
     email: z
@@ -67,15 +48,11 @@ function SignupForm() {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setSigningUp(true)
-    try {
-      const { user } = await createUserWithEmailAndPassword(firebaseAuth, values.email, values.password)
-      console.log(user)
-    } catch (err) {
-      console.log(err)
-    } finally {
-      setSigningUp(false)
-    }
+
+    createUser(values.email, values.password)
+    .then((result: UserCredential) => {
+      console.log(result)
+    })
   }
 
   return (
@@ -123,7 +100,7 @@ function SignupForm() {
             </FormItem>
           )}
         />
-        <ResponsiveButton waiting={signingUp}/>
+        <ResponsiveButton />
       </form>
     </Form>
   )

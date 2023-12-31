@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import {
@@ -12,30 +10,15 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import * as z from "zod"
-import { useState } from "react";
+import { useContext } from "react";
 import ResponsiveButton from "@/components/custom/ResponsiveButton";
 import { useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { firebaseAuth } from "@/lib/firebase";
+import { UserCredential } from "firebase/auth";
+import { AuthContext } from "@/Misc/AuthProvider";
 
 function Login() {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button>
-          Login
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <LoginForm />
-      </DialogContent>
-    </Dialog>
-  )
-}
-
-function LoginForm() {
   const navigate = useNavigate()
-  const [loggingIn, setLoggingIn] = useState(false)
+  const { loginUser } = useContext<any>(AuthContext)
 
   const formSchema = z.object({
     email: z
@@ -56,16 +39,14 @@ function LoginForm() {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setLoggingIn(true)
-    try {
-      const { user } = await signInWithEmailAndPassword(firebaseAuth, values.email, values.password)
-      console.log(user)
-      navigate('/dashboard')
-    } catch (err) {
-      console.log(err)
-    } finally {
-      setLoggingIn(false)
-    }
+    loginUser(values.email, values.password)
+      .then((result: UserCredential) => {
+        console.log(result)
+        navigate('/dashboard')
+      })
+      .catch((err: Error) => {
+        console.log(err)
+      })
   }
 
   return (
@@ -100,7 +81,7 @@ function LoginForm() {
             </FormItem>
           )}
         />
-        <ResponsiveButton waiting={loggingIn}/>
+        <ResponsiveButton />
       </form>
     </Form>
   )
