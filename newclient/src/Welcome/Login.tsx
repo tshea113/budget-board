@@ -13,8 +13,23 @@ import * as z from "zod"
 import { useContext } from "react";
 import ResponsiveButton from "@/components/custom/ResponsiveButton";
 import { useNavigate } from "react-router-dom";
-import { UserCredential } from "firebase/auth";
 import { AuthContext } from "@/Misc/AuthProvider";
+import axios from 'axios'
+import { UserCredential } from "firebase/auth"
+import { firebaseAuth } from "@/lib/firebase"
+
+function GetUser({token}: {token: string}) {
+  const headers = {authorization: 'Bearer ' + token}
+  axios({
+    url: import.meta.env.VITE_API_URL + '/api/user',
+    method: 'GET',
+    headers: headers
+  }).then((res) => {
+    console.log(res)
+  }).catch((err: Error) => {
+    console.error(err.message)
+  })
+}
 
 function Login() {
   const navigate = useNavigate()
@@ -38,14 +53,17 @@ function Login() {
     },
   })
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof formSchema>) {
     loginUser(values.email, values.password)
-      .then((result: UserCredential) => {
-        console.log(result)
-        navigate('/dashboard')
-      })
-      .catch((err: Error) => {
-        console.log(err)
+      .then((userCredential: UserCredential) => {
+        console.log(userCredential.user)
+        if (userCredential) {
+          firebaseAuth.currentUser?.getIdToken()
+            .then((token) => {
+              GetUser({token})
+              navigate('/dashboard')
+            })
+        }
       })
   }
 

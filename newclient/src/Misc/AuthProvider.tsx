@@ -1,5 +1,6 @@
 import {
   User,
+  UserCredential,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
@@ -17,12 +18,26 @@ const AuthProvider = ({ children }: {children: any}) => {
 
   const createUser = (email: string, password: string) => {
     setLoading(true);
-    return createUserWithEmailAndPassword(firebaseAuth, email, password);
+    createUserWithEmailAndPassword(firebaseAuth, email, password)
+      .then((res: UserCredential) => {
+        return res;
+      })
+      .catch((err: Error) => {
+        console.error(err.message)
+        return null
+      });
   };
 
-  const loginUser = (email: string, password: string) => {
+  const loginUser = async (email: string, password: string) => {
     setLoading(true);
-    return signInWithEmailAndPassword(firebaseAuth, email, password);
+    try {
+      const user = await signInWithEmailAndPassword(firebaseAuth, email, password)
+      return user
+    } catch(err) {
+      console.error(err)
+      setLoading(false)
+      return null
+    }
   };
 
   const logOut = () => {

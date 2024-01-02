@@ -5,12 +5,12 @@ using MoneyMinder.Database.Models;
 
 namespace MoneyMinder.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class UserDataController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly UserDataContext _userDataContext;
-        public UserDataController(UserDataContext context)
+        public UserController(UserDataContext context)
         {
             _userDataContext = context;
         }
@@ -28,7 +28,7 @@ namespace MoneyMinder.Controllers
             return Ok();
         }
 
-        [HttpPost]
+        [HttpGet]
         [Authorize]
         public IActionResult GetUser()
         {
