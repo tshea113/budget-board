@@ -12,7 +12,6 @@ function Dashboard() {
   function Logout() {
     signOut(firebaseAuth).then(() => {
       navigate('/')
-      console.log('Logged out!')
     }).catch((err) => {
       console.log(err)
     })
