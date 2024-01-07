@@ -24,6 +24,7 @@ $RECYCLE.BIN/
 .env*
 *.override.yml
 **/node_modules/
+install-state.gz
 
 # Distribution / packaging
 .Python
