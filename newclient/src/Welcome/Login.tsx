@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { useForm, SubmitHandler } from "react-hook-form"
 import {
   Form,
   FormControl,
@@ -18,7 +18,7 @@ import axios from 'axios'
 import { UserCredential } from "firebase/auth"
 import { firebaseAuth } from "@/lib/firebase"
 
-function GetUser({token}: {token: string}) {
+const GetUser = ({token}: {token: string}) => {
   const headers = {authorization: 'Bearer ' + token}
   axios({
     url: import.meta.env.VITE_API_URL + '/api/user',
@@ -31,9 +31,14 @@ function GetUser({token}: {token: string}) {
   })
 }
 
-function Login() {
+const Login = () => {
   const navigate = useNavigate()
   const { loginUser } = useContext<any>(AuthContext)
+
+  type FormValues = {
+    email: string
+    password: string
+  }
 
   const formSchema = z.object({
     email: z
@@ -53,18 +58,25 @@ function Login() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    loginUser(values.email, values.password)
-      .then((userCredential: UserCredential) => {
+  const submitUserLogin: SubmitHandler<FormValues> = async (values: z.infer<typeof formSchema>, e: any) => {
+    try {
+      const userCredential: UserCredential = await loginUser(values.email, values.password)
+      if (userCredential) {
         console.log(userCredential.user)
-        if (userCredential) {
-          firebaseAuth.currentUser?.getIdToken()
-            .then((token) => {
-              GetUser({token})
-              navigate('/dashboard')
-            })
-        }
-      })
+          const token = await firebaseAuth.currentUser?.getIdToken()
+          if (token) {
+            GetUser({token})
+            navigate('/dashboard')
+          } else {
+            console.error('Token not found!')
+          }
+      } else {
+        console.error('User not found!')
+      }
+    } catch (err) {
+      console.error(err)
+    }
+    e.preventDefault()
   }
 
   return (
@@ -72,7 +84,10 @@ function Login() {
       <h1 className="text-xl font-bold">
         Login
       </h1>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        onSubmit={form.handleSubmit(submitUserLogin)}
+        className="space-y-8"
+      >
         <FormField
           control={form.control}
           name="email"

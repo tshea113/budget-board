@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 import { AuthContext } from "@/Misc/AuthProvider";
 import { useContext } from "react";
 
-function ResponsiveButton() {
+const ResponsiveButton = () => {
   const { loading } = useContext<any>(AuthContext)
 
   if (loading){
