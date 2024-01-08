@@ -26,6 +26,11 @@ ARG VITE_FIREBASE_MEASUREMENT_ID ${VITE_FIREBASE_MEASUREMENT_ID}
 
 ENV NODE_ENV=development
 WORKDIR /app
+
+COPY client/.yarnrc.yml .
+COPY client/.yarn ./.yarn
+RUN yarn set version stable
+
 COPY ["./client/package.json", "./client/yarn.lock", "./"]
 RUN yarn install
 
