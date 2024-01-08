@@ -25,6 +25,9 @@ $RECYCLE.BIN/
 *.override.yml
 **/node_modules/
 
+# Yarn
+client/.yarn/install-state.gz
+
 # Distribution / packaging
 .Python
 env/
