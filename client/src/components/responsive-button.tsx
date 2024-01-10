@@ -1,5 +1,5 @@
 import { Loader2 } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "./ui/button";
 import { AuthContext } from "@/Misc/AuthProvider";
 import { useContext } from "react";
 
