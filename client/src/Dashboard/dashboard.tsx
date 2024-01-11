@@ -4,7 +4,6 @@ import { signOut } from "firebase/auth"
 import { useNavigate } from "react-router-dom"
 import AddItems from "./add-items"
 import WelcomeCard from "./welcome-card"
-import Transactions from "./transactions"
 
 function Dashboard() {
   const navigate = useNavigate()
@@ -21,7 +20,6 @@ function Dashboard() {
       <div className="flex flex-row space-x-2">
         <WelcomeCard />
         <AddItems />
-        <Transactions />
       </div>
       <Button onClick={Logout}>
         Logout

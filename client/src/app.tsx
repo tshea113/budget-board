@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider,} from 'react-router-dom';
 import Welcome from './Welcome/Welcome'
-import Dashboard from './dashboard/dashboard';
+import DashboardLayout from './dashboard/layout';
 import ErrorPage from './Misc/ErrorPage';
 import AuthProvider from './Misc/AuthProvider';
 import AuthRoute from './Misc/AuthRoute';
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
     path: "/dashboard",
     element:
     <AuthRoute>
-      <Dashboard />
+      <DashboardLayout />
     </AuthRoute>
   }
 ]);
