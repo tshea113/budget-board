@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input"
 import * as z from "zod"
 import { useContext } from "react";
-import ResponsiveButton from "@/components/custom/ResponsiveButton";
+import ResponsiveButton from "@/components/responsive-button";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/Misc/AuthProvider";
 import axios from 'axios'

@@ -1,4 +1,4 @@
-import Modal from "@/components/custom/Modal";
+import Modal from "@/components/modal";
 import Login from "./Login";
 import Signup from "./Signup";
 
