@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider,} from 'react-router-dom';
 import Welcome from './Welcome/Welcome'
-import Dashboard from './Dashboard/Dashboard';
+import Dashboard from './Dashboard/dashboard';
 import ErrorPage from './Misc/ErrorPage';
 import AuthProvider from './Misc/AuthProvider';
 import AuthRoute from './Misc/AuthRoute';
