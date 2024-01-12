@@ -1,45 +1,32 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { formatDate, getTransactions } from "@/lib/transactions";
+import { useQuery } from "@tanstack/react-query";
+
+type Transaction = {
+  id: string,
+  date: string,
+  merchantName: string,
+  category: string,
+  amount: string
+}
 
 const Transactions = () => {
-
-  const transactions = [
-    {
-      id: "1",
-      date: "9-11-2001",
-      merchant: "osamart",
-      category: "hobby",
-      amount: "$69.69"
-    },
-    {
-      id: "2",
-      date: "9-11-2001",
-      merchant: "osamart",
-      category: "hobby",
-      amount: "$69.69"
-    },
-    {
-      id: "3",
-      date: "9-11-2001",
-      merchant: "osamart",
-      category: "hobby",
-      amount: "$69.69"
-    },
-    {
-      id: "4",
-      date: "9-11-2001",
-      merchant: "osamart",
-      category: "hobby",
-      amount: "$69.69"
-    },
-    {
-      id: "5",
-      date: "9-11-2001",
-      merchant: "osamart",
-      category: "hobby",
-      amount: "$69.69"
+  const { isPending, isError, data, error } = useQuery({
+    queryKey: ['transactions'],
+    queryFn: async () => {
+      const response = await getTransactions();
+      return response;
     }
-  ]
+  });
+
+  if (isPending) {
+    return <span>Loading...</span>
+  }
+
+  if (isError) {
+    return <span>Error: {error.message}</span>
+  }
 
   return (
     <Card className="">
@@ -51,16 +38,18 @@ const Transactions = () => {
       <CardContent>
         <Table>
           <TableHeader>
-            <TableHead>Date</TableHead>
-            <TableHead>Merchant</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead>Amount</TableHead>
+            <TableRow>
+              <TableHead>Date</TableHead>
+              <TableHead>Merchant</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead>Amount</TableHead>
+            </TableRow>
           </TableHeader>
           <TableBody>
-            {transactions.map((transaction: any) => (
+            {data.data.map((transaction: Transaction) => (
               <TableRow key={transaction.id}>
-                <TableCell>{transaction.date}</TableCell>
-                <TableCell>{transaction.merchant}</TableCell>
+                <TableCell>{formatDate(transaction.date)}</TableCell>
+                <TableCell>{transaction.merchantName}</TableCell>
                 <TableCell>{transaction.category}</TableCell>
                 <TableCell>{transaction.amount}</TableCell>
               </TableRow>

@@ -4,12 +4,15 @@ import { signOut } from "firebase/auth"
 import { useNavigate } from "react-router-dom"
 import AddItems from "./add-items"
 import WelcomeCard from "./welcome-card"
+import { useQueryClient } from "@tanstack/react-query"
 
 function Dashboard() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   function Logout() {
     signOut(firebaseAuth).then(() => {
+      queryClient.removeQueries()
       navigate('/')
     }).catch((err) => {
       console.log(err)

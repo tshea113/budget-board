@@ -5,6 +5,10 @@ import ErrorPage from './Misc/ErrorPage';
 import AuthProvider from './Misc/AuthProvider';
 import AuthRoute from './Misc/AuthRoute';
 import NoAuthRoute from './Misc/NoAuthRoute';
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 
 const router = createBrowserRouter([
   {
@@ -24,10 +28,14 @@ const router = createBrowserRouter([
   }
 ]);
 
+const queryClient = new QueryClient()
+
 function App() {
   return (
     <AuthProvider>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
     </AuthProvider>
   )
 }
