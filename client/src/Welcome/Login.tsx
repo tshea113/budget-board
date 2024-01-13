@@ -1,5 +1,5 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm, SubmitHandler } from "react-hook-form"
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 import {
   Form,
   FormControl,
@@ -7,85 +7,92 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import * as z from "zod"
-import { useContext } from "react";
-import ResponsiveButton from "@/components/responsive-button";
-import { useNavigate } from "react-router-dom";
-import { AuthContext } from "@/Misc/AuthProvider";
-import axios from 'axios'
-import { UserCredential } from "firebase/auth"
-import { firebaseAuth } from "@/lib/firebase"
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import * as z from 'zod';
+import { useContext } from 'react';
+import ResponsiveButton from '@/components/responsive-button';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '@/Misc/AuthProvider';
+import axios from 'axios';
+import { type UserCredential } from 'firebase/auth';
+import { firebaseAuth } from '@/lib/firebase';
 
-const GetUser = ({token}: {token: string}) => {
-  const headers = {authorization: 'Bearer ' + token}
+const GetUser = (token: string): void => {
+  const headers = { authorization: 'Bearer ' + token };
   axios({
     url: import.meta.env.VITE_API_URL + '/api/user',
     method: 'GET',
-    headers: headers
-  }).then((res) => {
-    console.log(res)
-  }).catch((err: Error) => {
-    console.error(err.message)
+    headers,
   })
-}
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err: Error) => {
+      console.error(err.message);
+    });
+};
 
-const Login = () => {
-  const navigate = useNavigate()
-  const { loginUser } = useContext<any>(AuthContext)
+const Login = (): JSX.Element => {
+  const navigate = useNavigate();
+  const { loginUser } = useContext<any>(AuthContext);
 
-  type FormValues = {
-    email: string
-    password: string
+  interface FormValues {
+    email: string;
+    password: string;
   }
 
   const formSchema = z.object({
     email: z
       .string()
-      .min(1, { message: "This field must be filled." })
-      .email("This is not a valid email"),
-    password: z
-      .string()
-      .min(7, { message: "Password must be at least 7 characters"})
-  })
+      .min(1, { message: 'This field must be filled.' })
+      .email('This is not a valid email'),
+    password: z.string().min(7, { message: 'Password must be at least 7 characters' }),
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      password: ""
+      email: '',
+      password: '',
     },
-  })
+  });
 
-  const submitUserLogin: SubmitHandler<FormValues> = async (values: z.infer<typeof formSchema>, e: any) => {
-    try {
-      const userCredential: UserCredential = await loginUser(values.email, values.password)
-      if (userCredential) {
-        console.log(userCredential.user)
-          const token = await firebaseAuth.currentUser?.getIdToken()
-          if (token) {
-            GetUser({token})
-            navigate('/dashboard')
+  const submitUserLogin: SubmitHandler<FormValues> = (
+    values: z.infer<typeof formSchema>,
+    e: any
+  ) => {
+    loginUser(values.email, values.password)
+      .then(async (userCredential: UserCredential) => {
+        if (userCredential !== null) {
+          console.log(userCredential.user);
+          const token = (await firebaseAuth.currentUser?.getIdToken()) ?? '';
+          if (token.length !== 0) {
+            GetUser(token);
+            navigate('/dashboard');
           } else {
-            console.error('Token not found!')
+            console.error('Token not found!');
           }
-      } else {
-        console.error('User not found!')
-      }
-    } catch (err) {
-      console.error(err)
-    }
-    e.preventDefault()
-  }
+        } else {
+          console.error('User not found!');
+        }
+      })
+      .catch((err: Error) => {
+        console.error(err);
+      })
+      .finally(() => {
+        e.preventDefault();
+      });
+  };
 
   return (
     <Form {...form}>
-      <h1 className="text-xl font-bold">
-        Login
-      </h1>
+      <h1 className="text-xl font-bold">Login</h1>
       <form
-        onSubmit={form.handleSubmit(submitUserLogin)}
+        onSubmit={(event) => {
+          event.preventDefault();
+          void form.handleSubmit(submitUserLogin)(event);
+        }}
         className="space-y-8"
       >
         <FormField
@@ -117,7 +124,7 @@ const Login = () => {
         <ResponsiveButton />
       </form>
     </Form>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

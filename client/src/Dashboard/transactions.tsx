@@ -2,6 +2,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatDate, getTransactions } from "@/lib/transactions";
 import { useQuery } from "@tanstack/react-query";
+import AddTransaction from "./add-transaction";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 type Transaction = {
   id: string,
@@ -12,6 +15,7 @@ type Transaction = {
 }
 
 const Transactions = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const { isPending, isError, data, error } = useQuery({
     queryKey: ['transactions'],
     queryFn: async () => {
@@ -28,13 +32,23 @@ const Transactions = () => {
     return <span>Error: {error.message}</span>
   }
 
+  const toggle = () => {
+    setIsOpen((isOpen) => !isOpen);
+  }
+
   return (
     <Card className="">
-      <CardHeader>
-        <CardTitle>
+      <CardHeader className="grid w-screen grid-cols-2">
+        <CardTitle className="justify-self-start">
           Transactions
         </CardTitle>
+        <div className="justify-self-end">
+          <Button onClick={toggle}>
+            Add Transaction
+          </Button>
+        </div>
       </CardHeader>
+      {isOpen && <AddTransaction />}
       <CardContent>
         <Table>
           <TableHeader>
