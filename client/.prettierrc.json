@@ -6,5 +6,8 @@
   "printWidth": 100,
   "trailingComma": "es5",
   "plugins": ["prettier-plugin-tailwindcss"],
-  "pluginSearchDirs": ["."]
+  "pluginSearchDirs": ["."],
+  "importOrder": ["^components/(.*)$", "^[./]"],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
 }

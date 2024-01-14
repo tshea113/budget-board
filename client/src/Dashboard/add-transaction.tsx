@@ -18,31 +18,70 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
+import { type NewTransaction } from '@/types/transaction';
+import request from '@/lib/request';
+import { type AxiosResponse } from 'axios';
+import { useState } from 'react';
 
 const formSchema = z.object({
   date: z.date({
     required_error: 'A transaction date is required.',
   }),
   merchant: z.string().min(1).max(50),
-  amount: z.number(),
+  amount: z.coerce.number().nonnegative(),
+  category: z.string().min(1).max(50),
+  accountId: z.string().min(1).max(50),
 });
 
 const AddTransaction = (): JSX.Element => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {},
+    defaultValues: {
+      merchant: '',
+      amount: 0,
+      category: '',
+      accountId: '',
+    },
   });
+
+  const [loading, setLoading] = useState(false);
 
   interface FormValues {
     date: Date;
     merchant: string;
     amount: number;
+    category: string;
+    accountId: string;
   }
 
   const submitTransaction: SubmitHandler<FormValues> = (
     values: z.infer<typeof formSchema>
   ): any => {
-    console.log(values);
+    setLoading(true);
+    const newTransaction: NewTransaction = {
+      amount: values.amount,
+      date: values.date,
+      category: values.category,
+      merchantName: values.merchant,
+      pending: false,
+      source: 'manual',
+      accountId: values.accountId,
+    };
+
+    request({
+      url: '/api/transaction',
+      method: 'POST',
+      data: newTransaction,
+    })
+      .then((res: AxiosResponse) => {
+        console.log(res);
+      })
+      .catch((err: Error) => {
+        console.error(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
@@ -116,11 +155,36 @@ const AddTransaction = (): JSX.Element => {
                   <FormControl>
                     <Input className="w-[240px]" placeholder="Enter an amount" {...field} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Category</FormLabel>
+                  <FormControl>
+                    <Input className="w-[240px]" placeholder="Enter a category" {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="accountId"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Account Id</FormLabel>
+                  <FormControl>
+                    <Input className="w-[240px]" placeholder="Enter an account" {...field} />
+                  </FormControl>
                 </FormItem>
               )}
             />
           </div>
-          <ResponsiveButton />
+          <ResponsiveButton loading={loading} />
         </form>
       </Form>
     </Card>

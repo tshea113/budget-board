@@ -35,7 +35,7 @@ const GetUser = (token: string): void => {
 
 const Login = (): JSX.Element => {
   const navigate = useNavigate();
-  const { loginUser } = useContext<any>(AuthContext);
+  const { loginUser, loading } = useContext<any>(AuthContext);
 
   interface FormValues {
     email: string;
@@ -121,7 +121,7 @@ const Login = (): JSX.Element => {
             </FormItem>
           )}
         />
-        <ResponsiveButton />
+        <ResponsiveButton {...loading} />
       </form>
     </Form>
   );

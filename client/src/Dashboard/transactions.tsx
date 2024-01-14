@@ -12,14 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import AddTransaction from './add-transaction';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
-
-interface Transaction {
-  id: string;
-  date: string;
-  merchantName: string;
-  category: string;
-  amount: string;
-}
+import { type Transaction } from '@/types/transaction';
 
 const Transactions = (): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
