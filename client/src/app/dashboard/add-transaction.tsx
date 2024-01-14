@@ -52,7 +52,7 @@ const AddTransaction = (): JSX.Element => {
     },
   });
 
-  const { isPending, isError, data, error } = useQuery({
+  const { data } = useQuery({
     queryKey: ['accounts'],
     queryFn: async () => {
       const response = await getAccounts();
