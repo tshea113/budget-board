@@ -20,8 +20,7 @@ import { CalendarIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { type NewTransaction } from '@/types/transaction';
 import request from '@/lib/request';
-import { type AxiosResponse } from 'axios';
-import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const formSchema = z.object({
   date: z.date({
@@ -44,7 +43,19 @@ const AddTransaction = (): JSX.Element => {
     },
   });
 
-  const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: async (newTransaction) => {
+      return await request({
+        url: '/api/transaction',
+        method: 'POST',
+        data: newTransaction,
+      });
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['transactions'] });
+    },
+  });
 
   interface FormValues {
     date: Date;
@@ -57,7 +68,6 @@ const AddTransaction = (): JSX.Element => {
   const submitTransaction: SubmitHandler<FormValues> = (
     values: z.infer<typeof formSchema>
   ): any => {
-    setLoading(true);
     const newTransaction: NewTransaction = {
       amount: values.amount,
       date: values.date,
@@ -67,21 +77,7 @@ const AddTransaction = (): JSX.Element => {
       source: 'manual',
       accountId: values.accountId,
     };
-
-    request({
-      url: '/api/transaction',
-      method: 'POST',
-      data: newTransaction,
-    })
-      .then((res: AxiosResponse) => {
-        console.log(res);
-      })
-      .catch((err: Error) => {
-        console.error(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    mutation.mutate(newTransaction);
   };
 
   return (
@@ -184,7 +180,7 @@ const AddTransaction = (): JSX.Element => {
               )}
             />
           </div>
-          <ResponsiveButton loading={loading} />
+          <ResponsiveButton loading={mutation.isPending} />
         </form>
       </Form>
     </Card>

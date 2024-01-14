@@ -58,11 +58,8 @@ const Login = (): JSX.Element => {
     },
   });
 
-  const submitUserLogin: SubmitHandler<FormValues> = (
-    values: z.infer<typeof formSchema>,
-    e: any
-  ) => {
-    loginUser(values.email, values.password)
+  const submitUserLogin: SubmitHandler<FormValues> = (values: z.infer<typeof formSchema>) => {
+    return loginUser(values.email, values.password)
       .then(async (userCredential: UserCredential) => {
         if (userCredential !== null) {
           console.log(userCredential.user);
@@ -79,9 +76,6 @@ const Login = (): JSX.Element => {
       })
       .catch((err: Error) => {
         console.error(err);
-      })
-      .finally(() => {
-        e.preventDefault();
       });
   };
 

@@ -1,11 +1,11 @@
-import Tab from "./tab"
+import Tab from './tab';
 
-function DashboardLayout() {
-  return(
+const DashboardLayout = (): JSX.Element => {
+  return (
     <div>
       <Tab />
     </div>
-  )
-}
+  );
+};
 
-export default DashboardLayout
+export default DashboardLayout;
