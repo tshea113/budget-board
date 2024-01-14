@@ -20,7 +20,16 @@ import { CalendarIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { type NewTransaction } from '@/types/transaction';
 import request from '@/lib/request';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getAccounts } from '@/lib/accounts';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { type Account } from '@/types/account';
 
 const formSchema = z.object({
   date: z.date({
@@ -40,6 +49,15 @@ const AddTransaction = (): JSX.Element => {
       amount: 0,
       category: '',
       accountId: '',
+    },
+  });
+
+  const { isPending, isError, data, error } = useQuery({
+    queryKey: ['accounts'],
+    queryFn: async () => {
+      const response = await getAccounts();
+      console.log(response);
+      return response;
     },
   });
 
@@ -149,7 +167,12 @@ const AddTransaction = (): JSX.Element => {
                 <FormItem className="flex flex-col">
                   <FormLabel>Amount</FormLabel>
                   <FormControl>
-                    <Input className="w-[240px]" placeholder="Enter an amount" {...field} />
+                    <Input
+                      type="number"
+                      className="w-[240px]"
+                      placeholder="Enter an amount"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -173,9 +196,21 @@ const AddTransaction = (): JSX.Element => {
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Account Id</FormLabel>
-                  <FormControl>
-                    <Input className="w-[240px]" placeholder="Enter an account" {...field} />
-                  </FormControl>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="w-[240px]">
+                        <SelectValue placeholder="Select an account" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {data?.data.map((account: Account) => (
+                        <SelectItem key={account.id} value={account.id}>
+                          {account.name}
+                        </SelectItem>
+                      ))}
+                      <SelectItem value="Cash">Cash</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </FormItem>
               )}
             />

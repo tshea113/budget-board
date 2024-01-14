@@ -61,7 +61,12 @@ const Transactions = (): JSX.Element => {
                 <TableCell>{formatDate(transaction.date)}</TableCell>
                 <TableCell>{transaction.merchantName}</TableCell>
                 <TableCell>{transaction.category}</TableCell>
-                <TableCell>{transaction.amount}</TableCell>
+                <TableCell>
+                  {transaction.amount?.toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                  })}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
