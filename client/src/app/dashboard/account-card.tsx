@@ -12,7 +12,7 @@ import { groupOptions } from '@/lib/accounts';
 import { Type, type Account, SubType } from '@/types/account';
 import { useQuery } from '@tanstack/react-query';
 
-const AccountCard = (): JSX.Element => {
+const AccountCard = ({ toggleAddAccount }: { toggleAddAccount: () => void }): JSX.Element => {
   const { isPending, isError, data, error } = useQuery(groupOptions());
 
   if (isPending) {
@@ -47,7 +47,7 @@ const AccountCard = (): JSX.Element => {
             ))}
           </TableBody>
         </Table>
-        <Button>Add Account</Button>
+        <Button onClick={toggleAddAccount}>Add Account</Button>
       </CardContent>
     </Card>
   );
