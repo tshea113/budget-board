@@ -27,4 +27,5 @@ enum SubType {
   CreditCard,
 }
 
-export type { Account, Type, SubType };
+export type { Account };
+export { Type, SubType };

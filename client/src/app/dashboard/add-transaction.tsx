@@ -21,7 +21,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { type NewTransaction } from '@/types/transaction';
 import request from '@/lib/request';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getAccounts } from '@/lib/accounts';
+import { getAccounts, groupOptions } from '@/lib/accounts';
 import {
   Select,
   SelectContent,
@@ -52,14 +52,7 @@ const AddTransaction = (): JSX.Element => {
     },
   });
 
-  const { data } = useQuery({
-    queryKey: ['accounts'],
-    queryFn: async () => {
-      const response = await getAccounts();
-      console.log(response);
-      return response;
-    },
-  });
+  const { data } = useQuery(groupOptions());
 
   const queryClient = useQueryClient();
   const mutation = useMutation({

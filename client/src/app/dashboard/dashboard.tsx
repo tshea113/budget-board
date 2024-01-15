@@ -2,9 +2,9 @@ import { Button } from '@/components/ui/button';
 import { firebaseAuth } from '@/lib/firebase';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import AddItems from './add-items';
-import WelcomeCard from './welcome-card';
 import { useQueryClient } from '@tanstack/react-query';
+import AccountCard from './account-card';
+import WelcomeCard from './welcome-card';
 
 const Dashboard = (): JSX.Element => {
   const navigate = useNavigate();
@@ -22,11 +22,15 @@ const Dashboard = (): JSX.Element => {
   };
   return (
     <div>
-      <div className="flex flex-row space-x-2">
-        <WelcomeCard />
-        <AddItems />
-      </div>
       <Button onClick={Logout}>Logout</Button>
+      <div className="grid grid-flow-col grid-cols-3 grid-rows-3 gap-2">
+        <div className="row-span-full">
+          <AccountCard />
+        </div>
+        <div className="col-span-2">
+          <WelcomeCard />
+        </div>
+      </div>
     </div>
   );
 };
