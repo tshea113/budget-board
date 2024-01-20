@@ -24,10 +24,12 @@ const Transactions = (): JSX.Element => {
     },
   });
 
+  // TODO: Make this not ugly
   if (isPending) {
     return <span>Loading...</span>;
   }
 
+  // TODO: This should probably just be an error alert
   if (isError) {
     return <span>Error: {error.message}</span>;
   }

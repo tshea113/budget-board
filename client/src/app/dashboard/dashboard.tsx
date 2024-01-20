@@ -24,6 +24,7 @@ const Dashboard = (): JSX.Element => {
         navigate('/');
       })
       .catch((err) => {
+        // TODO: Make this an alert dialog
         console.log(err);
       });
   };

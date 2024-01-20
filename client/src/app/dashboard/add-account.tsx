@@ -175,7 +175,7 @@ const AddAccount = (): JSX.Element => {
               />
             )}
           </div>
-          <ResponsiveButton loading={false} />
+          <ResponsiveButton loading={mutation.isPending} />
         </form>
       </Form>
     </Card>

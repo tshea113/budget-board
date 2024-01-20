@@ -42,16 +42,6 @@ const formSchema = z.object({
 });
 
 const AddTransaction = (): JSX.Element => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      merchant: '',
-      amount: 0,
-      category: '',
-      accountId: '',
-    },
-  });
-
   const { data } = useQuery(groupOptions());
 
   const queryClient = useQueryClient();
@@ -65,6 +55,16 @@ const AddTransaction = (): JSX.Element => {
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['transactions'] });
+    },
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      merchant: '',
+      amount: 0,
+      category: '',
+      accountId: '',
     },
   });
 
