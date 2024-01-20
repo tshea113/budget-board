@@ -1,9 +1,183 @@
+import ResponsiveButton from '@/components/responsive-button';
 import { Card } from '@/components/ui/card';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import request from '@/lib/request';
+import { getUser } from '@/lib/user';
+import { Type, SubType, type NewAccount } from '@/types/account';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { type SubmitHandler, useForm, useWatch } from 'react-hook-form';
+import * as z from 'zod';
+
+const formSchema = z.object({
+  name: z.string().min(1).max(50),
+  institution: z.string().min(1).max(50),
+  type: z.string().min(1).max(50),
+  subtype: z.string().min(1).max(50),
+});
 
 const AddAccount = (): JSX.Element => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      institution: '',
+      type: '',
+      subtype: '',
+    },
+  });
+
+  const { isPending, isError, data } = useQuery({
+    queryKey: ['user'],
+    queryFn: async () => {
+      const response = await getUser();
+      return response;
+    },
+  });
+
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: async (newAccount: NewAccount) => {
+      return await request({
+        url: '/api/account',
+        method: 'POST',
+        data: newAccount,
+      });
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['accounts'] });
+    },
+  });
+
+  const watchType: string = useWatch({
+    control: form.control,
+    name: 'type',
+    defaultValue: 'Depository',
+  });
+
+  const getSubTypes = (type: string): string[] => {
+    return SubType[Type.indexOf(type)] ?? [];
+  };
+
+  interface FormValues {
+    name: string;
+    institution: string;
+    type: string;
+    subtype: string;
+  }
+
+  const submitAccount: SubmitHandler<FormValues> = (values: z.infer<typeof formSchema>): any => {
+    if (Boolean(isPending) || Boolean(isError)) {
+      console.error('There was an issue getting info from the server.');
+      return;
+    }
+
+    const newAccount: NewAccount = {
+      name: values.name,
+      institution: values.institution,
+      type: values.type,
+      subtype: values.subtype,
+      source: 'manual',
+      userId: data?.data.id,
+    };
+    mutation.mutate(newAccount);
+  };
+
   return (
     <Card className="mb-2 w-screen p-2">
-      <p>Add an account!</p>
+      <Form {...form}>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            void form.handleSubmit(submitAccount)(event);
+          }}
+          className="space-y-8"
+        >
+          <div className="flex gap-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input className="w-[240px]" placeholder="Enter a name" {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="institution"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Institution</FormLabel>
+                  <FormControl>
+                    <Input className="w-[240px]" placeholder="Enter an Institution" {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Type</FormLabel>
+                  <FormControl>
+                    <Select onValueChange={field.onChange}>
+                      <SelectTrigger className="w-[240px]">
+                        <SelectValue placeholder="Select a type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Type.map((value: string, index: number) => (
+                          <SelectItem key={index} value={value}>
+                            {value}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            {getSubTypes(watchType).length !== 0 && (
+              <FormField
+                control={form.control}
+                name="subtype"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Subtype</FormLabel>
+                    <FormControl>
+                      <Select onValueChange={field.onChange}>
+                        <SelectTrigger className="w-[240px]">
+                          <SelectValue placeholder="Select a subtype" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {getSubTypes(watchType).map((value: string, index: number) => (
+                            <SelectItem key={index} value={value}>
+                              {value}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            )}
+          </div>
+          <ResponsiveButton loading={false} />
+        </form>
+      </Form>
     </Card>
   );
 };

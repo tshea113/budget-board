@@ -53,7 +53,7 @@ namespace MoneyMinder.Controllers
                 try
                 {
                     user = _userDataContext.Users.Single(x => x.Uid == uid);
-                    return Ok(uid);
+                    return Ok(user);
                 }
                 catch (Exception ex)
                 {
@@ -62,7 +62,7 @@ namespace MoneyMinder.Controllers
             }
             else
             {
-                return Ok(uid);
+                return Ok(user);
             }
         }
     }

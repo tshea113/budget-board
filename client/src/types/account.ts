@@ -2,30 +2,20 @@ interface Account {
   id: string;
   name: string;
   institution: string;
-  type: Type;
-  subtype: SubType;
+  type: string;
+  subtype: string;
   userId: string;
   source: string;
   accountId: string;
 }
 
-enum Type {
-  Depository,
-  Credit,
-  Loan,
-  Investment,
-  Other,
-}
+interface NewAccount extends Partial<Account> {}
 
-enum SubType {
-  Checking,
-  Savings,
-  MoneyMarket,
-  CD,
-  Treasury,
-  Sweep,
-  CreditCard,
-}
+const Type: string[] = ['Depository', 'Credit', 'Loan', 'Investment', 'Other'];
 
-export type { Account };
+const SubType: string[][] = [
+  ['Checking', 'Savings', 'MoneyMarket', 'CD', 'Treasury', 'Sweep', 'CreditCard'],
+];
+
+export type { Account, NewAccount };
 export { Type, SubType };

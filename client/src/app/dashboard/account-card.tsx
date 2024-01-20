@@ -9,7 +9,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { groupOptions } from '@/lib/accounts';
-import { Type, type Account, SubType } from '@/types/account';
+import { type Account } from '@/types/account';
 import { useQuery } from '@tanstack/react-query';
 
 const AccountCard = ({ toggleAddAccount }: { toggleAddAccount: () => void }): JSX.Element => {
@@ -41,8 +41,8 @@ const AccountCard = ({ toggleAddAccount }: { toggleAddAccount: () => void }): JS
             {data.data.map((account: Account) => (
               <TableRow key={account.id}>
                 <TableCell>{account.name}</TableCell>
-                <TableCell>{Type[account.type]}</TableCell>
-                <TableCell>{SubType[account.subtype]}</TableCell>
+                <TableCell>{account.type}</TableCell>
+                <TableCell>{account.subtype}</TableCell>
               </TableRow>
             ))}
           </TableBody>

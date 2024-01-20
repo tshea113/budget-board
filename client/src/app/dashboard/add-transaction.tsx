@@ -21,7 +21,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { type NewTransaction } from '@/types/transaction';
 import request from '@/lib/request';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getAccounts, groupOptions } from '@/lib/accounts';
+import { groupOptions } from '@/lib/accounts';
 import {
   Select,
   SelectContent,

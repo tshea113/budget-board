@@ -12,7 +12,6 @@ export const groupOptions = (): unknown => {
     queryKey: ['accounts'],
     queryFn: async () => {
       const response = await getAccounts();
-      console.log(response);
       return response;
     },
   });
