@@ -8,12 +8,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { groupOptions } from '@/lib/accounts';
+import { getAccounts } from '@/lib/accounts';
 import { type Account } from '@/types/account';
 import { useQuery } from '@tanstack/react-query';
 
 const AccountCard = ({ toggleAddAccount }: { toggleAddAccount: () => void }): JSX.Element => {
-  const { isPending, isError, data, error } = useQuery(groupOptions());
+  const { isPending, isError, data, error } = useQuery({
+    queryKey: ['accounts'],
+    queryFn: async () => {
+      const response = await getAccounts();
+      return response;
+    },
+  });
 
   if (isPending) {
     return <span>Loading...</span>;
@@ -24,7 +30,7 @@ const AccountCard = ({ toggleAddAccount }: { toggleAddAccount: () => void }): JS
   }
 
   return (
-    <Card className="w-[350px]">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Accounts</CardTitle>
       </CardHeader>
