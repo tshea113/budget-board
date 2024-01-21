@@ -107,7 +107,7 @@ const AddTransaction = (): JSX.Element => {
           }}
           className="space-y-8"
         >
-          <div className="flex gap-4">
+          <div className="flex flex-row flex-wrap gap-4">
             <FormField
               control={form.control}
               name="date"
