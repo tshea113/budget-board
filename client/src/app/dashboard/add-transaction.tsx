@@ -52,7 +52,7 @@ const AddTransaction = (): JSX.Element => {
 
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: async (newTransaction) => {
+    mutationFn: async (newTransaction: NewTransaction) => {
       return await request({
         url: '/api/transaction',
         method: 'POST',
