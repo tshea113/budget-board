@@ -92,7 +92,7 @@ const AddAccount = (): JSX.Element => {
   };
 
   return (
-    <Card className="mb-2 w-screen p-2">
+    <Card className="mb-2 w-full p-2">
       <Form {...form}>
         <form
           onSubmit={(event) => {
@@ -101,7 +101,7 @@ const AddAccount = (): JSX.Element => {
           }}
           className="space-y-8"
         >
-          <div className="flex gap-4">
+          <div className="flex flex-col gap-4 lg:flex-row">
             <FormField
               control={form.control}
               name="name"
@@ -109,7 +109,7 @@ const AddAccount = (): JSX.Element => {
                 <FormItem className="flex flex-col">
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input className="w-[240px]" placeholder="Enter a name" {...field} />
+                    <Input className="min-w-min max-w-full" placeholder="Enter a name" {...field} />
                   </FormControl>
                 </FormItem>
               )}
@@ -121,7 +121,11 @@ const AddAccount = (): JSX.Element => {
                 <FormItem className="flex flex-col">
                   <FormLabel>Institution</FormLabel>
                   <FormControl>
-                    <Input className="w-[240px]" placeholder="Enter an Institution" {...field} />
+                    <Input
+                      className="min-w-min max-w-full"
+                      placeholder="Enter an Institution"
+                      {...field}
+                    />
                   </FormControl>
                 </FormItem>
               )}
@@ -134,7 +138,7 @@ const AddAccount = (): JSX.Element => {
                   <FormLabel>Type</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange}>
-                      <SelectTrigger className="w-[240px]">
+                      <SelectTrigger className="min-w-min max-w-full">
                         <SelectValue placeholder="Select a type" />
                       </SelectTrigger>
                       <SelectContent>
@@ -158,7 +162,7 @@ const AddAccount = (): JSX.Element => {
                     <FormLabel>Subtype</FormLabel>
                     <FormControl>
                       <Select onValueChange={field.onChange}>
-                        <SelectTrigger className="w-[240px]">
+                        <SelectTrigger className="min-w-min max-w-full">
                           <SelectValue placeholder="Select a subtype" />
                         </SelectTrigger>
                         <SelectContent>

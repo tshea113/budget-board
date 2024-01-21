@@ -31,11 +31,11 @@ const Dashboard = (): JSX.Element => {
   return (
     <div>
       <Button onClick={Logout}>Logout</Button>
-      <div className="grid grid-flow-col grid-cols-3 grid-rows-3 gap-2">
-        <div className="row-span-full">
+      <div className="flex flex-col gap-2 lg:grid lg:grid-flow-col lg:grid-cols-3 lg:grid-rows-5">
+        <div className="lg:row-span-full">
           <AccountCard toggleAddAccount={toggleAddAccount} />
         </div>
-        <div className="col-span-2">
+        <div className="lg:col-span-2">
           {addAccountIsOpen && <AddAccount />}
           <WelcomeCard />
         </div>
