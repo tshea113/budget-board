@@ -106,10 +106,10 @@ const AddAccount = (): JSX.Element => {
               control={form.control}
               name="name"
               render={({ field }) => (
-                <FormItem className="flex flex-col">
+                <FormItem className="flex w-screen flex-col">
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input className="min-w-min max-w-full" placeholder="Enter a name" {...field} />
+                    <Input className="min-w-min" placeholder="Enter a name" {...field} />
                   </FormControl>
                 </FormItem>
               )}
@@ -118,14 +118,10 @@ const AddAccount = (): JSX.Element => {
               control={form.control}
               name="institution"
               render={({ field }) => (
-                <FormItem className="flex flex-col">
+                <FormItem className="flex w-screen flex-col">
                   <FormLabel>Institution</FormLabel>
                   <FormControl>
-                    <Input
-                      className="min-w-min max-w-full"
-                      placeholder="Enter an Institution"
-                      {...field}
-                    />
+                    <Input className="min-w-min" placeholder="Enter an Institution" {...field} />
                   </FormControl>
                 </FormItem>
               )}
@@ -134,11 +130,11 @@ const AddAccount = (): JSX.Element => {
               control={form.control}
               name="type"
               render={({ field }) => (
-                <FormItem className="flex flex-col">
+                <FormItem className="flex w-screen flex-col">
                   <FormLabel>Type</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange}>
-                      <SelectTrigger className="min-w-min max-w-full">
+                      <SelectTrigger className="min-w-min">
                         <SelectValue placeholder="Select a type" />
                       </SelectTrigger>
                       <SelectContent>
@@ -158,11 +154,11 @@ const AddAccount = (): JSX.Element => {
                 control={form.control}
                 name="subtype"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col">
+                  <FormItem className="flex w-screen flex-col">
                     <FormLabel>Subtype</FormLabel>
                     <FormControl>
                       <Select onValueChange={field.onChange}>
-                        <SelectTrigger className="min-w-min max-w-full">
+                        <SelectTrigger className="min-w-min">
                           <SelectValue placeholder="Select a subtype" />
                         </SelectTrigger>
                         <SelectContent>
