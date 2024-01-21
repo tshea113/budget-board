@@ -1,48 +1,49 @@
 import {
-  User,
-  UserCredential,
+  type User,
+  type UserCredential,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
-} from "firebase/auth";
-import { createContext, useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import { firebaseAuth } from "@/lib/firebase";
+} from 'firebase/auth';
+import { createContext, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { firebaseAuth } from '@/lib/firebase';
 
 export const AuthContext = createContext({});
 
-const AuthProvider = ({ children }: {children: any}) => {
+const AuthProvider = ({ children }: { children: any }): JSX.Element => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const createUser = (email: string, password: string) => {
+  const createUser = (email: string, password: string): any => {
     setLoading(true);
     createUserWithEmailAndPassword(firebaseAuth, email, password)
       .then((res: UserCredential) => {
         return res;
       })
       .catch((err: Error) => {
-        console.error(err.message)
-        return null
+        console.error(err.message);
+        return null;
       });
   };
 
-  const loginUser = async (email: string, password: string) => {
+  const loginUser = async (email: string, password: string): Promise<UserCredential | null> => {
     setLoading(true);
     try {
-      const user = await signInWithEmailAndPassword(firebaseAuth, email, password)
-      return user
-    } catch(err) {
-      console.error(err)
-      setLoading(false)
-      return null
+      const user = await signInWithEmailAndPassword(firebaseAuth, email, password);
+      setLoading(false);
+      return user;
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+      return null;
     }
   };
 
-  const logOut = () => {
+  const logOut = async (): Promise<void> => {
     setLoading(true);
-    return signOut(firebaseAuth);
+    await signOut(firebaseAuth);
   };
 
   useEffect(() => {
@@ -61,7 +62,7 @@ const AuthProvider = ({ children }: {children: any}) => {
     user,
     loginUser,
     logOut,
-    loading
+    loading,
   };
 
   return <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>;

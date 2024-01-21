@@ -5,7 +5,7 @@ namespace MoneyMinder.Database.Models;
 public class Transaction
 {
     public Guid ID { get; set; }
-    public int Amount { get; set; }
+    public decimal Amount { get; set; }
     public DateTime Date { get; set; }
     [DisplayFormat(NullDisplayText = "No Category")]
     public string? Category { get; set; }
