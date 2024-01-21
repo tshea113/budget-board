@@ -21,7 +21,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { type NewTransaction } from '@/types/transaction';
 import request from '@/lib/request';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { groupOptions } from '@/lib/accounts';
+import { getAccounts } from '@/lib/accounts';
 import {
   Select,
   SelectContent,
@@ -42,7 +42,13 @@ const formSchema = z.object({
 });
 
 const AddTransaction = (): JSX.Element => {
-  const { data } = useQuery(groupOptions());
+  const { data } = useQuery({
+    queryKey: ['accounts'],
+    queryFn: async () => {
+      const response = await getAccounts();
+      return response;
+    },
+  });
 
   const queryClient = useQueryClient();
   const mutation = useMutation({
