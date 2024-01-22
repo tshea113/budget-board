@@ -1,5 +1,5 @@
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY as string,
@@ -15,4 +15,8 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const firebaseAuth = getAuth(firebaseApp);
 
-export { firebaseApp, firebaseAuth };
+async function getToken(): Promise<string | undefined> {
+  return await firebaseAuth.currentUser?.getIdToken();
+}
+
+export { firebaseApp, firebaseAuth, getToken };
