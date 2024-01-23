@@ -30,8 +30,8 @@ const AddAccount = (): JSX.Element => {
     defaultValues: {
       name: '',
       institution: '',
-      type: '',
-      subtype: '',
+      type: 'None',
+      subtype: 'None',
     },
   });
 
@@ -60,7 +60,6 @@ const AddAccount = (): JSX.Element => {
   const watchType: string = useWatch({
     control: form.control,
     name: 'type',
-    defaultValue: 'Depository',
   });
 
   const getSubTypes = (type: string): string[] => {
