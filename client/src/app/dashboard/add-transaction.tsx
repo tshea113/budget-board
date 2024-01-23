@@ -7,7 +7,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { type SubmitHandler, useForm } from 'react-hook-form';
+import { type SubmitHandler, useForm, useWatch } from 'react-hook-form';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
-import { type NewTransaction } from '@/types/transaction';
+import { Category, SubCategory, type NewTransaction } from '@/types/transaction';
 import request from '@/lib/request';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getAccounts } from '@/lib/accounts';
@@ -38,6 +38,7 @@ const formSchema = z.object({
   merchant: z.string().min(1).max(50),
   amount: z.coerce.number().nonnegative(),
   category: z.string().min(1).max(50),
+  subCategory: z.string().min(1).max(50),
   accountId: z.string().min(1).max(50),
 });
 
@@ -69,16 +70,28 @@ const AddTransaction = (): JSX.Element => {
     defaultValues: {
       merchant: '',
       amount: 0,
-      category: '',
+      category: 'None',
+      subCategory: 'None',
       accountId: '',
     },
   });
+
+  const watchType: string = useWatch({
+    control: form.control,
+    name: 'category',
+    defaultValue: 'Auto & Transport',
+  });
+
+  const getSubCategories = (category: string): string[] => {
+    return SubCategory[Category.indexOf(category)] ?? [];
+  };
 
   interface FormValues {
     date: Date;
     merchant: string;
     amount: number;
     category: string;
+    subCategory: string;
     accountId: string;
   }
 
@@ -89,6 +102,7 @@ const AddTransaction = (): JSX.Element => {
       amount: values.amount,
       date: values.date,
       category: values.category,
+      subCategory: values.subCategory,
       merchantName: values.merchant,
       pending: false,
       source: 'manual',
@@ -182,19 +196,55 @@ const AddTransaction = (): JSX.Element => {
               name="category"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel>Type</FormLabel>
                   <FormControl>
-                    <Input className="w-[240px]" placeholder="Enter a category" {...field} />
+                    <Select onValueChange={field.onChange}>
+                      <SelectTrigger className="min-w-min">
+                        <SelectValue placeholder="Select a category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Category.map((value: string, index: number) => (
+                          <SelectItem key={index} value={value}>
+                            {value}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                 </FormItem>
               )}
             />
+            {getSubCategories(watchType).length !== 0 && (
+              <FormField
+                control={form.control}
+                name="subCategory"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Subtype</FormLabel>
+                    <FormControl>
+                      <Select onValueChange={field.onChange}>
+                        <SelectTrigger className="min-w-min">
+                          <SelectValue placeholder="Select a subtype" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {getSubCategories(watchType).map((value: string, index: number) => (
+                            <SelectItem key={index} value={value}>
+                              {value}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            )}
             <FormField
               control={form.control}
               name="accountId"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Account Id</FormLabel>
+                  <FormLabel>Account</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="w-[240px]">

@@ -147,6 +147,7 @@ public class TransactionController : ControllerBase
         transaction.Amount = newTransaction.Amount;
         transaction.Date = newTransaction.Date;
         transaction.Category = newTransaction.Category;
+        transaction.SubCategory = newTransaction.SubCategory;
         transaction.MerchantName = newTransaction.MerchantName;
         transaction.Pending = newTransaction.Pending;
         transaction.Source = newTransaction.Source;

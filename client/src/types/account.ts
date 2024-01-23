@@ -14,7 +14,8 @@ interface NewAccount extends Partial<Account> {}
 const Type: string[] = ['Depository', 'Credit', 'Loan', 'Investment', 'Other'];
 
 const SubType: string[][] = [
-  ['Checking', 'Savings', 'MoneyMarket', 'CD', 'Treasury', 'Sweep', 'CreditCard'],
+  ['Checking', 'Savings', 'Money Market', 'CD', 'Treasury', 'Sweep'],
+  ['Credit Card'],
 ];
 
 export type { Account, NewAccount };
