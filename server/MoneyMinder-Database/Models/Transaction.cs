@@ -9,6 +9,8 @@ public class Transaction
     public DateTime Date { get; set; }
     [DisplayFormat(NullDisplayText = "No Category")]
     public string? Category { get; set; }
+    [DisplayFormat(NullDisplayText = "No Subcategory")]
+    public string? Subcategory { get; set; }
     [DisplayFormat(NullDisplayText = "No Merchant")]
     public string? MerchantName { get; set; }
     public bool Pending { get; set; }

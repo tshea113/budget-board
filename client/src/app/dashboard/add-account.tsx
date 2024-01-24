@@ -30,8 +30,8 @@ const AddAccount = (): JSX.Element => {
     defaultValues: {
       name: '',
       institution: '',
-      type: '',
-      subtype: '',
+      type: 'None',
+      subtype: 'None',
     },
   });
 
@@ -60,7 +60,6 @@ const AddAccount = (): JSX.Element => {
   const watchType: string = useWatch({
     control: form.control,
     name: 'type',
-    defaultValue: 'Depository',
   });
 
   const getSubTypes = (type: string): string[] => {
@@ -133,7 +132,12 @@ const AddAccount = (): JSX.Element => {
                 <FormItem className="flex w-screen flex-col">
                   <FormLabel>Type</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange}>
+                    <Select
+                      onValueChange={(e) => {
+                        field.onChange(e);
+                        form.resetField('subtype', { keepDirty: false });
+                      }}
+                    >
                       <SelectTrigger className="min-w-min">
                         <SelectValue placeholder="Select a type" />
                       </SelectTrigger>
@@ -157,9 +161,11 @@ const AddAccount = (): JSX.Element => {
                   <FormItem className="flex w-screen flex-col">
                     <FormLabel>Subtype</FormLabel>
                     <FormControl>
-                      <Select onValueChange={field.onChange}>
+                      <Select onValueChange={field.onChange} defaultValue="None">
                         <SelectTrigger className="min-w-min">
-                          <SelectValue placeholder="Select a subtype" />
+                          <SelectValue asChild>
+                            <p>{field.value}</p>
+                          </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                           {getSubTypes(watchType).map((value: string, index: number) => (
