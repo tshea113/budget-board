@@ -132,7 +132,12 @@ const AddAccount = (): JSX.Element => {
                 <FormItem className="flex w-screen flex-col">
                   <FormLabel>Type</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange}>
+                    <Select
+                      onValueChange={(e) => {
+                        field.onChange(e);
+                        form.resetField('subtype', { keepDirty: false });
+                      }}
+                    >
                       <SelectTrigger className="min-w-min">
                         <SelectValue placeholder="Select a type" />
                       </SelectTrigger>
@@ -156,9 +161,11 @@ const AddAccount = (): JSX.Element => {
                   <FormItem className="flex w-screen flex-col">
                     <FormLabel>Subtype</FormLabel>
                     <FormControl>
-                      <Select onValueChange={field.onChange}>
+                      <Select onValueChange={field.onChange} defaultValue="None">
                         <SelectTrigger className="min-w-min">
-                          <SelectValue placeholder="Select a subtype" />
+                          <SelectValue asChild>
+                            <p>{field.value}</p>
+                          </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                           {getSubTypes(watchType).map((value: string, index: number) => (

@@ -76,10 +76,9 @@ const AddTransaction = (): JSX.Element => {
     },
   });
 
-  const watchType: string = useWatch({
+  const watchCategory: string = useWatch({
     control: form.control,
     name: 'category',
-    defaultValue: 'Auto & Transport',
   });
 
   const getSubCategories = (category: string): string[] => {
@@ -196,9 +195,14 @@ const AddTransaction = (): JSX.Element => {
               name="category"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Type</FormLabel>
+                  <FormLabel>Category</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange}>
+                    <Select
+                      onValueChange={(e) => {
+                        field.onChange(e);
+                        form.resetField('subCategory', { keepDirty: false });
+                      }}
+                    >
                       <SelectTrigger className="min-w-min">
                         <SelectValue placeholder="Select a category" />
                       </SelectTrigger>
@@ -214,20 +218,22 @@ const AddTransaction = (): JSX.Element => {
                 </FormItem>
               )}
             />
-            {getSubCategories(watchType).length !== 0 && (
+            {getSubCategories(watchCategory).length !== 0 && (
               <FormField
                 control={form.control}
                 name="subCategory"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Subtype</FormLabel>
+                    <FormLabel>SubCategory</FormLabel>
                     <FormControl>
-                      <Select onValueChange={field.onChange}>
+                      <Select onValueChange={field.onChange} defaultValue="None">
                         <SelectTrigger className="min-w-min">
-                          <SelectValue placeholder="Select a subtype" />
+                          <SelectValue asChild>
+                            <p>{field.value}</p>
+                          </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
-                          {getSubCategories(watchType).map((value: string, index: number) => (
+                          {getSubCategories(watchCategory).map((value: string, index: number) => (
                             <SelectItem key={index} value={value}>
                               {value}
                             </SelectItem>
@@ -245,7 +251,7 @@ const AddTransaction = (): JSX.Element => {
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Account</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger className="w-[240px]">
                         <SelectValue placeholder="Select an account" />
