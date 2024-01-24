@@ -38,7 +38,7 @@ const formSchema = z.object({
   merchant: z.string().min(1).max(50),
   amount: z.coerce.number().nonnegative(),
   category: z.string().min(1).max(50),
-  subCategory: z.string().min(1).max(50),
+  subcategory: z.string().min(1).max(50),
   accountId: z.string().min(1).max(50),
 });
 
@@ -71,7 +71,7 @@ const AddTransaction = (): JSX.Element => {
       merchant: '',
       amount: 0,
       category: 'None',
-      subCategory: 'None',
+      subcategory: 'None',
       accountId: '',
     },
   });
@@ -90,7 +90,7 @@ const AddTransaction = (): JSX.Element => {
     merchant: string;
     amount: number;
     category: string;
-    subCategory: string;
+    subcategory: string;
     accountId: string;
   }
 
@@ -101,7 +101,7 @@ const AddTransaction = (): JSX.Element => {
       amount: values.amount,
       date: values.date,
       category: values.category,
-      subCategory: values.subCategory,
+      subcategory: values.subcategory,
       merchantName: values.merchant,
       pending: false,
       source: 'manual',
@@ -200,7 +200,7 @@ const AddTransaction = (): JSX.Element => {
                     <Select
                       onValueChange={(e) => {
                         field.onChange(e);
-                        form.resetField('subCategory', { keepDirty: false });
+                        form.resetField('subcategory', { keepDirty: false });
                       }}
                     >
                       <SelectTrigger className="min-w-min">
@@ -221,7 +221,7 @@ const AddTransaction = (): JSX.Element => {
             {getSubCategories(watchCategory).length !== 0 && (
               <FormField
                 control={form.control}
-                name="subCategory"
+                name="subcategory"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel>SubCategory</FormLabel>

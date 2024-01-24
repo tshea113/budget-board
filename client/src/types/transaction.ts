@@ -3,7 +3,7 @@ interface Transaction {
   amount: number;
   date: Date;
   category: string;
-  subCategory: string;
+  subcategory: string;
   merchantName: string;
   pending: boolean;
   source: string;
