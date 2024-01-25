@@ -1,4 +1,4 @@
-import { AuthContext } from '@/Misc/AuthProvider';
+import { AuthContext } from '@/components/auth-provider';
 import ResponsiveButton from '@/components/responsive-button';
 import {
   Form,

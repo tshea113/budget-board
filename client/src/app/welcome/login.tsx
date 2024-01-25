@@ -13,7 +13,7 @@ import * as z from 'zod';
 import { useContext } from 'react';
 import ResponsiveButton from '@/components/responsive-button';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '@/Misc/AuthProvider';
+import { AuthContext } from '@/components/auth-provider';
 import axios from 'axios';
 import { type UserCredential } from 'firebase/auth';
 import { firebaseAuth } from '@/lib/firebase';

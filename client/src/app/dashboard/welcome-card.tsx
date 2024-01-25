@@ -1,4 +1,4 @@
-import { AuthContext } from '@/Misc/AuthProvider';
+import { AuthContext } from '@/components/auth-provider';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { firebaseAuth } from '@/lib/firebase';
