@@ -15,12 +15,12 @@ import { useContext, useState } from 'react';
 import ResponsiveButton from '@/components/responsive-button';
 import { AuthContext } from '@/components/auth-provider';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle, LogOut } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import { getMessageForErrorCode } from '@/lib/firebase';
 import request from '@/lib/request';
 
 const Login = (): JSX.Element => {
-  const { currentUserState, loginUser, logOut } = useContext<any>(AuthContext);
+  const { currentUserState, loginUser } = useContext<any>(AuthContext);
   const [alert, setAlert] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -44,14 +44,12 @@ const Login = (): JSX.Element => {
     e.preventDefault();
     setLoading(true);
     const error: string = await loginUser(values.email, values.password);
-    if (currentUserState === null) {
+    if (currentUserState == null) {
       setAlert(getMessageForErrorCode(error));
-    } else if (!currentUserState.emailVerified) {
-      setAlert('Please verify your email before logging in.');
-      logOut();
+    } else {
+      // Need to make sure a user exists before proceeding
+      await request({ url: '/api/user', method: 'GET' });
     }
-    // Need to make sure a user exists before proceeding
-    await request({ url: '/api/user', method: 'GET' });
     setLoading(false);
   };
 

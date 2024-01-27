@@ -12,9 +12,7 @@ const AuthRoute = ({ children }: { children: any }): JSX.Element => {
     return <p>Loading...</p>;
   }
   if (currentUserState != null) {
-    if (currentUserState.emailVerified) {
-      return children;
-    }
+    return children;
   }
   return <Navigate to="/" />;
 };

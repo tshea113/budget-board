@@ -13,8 +13,6 @@ const NoAuthRoute = ({ children }: { children: any }): JSX.Element => {
   }
   if (currentUserState == null) {
     return children;
-  } else if (!currentUserState?.emailVerified) {
-    return children;
   }
 
   return <Navigate to="/dashboard" />;
