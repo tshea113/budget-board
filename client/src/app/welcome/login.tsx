@@ -20,8 +20,9 @@ import { useNavigate } from 'react-router-dom';
 import { getMessageForErrorCode } from '@/lib/firebase';
 
 const Login = (): JSX.Element => {
-  const { currentUserState, loginUser, loading } = useContext<any>(AuthContext);
+  const { currentUserState, loginUser } = useContext<any>(AuthContext);
   const [alert, setAlert] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const formSchema = z.object({
@@ -42,6 +43,7 @@ const Login = (): JSX.Element => {
 
   const submitUserLogin = async (values: z.infer<typeof formSchema>, e: any): Promise<void> => {
     e.preventDefault();
+    setLoading(true);
     const error: string = await loginUser(values.email, values.password);
     if (currentUserState === null) {
       const errorMessage = getMessageForErrorCode(error);
@@ -49,6 +51,7 @@ const Login = (): JSX.Element => {
     } else {
       navigate('/dashboard');
     }
+    setLoading(false);
   };
 
   return (
@@ -94,7 +97,7 @@ const Login = (): JSX.Element => {
             </FormItem>
           )}
         />
-        <ResponsiveButton {...loading} />
+        <ResponsiveButton {...{ loading }} />
       </form>
     </Form>
   );

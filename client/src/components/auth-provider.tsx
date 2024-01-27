@@ -29,7 +29,6 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
   };
 
   const loginUser = async (email: string, password: string): Promise<string> => {
-    setLoading(true);
     let errorCode: string = '';
     try {
       const userCredential: UserCredential = await signInWithEmailAndPassword(
@@ -44,7 +43,6 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
       errorCode = err.code;
       console.log(err.message);
     }
-    setLoading(false);
     return errorCode;
   };
 
