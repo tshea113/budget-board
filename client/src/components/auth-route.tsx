@@ -6,9 +6,6 @@ import { Navigate } from 'react-router-dom';
 const AuthRoute = ({ children }: { children: any }): JSX.Element => {
   const { currentUserState, loading } = useContext<any>(AuthContext);
 
-  console.log(currentUserState);
-  console.log(loading);
-
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (loading) {
     // TODO: Create a better loading screen
