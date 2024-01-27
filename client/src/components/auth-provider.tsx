@@ -47,7 +47,6 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
   };
 
   const logOut = async (): Promise<void> => {
-    setLoading(true);
     await signOut(firebaseAuth);
   };
 
