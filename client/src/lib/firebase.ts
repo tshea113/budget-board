@@ -18,4 +18,17 @@ async function getToken(): Promise<string | undefined> {
   return await firebaseAuth.currentUser?.getIdToken();
 }
 
-export { firebaseApp, firebaseAuth, getToken };
+const getMessageForErrorCode = (errorCode: string): string => {
+  switch (errorCode) {
+    case 'auth/invalid-credential':
+      return 'This email or password is not valid.';
+    case 'auth/user-disabled':
+      return 'This user has been disabled.';
+    case 'auth/user-not-found':
+      return 'User not found.';
+    default:
+      return 'An unknown error occurred.';
+  }
+};
+
+export { firebaseApp, firebaseAuth, getToken, getMessageForErrorCode };

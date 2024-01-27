@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import {
   Form,
   FormControl,
@@ -17,9 +17,10 @@ import { AuthContext } from '@/components/auth-provider';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { getMessageForErrorCode } from '@/lib/firebase';
 
 const Login = (): JSX.Element => {
-  const { user, loginUser, loading } = useContext<any>(AuthContext);
+  const { currentUserState, loginUser, loading } = useContext<any>(AuthContext);
   const [alert, setAlert] = useState<string>('');
   const navigate = useNavigate();
 
@@ -42,9 +43,9 @@ const Login = (): JSX.Element => {
   const submitUserLogin = async (values: z.infer<typeof formSchema>, e: any): Promise<void> => {
     e.preventDefault();
     const error: string = await loginUser(values.email, values.password);
-    if (user === null) {
-      console.log(error);
-      setAlert(error);
+    if (currentUserState === null) {
+      const errorMessage = getMessageForErrorCode(error);
+      setAlert(errorMessage);
     } else {
       navigate('/dashboard');
     }

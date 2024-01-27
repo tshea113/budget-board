@@ -4,13 +4,18 @@ import PropTypes from 'prop-types';
 import { Navigate } from 'react-router-dom';
 
 const NoAuthRoute = ({ children }: { children: any }): JSX.Element => {
-  const { user } = useContext<any>(AuthContext);
+  const { currentUserState, loading } = useContext<any>(AuthContext);
 
-  if (user === null) {
-    return children;
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  if (loading) {
+    // TODO: Create a better loading screen
+    return <p>Loading...</p>;
   }
-
-  return <Navigate to="/dashboard" />;
+  if (currentUserState === null) {
+    return children;
+  } else {
+    return <Navigate to="/dashboard" />;
+  }
 };
 
 NoAuthRoute.propTypes = {

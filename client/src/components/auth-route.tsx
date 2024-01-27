@@ -1,13 +1,20 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useContext } from 'react';
 import { AuthContext } from './auth-provider';
 import PropTypes from 'prop-types';
 import { Navigate } from 'react-router-dom';
 
 const AuthRoute = ({ children }: { children: any }): JSX.Element => {
-  const { user } = useContext<any>(AuthContext);
+  const { currentUserState, loading } = useContext<any>(AuthContext);
 
-  if (user !== null) {
+  console.log(currentUserState);
+  console.log(loading);
+
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  if (loading) {
+    // TODO: Create a better loading screen
+    return <p>Loading...</p>;
+  }
+  if (currentUserState !== null) {
     return children;
   } else {
     return <Navigate to="/" />;

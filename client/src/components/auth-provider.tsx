@@ -4,15 +4,16 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  onAuthStateChanged,
 } from 'firebase/auth';
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { firebaseAuth } from '@/lib/firebase';
 
 export const AuthContext = createContext({});
 
 const AuthProvider = ({ children }: { children: any }): JSX.Element => {
-  const [user, setUser] = useState<User | null>(null);
+  const [currentUserState, setCurrentUserState] = useState<User | null>(firebaseAuth.currentUser);
   const [loading, setLoading] = useState<boolean>(true);
 
   const createUser = (email: string, password: string): any => {
@@ -29,7 +30,7 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
 
   const loginUser = async (email: string, password: string): Promise<string> => {
     setLoading(true);
-    let errorMessage: string = '';
+    let errorCode: string = '';
     try {
       const userCredential: UserCredential = await signInWithEmailAndPassword(
         firebaseAuth,
@@ -37,15 +38,14 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
         password
       );
       if (userCredential !== null || userCredential !== undefined) {
-        console.log(userCredential?.user);
-        setUser(userCredential.user);
+        setCurrentUserState(userCredential.user);
       }
     } catch (err: any) {
-      errorMessage = err.message;
+      errorCode = err.code;
       console.log(err.message);
     }
     setLoading(false);
-    return errorMessage;
+    return errorCode;
   };
 
   const logOut = async (): Promise<void> => {
@@ -53,10 +53,27 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
     await signOut(firebaseAuth);
   };
 
+  useEffect(() => {
+    const unsubscribe = (): void => {
+      onAuthStateChanged(firebaseAuth, (currentUser) => {
+        if (currentUser !== null) {
+          setCurrentUserState(currentUser);
+        } else {
+          setCurrentUserState(null);
+        }
+        setLoading(false);
+      });
+    };
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   const authValue = {
     createUser,
-    user,
-    setUser,
+    currentUserState,
+    setCurrentUserState,
     loginUser,
     logOut,
     loading,
