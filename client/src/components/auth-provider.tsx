@@ -5,6 +5,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  sendEmailVerification,
 } from 'firebase/auth';
 import { createContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
@@ -24,8 +25,10 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
         email,
         password
       );
-      // TODO: Remove this. We should instead show a message that the sign up was successfull.
-      console.log(userCredential);
+
+      if (!userCredential.user.emailVerified && firebaseAuth.currentUser != null) {
+        await sendEmailVerification(firebaseAuth.currentUser);
+      }
     } catch (err: any) {
       errorCode = err.code;
     }

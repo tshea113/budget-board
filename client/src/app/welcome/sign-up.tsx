@@ -81,7 +81,7 @@ const Signup = (): JSX.Element => {
           </Alert>
         )}
         {success.length > 0 && (
-          <Alert>
+          <Alert variant="success">
             <AlertDescription>{success}</AlertDescription>
           </Alert>
         )}

@@ -5,19 +5,15 @@ import { firebaseAuth } from '@/lib/firebase';
 import { useQueryClient } from '@tanstack/react-query';
 import { signOut } from 'firebase/auth';
 import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const WelcomeCard = (): JSX.Element => {
-  const { currentUserState, setCurrentUserState } = useContext<any>(AuthContext);
-  const navigate = useNavigate();
+  const { currentUserState } = useContext<any>(AuthContext);
   const queryClient = useQueryClient();
 
   const Logout = (): void => {
     signOut(firebaseAuth)
       .then(() => {
         queryClient.removeQueries();
-        setCurrentUserState(null);
-        navigate('/');
       })
       .catch((err) => {
         // TODO: Make this an alert dialog

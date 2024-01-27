@@ -11,7 +11,7 @@ const AuthRoute = ({ children }: { children: any }): JSX.Element => {
     // TODO: Create a better loading screen
     return <p>Loading...</p>;
   }
-  if (currentUserState !== null) {
+  if (currentUserState != null) {
     if (currentUserState.emailVerified) {
       return children;
     }
