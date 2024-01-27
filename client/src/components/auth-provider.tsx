@@ -16,16 +16,20 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
   const [currentUserState, setCurrentUserState] = useState<User | null>(firebaseAuth.currentUser);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const createUser = (email: string, password: string): any => {
-    setLoading(true);
-    createUserWithEmailAndPassword(firebaseAuth, email, password)
-      .then((res: UserCredential) => {
-        return res;
-      })
-      .catch((err: Error) => {
-        console.error(err.message);
-        return null;
-      });
+  const createUser = async (email: string, password: string): Promise<string> => {
+    let errorCode: string = '';
+    try {
+      const userCredential: UserCredential = await createUserWithEmailAndPassword(
+        firebaseAuth,
+        email,
+        password
+      );
+      // TODO: Remove this. We should instead show a message that the sign up was successfull.
+      console.log(userCredential);
+    } catch (err: any) {
+      errorCode = err.code;
+    }
+    return errorCode;
   };
 
   const loginUser = async (email: string, password: string): Promise<string> => {
@@ -41,7 +45,6 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
       }
     } catch (err: any) {
       errorCode = err.code;
-      console.log(err.message);
     }
     return errorCode;
   };

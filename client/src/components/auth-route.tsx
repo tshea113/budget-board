@@ -12,10 +12,13 @@ const AuthRoute = ({ children }: { children: any }): JSX.Element => {
     return <p>Loading...</p>;
   }
   if (currentUserState !== null) {
-    return children;
-  } else {
-    return <Navigate to="/" />;
+    // eslint-disable-next-line no-extra-boolean-cast
+    console.log(currentUserState.emailVerified);
+    if (currentUserState.emailVerified) {
+      return children;
+    }
   }
+  return <Navigate to="/" />;
 };
 
 AuthRoute.propTypes = {

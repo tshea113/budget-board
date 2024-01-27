@@ -13,9 +13,12 @@ const NoAuthRoute = ({ children }: { children: any }): JSX.Element => {
   }
   if (currentUserState === null) {
     return children;
-  } else {
-    return <Navigate to="/dashboard" />;
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  } else if (!currentUserState.emailVerified) {
+    return children;
   }
+
+  return <Navigate to="/dashboard" />;
 };
 
 NoAuthRoute.propTypes = {

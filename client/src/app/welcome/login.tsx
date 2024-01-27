@@ -16,14 +16,12 @@ import ResponsiveButton from '@/components/responsive-button';
 import { AuthContext } from '@/components/auth-provider';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { getMessageForErrorCode } from '@/lib/firebase';
 
 const Login = (): JSX.Element => {
   const { currentUserState, loginUser } = useContext<any>(AuthContext);
   const [alert, setAlert] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
 
   const formSchema = z.object({
     email: z
@@ -46,10 +44,9 @@ const Login = (): JSX.Element => {
     setLoading(true);
     const error: string = await loginUser(values.email, values.password);
     if (currentUserState === null) {
-      const errorMessage = getMessageForErrorCode(error);
-      setAlert(errorMessage);
-    } else {
-      navigate('/dashboard');
+      setAlert(getMessageForErrorCode(error));
+    } else if (!currentUserState.emailVerified) {
+      setAlert('Please verify your email before logging in.');
     }
     setLoading(false);
   };
