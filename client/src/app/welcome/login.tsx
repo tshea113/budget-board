@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, type SubmitHandler } from 'react-hook-form';
+import { type SubmitHandler, useForm } from 'react-hook-form';
 import {
   Form,
   FormControl,
@@ -10,37 +11,17 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import * as z from 'zod';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import ResponsiveButton from '@/components/responsive-button';
-import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '@/components/auth-provider';
-import axios from 'axios';
-import { type UserCredential } from 'firebase/auth';
-import { firebaseAuth } from '@/lib/firebase';
-
-const GetUser = (token: string): void => {
-  const headers = { authorization: 'Bearer ' + token };
-  axios({
-    url: import.meta.env.VITE_API_URL + '/api/user',
-    method: 'GET',
-    headers,
-  })
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err: Error) => {
-      console.error(err.message);
-    });
-};
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Login = (): JSX.Element => {
+  const { user, loginUser, loading } = useContext<any>(AuthContext);
+  const [alert, setAlert] = useState<string>('');
   const navigate = useNavigate();
-  const { loginUser, loading } = useContext<any>(AuthContext);
-
-  interface FormValues {
-    email: string;
-    password: string;
-  }
 
   const formSchema = z.object({
     email: z
@@ -58,37 +39,34 @@ const Login = (): JSX.Element => {
     },
   });
 
-  const submitUserLogin: SubmitHandler<FormValues> = (values: z.infer<typeof formSchema>) => {
-    return loginUser(values.email, values.password)
-      .then(async (userCredential: UserCredential) => {
-        if (userCredential !== null) {
-          console.log(userCredential.user);
-          const token = (await firebaseAuth.currentUser?.getIdToken()) ?? '';
-          if (token.length !== 0) {
-            GetUser(token);
-            navigate('/dashboard');
-          } else {
-            console.error('Token not found!');
-          }
-        } else {
-          console.error('User not found!');
-        }
-      })
-      .catch((err: Error) => {
-        console.error(err);
-      });
+  const submitUserLogin = async (values: z.infer<typeof formSchema>, e: any): Promise<void> => {
+    e.preventDefault();
+    const error: string = await loginUser(values.email, values.password);
+    if (user === null) {
+      console.log(error);
+      setAlert(error);
+    } else {
+      navigate('/dashboard');
+    }
   };
 
   return (
     <Form {...form}>
       <h1 className="text-xl font-bold">Login</h1>
       <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          void form.handleSubmit(submitUserLogin)(event);
-        }}
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        onSubmit={form.handleSubmit(async (data, event) => {
+          await submitUserLogin(data, event);
+        })}
         className="space-y-8"
       >
+        {alert.length !== 0 && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{alert}</AlertDescription>
+          </Alert>
+        )}
         <FormField
           control={form.control}
           name="email"

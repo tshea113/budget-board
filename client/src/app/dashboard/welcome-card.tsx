@@ -8,7 +8,7 @@ import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const WelcomeCard = (): JSX.Element => {
-  const { user } = useContext<any>(AuthContext);
+  const { user, setUser } = useContext<any>(AuthContext);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -16,6 +16,7 @@ const WelcomeCard = (): JSX.Element => {
     signOut(firebaseAuth)
       .then(() => {
         queryClient.removeQueries();
+        setUser(null);
         navigate('/');
       })
       .catch((err) => {

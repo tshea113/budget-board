@@ -5,17 +5,13 @@ import PropTypes from 'prop-types';
 import { Navigate } from 'react-router-dom';
 
 const AuthRoute = ({ children }: { children: any }): JSX.Element => {
-  const { loading, user } = useContext<any>(AuthContext);
+  const { user } = useContext<any>(AuthContext);
 
-  if (loading) {
-    return <span className="loading loading-dots loading-lg"></span>;
-  }
-
-  if (user) {
+  if (user !== null) {
     return children;
+  } else {
+    return <Navigate to="/" />;
   }
-
-  return <Navigate to="/" />;
 };
 
 AuthRoute.propTypes = {

@@ -1,5 +1,6 @@
 import { AuthContext } from '@/components/auth-provider';
 import ResponsiveButton from '@/components/responsive-button';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
   Form,
   FormControl,
@@ -11,12 +12,14 @@ import {
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type UserCredential } from 'firebase/auth';
-import { useContext } from 'react';
+import { AlertCircle } from 'lucide-react';
+import { useContext, useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 const Signup = (): JSX.Element => {
   const { createUser } = useContext<any>(AuthContext);
+  const [alert, setAlert] = useState('');
 
   const formSchema = z
     .object({
@@ -51,9 +54,13 @@ const Signup = (): JSX.Element => {
   }
 
   const onSubmit = (values: z.infer<typeof formSchema>): SubmitHandler<FormValues> => {
-    return createUser(values.email, values.password).then((result: UserCredential) => {
-      console.log(result);
-    });
+    return createUser(values.email, values.password)
+      .then((result: UserCredential) => {
+        console.log(result);
+      })
+      .catch((err: Error) => {
+        setAlert(err.message);
+      });
   };
 
   return (
@@ -66,6 +73,13 @@ const Signup = (): JSX.Element => {
         }}
         className="space-y-8"
       >
+        {alert.length > 0 && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{alert}</AlertDescription>
+          </Alert>
+        )}
         <FormField
           control={form.control}
           name="email"

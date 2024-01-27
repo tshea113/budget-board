@@ -2,11 +2,10 @@ import {
   type User,
   type UserCredential,
   createUserWithEmailAndPassword,
-  onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
 } from 'firebase/auth';
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { firebaseAuth } from '@/lib/firebase';
 
@@ -28,17 +27,25 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
       });
   };
 
-  const loginUser = async (email: string, password: string): Promise<UserCredential | null> => {
+  const loginUser = async (email: string, password: string): Promise<string> => {
     setLoading(true);
+    let errorMessage: string = '';
     try {
-      const user = await signInWithEmailAndPassword(firebaseAuth, email, password);
-      setLoading(false);
-      return user;
-    } catch (err) {
-      console.error(err);
-      setLoading(false);
-      return null;
+      const userCredential: UserCredential = await signInWithEmailAndPassword(
+        firebaseAuth,
+        email,
+        password
+      );
+      if (userCredential !== null || userCredential !== undefined) {
+        console.log(userCredential?.user);
+        setUser(userCredential.user);
+      }
+    } catch (err: any) {
+      errorMessage = err.message;
+      console.log(err.message);
     }
+    setLoading(false);
+    return errorMessage;
   };
 
   const logOut = async (): Promise<void> => {
@@ -46,20 +53,10 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
     await signOut(firebaseAuth);
   };
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(firebaseAuth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
-
   const authValue = {
     createUser,
     user,
+    setUser,
     loginUser,
     logOut,
     loading,
