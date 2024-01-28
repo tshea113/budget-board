@@ -12,7 +12,7 @@ const EmailVerified = (): JSX.Element | null => {
       <Alert variant="destructive">
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>
-          Before you can get started you will need to check your email for a validation link.
+          Before you can get started, you will need to check your email for a validation link.
         </AlertDescription>
       </Alert>
     );
