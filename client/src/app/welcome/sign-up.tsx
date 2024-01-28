@@ -21,7 +21,6 @@ const Signup = (): JSX.Element => {
   const { createUser } = useContext<any>(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [alert, setAlert] = useState<string>('');
-  const [success, setSuccess] = useState<string>('');
 
   const formSchema = z
     .object({
@@ -57,9 +56,6 @@ const Signup = (): JSX.Element => {
     if (error.length !== 0) {
       setAlert(getMessageForErrorCode(error));
     }
-    setSuccess(
-      'Account successfully created. Please check your email for verification before logging in.'
-    );
     setLoading(false);
   };
 
@@ -78,11 +74,6 @@ const Signup = (): JSX.Element => {
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error</AlertTitle>
             <AlertDescription>{alert}</AlertDescription>
-          </Alert>
-        )}
-        {success.length > 0 && (
-          <Alert variant="success">
-            <AlertDescription>{success}</AlertDescription>
           </Alert>
         )}
         <FormField
