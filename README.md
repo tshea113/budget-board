@@ -1,1 +1,1 @@
-# money-minder
+# Budget Board
