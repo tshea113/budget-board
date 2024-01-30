@@ -22,8 +22,8 @@ services:
       context: .
       dockerfile: ./client/Dockerfile
     volumes:
-      - ./certs/budgetboard.net.crt:/etc/ssl/certs/budgetboard.net.crt:ro
-      - ./certs/budgetboard.net.key:/etc/ssl/private/budgetboard.net.key:ro
+      - .client/certs/budgetboard.net.crt:/etc/ssl/certs/budgetboard.net.crt:ro
+      - .client/certs/budgetboard.net.key:/etc/ssl/private/budgetboard.net.key:ro
     ports:
       - 80:80
     depends_on:
