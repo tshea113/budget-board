@@ -21,7 +21,8 @@ services:
     build:
       context: .
       dockerfile: ./client/Dockerfile
-    ports:
-      - 80:80
+    volumes:
+      - ./client/certs/budgetboard.net.crt:/etc/ssl/certs/budgetboard.net.crt:ro
+      - ./client/certs/budgetboard.net.key:/etc/ssl/private/budgetboard.net.key:ro
     depends_on:
       - backend
