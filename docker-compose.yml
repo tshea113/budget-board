@@ -24,7 +24,5 @@ services:
     volumes:
       - ./client/certs/budgetboard.net.crt:/etc/ssl/certs/budgetboard.net.crt:ro
       - ./client/certs/budgetboard.net.key:/etc/ssl/private/budgetboard.net.key:ro
-    ports:
-      - 80:80
     depends_on:
       - backend
