@@ -1,4 +1,4 @@
-﻿namespace MoneyMinder.Database.Models;
+﻿namespace BudgetBoard.Database.Models;
 public class User
 {
     public Guid ID { get; set; }

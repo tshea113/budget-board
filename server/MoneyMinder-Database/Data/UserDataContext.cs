@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MoneyMinder.Database.Models;
+﻿using BudgetBoard.Database.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace MoneyMinder.Database.Data
+namespace BudgetBoard.Database.Data
 {
     public class UserDataContext : DbContext
     {

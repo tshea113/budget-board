@@ -1,4 +1,4 @@
-﻿namespace MoneyMinder.Models
+﻿namespace BudgetBoard.Models
 {
     public class UserDetails
     {
