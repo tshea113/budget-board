@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="MoneyMinder-Database\MoneyMinder.Database.csproj" />
+    <ProjectReference Include="MoneyMinder-Database\BudgetBoard.Database.csproj" />
   </ItemGroup>
 
 </Project>
