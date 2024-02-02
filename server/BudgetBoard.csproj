@@ -4,16 +4,16 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>MoneyMinder</RootNamespace>
+    <RootNamespace>BudgetBoard</RootNamespace>
     <StaticWebAssetsEnabled>false</StaticWebAssetsEnabled>
     <UserSecretsId>23b824e9-5a44-4fa5-b8f2-e84a19a59819</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="MoneyMinder-Database\**" />
-    <Content Remove="MoneyMinder-Database\**" />
-    <EmbeddedResource Remove="MoneyMinder-Database\**" />
-    <None Remove="MoneyMinder-Database\**" />
+    <Compile Remove="BudgetBoard-Database\**" />
+    <Content Remove="BudgetBoard-Database\**" />
+    <EmbeddedResource Remove="BudgetBoard-Database\**" />
+    <None Remove="BudgetBoard-Database\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="MoneyMinder-Database\BudgetBoard.Database.csproj" />
+    <ProjectReference Include="BudgetBoard-Database\BudgetBoard.Database.csproj" />
   </ItemGroup>
 
 </Project>
