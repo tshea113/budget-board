@@ -4,16 +4,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MoneyMinder.Database.Data;
+using BudgetBoard.Database.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace MoneyMinder.Database.Migrations
+namespace BudgetBoard.Database.Migrations
 {
     [DbContext(typeof(UserDataContext))]
-    [Migration("20240124031230_ChangeToOneWord")]
-    partial class ChangeToOneWord
+    [Migration("20231218061703_InitialDatabase")]
+    partial class InitialDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace MoneyMinder.Database.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("MoneyMinder.Database.Models.Account", b =>
+            modelBuilder.Entity("BudgetBoard.Database.Models.Account", b =>
                 {
                     b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
@@ -39,13 +39,11 @@ namespace MoneyMinder.Database.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Subtype")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Subtype")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("UserID")
                         .HasColumnType("uuid");
@@ -57,7 +55,7 @@ namespace MoneyMinder.Database.Migrations
                     b.ToTable("Account", (string)null);
                 });
 
-            modelBuilder.Entity("MoneyMinder.Database.Models.Transaction", b =>
+            modelBuilder.Entity("BudgetBoard.Database.Models.Transaction", b =>
                 {
                     b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
@@ -66,8 +64,8 @@ namespace MoneyMinder.Database.Migrations
                     b.Property<Guid>("AccountID")
                         .HasColumnType("uuid");
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
+                    b.Property<int>("Amount")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Category")
                         .HasColumnType("text");
@@ -85,9 +83,6 @@ namespace MoneyMinder.Database.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Subcategory")
-                        .HasColumnType("text");
-
                     b.HasKey("ID");
 
                     b.HasIndex("AccountID");
@@ -95,7 +90,7 @@ namespace MoneyMinder.Database.Migrations
                     b.ToTable("Transaction", (string)null);
                 });
 
-            modelBuilder.Entity("MoneyMinder.Database.Models.User", b =>
+            modelBuilder.Entity("BudgetBoard.Database.Models.User", b =>
                 {
                     b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
@@ -110,34 +105,30 @@ namespace MoneyMinder.Database.Migrations
                     b.ToTable("User", (string)null);
                 });
 
-            modelBuilder.Entity("MoneyMinder.Database.Models.Account", b =>
+            modelBuilder.Entity("BudgetBoard.Database.Models.Account", b =>
                 {
-                    b.HasOne("MoneyMinder.Database.Models.User", "User")
+                    b.HasOne("BudgetBoard.Database.Models.User", null)
                         .WithMany("Accounts")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MoneyMinder.Database.Models.Transaction", b =>
+            modelBuilder.Entity("BudgetBoard.Database.Models.Transaction", b =>
                 {
-                    b.HasOne("MoneyMinder.Database.Models.Account", "Account")
+                    b.HasOne("BudgetBoard.Database.Models.Account", null)
                         .WithMany("Transactions")
                         .HasForeignKey("AccountID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Account");
                 });
 
-            modelBuilder.Entity("MoneyMinder.Database.Models.Account", b =>
+            modelBuilder.Entity("BudgetBoard.Database.Models.Account", b =>
                 {
                     b.Navigation("Transactions");
                 });
 
-            modelBuilder.Entity("MoneyMinder.Database.Models.User", b =>
+            modelBuilder.Entity("BudgetBoard.Database.Models.User", b =>
                 {
                     b.Navigation("Accounts");
                 });

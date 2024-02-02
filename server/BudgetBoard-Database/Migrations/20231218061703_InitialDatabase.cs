@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace MoneyMinder.Database.Migrations
+namespace BudgetBoard.Database.Migrations
 {
     /// <inheritdoc />
     public partial class InitialDatabase : Migration

@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace MoneyMinder.Database.Migrations
+namespace BudgetBoard.Database.Migrations
 {
     /// <inheritdoc />
     public partial class UpdateTypeType : Migration

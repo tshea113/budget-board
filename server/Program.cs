@@ -2,7 +2,7 @@ using FirebaseAdmin;
 using FirebaseAdminAuthentication.DependencyInjection.Extensions;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.EntityFrameworkCore;
-using MoneyMinder.Database.Data;
+using BudgetBoard.Database.Data;
 using System.Text.Json.Serialization;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";

@@ -2,27 +2,27 @@
 
 #nullable disable
 
-namespace MoneyMinder.Database.Migrations
+namespace BudgetBoard.Database.Migrations
 {
     /// <inheritdoc />
-    public partial class AddSubCategory : Migration
+    public partial class ChangeToOneWord : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
+            migrationBuilder.RenameColumn(
                 name: "SubCategory",
                 table: "Transaction",
-                type: "text",
-                nullable: true);
+                newName: "Subcategory");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "SubCategory",
-                table: "Transaction");
+            migrationBuilder.RenameColumn(
+                name: "Subcategory",
+                table: "Transaction",
+                newName: "SubCategory");
         }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MoneyMinder.Database.Data;
-using MoneyMinder.Database.Models;
+using BudgetBoard.Database.Data;
+using BudgetBoard.Database.Models;
 
-namespace MoneyMinder.Controllers;
+namespace BudgetBoard.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

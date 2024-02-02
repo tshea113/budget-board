@@ -1,4 +1,4 @@
-﻿namespace MoneyMinder.Database.Models;
+﻿namespace BudgetBoard.Database.Models;
 
 public class Account
 {

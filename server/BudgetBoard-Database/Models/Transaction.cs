@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MoneyMinder.Database.Models;
+namespace BudgetBoard.Database.Models;
 
 public class Transaction
 {
