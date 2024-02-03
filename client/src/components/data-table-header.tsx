@@ -1,5 +1,6 @@
-import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon } from 'lucide-react';
+import { ArrowDownIcon, ArrowUpIcon } from '@radix-ui/react-icons';
 import { Button } from './ui/button';
+import { ArrowUpDownIcon } from 'lucide-react';
 
 const DataTableHeader = ({ column, label }: { column: any; label: string }): JSX.Element => {
   let sortedIcon = <ArrowUpDownIcon className="ml-2 h-4 w-4" />;
