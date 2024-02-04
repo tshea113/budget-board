@@ -30,6 +30,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { type Account } from '@/types/account';
+import { getSubCategories } from '@/lib/transactions';
 
 const formSchema = z.object({
   date: z.date({
@@ -80,10 +81,6 @@ const AddTransaction = (): JSX.Element => {
     control: form.control,
     name: 'category',
   });
-
-  const getSubCategories = (category: string): string[] => {
-    return SubCategory[Category.indexOf(category)] ?? [];
-  };
 
   interface FormValues {
     date: Date;
