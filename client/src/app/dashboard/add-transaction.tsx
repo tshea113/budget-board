@@ -270,7 +270,7 @@ const AddTransaction = (): JSX.Element => {
               )}
             />
           </div>
-          <ResponsiveButton loading={mutation.isPending} />
+          <ResponsiveButton loading={mutation.isPending}>Submit</ResponsiveButton>
         </form>
       </Form>
     </Card>

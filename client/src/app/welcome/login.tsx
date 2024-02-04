@@ -96,7 +96,7 @@ const Login = (): JSX.Element => {
             </FormItem>
           )}
         />
-        <ResponsiveButton {...{ loading }} />
+        <ResponsiveButton {...{ loading }}>Submit</ResponsiveButton>
       </form>
     </Form>
   );

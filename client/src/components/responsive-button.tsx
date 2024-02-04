@@ -1,7 +1,13 @@
 import { Loader2 } from 'lucide-react';
 import { Button } from './ui/button';
 
-const ResponsiveButton = ({ loading }: { loading: boolean }): JSX.Element => {
+const ResponsiveButton = ({
+  children,
+  loading,
+}: {
+  children: JSX.Element | string;
+  loading: boolean;
+}): JSX.Element => {
   if (loading) {
     return (
       <Button disabled>
@@ -10,7 +16,7 @@ const ResponsiveButton = ({ loading }: { loading: boolean }): JSX.Element => {
       </Button>
     );
   } else {
-    return <Button type="submit">Submit</Button>;
+    return <Button type="submit">{children}</Button>;
   }
 };
 
