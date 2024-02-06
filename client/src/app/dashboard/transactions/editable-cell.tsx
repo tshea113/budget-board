@@ -12,17 +12,19 @@ import { SubCategory } from '@/types/transaction';
 import { type Column, type Row, type Table } from '@tanstack/react-table';
 import React from 'react';
 
-const EditableCell = ({
+interface EditableCellProps<TData> {
+  getValue: () => any;
+  column: Column<TData>;
+  row: Row<TData>;
+  table: Table<TData>;
+}
+
+const EditableCell = <TData,>({
   getValue,
   column,
   row,
   table,
-}: {
-  getValue: () => any;
-  column: Column<any>;
-  row: Row<any>;
-  table: Table<any>;
-}): JSX.Element => {
+}: EditableCellProps<TData>): JSX.Element => {
   const initialValue = getValue() as string;
   const [value, setValue] = React.useState<string>(initialValue);
 
@@ -43,7 +45,7 @@ const EditableCell = ({
 
   if (row.getIsSelected()) {
     if (column.columnDef.meta?.type === 'date') {
-      return <DatePicker value={getValue() as Date} onChange={() => {}} />;
+      return <DatePicker value={getValue() as Date} />;
     } else if (column.columnDef.meta?.type === 'select') {
       let options: any = column.columnDef.meta?.options;
       if (column.columnDef.meta?.options === SubCategory) {

@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
-import { Category, SubCategory, type NewTransaction } from '@/types/transaction';
+import { Category, type NewTransaction } from '@/types/transaction';
 import request from '@/lib/request';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getAccounts } from '@/lib/accounts';
@@ -267,7 +267,9 @@ const AddTransaction = (): JSX.Element => {
               )}
             />
           </div>
-          <ResponsiveButton loading={mutation.isPending}>Submit</ResponsiveButton>
+          <ResponsiveButton loading={mutation.isPending} onClick={() => {}}>
+            Submit
+          </ResponsiveButton>
         </form>
       </Form>
     </Card>

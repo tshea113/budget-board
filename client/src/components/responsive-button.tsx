@@ -1,15 +1,13 @@
 import { Loader2 } from 'lucide-react';
 import { Button } from './ui/button';
 
-const ResponsiveButton = ({
-  children,
-  loading,
-  onClick,
-}: {
+interface ResponsiveButtonProps {
   children: JSX.Element | string;
   loading: boolean;
   onClick: () => void;
-}): JSX.Element => {
+}
+
+const ResponsiveButton = ({ children, loading, onClick }: ResponsiveButtonProps): JSX.Element => {
   if (loading) {
     return (
       <Button disabled>

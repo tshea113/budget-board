@@ -6,7 +6,11 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 
-const DatePicker = ({ value, onChange }: { value: Date; onChange: () => void }): JSX.Element => {
+interface DatePickerProps {
+  value: Date;
+}
+
+const DatePicker = ({ value }: DatePickerProps): JSX.Element => {
   const [date, setDate] = React.useState<any>(value);
 
   return (
