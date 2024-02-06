@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BudgetBoard.Database.Data;
+using BudgetBoard.Database.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BudgetBoard.Database.Data;
-using BudgetBoard.Database.Models;
 
 namespace BudgetBoard.Controllers;
 
@@ -139,10 +139,12 @@ public class TransactionController : ControllerBase
             return NotFound();
         }
 
-        if (user.Accounts.Single(a => a.ID == transaction.AccountID) == null)
-        {
-            return BadRequest();
-        }
+        /*        if (user.Accounts.Single(a => a.ID == transaction.AccountID) == null)
+                {
+                    return BadRequest();
+                }*/
+
+        Console.WriteLine(newTransaction.ToString());
 
         transaction.Amount = newTransaction.Amount;
         transaction.Date = newTransaction.Date;
