@@ -13,6 +13,9 @@ interface SubmitCellProps<TData> {
 
 const SubmitCell = <TData,>({ row, table }: SubmitCellProps<TData>): JSX.Element => {
   const queryClient = useQueryClient();
+
+  const tableMeta = table.options.meta;
+
   const mutation = useMutation({
     mutationFn: async (newTransaction: Transaction) => {
       return await request({
@@ -24,6 +27,9 @@ const SubmitCell = <TData,>({ row, table }: SubmitCellProps<TData>): JSX.Element
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['transactions'] });
       row.toggleSelected(false);
+    },
+    onError: (error: Error) => {
+      tableMeta?.setErrorInner(error.message);
     },
   });
 

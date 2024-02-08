@@ -23,6 +23,7 @@ import DataTablePagination from '@/components/data-table-pagination';
 interface DataTableProps<TData, TValue> {
   columns: Array<ColumnDef<TData, TValue>>;
   data: TData[];
+  setError: (error: string) => void;
 }
 
 declare module '@tanstack/react-table' {
@@ -30,12 +31,16 @@ declare module '@tanstack/react-table' {
   export interface TableMeta<TData> {
     updateData: (rowIndex: number, columnId: string, value: string) => void;
     revertData: (rowIndex: number, revert: boolean) => void;
+    setErrorInner: (newError: string) => void;
   }
 }
+
+// TODO: Rows sort when data is edited. Need to pause sorting while edit is active.
 
 const DataTable = <TData, TValue>({
   columns,
   data,
+  setError,
 }: DataTableProps<TData, TValue>): JSX.Element => {
   const [tableData, setTableData] = React.useState<TData[]>(data);
   const [originalData, setOriginalData] = React.useState<TData[]>(data);
@@ -52,9 +57,9 @@ const DataTable = <TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     autoResetPageIndex: false,
     onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
     enableRowSelection: true,
     enableMultiRowSelection: false,
     onRowSelectionChange: setRowSelection,
@@ -86,6 +91,9 @@ const DataTable = <TData, TValue>({
             old.map((row, index) => (index === rowIndex ? data[rowIndex] : row))
           );
         }
+      },
+      setErrorInner: (newError: string) => {
+        setError(newError);
       },
     },
   });

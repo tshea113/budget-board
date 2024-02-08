@@ -139,12 +139,10 @@ public class TransactionController : ControllerBase
             return NotFound();
         }
 
-        /*        if (user.Accounts.Single(a => a.ID == transaction.AccountID) == null)
-                {
-                    return BadRequest();
-                }*/
-
-        Console.WriteLine(newTransaction.ToString());
+        if (user.Accounts.Single(a => a.ID == transaction.AccountID) == null)
+        {
+            return BadRequest();
+        }
 
         transaction.Amount = newTransaction.Amount;
         transaction.Date = newTransaction.Date;

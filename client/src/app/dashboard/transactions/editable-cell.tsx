@@ -43,9 +43,14 @@ const EditableCell = <TData,>({
     tableMeta?.updateData(row.index, column.id, newValue);
   };
 
+  const onDatePick = (day: Date): void => {
+    setValue(day.toISOString());
+    tableMeta?.updateData(row.index, column.id, day.toISOString());
+  };
+
   if (row.getIsSelected()) {
     if (column.columnDef.meta?.type === 'date') {
-      return <DatePicker value={getValue() as Date} />;
+      return <DatePicker value={value as unknown as Date} setDatePick={onDatePick} />;
     } else if (column.columnDef.meta?.type === 'select') {
       let options: any = column.columnDef.meta?.options;
       if (column.columnDef.meta?.options === SubCategory) {
@@ -78,6 +83,7 @@ const EditableCell = <TData,>({
       );
     }
   }
+
   let displayValue: string = getValue() as string;
   if (column.columnDef.meta?.type === 'date') {
     displayValue = formatDate(getValue() as Date);
