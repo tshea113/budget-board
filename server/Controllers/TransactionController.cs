@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BudgetBoard.Database.Data;
+using BudgetBoard.Database.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BudgetBoard.Database.Data;
-using BudgetBoard.Database.Models;
 
 namespace BudgetBoard.Controllers;
 

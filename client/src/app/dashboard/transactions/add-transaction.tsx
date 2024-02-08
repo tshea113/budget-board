@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
-import { Category, SubCategory, type NewTransaction } from '@/types/transaction';
+import { Category, type NewTransaction } from '@/types/transaction';
 import request from '@/lib/request';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getAccounts } from '@/lib/accounts';
@@ -30,6 +30,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { type Account } from '@/types/account';
+import { getSubCategories } from '@/lib/transactions';
 
 const formSchema = z.object({
   date: z.date({
@@ -80,10 +81,6 @@ const AddTransaction = (): JSX.Element => {
     control: form.control,
     name: 'category',
   });
-
-  const getSubCategories = (category: string): string[] => {
-    return SubCategory[Category.indexOf(category)] ?? [];
-  };
 
   interface FormValues {
     date: Date;
@@ -270,7 +267,9 @@ const AddTransaction = (): JSX.Element => {
               )}
             />
           </div>
-          <ResponsiveButton loading={mutation.isPending} />
+          <ResponsiveButton loading={mutation.isPending} onClick={() => {}}>
+            Submit
+          </ResponsiveButton>
         </form>
       </Form>
     </Card>

@@ -181,7 +181,9 @@ const AddAccount = (): JSX.Element => {
               />
             )}
           </div>
-          <ResponsiveButton loading={mutation.isPending} />
+          <ResponsiveButton loading={mutation.isPending} onClick={() => {}}>
+            Submit
+          </ResponsiveButton>
         </form>
       </Form>
     </Card>

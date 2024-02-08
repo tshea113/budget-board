@@ -1,22 +1,19 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { formatDate, getTransactions } from '@/lib/transactions';
+import { getTransactions } from '@/lib/transactions';
 import { useQuery } from '@tanstack/react-query';
 import AddTransaction from './add-transaction';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import EmailVerified from '../email-verified';
+import DataTable from './data-table';
+import { columns } from './columns';
 import { type Transaction } from '@/types/transaction';
-import EmailVerified from './email-verified';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AlertCircle } from 'lucide-react';
 
 const Transactions = (): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
+  const [transactionError, setTransactionError] = useState<string>('');
   const { isPending, isError, data, error } = useQuery({
     queryKey: ['transactions'],
     queryFn: async () => {
@@ -39,6 +36,14 @@ const Transactions = (): JSX.Element => {
     setIsOpen((isOpen) => !isOpen);
   };
 
+  const translateError = (error: string): string => {
+    if (error === 'Network Error') {
+      return 'There was an error connecting to the server. Your data was not updated.';
+    } else {
+      return 'An unknown error occurred. Please try again later.';
+    }
+  };
+
   return (
     <div>
       <EmailVerified />
@@ -51,33 +56,20 @@ const Transactions = (): JSX.Element => {
         </CardHeader>
         {isOpen && <AddTransaction />}
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Merchant</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Subcategory</TableHead>
-                <TableHead>Amount</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.data.map((transaction: Transaction) => (
-                <TableRow key={transaction.id}>
-                  <TableCell>{formatDate(transaction.date)}</TableCell>
-                  <TableCell>{transaction.merchantName}</TableCell>
-                  <TableCell>{transaction.category}</TableCell>
-                  <TableCell>{transaction.subcategory}</TableCell>
-                  <TableCell>
-                    {transaction.amount?.toLocaleString('en-US', {
-                      style: 'currency',
-                      currency: 'USD',
-                    })}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          {transactionError.length > 0 && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{translateError(transactionError)}</AlertDescription>
+            </Alert>
+          )}
+          <DataTable
+            columns={columns}
+            data={data.data.sort((a: Transaction, b: Transaction) => {
+              // Sort the data by date in decending order
+              return new Date(b.date).getTime() - new Date(a.date).getTime();
+            })}
+            setError={setTransactionError}
+          />
         </CardContent>
       </Card>
     </div>

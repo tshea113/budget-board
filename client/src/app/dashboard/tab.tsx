@@ -1,7 +1,7 @@
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TabsContent } from '@radix-ui/react-tabs';
 import Dashboard from './dashboard';
-import Transactions from './transactions';
+import Transactions from './transactions/transactions';
 
 const Tab = (): JSX.Element => {
   return (
