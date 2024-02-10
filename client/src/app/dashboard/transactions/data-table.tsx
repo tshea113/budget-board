@@ -35,6 +35,7 @@ declare module '@tanstack/react-table' {
     updateData: (rowIndex: number, columnId: string, value: string) => void;
     revertData: (rowIndex: number, revert: boolean) => void;
     setErrorInner: (newError: string) => void;
+    isPending: boolean;
   }
 }
 
@@ -56,7 +57,7 @@ const DataTable = <TData, TValue>({
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
   const queryClient = useQueryClient();
-  const mutation = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: async (newTransaction: Transaction) => {
       return await request({
         url: '/api/transaction',
@@ -88,6 +89,7 @@ const DataTable = <TData, TValue>({
       rowSelection,
     },
     meta: {
+      isPending,
       updateData: (rowIndex: number, columnId: string, value: string) => {
         let newRow: TData | undefined;
         setTableData((old) =>
@@ -103,7 +105,7 @@ const DataTable = <TData, TValue>({
           })
         );
         if (newRow) {
-          mutation.mutate(newRow as unknown as Transaction);
+          mutate(newRow as unknown as Transaction);
         }
       },
       revertData: (rowIndex: number, revert: boolean) => {
