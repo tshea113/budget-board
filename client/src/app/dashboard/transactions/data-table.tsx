@@ -19,6 +19,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import DataTablePagination from '@/components/data-table-pagination';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { type Transaction } from '@/types/transaction';
+import request from '@/lib/request';
 
 interface DataTableProps<TData, TValue> {
   columns: Array<ColumnDef<TData, TValue>>;
@@ -32,6 +35,7 @@ declare module '@tanstack/react-table' {
     updateData: (rowIndex: number, columnId: string, value: string) => void;
     revertData: (rowIndex: number, revert: boolean) => void;
     setErrorInner: (newError: string) => void;
+    isPending: boolean;
   }
 }
 
@@ -52,6 +56,23 @@ const DataTable = <TData, TValue>({
   ]);
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
+  const queryClient = useQueryClient();
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (newTransaction: Transaction) => {
+      return await request({
+        url: '/api/transaction',
+        method: 'PUT',
+        data: newTransaction,
+      });
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['transactions'] });
+    },
+    onError: (error: Error) => {
+      setError(error.message);
+    },
+  });
+
   const table = useReactTable({
     data: tableData,
     columns,
@@ -68,18 +89,24 @@ const DataTable = <TData, TValue>({
       rowSelection,
     },
     meta: {
+      isPending,
       updateData: (rowIndex: number, columnId: string, value: string) => {
+        let newRow: TData | undefined;
         setTableData((old) =>
           old.map((row, index) => {
             if (index === rowIndex) {
-              return {
+              newRow = {
                 ...old[rowIndex],
                 [columnId]: value,
               };
+              return newRow;
             }
             return row;
           })
         );
+        if (newRow) {
+          mutate(newRow as unknown as Transaction);
+        }
       },
       revertData: (rowIndex: number, revert: boolean) => {
         if (revert) {
