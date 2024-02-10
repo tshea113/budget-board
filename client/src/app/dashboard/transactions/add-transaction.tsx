@@ -148,6 +148,7 @@ const AddTransaction = (): JSX.Element => {
                         mode="single"
                         selected={field.value}
                         onDayClick={field.onChange}
+                        defaultMonth={field.value}
                         disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
                         initialFocus
                       />

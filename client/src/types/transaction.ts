@@ -62,13 +62,12 @@ const SubCategory: string[][] = [
   ],
   [
     // Entertainment
-    'Amusement',
+    'Activities',
     'Arts',
-    'Gas & Fuel',
-    'Parking',
-    'Public Transportation',
-    'Ride Share',
-    'Service & Parts',
+    'Movies',
+    'Music',
+    'Books',
+    'Games',
   ],
   [
     // Fees & Charges
@@ -88,7 +87,6 @@ const SubCategory: string[][] = [
     // Food & Dining
     'Alcohol & Bars',
     'Coffee Shops',
-    'Fast Food',
     'Food Delivery',
     'Groceries',
     'Restaurants',
@@ -153,16 +151,16 @@ const SubCategory: string[][] = [
   ],
   [
     // Pets
-    'Fet Food & Supplies',
+    'Pet Food & Supplies',
     'Pet Grooming',
     'Veterinary',
   ],
   [
     // Shopping
-    'Books',
     'Clothing',
     'Electronics & Software',
     'Hobbies',
+    'Household',
   ],
   [
     // Taxes
