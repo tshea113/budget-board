@@ -56,10 +56,6 @@ const DataTable = <TData, TValue>({
   ]);
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
-  React.useEffect(() => {
-    setTableData(data);
-  }, [data]);
-
   const queryClient = useQueryClient();
   const { mutate, isPending } = useMutation({
     mutationFn: async (newTransaction: Transaction) => {
