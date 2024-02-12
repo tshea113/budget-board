@@ -6,6 +6,7 @@ import AuthProvider from './components/auth-provider';
 import AuthRoute from './components/auth-route';
 import NoAuthRoute from './components/no-auth-route';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ThemeProvider } from './components/theme-provicer';
 
 const router = createBrowserRouter([
   {
@@ -31,11 +32,13 @@ const queryClient = new QueryClient();
 
 const App = (): JSX.Element => {
   return (
-    <AuthProvider>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
-    </AuthProvider>
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 };
 
