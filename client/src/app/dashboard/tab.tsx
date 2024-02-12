@@ -6,7 +6,7 @@ import Transactions from './transactions/transactions';
 const Tab = (): JSX.Element => {
   return (
     <Tabs defaultValue="dashboard">
-      <TabsList className="mb-2 flex w-auto">
+      <TabsList className="mx-1 mb-2 flex w-auto">
         <TabsTrigger className="flex-grow" value="dashboard">
           Dashboard
         </TabsTrigger>
