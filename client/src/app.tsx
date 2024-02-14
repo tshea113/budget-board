@@ -6,7 +6,7 @@ import AuthProvider from './components/auth-provider';
 import AuthRoute from './components/auth-route';
 import NoAuthRoute from './components/no-auth-route';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ThemeProvider } from './components/theme-provicer';
+import { ThemeProvider } from './components/theme-provider';
 
 const router = createBrowserRouter([
   {
