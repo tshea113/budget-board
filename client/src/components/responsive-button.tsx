@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 interface ResponsiveButtonProps {
   children: JSX.Element | string;
   loading: boolean;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const ResponsiveButton = ({ children, loading, onClick }: ResponsiveButtonProps): JSX.Element => {

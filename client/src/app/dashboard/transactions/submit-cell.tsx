@@ -48,7 +48,7 @@ const SubmitCell = <TData,>({ row, table }: SubmitCellProps<TData>): JSX.Element
         <Button onClick={cancelChanges}>
           <Cross2Icon className="h-5 w-5" />
         </Button>
-        <ResponsiveButton loading={mutation.isPending} onClick={submitChanges}>
+        <ResponsiveButton loading={mutation.isPending}>
           <CheckIcon className="h-5 w-5" />
         </ResponsiveButton>
       </div>
