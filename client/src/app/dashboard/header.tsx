@@ -1,4 +1,5 @@
 import { AuthContext } from '@/components/auth-provider';
+import SheetItem from '@/components/sheet-item';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -12,6 +13,7 @@ import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { useQueryClient } from '@tanstack/react-query';
 import { signOut } from 'firebase/auth';
 import React from 'react';
+import AccountSettings from './account-settings';
 
 const Header = (): JSX.Element => {
   const { currentUserState } = React.useContext<any>(AuthContext);
@@ -40,9 +42,12 @@ const Header = (): JSX.Element => {
               <AvatarFallback>TS</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
+          <DropdownMenuContent align="end">
             <DropdownMenuLabel>{currentUserState.email}</DropdownMenuLabel>
             <DropdownMenuSeparator />
+            <SheetItem triggerChildren={<p>Account</p>} side={'right'}>
+              <AccountSettings />
+            </SheetItem>
             <DropdownMenuItem onClick={Logout}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
