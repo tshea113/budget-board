@@ -1,8 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getTransactions } from '@/lib/transactions';
 import { useQuery } from '@tanstack/react-query';
-import AddTransaction from './add-transaction';
-import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import EmailVerified from '../email-verified';
 import DataTable from './data-table';
@@ -12,7 +10,6 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 
 const Transactions = (): JSX.Element => {
-  const [isOpen, setIsOpen] = useState(false);
   const [transactionError, setTransactionError] = useState<string>('');
   const { isPending, isError, data, error } = useQuery({
     queryKey: ['transactions'],
@@ -32,10 +29,6 @@ const Transactions = (): JSX.Element => {
     return <span>Error: {error.message}</span>;
   }
 
-  const toggle = (): void => {
-    setIsOpen((isOpen) => !isOpen);
-  };
-
   const translateError = (error: string): string => {
     if (error === 'Network Error') {
       return 'There was an error connecting to the server. Your data was not updated.';
@@ -50,11 +43,7 @@ const Transactions = (): JSX.Element => {
       <Card className="">
         <CardHeader className="grid w-screen grid-cols-2">
           <CardTitle className="justify-self-start">Transactions</CardTitle>
-          <div className="justify-self-end">
-            <Button onClick={toggle}>Add Transaction</Button>
-          </div>
         </CardHeader>
-        {isOpen && <AddTransaction />}
         <CardContent>
           {transactionError.length > 0 && (
             <Alert variant="destructive">
