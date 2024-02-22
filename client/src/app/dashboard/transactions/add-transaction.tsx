@@ -108,7 +108,7 @@ const AddTransaction = (): JSX.Element => {
   };
 
   return (
-    <Card className="w-screen p-2">
+    <Card className="p-2">
       <Form {...form}>
         <form
           onSubmit={(event) => {
@@ -117,7 +117,7 @@ const AddTransaction = (): JSX.Element => {
           }}
           className="space-y-8"
         >
-          <div className="flex flex-row flex-wrap gap-4">
+          <div className="flex flex-col flex-wrap gap-4">
             <FormField
               control={form.control}
               name="date"
