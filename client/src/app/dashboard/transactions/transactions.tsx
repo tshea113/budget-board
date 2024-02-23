@@ -40,8 +40,8 @@ const Transactions = (): JSX.Element => {
   return (
     <div>
       <EmailVerified />
-      <Card className="">
-        <CardHeader className="grid w-screen grid-cols-2">
+      <Card>
+        <CardHeader className="grid w-auto grid-cols-2">
           <CardTitle className="justify-self-start">Transactions</CardTitle>
         </CardHeader>
         <CardContent>

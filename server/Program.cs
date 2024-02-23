@@ -1,8 +1,8 @@
+using BudgetBoard.Database.Data;
 using FirebaseAdmin;
 using FirebaseAdminAuthentication.DependencyInjection.Extensions;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.EntityFrameworkCore;
-using BudgetBoard.Database.Data;
 using System.Text.Json.Serialization;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -56,6 +56,8 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
+
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 

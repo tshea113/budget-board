@@ -33,10 +33,6 @@ const SubmitCell = <TData,>({ row, table }: SubmitCellProps<TData>): JSX.Element
     },
   });
 
-  const submitChanges = (): void => {
-    mutation.mutate(row.original as Transaction);
-  };
-
   const cancelChanges = (): void => {
     table.options.meta?.revertData(row.index, true);
     row.toggleSelected(false);
@@ -48,7 +44,7 @@ const SubmitCell = <TData,>({ row, table }: SubmitCellProps<TData>): JSX.Element
         <Button onClick={cancelChanges}>
           <Cross2Icon className="h-5 w-5" />
         </Button>
-        <ResponsiveButton loading={mutation.isPending} onClick={submitChanges}>
+        <ResponsiveButton loading={mutation.isPending}>
           <CheckIcon className="h-5 w-5" />
         </ResponsiveButton>
       </div>

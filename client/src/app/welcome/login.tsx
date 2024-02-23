@@ -20,7 +20,7 @@ import { getMessageForErrorCode } from '@/lib/firebase';
 import request from '@/lib/request';
 
 const Login = (): JSX.Element => {
-  const { currentUserState, loginUser } = useContext<any>(AuthContext);
+  const { loginUser } = useContext<any>(AuthContext);
   const [alert, setAlert] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -44,7 +44,7 @@ const Login = (): JSX.Element => {
     e.preventDefault();
     setLoading(true);
     const error: string = await loginUser(values.email, values.password);
-    if (currentUserState == null) {
+    if (error.length !== 0) {
       setAlert(getMessageForErrorCode(error));
     } else {
       // Need to make sure a user exists before proceeding
@@ -96,9 +96,7 @@ const Login = (): JSX.Element => {
             </FormItem>
           )}
         />
-        <ResponsiveButton {...{ loading }} onClick={() => {}}>
-          Submit
-        </ResponsiveButton>
+        <ResponsiveButton {...{ loading }}>Submit</ResponsiveButton>
       </form>
     </Form>
   );

@@ -9,7 +9,7 @@ const EmailVerified = (): JSX.Element | null => {
 
   if (!emailVerified) {
     return (
-      <Alert variant="destructive">
+      <Alert variant="destructive" className="mb-2">
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>
           Before you can get started, you will need to check your email for a validation link.

@@ -6,7 +6,7 @@ import Transactions from './transactions/transactions';
 const Tab = (): JSX.Element => {
   return (
     <Tabs defaultValue="dashboard">
-      <TabsList className="flex w-screen">
+      <TabsList className="mx-1 mb-2 flex w-auto">
         <TabsTrigger className="flex-grow" value="dashboard">
           Dashboard
         </TabsTrigger>
@@ -23,11 +23,15 @@ const Tab = (): JSX.Element => {
       <TabsContent className="m-1" value="dashboard">
         <Dashboard />
       </TabsContent>
-      <TabsContent value="transactions">
+      <TabsContent className="m-1" value="transactions">
         <Transactions />
       </TabsContent>
-      <TabsContent value="budget">Budget goes here!</TabsContent>
-      <TabsContent value="trends">Trends goes here!</TabsContent>
+      <TabsContent className="m-1" value="budget">
+        Budget goes here!
+      </TabsContent>
+      <TabsContent className="m-1" value="trends">
+        Trends goes here!
+      </TabsContent>
     </Tabs>
   );
 };
