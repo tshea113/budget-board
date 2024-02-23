@@ -33,10 +33,6 @@ const SubmitCell = <TData,>({ row, table }: SubmitCellProps<TData>): JSX.Element
     },
   });
 
-  const submitChanges = (): void => {
-    mutation.mutate(row.original as Transaction);
-  };
-
   const cancelChanges = (): void => {
     table.options.meta?.revertData(row.index, true);
     row.toggleSelected(false);
