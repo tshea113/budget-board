@@ -1,3 +1,4 @@
+import SkeletonCard from '@/app/dashboard/skeleton-account-card';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -22,7 +23,7 @@ const AccountCard = ({ toggleAddAccount }: { toggleAddAccount: () => void }): JS
   });
 
   if (isPending) {
-    return <span>Loading...</span>;
+    return <SkeletonCard />;
   }
 
   if (isError) {
