@@ -8,6 +8,7 @@ import { columns } from './columns';
 import { type Transaction } from '@/types/transaction';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
+import SkeletonTranasctionTable from './skeleton-transaction-table';
 
 const Transactions = (): JSX.Element => {
   const [transactionError, setTransactionError] = useState<string>('');
@@ -19,9 +20,8 @@ const Transactions = (): JSX.Element => {
     },
   });
 
-  // TODO: Make this not ugly
   if (isPending) {
-    return <span>Loading...</span>;
+    return <SkeletonTranasctionTable />;
   }
 
   // TODO: This should probably just be an error alert
