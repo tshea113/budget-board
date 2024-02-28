@@ -29,8 +29,7 @@ const DeleteTransactionButton = <TData,>({
       tableMeta?.deleteRow(row.index);
     },
     onError: (error: Error) => {
-      // setError(error.message);
-      console.log('uh oh spaghettio: ' + error.message);
+      tableMeta?.setErrorInner(error.message);
     },
   });
   const deleteTransaction = (): void => {
