@@ -34,6 +34,7 @@ declare module '@tanstack/react-table' {
   export interface TableMeta<TData> {
     updateData: (rowIndex: number, columnId: string, value: string) => void;
     revertData: (rowIndex: number, revert: boolean) => void;
+    deleteRow: (rowIndex: number) => void;
     setErrorInner: (newError: string) => void;
     isPending: boolean;
   }
@@ -118,6 +119,11 @@ const DataTable = <TData, TValue>({
             old.map((row, index) => (index === rowIndex ? data[rowIndex] : row))
           );
         }
+      },
+      deleteRow: (rowIndex: number) => {
+        const setFilterFunc = (old: TData[]): TData[] =>
+          old.filter((_row: TData, index: number) => index !== rowIndex);
+        setTableData(setFilterFunc);
       },
       setErrorInner: (newError: string) => {
         setError(newError);
