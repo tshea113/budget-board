@@ -6,66 +6,36 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetBoard.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/[controller]/[action]")]
 [ApiController]
-public class UserController : ControllerBase
+public class SimpleFinController : Controller
 {
     private readonly UserDataContext _userDataContext;
     private SimpleFinHandler _simpleFinHandler;
 
-    public UserController(UserDataContext context, IHttpClientFactory clientFactory)
+    public SimpleFinController(UserDataContext context, IHttpClientFactory clientFactory)
     {
         _userDataContext = context;
         _simpleFinHandler = new SimpleFinHandler(clientFactory);
     }
 
-    private IActionResult CreateUser(string uid)
-    {
-        var newUser = new User
-        {
-            Uid = uid,
-        };
-
-        _userDataContext.Users.Add(newUser);
-        _userDataContext.SaveChanges();
-
-        return Ok();
-    }
-
     [HttpGet]
     [Authorize]
-    public IActionResult GetUser()
+    public async Task<IActionResult> Sync()
     {
-        var uid = User.Claims.Single(c => c.Type == "id").Value;
-        var user = GetCurrentUser(uid);
-
+        var user = GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
         if (user == null)
         {
-            // Push the new user to the db
-            CreateUser(uid);
+            return NotFound();
+        }
+        var response = await _simpleFinHandler.GetAccountData(user.AccessToken);
+        return Ok(response);
 
-            // We need to throw an error if the user isn't pushed to the db correctly
-            try
-            {
-                user = _userDataContext.Users.Single(x => x.Uid == uid);
-                ResponseUser response = new ResponseUser(user);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-        else
-        {
-            ResponseUser response = new ResponseUser(user);
-            return Ok(response);
-        }
     }
 
-    [HttpPut]
+    [HttpPost]
     [Authorize]
-    public async Task<IActionResult> EditUser([FromBody] User newUser)
+    public async Task<IActionResult> UpdateToken(string newToken)
     {
         var user = GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
 
@@ -77,7 +47,7 @@ public class UserController : ControllerBase
         var response = default(HttpResponseMessage);
         try
         {
-            response = await _simpleFinHandler.GetAccessToken(newUser.AccessToken);
+            response = await _simpleFinHandler.GetAccessToken(newToken);
             if (response.IsSuccessStatusCode)
             {
                 user.AccessToken = await response.Content.ReadAsStringAsync();
