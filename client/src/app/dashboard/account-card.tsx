@@ -41,15 +41,15 @@ const AccountCard = ({ toggleAddAccount }: { toggleAddAccount: () => void }): JS
             <TableRow>
               <TableHead>Name</TableHead>
               <TableHead>Type</TableHead>
-              <TableHead>Subtype</TableHead>
+              <TableHead>Current Balance</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {data.data.map((account: Account) => (
               <TableRow key={account.id}>
                 <TableCell>{account.name}</TableCell>
-                <TableCell>{account.type}</TableCell>
                 <TableCell>{account.subtype}</TableCell>
+                <TableCell>{account.currentBalance}</TableCell>
               </TableRow>
             ))}
           </TableBody>

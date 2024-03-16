@@ -3,6 +3,7 @@ using BudgetBoard.Database.Models;
 using BudgetBoard.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBoard.Controllers;
 
@@ -16,7 +17,7 @@ public class SimpleFinController : Controller
     public SimpleFinController(UserDataContext context, IHttpClientFactory clientFactory)
     {
         _userDataContext = context;
-        _simpleFinHandler = new SimpleFinHandler(clientFactory);
+        _simpleFinHandler = new SimpleFinHandler(_userDataContext, clientFactory);
     }
 
     [HttpGet]
@@ -29,7 +30,10 @@ public class SimpleFinController : Controller
             return NotFound();
         }
         var response = await _simpleFinHandler.GetAccountData(user.AccessToken);
-        return Ok(response);
+
+        _simpleFinHandler.SyncAccounts(user, response!.Accounts);
+
+        return Ok(response?.Accounts);
 
     }
 
@@ -72,7 +76,8 @@ public class SimpleFinController : Controller
     {
         try
         {
-            var user = _userDataContext.Users.Single(u => u.Uid == uid);
+            var users = _userDataContext.Users.Include(user => user.Accounts).ToList();
+            var user = users.Single(u => u.Uid == uid);
 
             return user;
         }

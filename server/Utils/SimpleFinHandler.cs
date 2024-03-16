@@ -1,4 +1,7 @@
-﻿using BudgetBoard.Models.SimpleFinDetails;
+﻿using BudgetBoard.Database.Data;
+using BudgetBoard.Database.Models;
+using BudgetBoard.Models.SimpleFinDetails;
+using System.Globalization;
 using System.Text;
 using System.Text.Json;
 
@@ -7,9 +10,11 @@ namespace BudgetBoard.Utils;
 public class SimpleFinHandler
 {
     private readonly IHttpClientFactory _clientFactory;
+    private readonly UserDataContext _userDataContext;
 
-    public SimpleFinHandler(IHttpClientFactory clientFactory)
+    public SimpleFinHandler(UserDataContext context, IHttpClientFactory clientFactory)
     {
+        _userDataContext = context;
         _clientFactory = clientFactory;
     }
 
@@ -50,6 +55,33 @@ public class SimpleFinHandler
         var response = await client.SendAsync(request);
 
         return response;
+    }
+
+    public void SyncAccounts(User user, Models.SimpleFinDetails.Account[] accountData)
+    {
+        foreach (var account in accountData)
+        {
+            var foundAccount = AccountHandler.GetAccount(user, account.Id);
+            if (foundAccount != null)
+            {
+                foundAccount.CurrentBalance = float.Parse(account.Balance, CultureInfo.InvariantCulture.NumberFormat);
+
+                AccountHandler.UpdateAccount(user, _userDataContext, foundAccount);
+            }
+            else
+            {
+                var newAccount = new Database.Models.Account
+                {
+                    SyncID = account.Id,
+                    Name = account.Name,
+                    Institution = account.Org.Name ?? string.Empty,
+                    CurrentBalance = float.Parse(account.Balance, CultureInfo.InvariantCulture.NumberFormat),
+                    UserID = user.ID
+                };
+
+                AccountHandler.AddAccount(user, _userDataContext, newAccount);
+            }
+        }
     }
 
     private static SimpleFinData GetUrlCredentials(string accessToken)

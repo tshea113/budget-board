@@ -16,7 +16,7 @@ public class UserController : ControllerBase
     public UserController(UserDataContext context, IHttpClientFactory clientFactory)
     {
         _userDataContext = context;
-        _simpleFinHandler = new SimpleFinHandler(clientFactory);
+        _simpleFinHandler = new SimpleFinHandler(_userDataContext, clientFactory);
     }
 
     private IActionResult CreateUser(string uid)
