@@ -10,7 +10,6 @@ import { getUser } from '@/lib/user';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import SyncAccountButton from './sync-account-button';
 
 const AccountSettings = (): JSX.Element => {
   const [formVisible, setFormVisible] = React.useState<boolean>(false);
@@ -94,7 +93,6 @@ const AccountSettings = (): JSX.Element => {
           )}
         </CardContent>
       </Card>
-      <SyncAccountButton />
     </div>
   );
 };

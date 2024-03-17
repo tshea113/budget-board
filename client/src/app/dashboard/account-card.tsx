@@ -40,7 +40,6 @@ const AccountCard = ({ toggleAddAccount }: { toggleAddAccount: () => void }): JS
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
-              <TableHead>Type</TableHead>
               <TableHead>Current Balance</TableHead>
             </TableRow>
           </TableHeader>
@@ -48,8 +47,12 @@ const AccountCard = ({ toggleAddAccount }: { toggleAddAccount: () => void }): JS
             {data.data.map((account: Account) => (
               <TableRow key={account.id}>
                 <TableCell>{account.name}</TableCell>
-                <TableCell>{account.subtype}</TableCell>
-                <TableCell>{account.currentBalance}</TableCell>
+                <TableCell>
+                  {Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD', // TODO: SimpleFin provides the currency. Eventually should read from there.
+                  }).format(account.currentBalance)}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
