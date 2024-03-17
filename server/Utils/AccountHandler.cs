@@ -37,4 +37,3 @@ public class AccountHandler
         userDataContext.SaveChanges();
     }
 }
-}

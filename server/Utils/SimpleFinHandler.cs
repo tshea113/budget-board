@@ -18,13 +18,15 @@ public class SimpleFinHandler
         _clientFactory = clientFactory;
     }
 
-    public async Task<AccountSet?> GetAccountData(string accessToken)
+    public async Task<AccountSet?> GetAccountData(string accessToken, long startDate)
     {
         SimpleFinData data = GetUrlCredentials(accessToken);
 
+        var startArg = "?start-date=" + startDate.ToString();
+
         var request = new HttpRequestMessage(
             HttpMethod.Get,
-            data.BaseUrl + "/accounts");
+            data.BaseUrl + "/accounts" + startArg);
         var client = _clientFactory.CreateClient();
         var byteArray = Encoding.ASCII.GetBytes(data.Auth);
         client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
@@ -57,9 +59,9 @@ public class SimpleFinHandler
         return response;
     }
 
-    public void SyncAccounts(User user, Models.SimpleFinDetails.Account[] accountData)
+    public void SyncAccounts(User user, List<Models.SimpleFinDetails.Account> accounts)
     {
-        foreach (var account in accountData)
+        foreach (var account in accounts)
         {
             var foundAccount = AccountHandler.GetAccount(user, account.Id);
             if (foundAccount != null)
@@ -82,6 +84,46 @@ public class SimpleFinHandler
                 AccountHandler.AddAccount(user, _userDataContext, newAccount);
             }
         }
+    }
+
+    public void SyncTransactions(User user, List<Models.SimpleFinDetails.Account> accounts)
+    {
+        var userTransactions = TransactionHandler.GetTransactions(user);
+        foreach (var account in accounts)
+        {
+            var userAccount = user.Accounts.FirstOrDefault(t => t.SyncID == account.Id);
+            if (userAccount != null)
+            {
+                foreach (var transaction in account.Transactions)
+                {
+                    if (userTransactions.Any(t => t.SyncID == transaction.Id))
+                    {
+                        Console.WriteLine("Transaction already exists!");
+                    }
+                    else
+                    {
+                        var newTransaction = new Database.Models.Transaction
+                        {
+                            SyncID = transaction.Id,
+                            Amount = decimal.Parse(transaction.Amount),
+                            Date = transaction.Pending ? DateTime.UnixEpoch.AddSeconds(transaction.TransactedAt) : DateTime.UnixEpoch.AddSeconds(transaction.Posted),
+                            MerchantName = transaction.Description,
+                            Pending = transaction.Pending,
+                            Source = "SimpleFin",
+                            AccountID = userAccount.ID,
+                        };
+
+                        TransactionHandler.AddTransaction(user, _userDataContext, newTransaction);
+                    }
+                }
+            }
+        }
+    }
+
+    public void UpdateLastSync(User user)
+    {
+        user.LastSync = DateTime.Now;
+
     }
 
     private static SimpleFinData GetUrlCredentials(string accessToken)

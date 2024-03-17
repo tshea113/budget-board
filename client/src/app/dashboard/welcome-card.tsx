@@ -1,5 +1,5 @@
 import { AuthContext } from '@/components/auth-provider';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useContext } from 'react';
 import SyncAccountButton from './sync-account-button';
 
@@ -11,7 +11,9 @@ const WelcomeCard = (): JSX.Element => {
       <CardHeader>
         <CardTitle>Hello, {currentUserState?.email}.</CardTitle>
       </CardHeader>
-      <SyncAccountButton />
+      <CardContent>
+        <SyncAccountButton />
+      </CardContent>
     </Card>
   );
 };

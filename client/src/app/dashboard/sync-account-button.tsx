@@ -1,6 +1,5 @@
 import ResponsiveButton from '@/components/responsive-button';
 import request from '@/lib/request';
-import { type AxiosResponse } from 'axios';
 import React from 'react';
 
 const SyncAccountButton = (): JSX.Element => {
@@ -12,9 +11,6 @@ const SyncAccountButton = (): JSX.Element => {
       url: '/api/simplefin/sync',
       method: 'GET',
     })
-      .then((res: AxiosResponse<any, any>) => {
-        console.log(res.data);
-      })
       .catch((err: Error) => {
         console.log(err.message);
       })

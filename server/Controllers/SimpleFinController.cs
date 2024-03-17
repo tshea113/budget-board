@@ -11,6 +11,9 @@ namespace BudgetBoard.Controllers;
 [ApiController]
 public class SimpleFinController : Controller
 {
+    private const long UnixMonth = 2629743;
+    private const long UnixWeek = 604800;
+
     private readonly UserDataContext _userDataContext;
     private SimpleFinHandler _simpleFinHandler;
 
@@ -29,12 +32,34 @@ public class SimpleFinController : Controller
         {
             return NotFound();
         }
-        var response = await _simpleFinHandler.GetAccountData(user.AccessToken);
 
-        _simpleFinHandler.SyncAccounts(user, response!.Accounts);
+        long startDate;
+        if (user.LastSync == DateTime.MinValue)
+        {
+            // If we haven't synced before, sync the full 90 days of history
+            startDate = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() - (UnixMonth * 3);
+        }
+        else
+        {
+            var oneMonthAgo = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() - UnixMonth;
+            var lastSyncWithBuffer = ((DateTimeOffset)user.LastSync).ToUnixTimeSeconds() - UnixWeek;
 
-        return Ok(response?.Accounts);
+            startDate = Math.Min(oneMonthAgo, lastSyncWithBuffer);
+        }
 
+        var simpleFinData = await _simpleFinHandler.GetAccountData(user.AccessToken, startDate);
+
+        if (simpleFinData == null)
+        {
+            return NotFound();
+        }
+
+        _simpleFinHandler.SyncAccounts(user, simpleFinData.Accounts);
+        _simpleFinHandler.SyncTransactions(user, simpleFinData.Accounts);
+
+        UserHandler.UpdateLastSync(user, _userDataContext);
+
+        return Ok();
     }
 
     [HttpPost]
@@ -76,7 +101,10 @@ public class SimpleFinController : Controller
     {
         try
         {
-            var users = _userDataContext.Users.Include(user => user.Accounts).ToList();
+            var users = _userDataContext.Users
+                .Include(user => user.Accounts)
+                .ThenInclude(a => a.Transactions)
+                .ToList();
             var user = users.Single(u => u.Uid == uid);
 
             return user;
