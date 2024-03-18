@@ -7,7 +7,6 @@ import { Input } from '@/components/ui/input';
 import { SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import request from '@/lib/request';
 import { getUser } from '@/lib/user';
-import { type NewUser } from '@/types/user';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -30,11 +29,11 @@ const AccountSettings = (): JSX.Element => {
 
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: async (newUser: NewUser) => {
+    mutationFn: async (newToken: string) => {
       return await request({
-        url: '/api/user',
-        method: 'PUT',
-        data: newUser,
+        url: '/api/simplefin/updatetoken',
+        method: 'POST',
+        params: { newToken },
       });
     },
     onSuccess: () => {
@@ -46,8 +45,12 @@ const AccountSettings = (): JSX.Element => {
     setFormVisible((addFormVisible) => !addFormVisible);
   };
 
+  interface FormValues {
+    accessToken: string;
+  }
+
   return (
-    <div>
+    <div className="space-y-4">
       <SheetHeader>
         <SheetTitle>Account</SheetTitle>
         <SheetDescription>Make changes to your account here.</SheetDescription>
@@ -64,14 +67,10 @@ const AccountSettings = (): JSX.Element => {
             <Form {...form}>
               <form
                 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                onSubmit={form.handleSubmit(async (data: NewUser, event) => {
+                onSubmit={form.handleSubmit(async (data: FormValues, event) => {
                   event?.preventDefault();
                   if (user?.data) {
-                    const newUser: NewUser = {
-                      uid: user.data.uid,
-                      accessToken: data.accessToken,
-                    };
-                    mutation.mutate(newUser);
+                    mutation.mutate(data.accessToken);
                   }
                 })}
                 className="space-y-4"

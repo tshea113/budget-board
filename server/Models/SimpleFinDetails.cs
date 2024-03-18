@@ -4,8 +4,8 @@ namespace BudgetBoard.Models.SimpleFinDetails;
 
 public class AccountSet
 {
-    public required string[] Errors { get; set; }
-    public required Account[] Accounts { get; set; }
+    public required List<string> Errors { get; set; }
+    public required List<Account> Accounts { get; set; }
 }
 
 public class Account
@@ -19,7 +19,7 @@ public class Account
     public string? AvailableBalance { get; set; }
     [JsonPropertyName("balance-date")]
     public required int BalanceDate { get; set; }
-    public Transaction[]? Transactions { get; set; }
+    public List<Transaction> Transactions { get; set; } = new List<Transaction>();
 
 }
 

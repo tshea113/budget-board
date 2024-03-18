@@ -4,6 +4,7 @@ interface Account {
   institution: string;
   type: string;
   subtype: string;
+  currentBalance: number;
   userId: string;
   source: string;
   accountId: string;

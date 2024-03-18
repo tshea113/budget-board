@@ -1,5 +1,6 @@
 ﻿using BudgetBoard.Database.Data;
 using BudgetBoard.Database.Models;
+using BudgetBoard.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,12 +11,12 @@ namespace BudgetBoard.Controllers;
 public class UserController : ControllerBase
 {
     private readonly UserDataContext _userDataContext;
-    private readonly IHttpClientFactory _clientFactory;
+    private SimpleFinHandler _simpleFinHandler;
 
     public UserController(UserDataContext context, IHttpClientFactory clientFactory)
     {
         _userDataContext = context;
-        _clientFactory = clientFactory;
+        _simpleFinHandler = new SimpleFinHandler(_userDataContext, clientFactory);
     }
 
     private IActionResult CreateUser(string uid)
@@ -36,7 +37,7 @@ public class UserController : ControllerBase
     public IActionResult GetUser()
     {
         var uid = User.Claims.Single(c => c.Type == "id").Value;
-        var user = GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+        var user = GetCurrentUser(uid);
 
         if (user == null)
         {
@@ -76,7 +77,7 @@ public class UserController : ControllerBase
         var response = default(HttpResponseMessage);
         try
         {
-            response = await GetAccessToken(newUser.AccessToken);
+            response = await _simpleFinHandler.GetAccessToken(newUser.AccessToken);
             if (response.IsSuccessStatusCode)
             {
                 user.AccessToken = await response.Content.ReadAsStringAsync();
@@ -95,19 +96,6 @@ public class UserController : ControllerBase
 
         return Ok();
 
-    }
-    private async Task<HttpResponseMessage> GetAccessToken(string setupToken)
-    {
-        byte[] data = Convert.FromBase64String(setupToken);
-        string decodedString = System.Text.Encoding.UTF8.GetString(data);
-
-        var request = new HttpRequestMessage(
-            HttpMethod.Post,
-            decodedString);
-        var client = _clientFactory.CreateClient();
-        var response = await client.SendAsync(request);
-
-        return response;
     }
 
     private User? GetCurrentUser(string uid)

@@ -3,6 +3,7 @@ using System;
 using BudgetBoard.Database.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BudgetBoard.Database.Migrations
 {
     [DbContext(typeof(UserDataContext))]
-    partial class UserDataContextModelSnapshot : ModelSnapshot
+    [Migration("20240316022816_Add-Sync-ID")]
+    partial class AddSyncID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,9 +31,6 @@ namespace BudgetBoard.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<float>("CurrentBalance")
-                        .HasColumnType("real");
-
                     b.Property<string>("Institution")
                         .IsRequired()
                         .HasColumnType("text");
@@ -41,9 +41,6 @@ namespace BudgetBoard.Database.Migrations
 
                     b.Property<string>("Subtype")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("SyncID")
                         .HasColumnType("text");
 
                     b.Property<string>("Type")
@@ -110,9 +107,6 @@ namespace BudgetBoard.Database.Migrations
                     b.Property<string>("AccessToken")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<DateTime>("LastSync")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Uid")
                         .IsRequired()

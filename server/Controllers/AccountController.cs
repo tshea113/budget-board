@@ -21,7 +21,6 @@ public class AccountController : ControllerBase
     [Authorize]
     public async Task<IActionResult> Get()
     {
-
         var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
 
         if (user == null)
@@ -30,7 +29,6 @@ public class AccountController : ControllerBase
         }
 
         return Ok(user.Accounts);
-
     }
 
     [HttpGet("{guid}")]
@@ -73,7 +71,7 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpDelete("{guid}")]
+    [HttpDelete]
     [Authorize]
     public async Task<IActionResult> Delete(Guid guid)
     {
