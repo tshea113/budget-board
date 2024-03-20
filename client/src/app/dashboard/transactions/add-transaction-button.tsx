@@ -7,7 +7,7 @@ import AddTransaction from './add-transaction';
 const AddTransactionButton = (): JSX.Element => {
   return (
     <Popover>
-      <PopoverTrigger>
+      <PopoverTrigger asChild>
         <Button variant="outline">
           <PlusIcon></PlusIcon>
         </Button>
