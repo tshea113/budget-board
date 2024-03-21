@@ -8,8 +8,9 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { getCategoriesAsTree } from '@/lib/transactions';
 import { cn } from '@/lib/utils';
-import { type Category, categories } from '@/types/transaction';
+import { type Category } from '@/types/transaction';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import React from 'react';
 
@@ -21,6 +22,8 @@ interface CategoryInputProps {
 const CategoryInput = ({ ...props }: CategoryInputProps): JSX.Element => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState('');
+
+  const categories = getCategoriesAsTree();
 
   React.useEffect(() => {
     setValue(props.initialValue ?? '');
