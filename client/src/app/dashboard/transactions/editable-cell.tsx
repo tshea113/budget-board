@@ -1,16 +1,10 @@
 import DatePicker from '@/components/date-picker';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { formatDate, getSubCategories } from '@/lib/transactions';
-import { SubCategory } from '@/types/transaction';
+import { formatDate } from '@/lib/transactions';
 import { type Column, type Row, type Table } from '@tanstack/react-table';
 import React from 'react';
+import CategoryInput from './category-input';
+import { categories } from '@/types/transaction';
 
 interface EditableCellProps<TData> {
   getValue: () => any;
@@ -39,8 +33,16 @@ const EditableCell = <TData,>({
   };
 
   const onSelectChange = (newValue: string): void => {
-    setValue(newValue);
-    tableMeta?.updateData(row.index, column.id, newValue);
+    const category = categories.find((c) => c.value === newValue);
+    if (category != null) {
+      setValue(category.value);
+      if (category.parent.length !== 0) {
+        const parentCategory = category.parent;
+        tableMeta?.updateCategory(row.index, parentCategory, category.value);
+      } else {
+        tableMeta?.updateCategory(row.index, category.value, '');
+      }
+    }
   };
 
   const onDatePick = (day: Date): void => {
@@ -51,25 +53,8 @@ const EditableCell = <TData,>({
   if (row.getIsSelected()) {
     if (column.columnDef.meta?.type === 'date') {
       return <DatePicker value={value as unknown as Date} setDatePick={onDatePick} />;
-    } else if (column.columnDef.meta?.type === 'select') {
-      let options: any = column.columnDef.meta?.options;
-      if (column.columnDef.meta?.options === SubCategory) {
-        options = getSubCategories(row.getValue('category'));
-      }
-      return (
-        <Select value={value} onValueChange={onSelectChange}>
-          <SelectTrigger className="min-w-min">
-            <SelectValue placeholder="Select a category" />
-          </SelectTrigger>
-          <SelectContent>
-            {options.map((value: string, index: number) => (
-              <SelectItem key={index} value={value}>
-                {value}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      );
+    } else if (column.columnDef.meta?.type === 'category') {
+      return <CategoryInput initialValue={value} onSelectChange={onSelectChange} />;
     } else {
       return (
         <Input
@@ -92,6 +77,8 @@ const EditableCell = <TData,>({
       style: 'currency',
       currency: column.columnDef.meta?.currency,
     }).format(getValue() as number);
+  } else if (column.columnDef.meta?.type === 'category') {
+    displayValue = categories.find((category) => category.value === value)?.label ?? '';
   }
   return <div>{displayValue}</div>;
 };
