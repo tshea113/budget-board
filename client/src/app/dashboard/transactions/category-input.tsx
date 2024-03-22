@@ -10,9 +10,10 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { getCategoriesAsTree } from '@/lib/transactions';
 import { cn } from '@/lib/utils';
-import { type Category } from '@/types/transaction';
+import { categories, type Category } from '@/types/transaction';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import React from 'react';
+import CommandSubcategory from '../command-subcategory';
 
 interface CategoryInputProps {
   initialValue: string;
@@ -23,17 +24,13 @@ const CategoryInput = ({ ...props }: CategoryInputProps): JSX.Element => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState('');
 
-  const categories = getCategoriesAsTree();
-
-  React.useEffect(() => {
-    setValue(props.initialValue ?? '');
-  }, [props.initialValue]);
+  const categoriesTree = getCategoriesAsTree();
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
+          variant="dropdown"
           role="combobox"
           aria-expanded={open}
           className="w-[200px] justify-between"
@@ -44,15 +41,15 @@ const CategoryInput = ({ ...props }: CategoryInputProps): JSX.Element => {
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-[225px] p-0">
         <Command>
           <CommandInput placeholder="Search categories" />
           <CommandList>
             <CommandEmpty>No categories found.</CommandEmpty>
-            <CommandGroup>
-              {categories.map((category: Category) => (
+            {categoriesTree.map((category: Category) => (
+              <CommandGroup key={category.value}>
                 <CommandItem
-                  key={category.value}
+                  className="font-bold"
                   value={category.value}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? '' : currentValue);
@@ -68,8 +65,16 @@ const CategoryInput = ({ ...props }: CategoryInputProps): JSX.Element => {
                   />
                   {category.label}
                 </CommandItem>
-              ))}
-            </CommandGroup>
+                <CommandSubcategory
+                  category={category}
+                  updateValue={(currentValue) => {
+                    setValue(currentValue === value ? '' : currentValue);
+                    props.onSelectChange(currentValue === value ? '' : currentValue);
+                    setOpen(false);
+                  }}
+                />
+              </CommandGroup>
+            ))}
           </CommandList>
         </Command>
       </PopoverContent>
