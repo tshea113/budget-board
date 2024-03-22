@@ -4,7 +4,7 @@ import { formatDate } from '@/lib/transactions';
 import { type Column, type Row, type Table } from '@tanstack/react-table';
 import React from 'react';
 import CategoryInput from './category-input';
-import { categories } from '@/types/transaction';
+import { type Transaction, categories } from '@/types/transaction';
 
 interface EditableCellProps<TData> {
   getValue: () => any;
@@ -13,7 +13,7 @@ interface EditableCellProps<TData> {
   table: Table<TData>;
 }
 
-const EditableCell = <TData,>({
+const EditableCell = <TData extends Transaction>({
   getValue,
   column,
   row,
@@ -78,7 +78,15 @@ const EditableCell = <TData,>({
       currency: column.columnDef.meta?.currency,
     }).format(getValue() as number);
   } else if (column.columnDef.meta?.type === 'category') {
-    displayValue = categories.find((category) => category.value === value)?.label ?? '';
+    // This is kinda ugly, probably should fix at some point
+    const transaction: Transaction = row.original;
+    if (transaction.subcategory !== '') {
+      displayValue =
+        categories.find((category) => category.value === transaction.subcategory)?.label ?? '';
+    } else {
+      displayValue =
+        categories.find((category) => category.value === transaction.category)?.label ?? '';
+    }
   }
   return <div>{displayValue}</div>;
 };
