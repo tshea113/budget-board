@@ -58,7 +58,7 @@ const columns: Array<ColumnDef<Transaction>> = [
   },
   {
     id: 'loading',
-    header: AddTransactionButton,
+    // header: AddTransactionButton,
     cell: LoadingCell,
   },
 ];
