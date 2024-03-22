@@ -7,7 +7,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { type SubmitHandler, useForm, useWatch } from 'react-hook-form';
+import { type SubmitHandler, useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
-import { Category, type NewTransaction } from '@/types/transaction';
+import { type NewTransaction } from '@/types/transaction';
 import request from '@/lib/request';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getAccounts } from '@/lib/accounts';
@@ -30,7 +30,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { type Account } from '@/types/account';
-import { getSubCategories } from '@/lib/transactions';
 
 const formSchema = z.object({
   date: z.date({
@@ -77,10 +76,10 @@ const AddTransaction = (): JSX.Element => {
     },
   });
 
-  const watchCategory: string = useWatch({
-    control: form.control,
-    name: 'category',
-  });
+  // const watchCategory: string = useWatch({
+  //   control: form.control,
+  //   name: 'category',
+  // });
 
   interface FormValues {
     date: Date;
@@ -188,7 +187,7 @@ const AddTransaction = (): JSX.Element => {
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="category"
               render={({ field }) => (
@@ -215,8 +214,8 @@ const AddTransaction = (): JSX.Element => {
                   </FormControl>
                 </FormItem>
               )}
-            />
-            {getSubCategories(watchCategory).length !== 0 && (
+            /> */}
+            {/* {getSubCategories(watchCategory).length !== 0 && (
               <FormField
                 control={form.control}
                 name="subcategory"
@@ -242,7 +241,7 @@ const AddTransaction = (): JSX.Element => {
                   </FormItem>
                 )}
               />
-            )}
+            )} */}
             <FormField
               control={form.control}
               name="accountId"

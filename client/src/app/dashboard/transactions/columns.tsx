@@ -1,9 +1,9 @@
 import { type RowData, type ColumnDef } from '@tanstack/react-table';
-import { Category, SubCategory, type Transaction } from '@/types/transaction';
+import { type Transaction } from '@/types/transaction';
 import DataTableHeader from '@/components/data-table-header';
 import EditableCell from './editable-cell';
 import LoadingCell from './loading-cell';
-import AddTransactionButton from './add-transaction-button';
+// import AddTransactionButton from './add-transaction-button';
 
 declare module '@tanstack/react-table' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -42,19 +42,7 @@ const columns: Array<ColumnDef<Transaction>> = [
     },
     cell: EditableCell,
     meta: {
-      type: 'select',
-      options: Category,
-    },
-  },
-  {
-    accessorKey: 'subcategory',
-    header: ({ column }) => {
-      return <DataTableHeader column={column} label={'Subcategory'} />;
-    },
-    cell: EditableCell,
-    meta: {
-      type: 'select',
-      options: SubCategory,
+      type: 'category',
     },
   },
   {
@@ -70,7 +58,7 @@ const columns: Array<ColumnDef<Transaction>> = [
   },
   {
     id: 'loading',
-    header: AddTransactionButton,
+    // header: AddTransactionButton,
     cell: LoadingCell,
   },
 ];

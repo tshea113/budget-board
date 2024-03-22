@@ -33,6 +33,7 @@ declare module '@tanstack/react-table' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   export interface TableMeta<TData> {
     updateData: (rowIndex: number, columnId: string, value: string) => void;
+    updateCategory: (rowIndex: number, columnId: string, value: string) => void;
     revertData: (rowIndex: number, revert: boolean) => void;
     setErrorInner: (newError: string) => void;
     isPending: boolean;
@@ -84,6 +85,11 @@ const DataTable = <TData, TValue>({
     enableRowSelection: true,
     enableMultiRowSelection: false,
     onRowSelectionChange: setRowSelection,
+    initialState: {
+      pagination: {
+        pageSize: 25,
+      },
+    },
     state: {
       sorting,
       rowSelection,
@@ -106,6 +112,26 @@ const DataTable = <TData, TValue>({
         );
         if (newRow) {
           mutate(newRow as unknown as Transaction);
+        }
+      },
+      updateCategory: (rowIndex: number, category: string, subcategory: string) => {
+        let newRow: TData | undefined;
+        setTableData((old) =>
+          old.map((row, index) => {
+            if (index === rowIndex) {
+              newRow = {
+                ...old[rowIndex],
+                category,
+              };
+              return newRow;
+            }
+            return row;
+          })
+        );
+        if (newRow) {
+          const newTransaction = newRow as unknown as Transaction;
+          newTransaction.subcategory = subcategory;
+          mutate(newTransaction);
         }
       },
       revertData: (rowIndex: number, revert: boolean) => {
