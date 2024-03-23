@@ -20,9 +20,9 @@ interface CategoryInputProps {
   onSelectChange: (category: string) => void;
 }
 
-const CategoryInput = ({ ...props }: CategoryInputProps): JSX.Element => {
+const CategoryInput = ({ initialValue, onSelectChange }: CategoryInputProps): JSX.Element => {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState('');
+  const [value, setValue] = React.useState(initialValue);
 
   const categoriesTree = getCategoriesAsTree();
 
@@ -53,7 +53,7 @@ const CategoryInput = ({ ...props }: CategoryInputProps): JSX.Element => {
                   value={category.value}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? '' : currentValue);
-                    props.onSelectChange(currentValue === value ? '' : currentValue);
+                    onSelectChange(currentValue === value ? '' : currentValue);
                     setOpen(false);
                   }}
                 >
@@ -67,9 +67,10 @@ const CategoryInput = ({ ...props }: CategoryInputProps): JSX.Element => {
                 </CommandItem>
                 <CommandSubcategory
                   category={category}
+                  initialValue={value}
                   updateValue={(currentValue) => {
                     setValue(currentValue === value ? '' : currentValue);
-                    props.onSelectChange(currentValue === value ? '' : currentValue);
+                    onSelectChange(currentValue === value ? '' : currentValue);
                     setOpen(false);
                   }}
                 />
