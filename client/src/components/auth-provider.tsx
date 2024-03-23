@@ -23,15 +23,13 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
   const createUser = async (email: string, password: string): Promise<string> => {
     let errorCode: string = '';
     try {
-      const userCredential: UserCredential = await createUserWithEmailAndPassword(
-        firebaseAuth,
-        email,
-        password
+      await createUserWithEmailAndPassword(firebaseAuth, email, password).then(
+        async (user: UserCredential) => {
+          if (user != null) {
+            await sendEmailVerification(user.user);
+          }
+        }
       );
-
-      if (!userCredential.user.emailVerified && firebaseAuth.currentUser != null) {
-        await sendEmailVerification(firebaseAuth.currentUser);
-      }
     } catch (err: any) {
       errorCode = err.code;
     }
@@ -48,6 +46,20 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
       );
       if (userCredential !== null || userCredential !== undefined) {
         setCurrentUserState(userCredential.user);
+      }
+    } catch (err: any) {
+      errorCode = err.code;
+    }
+    return errorCode;
+  };
+
+  const sendVerificationEmail = async (): Promise<string> => {
+    let errorCode: string = '';
+    try {
+      if (firebaseAuth.currentUser != null) {
+        if (!firebaseAuth.currentUser.emailVerified) {
+          await sendEmailVerification(firebaseAuth.currentUser);
+        }
       }
     } catch (err: any) {
       errorCode = err.code;
@@ -83,6 +95,7 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
     setCurrentUserState,
     loginUser,
     logOut,
+    sendVerificationEmail,
     loading,
     emailVerified,
   };

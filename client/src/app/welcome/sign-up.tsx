@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { getMessageForErrorCode } from '@/lib/firebase';
+import request from '@/lib/request';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertCircle } from 'lucide-react';
 import { useContext, useState } from 'react';
@@ -55,6 +56,9 @@ const Signup = (): JSX.Element => {
     const error: string = await createUser(values.email, values.password);
     if (error.length !== 0) {
       setAlert(getMessageForErrorCode(error));
+    } else {
+      // Need to make sure a user exists before proceeding
+      await request({ url: '/api/user', method: 'GET' });
     }
     setLoading(false);
   };
