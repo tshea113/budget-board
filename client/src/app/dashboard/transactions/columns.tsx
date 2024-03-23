@@ -36,7 +36,16 @@ const columns: Array<ColumnDef<Transaction>> = [
     },
   },
   {
-    accessorKey: 'category',
+    id: 'category',
+    accessorFn: (row: Transaction) => {
+      if (row?.category === null && row?.subcategory === null) {
+        return '';
+      } else if (row.subcategory.length !== 0) {
+        return row.subcategory;
+      } else {
+        return row.category;
+      }
+    },
     header: ({ column }) => {
       return <DataTableHeader column={column} label={'Category'} />;
     },

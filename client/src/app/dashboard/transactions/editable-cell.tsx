@@ -50,6 +50,10 @@ const EditableCell = <TData extends Transaction>({
     tableMeta?.updateData(row.index, column.id, day.toISOString());
   };
 
+  const getCategoryLabel = (categoryValue: string): string => {
+    return categories.find((c) => c.value === categoryValue)?.label ?? '';
+  };
+
   if (row.getIsSelected()) {
     if (column.columnDef.meta?.type === 'date') {
       return <DatePicker value={value as unknown as Date} setDatePick={onDatePick} />;
@@ -78,15 +82,7 @@ const EditableCell = <TData extends Transaction>({
       currency: column.columnDef.meta?.currency,
     }).format(getValue() as number);
   } else if (column.columnDef.meta?.type === 'category') {
-    // This is kinda ugly, probably should fix at some point
-    const transaction: Transaction = row.original;
-    if (transaction.subcategory !== '') {
-      displayValue =
-        categories.find((category) => category.value === transaction.subcategory)?.label ?? '';
-    } else {
-      displayValue =
-        categories.find((category) => category.value === transaction.category)?.label ?? '';
-    }
+    displayValue = getCategoryLabel(value);
   }
   return <div>{displayValue}</div>;
 };
