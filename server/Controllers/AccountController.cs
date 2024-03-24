@@ -139,7 +139,10 @@ public class AccountController : ControllerBase
     {
         try
         {
-            var users = await _userDataContext.Users.Include(user => user.Accounts).ToListAsync();
+            var users = await _userDataContext.Users
+                .Include(u => u.Accounts)
+                .ThenInclude(a => a.Transactions)
+                .ToListAsync();
             var user = users.Single(u => u.Uid == uid);
 
             return user;

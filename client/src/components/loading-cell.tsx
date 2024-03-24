@@ -11,9 +11,9 @@ const LoadingCell = <TData,>({ table, row }: LoadingCellProps<TData>): JSX.Eleme
 
   return (tableMeta?.isPending ?? false) && row.getIsSelected() ? (
     // TODO: This probably should be themed
-    <TailSpin height="30" width="30" color="gray" />
+    <TailSpin height="20" width="20" color="gray" />
   ) : (
-    <></>
+    <div className="m-3"></div>
   );
 };
 export default LoadingCell;
