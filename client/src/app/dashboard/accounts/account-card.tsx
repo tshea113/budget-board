@@ -4,7 +4,6 @@ import { getAccounts } from '@/lib/accounts';
 import { useQuery } from '@tanstack/react-query';
 import AccountTable from './account-table';
 import { columns } from './account-columns';
-import AddButton from '../../../components/add-button';
 
 const AccountCard = (): JSX.Element => {
   const { isPending, isError, data, error } = useQuery({
