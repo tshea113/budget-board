@@ -6,8 +6,17 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import request from '@/lib/request';
 import { type Account } from '@/types/account';
-import { type ColumnDef, useReactTable, getCoreRowModel, flexRender } from '@tanstack/react-table';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  type ColumnDef,
+  useReactTable,
+  getCoreRowModel,
+  flexRender,
+  type RowSelectionState,
+} from '@tanstack/react-table';
+import React from 'react';
 
 interface AccountTableProps {
   columns: Array<ColumnDef<Account, unknown>>;
@@ -15,10 +24,69 @@ interface AccountTableProps {
 }
 
 const AccountTable = ({ data, columns }: AccountTableProps): JSX.Element => {
+  const [tableData, setTableData] = React.useState<Account[]>(data);
+  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+
+  const queryClient = useQueryClient();
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (newAccount: Account) => {
+      return await request({
+        url: '/api/account',
+        method: 'PUT',
+        data: newAccount,
+      });
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['accounts'] });
+    },
+    onError: (error: Error) => {
+      // setError(error.message);
+      console.log(error.message);
+    },
+  });
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    enableRowSelection: true,
+    enableMultiRowSelection: false,
+    onRowSelectionChange: setRowSelection,
+    state: {
+      rowSelection,
+    },
+    meta: {
+      isPending,
+      updateData: (rowIndex: number, columnId: string, value: string) => {
+        let editRow: Account | undefined;
+        setTableData((old) =>
+          old.map((row, index) => {
+            if (index === rowIndex) {
+              editRow = {
+                ...old[rowIndex],
+                [columnId]: value,
+              };
+              return editRow;
+            }
+            return row;
+          })
+        );
+        if (editRow != null) {
+          const editAccount: Account = {
+            id: editRow.id,
+            name: editRow.name,
+            institution: editRow.institution,
+            type: editRow.type,
+            subtype: editRow.subtype,
+            currentBalance: editRow.currentBalance,
+            source: editRow.source,
+            userId: editRow.id,
+            accountId: editRow.accountId,
+          };
+          mutate(editAccount);
+        }
+      },
+    },
   });
 
   return (
@@ -42,7 +110,13 @@ const AccountTable = ({ data, columns }: AccountTableProps): JSX.Element => {
         <TableBody>
           {table.getRowModel().rows?.length !== 0 ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+              <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && 'selected'}
+                onClick={() => {
+                  row.toggleSelected(true);
+                }}
+              >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

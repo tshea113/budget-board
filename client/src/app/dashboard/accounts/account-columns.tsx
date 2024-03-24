@@ -1,10 +1,18 @@
 import { type Account } from '@/types/account';
 import { type ColumnDef } from '@tanstack/react-table';
+import AccountNameCell from './account-name-cell';
+import LoadingCell from '../../../components/loading-cell';
 
 export const columns: Array<ColumnDef<Account>> = [
   {
     accessorKey: 'name',
     header: 'Name',
+    cell: AccountNameCell,
+  },
+  {
+    id: 'loading',
+    // header: AddTransactionButton,
+    cell: LoadingCell,
   },
   {
     accessorKey: 'currentBalance',
