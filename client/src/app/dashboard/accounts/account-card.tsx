@@ -28,10 +28,10 @@ const AccountCard = (): JSX.Element => {
       <CardHeader className="flex flex-row items-center">
         <CardTitle>Accounts</CardTitle>
         <div className="flex-grow" />
-        {/* TODO: Create a better add account interface */}
-        <AddButton>
+        {/* TODO: Create a better add account interface, then re-enable button */}
+        {/* <AddButton>
           <div />
-        </AddButton>
+        </AddButton> */}
       </CardHeader>
       <CardContent>
         <AccountTable columns={columns} data={data.data} />
