@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import AccountCard from './account-card';
+import AccountCard from './accounts/account-card';
 import WelcomeCard from './welcome-card';
 import { useState } from 'react';
-import AddAccount from './add-account';
+import AddAccount from './accounts/add-account';
 import EmailVerified from './email-verified';
 
 const Dashboard = (): JSX.Element => {
