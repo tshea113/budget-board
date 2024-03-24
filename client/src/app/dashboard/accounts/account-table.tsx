@@ -21,9 +21,10 @@ import React from 'react';
 interface AccountTableProps {
   columns: Array<ColumnDef<Account, unknown>>;
   data: Account[];
+  setError: (error: string) => void;
 }
 
-const AccountTable = ({ data, columns }: AccountTableProps): JSX.Element => {
+const AccountTable = ({ data, columns, setError }: AccountTableProps): JSX.Element => {
   const [tableData, setTableData] = React.useState<Account[]>(data);
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
@@ -40,13 +41,12 @@ const AccountTable = ({ data, columns }: AccountTableProps): JSX.Element => {
       void queryClient.invalidateQueries({ queryKey: ['accounts'] });
     },
     onError: (error: Error) => {
-      // setError(error.message);
-      console.log(error.message);
+      setError(error.message);
     },
   });
 
   const table = useReactTable({
-    data,
+    data: tableData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     enableRowSelection: true,
@@ -85,6 +85,11 @@ const AccountTable = ({ data, columns }: AccountTableProps): JSX.Element => {
           };
           mutate(editAccount);
         }
+      },
+      updateCategory: (_rowIndex, _columnId, _value) => {},
+      revertData: () => {},
+      setErrorInner: (newError: string) => {
+        setError(newError);
       },
     },
   });

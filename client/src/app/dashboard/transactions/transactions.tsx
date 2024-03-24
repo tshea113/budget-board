@@ -20,22 +20,34 @@ const Transactions = (): JSX.Element => {
     },
   });
 
+  const translateError = (error: string): string => {
+    if (error === 'Network Error') {
+      return 'There was an error connecting to the server. Please try again later.';
+    } else {
+      return 'An unknown error occurred. Please try again later.';
+    }
+  };
+
   if (isPending) {
     return <SkeletonTranasctionTable />;
   }
 
   // TODO: This should probably just be an error alert
   if (isError) {
-    return <span>Error: {error.message}</span>;
+    return (
+      <Card className="w-full">
+        <CardHeader className="justify-self-start">
+          <CardTitle>Transactions</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{translateError(error.message)}</AlertDescription>
+          </Alert>
+        </CardContent>
+      </Card>
+    );
   }
-
-  const translateError = (error: string): string => {
-    if (error === 'Network Error') {
-      return 'There was an error connecting to the server. Your data was not updated.';
-    } else {
-      return 'An unknown error occurred. Please try again later.';
-    }
-  };
 
   return (
     <div>
