@@ -16,12 +16,15 @@ import ResponsiveButton from '@/components/responsive-button';
 import { AuthContext } from '@/components/auth-provider';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
-import { getMessageForErrorCode } from '@/lib/firebase';
+import { firebaseAuth, getMessageForErrorCode } from '@/lib/firebase';
 import request from '@/lib/request';
+import { Button } from '@/components/ui/button';
+import { sendPasswordResetEmail } from 'firebase/auth';
 
 const Login = (): JSX.Element => {
   const { loginUser } = useContext<any>(AuthContext);
   const [alert, setAlert] = useState<string>('');
+  const [message, setMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
   const formSchema = z.object({
@@ -53,6 +56,18 @@ const Login = (): JSX.Element => {
     setLoading(false);
   };
 
+  const resetPassword = (email: string): void => {
+    sendPasswordResetEmail(firebaseAuth, email)
+      .then(() => {
+        setMessage(
+          'A reset email has been sent to the provided address, if an associated account exists.'
+        );
+      })
+      .catch((err: any) => {
+        setAlert(getMessageForErrorCode(err.code as string));
+      });
+  };
+
   return (
     <Form {...form}>
       <h1 className="text-xl font-bold">Login</h1>
@@ -68,6 +83,13 @@ const Login = (): JSX.Element => {
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error</AlertTitle>
             <AlertDescription>{alert}</AlertDescription>
+          </Alert>
+        )}
+        {message.length !== 0 && (
+          <Alert variant="success">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Success</AlertTitle>
+            <AlertDescription>{message}</AlertDescription>
           </Alert>
         )}
         <FormField
@@ -96,7 +118,18 @@ const Login = (): JSX.Element => {
             </FormItem>
           )}
         />
-        <ResponsiveButton {...{ loading }}>Submit</ResponsiveButton>
+        <div className="flex items-center space-x-5">
+          <ResponsiveButton {...{ loading }}>Submit</ResponsiveButton>
+          <Button
+            variant="link"
+            type="button"
+            onClick={() => {
+              resetPassword(form.getValues('email'));
+            }}
+          >
+            Forgot Password?
+          </Button>
+        </div>
       </form>
     </Form>
   );
