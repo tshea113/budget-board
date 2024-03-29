@@ -14,12 +14,12 @@ import * as z from 'zod';
 import { useContext, useState } from 'react';
 import ResponsiveButton from '@/components/responsive-button';
 import { AuthContext } from '@/components/auth-provider';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
 import { firebaseAuth, getMessageForErrorCode } from '@/lib/firebase';
 import request from '@/lib/request';
 import { Button } from '@/components/ui/button';
 import { sendPasswordResetEmail } from 'firebase/auth';
+import SuccessBanner from '@/components/success-banner';
+import AlertBanner from '@/components/alert-banner';
 
 const Login = (): JSX.Element => {
   const { loginUser } = useContext<any>(AuthContext);
@@ -78,20 +78,8 @@ const Login = (): JSX.Element => {
         })}
         className="space-y-8"
       >
-        {alert.length !== 0 && (
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{alert}</AlertDescription>
-          </Alert>
-        )}
-        {message.length !== 0 && (
-          <Alert variant="success">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Success</AlertTitle>
-            <AlertDescription>{message}</AlertDescription>
-          </Alert>
-        )}
+        <AlertBanner alert={alert} />
+        <SuccessBanner message={message} />
         <FormField
           control={form.control}
           name="email"

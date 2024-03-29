@@ -1,6 +1,6 @@
+import AlertBanner from '@/components/alert-banner';
 import { AuthContext } from '@/components/auth-provider';
 import ResponsiveButton from '@/components/responsive-button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
   Form,
   FormControl,
@@ -13,7 +13,6 @@ import { Input } from '@/components/ui/input';
 import { getMessageForErrorCode } from '@/lib/firebase';
 import request from '@/lib/request';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AlertCircle } from 'lucide-react';
 import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -73,13 +72,7 @@ const Signup = (): JSX.Element => {
         })}
         className="space-y-8"
       >
-        {alert.length > 0 && (
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{alert}</AlertDescription>
-          </Alert>
-        )}
+        <AlertBanner alert={alert} />
         <FormField
           control={form.control}
           name="email"
