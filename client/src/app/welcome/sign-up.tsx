@@ -52,6 +52,8 @@ const Signup = (): JSX.Element => {
   const submitUserSignup = async (values: z.infer<typeof formSchema>, e: any): Promise<void> => {
     e.preventDefault();
     setLoading(true);
+    setAlert('');
+
     const error: string = await createUser(values.email, values.password);
     if (error.length !== 0) {
       setAlert(getMessageForErrorCode(error));

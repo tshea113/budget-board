@@ -46,6 +46,9 @@ const Login = (): JSX.Element => {
   const submitUserLogin = async (values: z.infer<typeof formSchema>, e: any): Promise<void> => {
     e.preventDefault();
     setLoading(true);
+    setAlert('');
+    setMessage('');
+
     const error: string = await loginUser(values.email, values.password);
     if (error.length !== 0) {
       setAlert(getMessageForErrorCode(error));

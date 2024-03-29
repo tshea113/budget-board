@@ -54,24 +54,24 @@ const ResetPassword = (): JSX.Element => {
   ): Promise<void> => {
     e.preventDefault();
     setLoading(true);
+    setAlert('');
+    setMessage('');
 
     if (firebaseAuth.currentUser?.email) {
       const credential = EmailAuthProvider.credential(
         firebaseAuth.currentUser.email,
         values.oldPassword
       );
-      await reauthenticateWithCredential(firebaseAuth.currentUser, credential);
 
-      updatePassword(firebaseAuth.currentUser, values.newPassword)
-        .then(() => {
-          setMessage('Password successfully updated!');
-        })
-        .catch((error: Error) => {
-          setAlert(getMessageForErrorCode(error.message));
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      try {
+        await reauthenticateWithCredential(firebaseAuth.currentUser, credential);
+        await updatePassword(firebaseAuth.currentUser, values.newPassword);
+        setMessage('Password successfully updated!');
+      } catch (err: any) {
+        setAlert(getMessageForErrorCode(err.code as string));
+      }
+
+      setLoading(false);
     }
   };
 
