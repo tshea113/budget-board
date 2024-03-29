@@ -13,7 +13,7 @@ import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { useQueryClient } from '@tanstack/react-query';
 import { signOut } from 'firebase/auth';
 import React from 'react';
-import AccountSettings from './account-settings';
+import AccountSettings from './account-settings/account-settings';
 
 const Header = (): JSX.Element => {
   const { currentUserState } = React.useContext<any>(AuthContext);

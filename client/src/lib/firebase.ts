@@ -28,6 +28,10 @@ const getMessageForErrorCode = (errorCode: string): string => {
       return 'User not found.';
     case 'auth/too-many-requests':
       return ' Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later.';
+    case 'auth/missing-email':
+      return 'Email not provided.';
+    case 'auth/invalid-email':
+      return 'Invalid email provided.';
     default:
       return 'An unknown error occurred.';
   }

@@ -14,14 +14,17 @@ import * as z from 'zod';
 import { useContext, useState } from 'react';
 import ResponsiveButton from '@/components/responsive-button';
 import { AuthContext } from '@/components/auth-provider';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
-import { getMessageForErrorCode } from '@/lib/firebase';
+import { firebaseAuth, getMessageForErrorCode } from '@/lib/firebase';
 import request from '@/lib/request';
+import { Button } from '@/components/ui/button';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import SuccessBanner from '@/components/success-banner';
+import AlertBanner from '@/components/alert-banner';
 
 const Login = (): JSX.Element => {
   const { loginUser } = useContext<any>(AuthContext);
   const [alert, setAlert] = useState<string>('');
+  const [message, setMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
   const formSchema = z.object({
@@ -43,6 +46,9 @@ const Login = (): JSX.Element => {
   const submitUserLogin = async (values: z.infer<typeof formSchema>, e: any): Promise<void> => {
     e.preventDefault();
     setLoading(true);
+    setAlert('');
+    setMessage('');
+
     const error: string = await loginUser(values.email, values.password);
     if (error.length !== 0) {
       setAlert(getMessageForErrorCode(error));
@@ -51,6 +57,18 @@ const Login = (): JSX.Element => {
       await request({ url: '/api/user', method: 'GET' });
     }
     setLoading(false);
+  };
+
+  const resetPassword = (email: string): void => {
+    sendPasswordResetEmail(firebaseAuth, email)
+      .then(() => {
+        setMessage(
+          'A reset email has been sent to the provided address, if an associated account exists.'
+        );
+      })
+      .catch((err: any) => {
+        setAlert(getMessageForErrorCode(err.code as string));
+      });
   };
 
   return (
@@ -63,13 +81,8 @@ const Login = (): JSX.Element => {
         })}
         className="space-y-8"
       >
-        {alert.length !== 0 && (
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{alert}</AlertDescription>
-          </Alert>
-        )}
+        <AlertBanner alert={alert} />
+        <SuccessBanner message={message} />
         <FormField
           control={form.control}
           name="email"
@@ -96,7 +109,18 @@ const Login = (): JSX.Element => {
             </FormItem>
           )}
         />
-        <ResponsiveButton {...{ loading }}>Submit</ResponsiveButton>
+        <div className="flex items-center space-x-5">
+          <ResponsiveButton {...{ loading }}>Submit</ResponsiveButton>
+          <Button
+            variant="link"
+            type="button"
+            onClick={() => {
+              resetPassword(form.getValues('email'));
+            }}
+          >
+            Forgot Password?
+          </Button>
+        </div>
       </form>
     </Form>
   );
