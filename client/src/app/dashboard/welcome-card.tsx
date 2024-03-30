@@ -1,15 +1,12 @@
-import { AuthContext } from '@/components/auth-provider';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useContext } from 'react';
 import SyncAccountButton from './sync-account-button';
+import { firebaseAuth } from '@/lib/firebase';
 
 const WelcomeCard = (): JSX.Element => {
-  const { currentUserState } = useContext<any>(AuthContext);
-
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Hello, {currentUserState?.email}.</CardTitle>
+        <CardTitle>Hello, {firebaseAuth.currentUser?.email ?? 'not available'}.</CardTitle>
       </CardHeader>
       <CardContent>
         <SyncAccountButton />

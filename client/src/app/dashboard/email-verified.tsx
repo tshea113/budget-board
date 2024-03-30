@@ -1,18 +1,15 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { AuthContext } from '@/components/auth-provider';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import { firebaseAuth, sendVerificationEmail } from '@/lib/firebase';
 import { AlertCircle } from 'lucide-react';
-import { useContext } from 'react';
 
 const EmailVerified = (): JSX.Element | null => {
-  const { emailVerified, sendVerificationEmail } = useContext<any>(AuthContext);
-
   const resendVerification = (): void => {
-    sendVerificationEmail();
+    void sendVerificationEmail();
   };
 
-  if (!emailVerified) {
+  if (!firebaseAuth.currentUser?.emailVerified) {
     return (
       <Alert variant="destructive" className="mb-2 p-1">
         <AlertDescription className="flex items-center">

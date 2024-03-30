@@ -11,10 +11,9 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import * as z from 'zod';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import ResponsiveButton from '@/components/responsive-button';
-import { AuthContext } from '@/components/auth-provider';
-import { firebaseAuth, getMessageForErrorCode } from '@/lib/firebase';
+import { firebaseAuth, getMessageForErrorCode, loginUser } from '@/lib/firebase';
 import request from '@/lib/request';
 import { Button } from '@/components/ui/button';
 import { sendPasswordResetEmail } from 'firebase/auth';
@@ -22,7 +21,6 @@ import SuccessBanner from '@/components/success-banner';
 import AlertBanner from '@/components/alert-banner';
 
 const Login = (): JSX.Element => {
-  const { loginUser } = useContext<any>(AuthContext);
   const [alert, setAlert] = useState<string>('');
   const [message, setMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
