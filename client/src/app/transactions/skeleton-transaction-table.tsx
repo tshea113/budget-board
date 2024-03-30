@@ -1,5 +1,5 @@
 import { Skeleton } from '@/components/ui/skeleton';
-import { Card } from '../../../components/ui/card';
+import { Card } from '../../components/ui/card';
 
 const SkeletonTranasctionTable = (): JSX.Element => {
   return (

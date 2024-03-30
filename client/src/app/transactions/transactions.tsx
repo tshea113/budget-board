@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getTransactions } from '@/lib/transactions';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import EmailVerified from '../email-verified';
+import EmailVerified from '../dashboard/email-verified';
 import DataTable from './data-table';
 import { columns } from './columns';
 import { type Transaction } from '@/types/transaction';
