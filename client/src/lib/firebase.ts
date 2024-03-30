@@ -1,5 +1,12 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import {
+  type UserCredential,
+  createUserWithEmailAndPassword,
+  getAuth,
+  sendEmailVerification,
+  signOut,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY as string,
@@ -17,6 +24,50 @@ const firebaseAuth = getAuth(firebaseApp);
 async function getToken(): Promise<string | undefined> {
   return await firebaseAuth.currentUser?.getIdToken();
 }
+
+const createUser = async (email: string, password: string): Promise<string> => {
+  let errorCode: string = '';
+  try {
+    await createUserWithEmailAndPassword(firebaseAuth, email, password).then(
+      async (user: UserCredential) => {
+        if (user != null) {
+          await sendEmailVerification(user.user);
+        }
+      }
+    );
+  } catch (err: any) {
+    errorCode = err.code;
+  }
+  return errorCode;
+};
+
+const loginUser = async (email: string, password: string): Promise<string> => {
+  let errorCode: string = '';
+  try {
+    await signInWithEmailAndPassword(firebaseAuth, email, password);
+  } catch (err: any) {
+    errorCode = err.code;
+  }
+  return errorCode;
+};
+
+const sendVerificationEmail = async (): Promise<string> => {
+  let errorCode: string = '';
+  try {
+    if (firebaseAuth.currentUser != null) {
+      if (!firebaseAuth.currentUser.emailVerified) {
+        await sendEmailVerification(firebaseAuth.currentUser);
+      }
+    }
+  } catch (err: any) {
+    errorCode = err.code;
+  }
+  return errorCode;
+};
+
+const logOut = async (): Promise<void> => {
+  await signOut(firebaseAuth);
+};
 
 const getMessageForErrorCode = (errorCode: string): string => {
   switch (errorCode) {
@@ -37,4 +88,13 @@ const getMessageForErrorCode = (errorCode: string): string => {
   }
 };
 
-export { firebaseApp, firebaseAuth, getToken, getMessageForErrorCode };
+export {
+  firebaseApp,
+  firebaseAuth,
+  getToken,
+  createUser,
+  loginUser,
+  sendVerificationEmail,
+  logOut,
+  getMessageForErrorCode,
+};

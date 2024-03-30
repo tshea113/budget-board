@@ -1,5 +1,4 @@
 import AlertBanner from '@/components/alert-banner';
-import { AuthContext } from '@/components/auth-provider';
 import ResponsiveButton from '@/components/responsive-button';
 import {
   Form,
@@ -10,15 +9,14 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { getMessageForErrorCode } from '@/lib/firebase';
+import { createUser, getMessageForErrorCode } from '@/lib/firebase';
 import request from '@/lib/request';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 const Signup = (): JSX.Element => {
-  const { createUser } = useContext<any>(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [alert, setAlert] = useState<string>('');
 
