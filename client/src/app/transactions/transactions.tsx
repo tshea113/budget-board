@@ -50,9 +50,9 @@ const Transactions = (): JSX.Element => {
   }
 
   return (
-    <div>
+    <div className="flex w-screen flex-col items-center">
       <EmailVerified />
-      <Card>
+      <Card className="w-full 2xl:max-w-screen-2xl">
         <CardHeader className="grid w-auto grid-cols-2">
           <CardTitle className="justify-self-start">Transactions</CardTitle>
         </CardHeader>
