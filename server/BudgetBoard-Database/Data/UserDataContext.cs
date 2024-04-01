@@ -14,18 +14,32 @@ namespace BudgetBoard.Database.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<User>().ToTable("User")
-                .HasMany(e => e.Accounts)
+            modelBuilder.Entity<User>(u =>
+            {
+                u.HasMany(e => e.Accounts)
                 .WithOne(e => e.User)
                 .HasForeignKey(e => e.UserID);
 
+                u.HasMany(e => e.Budgets)
+                .WithOne(e => e.User)
+                .HasForeignKey(e => e.UserID);
 
-            modelBuilder.Entity<Account>().ToTable("Account")
-                .HasMany(e => e.Transactions)
+                u.ToTable("User");
+            });
+
+
+            modelBuilder.Entity<Account>((a) =>
+            {
+                a.HasMany(e => e.Transactions)
                 .WithOne(e => e.Account)
                 .HasForeignKey(e => e.AccountID);
 
+                a.ToTable("Account");
+            });
+
             modelBuilder.Entity<Transaction>().ToTable("Transaction");
+
+            modelBuilder.Entity<Budget>().ToTable("Budget");
 
             modelBuilder.UseIdentityColumns();
         }
@@ -33,5 +47,6 @@ namespace BudgetBoard.Database.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Budget> Budgets { get; set; }
     }
 }

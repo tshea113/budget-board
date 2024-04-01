@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { createUser, getMessageForErrorCode } from '@/lib/firebase';
-import request from '@/lib/request';
+import { getUser } from '@/lib/user';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -57,7 +57,7 @@ const Signup = (): JSX.Element => {
       setAlert(getMessageForErrorCode(error));
     } else {
       // Need to make sure a user exists before proceeding
-      await request({ url: '/api/user', method: 'GET' });
+      await getUser();
     }
     setLoading(false);
   };
