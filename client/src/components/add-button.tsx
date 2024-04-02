@@ -15,7 +15,9 @@ const AddButton = ({ children }: AddButtonProps): JSX.Element => {
           <PlusIcon></PlusIcon>
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end">{children}</PopoverContent>
+      <PopoverContent align="end" sideOffset={5}>
+        {children}
+      </PopoverContent>
     </Popover>
   );
 };
