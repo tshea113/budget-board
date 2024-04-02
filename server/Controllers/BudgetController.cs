@@ -47,6 +47,8 @@ namespace BudgetBoard.Controllers
                     return NotFound();
                 }
 
+                budget.UserID = user.ID;
+
                 user.Budgets.Add(budget);
                 _userDataContext.SaveChanges();
 

@@ -1,12 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import BudgetCard from './budget-card';
-import { type Budget, budgetDemo } from '@/types/budget';
 import MonthIterator from './month-iterator';
 import React from 'react';
 import AddButton from '@/components/add-button';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getBudgets } from '@/lib/budgets';
 import BudgetCards from './budget-cards';
+import AddBudget from './add-budget';
 
 const Budgets = (): JSX.Element => {
   const initDate = (): Date => {
@@ -40,7 +39,7 @@ const Budgets = (): JSX.Element => {
               </div>
               <div className="justify-self-end">
                 <AddButton>
-                  <Card></Card>
+                  <AddBudget date={date} />
                 </AddButton>
               </div>
             </div>

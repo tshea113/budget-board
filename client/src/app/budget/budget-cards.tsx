@@ -27,7 +27,7 @@ const BudgetCards = ({ budgetData, isPending }: BudgetCardsProps): JSX.Element =
     return (
       <div>
         {budgetData.map((budget: Budget) => (
-          <BudgetCard key={budget.id} category={budget.category} amount={23} total={100} />
+          <BudgetCard key={budget.id} category={budget.category} amount={32} total={budget.limit} />
         ))}
       </div>
     );

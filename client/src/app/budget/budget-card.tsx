@@ -1,5 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { getCategoryLabel } from '@/lib/transactions';
 
 interface BudgetCardProps {
   category: string;
@@ -18,7 +19,9 @@ const BudgetCard = ({ category, amount, total }: BudgetCardProps): JSX.Element =
     <Card>
       <CardContent>
         <div className="my-2 flex flex-row items-baseline">
-          <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">{category}</h3>
+          <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+            {getCategoryLabel(category)}
+          </h3>
           <div className="flex-grow" />
           <div className="flex flex-row space-x-1">
             <div className="text-md font-bold">${total - amount}</div>

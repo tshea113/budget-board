@@ -7,6 +7,11 @@ export const getTransactions = async (): Promise<AxiosResponse> =>
     url: '/api/transaction',
   });
 
+export const getCategoryLabel = (categoryValue: string): string => {
+  const foundCategory = categories.find((c) => c.value === categoryValue);
+  return foundCategory?.label ?? '';
+};
+
 export const getCategoriesAsTree = (): Category[] => {
   const map: Record<string, number> = {};
   let node: Category;
