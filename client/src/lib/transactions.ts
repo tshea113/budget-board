@@ -34,6 +34,11 @@ export const getCategoriesAsTree = (): Category[] => {
   return roots;
 };
 
+export const getIsCategory = (categoryValue: string): boolean => {
+  const categories = getCategoriesAsTree();
+  return categories.find((c) => c.value === categoryValue) !== undefined;
+};
+
 export const formatDate = (date: Date): string => {
   const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
   return new Date(date).toLocaleDateString([], options);
