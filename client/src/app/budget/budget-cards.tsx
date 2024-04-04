@@ -51,9 +51,8 @@ const BudgetCards = ({
         {budgetData.map((budget: Budget) => (
           <BudgetCard
             key={budget.id}
-            category={budget.category}
+            budget={budget}
             amount={getTransactionAmountForBudget(budget)}
-            total={budget.limit}
           />
         ))}
       </div>

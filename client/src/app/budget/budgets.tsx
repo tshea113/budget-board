@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import MonthIterator from './month-iterator';
 import React from 'react';
 import AddButton from '@/components/add-button';
@@ -35,31 +34,26 @@ const Budgets = (): JSX.Element => {
 
   return (
     <div className="flex w-screen flex-col items-center">
-      <Card className="w-full 2xl:max-w-screen-2xl">
-        <CardHeader>
-          <CardTitle>Budget</CardTitle>
-          <CardContent className="space-y-2 pt-0">
-            <div className="grid grid-cols-3">
-              <div />
-              <div className="justify-self-center">
-                <MonthIterator date={date} setDate={setDate} />
-              </div>
-              <div className="justify-self-end">
-                <AddButton>
-                  <AddBudget date={date} />
-                </AddButton>
-              </div>
-            </div>
-            <div className="items-center align-middle">
-              <BudgetCards
-                budgetData={budgetsQuery.data?.data}
-                transactionsData={transactionsQuery.data?.data}
-                isPending={budgetsQuery.isPending || transactionsQuery.isPending}
-              />
-            </div>
-          </CardContent>
-        </CardHeader>
-      </Card>
+      <div className="w-full space-y-2 2xl:max-w-screen-2xl">
+        <div className="grid grid-cols-3">
+          <div />
+          <div className="justify-self-center">
+            <MonthIterator date={date} setDate={setDate} />
+          </div>
+          <div className="justify-self-end">
+            <AddButton>
+              <AddBudget date={date} />
+            </AddButton>
+          </div>
+        </div>
+        <div className="items-center align-middle">
+          <BudgetCards
+            budgetData={budgetsQuery.data?.data}
+            transactionsData={transactionsQuery.data?.data}
+            isPending={budgetsQuery.isPending || transactionsQuery.isPending}
+          />
+        </div>
+      </div>
     </div>
   );
 };
