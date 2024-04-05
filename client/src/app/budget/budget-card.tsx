@@ -1,5 +1,4 @@
 import ResponsiveButton from '@/components/responsive-button';
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
@@ -13,17 +12,16 @@ import React from 'react';
 interface BudgetCardProps {
   budget: Budget;
   amount: number;
-  deleteBudget: (id: string) => void;
 }
 
-const BudgetCard = ({ budget, amount, deleteBudget }: BudgetCardProps): JSX.Element => {
+const BudgetCard = ({ budget, amount }: BudgetCardProps): JSX.Element => {
   const [isEdit, setIsEdit] = React.useState(false);
   const [limit, setLimit] = React.useState(budget.limit);
 
   const queryClient = useQueryClient();
-  const mutation = useMutation({
+  const doEditBudget = useMutation({
     mutationFn: async (newTotal: number) => {
-      const updateBudget: NewBudget = {
+      const newBudget: NewBudget = {
         id: budget.id,
         date: budget.date,
         category: budget.category,
@@ -33,7 +31,21 @@ const BudgetCard = ({ budget, amount, deleteBudget }: BudgetCardProps): JSX.Elem
       return await request({
         url: '/api/budget',
         method: 'PUT',
-        data: updateBudget,
+        data: newBudget,
+      });
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['budgets'] });
+      setIsEdit(false);
+    },
+  });
+
+  const doDeleteBudget = useMutation({
+    mutationFn: async (id: string) => {
+      return await request({
+        url: '/api/budget',
+        method: 'DELETE',
+        params: { id },
       });
     },
     onSuccess: async () => {
@@ -60,11 +72,7 @@ const BudgetCard = ({ budget, amount, deleteBudget }: BudgetCardProps): JSX.Elem
   };
 
   const submitLimitUpdate = (): void => {
-    mutation.mutate(limit);
-  };
-
-  const submitDelete = (): void => {
-    deleteBudget(budget.id);
+    doEditBudget.mutate(limit);
   };
 
   return (
@@ -75,9 +83,16 @@ const BudgetCard = ({ budget, amount, deleteBudget }: BudgetCardProps): JSX.Elem
             {getCategoryLabel(budget.category)}
           </h3>
           {isEdit && (
-            <Button variant="destructive" className="h-7" onClick={submitDelete}>
+            <ResponsiveButton
+              variant="destructive"
+              className="h-7"
+              onClick={() => {
+                doDeleteBudget.mutate(budget.id);
+              }}
+              loading={doDeleteBudget.isPending}
+            >
               Delete
-            </Button>
+            </ResponsiveButton>
           )}
         </div>
         <div className="grid h-6 grid-cols-2 justify-items-end">
@@ -100,7 +115,7 @@ const BudgetCard = ({ budget, amount, deleteBudget }: BudgetCardProps): JSX.Elem
                 />
                 <ResponsiveButton
                   className="h-8 w-8 p-0"
-                  loading={mutation.isPending}
+                  loading={doEditBudget.isPending}
                   onClick={(e) => {
                     e.stopPropagation();
                     submitLimitUpdate();

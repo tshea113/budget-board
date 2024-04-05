@@ -4,8 +4,6 @@ import { TailSpin } from 'react-loader-spinner';
 import { Button } from '@/components/ui/button';
 import { type Transaction } from '@/types/transaction';
 import { getIsCategory } from '@/lib/transactions';
-import request from '@/lib/request';
-import { useQueryClient } from '@tanstack/react-query';
 
 interface BudgetCardsProps {
   budgetData: Budget[] | null;
@@ -18,8 +16,6 @@ const BudgetCards = ({
   transactionsData,
   isPending,
 }: BudgetCardsProps): JSX.Element => {
-  const queryClient = useQueryClient();
-
   const getTransactionAmountForBudget = (budget: Budget): number => {
     let data: Transaction[] =
       transactionsData?.filter(
@@ -33,20 +29,6 @@ const BudgetCards = ({
     });
 
     return data.reduce((n, { amount }) => n + amount, 0) * -1;
-  };
-
-  const deleteBudget = (id: string): void => {
-    request({
-      url: '/api/budget',
-      method: 'DELETE',
-      params: { id },
-    })
-      .then(async () => {
-        await queryClient.invalidateQueries({ queryKey: ['budgets'] });
-      })
-      .catch((error: Error) => {
-        console.log(error.message);
-      });
   };
 
   if (isPending) {
@@ -75,7 +57,6 @@ const BudgetCards = ({
               key={budget.id}
               budget={budget}
               amount={getTransactionAmountForBudget(budget)}
-              deleteBudget={deleteBudget}
             />
           ))}
       </div>
