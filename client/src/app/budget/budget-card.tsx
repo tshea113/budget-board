@@ -19,7 +19,6 @@ interface BudgetCardProps {
 const BudgetCard = ({ budget, amount, deleteBudget }: BudgetCardProps): JSX.Element => {
   const [isEdit, setIsEdit] = React.useState(false);
   const [limit, setLimit] = React.useState(budget.limit);
-  const [newLimit, setNewLimit] = React.useState(budget.limit);
 
   const queryClient = useQueryClient();
   const mutation = useMutation({
@@ -39,7 +38,6 @@ const BudgetCard = ({ budget, amount, deleteBudget }: BudgetCardProps): JSX.Elem
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['budgets'] });
-      setLimit(newLimit);
       setIsEdit(false);
     },
   });
@@ -57,12 +55,12 @@ const BudgetCard = ({ budget, amount, deleteBudget }: BudgetCardProps): JSX.Elem
   const toggleIsEdit = (): void => {
     setIsEdit(!isEdit);
     if (isEdit) {
-      setNewLimit(limit);
+      setLimit(budget.limit);
     }
   };
 
   const submitLimitUpdate = (): void => {
-    mutation.mutate(newLimit);
+    mutation.mutate(limit);
   };
 
   const submitDelete = (): void => {
@@ -95,9 +93,9 @@ const BudgetCard = ({ budget, amount, deleteBudget }: BudgetCardProps): JSX.Elem
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
-                  value={newLimit}
+                  value={limit}
                   onChange={(e) => {
-                    setNewLimit(parseInt(e.target.value === '' ? '0' : e.target.value));
+                    setLimit(parseInt(e.target.value === '' ? '0' : e.target.value));
                   }}
                 />
                 <ResponsiveButton
