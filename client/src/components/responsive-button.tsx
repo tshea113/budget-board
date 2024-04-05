@@ -3,20 +3,34 @@ import { Button } from './ui/button';
 
 interface ResponsiveButtonProps {
   children: JSX.Element | string;
+  className?: string;
+  variant?: string;
   loading: boolean;
-  onClick?: () => void;
+  onClick?: (e: any) => void;
 }
 
-const ResponsiveButton = ({ children, loading, onClick }: ResponsiveButtonProps): JSX.Element => {
+const ResponsiveButton = ({
+  children,
+  className,
+  variant,
+  loading,
+  onClick,
+}: ResponsiveButtonProps): JSX.Element => {
   if (loading) {
     return (
-      <Button disabled>
+      <Button className={className} disabled>
         <Loader2 className="h-6 w-6 animate-spin" />
       </Button>
     );
   } else {
     return (
-      <Button className="w-fit" type="submit" onClick={onClick}>
+      <Button
+        className={className}
+        type="submit"
+        onClick={(e) => {
+          if (onClick != null) onClick(e);
+        }}
+      >
         {children}
       </Button>
     );
