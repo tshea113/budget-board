@@ -60,6 +60,30 @@ namespace BudgetBoard.Controllers
             }
         }
 
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> Edit([FromBody] Budget editBudget)
+        {
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            Budget? budget = await _userDataContext.Budgets.FindAsync(editBudget.ID);
+            if (budget == null)
+            {
+                return NotFound();
+            }
+
+            budget.Limit = editBudget.Limit;
+
+            await _userDataContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
         private async Task<User?> GetCurrentUser(string uid)
         {
             try
