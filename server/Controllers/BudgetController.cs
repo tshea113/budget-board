@@ -84,6 +84,29 @@ namespace BudgetBoard.Controllers
             return Ok();
         }
 
+        [HttpDelete]
+        [Authorize]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            Budget? budget = await _userDataContext.Budgets.FindAsync(id);
+            if (budget == null)
+            {
+                return NotFound();
+            }
+
+            _userDataContext.Entry(budget).State = EntityState.Deleted;
+            await _userDataContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
         private async Task<User?> GetCurrentUser(string uid)
         {
             try

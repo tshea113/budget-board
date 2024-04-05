@@ -13,9 +13,10 @@ import React from 'react';
 interface BudgetCardProps {
   budget: Budget;
   amount: number;
+  deleteBudget: (id: string) => void;
 }
 
-const BudgetCard = ({ budget, amount }: BudgetCardProps): JSX.Element => {
+const BudgetCard = ({ budget, amount, deleteBudget }: BudgetCardProps): JSX.Element => {
   const [isEdit, setIsEdit] = React.useState(false);
   const [limit, setLimit] = React.useState(budget.limit);
   const [newLimit, setNewLimit] = React.useState(budget.limit);
@@ -36,9 +37,10 @@ const BudgetCard = ({ budget, amount }: BudgetCardProps): JSX.Element => {
         data: updateBudget,
       });
     },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['budgets'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['budgets'] });
       setLimit(newLimit);
+      setIsEdit(false);
     },
   });
 
@@ -63,6 +65,10 @@ const BudgetCard = ({ budget, amount }: BudgetCardProps): JSX.Element => {
     mutation.mutate(newLimit);
   };
 
+  const submitDelete = (): void => {
+    deleteBudget(budget.id);
+  };
+
   return (
     <Card className="space-y-1 px-3 py-1 shadow-md" onClick={toggleIsEdit}>
       <div className="my-2 grid grid-cols-2 items-center">
@@ -71,7 +77,7 @@ const BudgetCard = ({ budget, amount }: BudgetCardProps): JSX.Element => {
             {getCategoryLabel(budget.category)}
           </h3>
           {isEdit && (
-            <Button variant="destructive" className="h-7">
+            <Button variant="destructive" className="h-7" onClick={submitDelete}>
               Delete
             </Button>
           )}
