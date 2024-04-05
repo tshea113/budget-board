@@ -48,13 +48,17 @@ const BudgetCards = ({
   } else {
     return (
       <div className="flex flex-col space-y-1">
-        {budgetData.map((budget: Budget) => (
-          <BudgetCard
-            key={budget.id}
-            budget={budget}
-            amount={getTransactionAmountForBudget(budget)}
-          />
-        ))}
+        {budgetData
+          .sort(function (a, b) {
+            return a.category.toLowerCase().localeCompare(b.category.toLowerCase());
+          })
+          .map((budget: Budget) => (
+            <BudgetCard
+              key={budget.id}
+              budget={budget}
+              amount={getTransactionAmountForBudget(budget)}
+            />
+          ))}
       </div>
     );
   }
