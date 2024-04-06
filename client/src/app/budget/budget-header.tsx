@@ -1,12 +1,14 @@
-import { Card } from '@/components/ui/card';
+interface BudgetHeaderProps {
+  children: JSX.Element | string;
+}
 
-const BudgetHeader = (): JSX.Element => {
+const BudgetHeader = (props: BudgetHeaderProps): JSX.Element => {
   return (
-    <Card className="my-2 space-y-1 px-3 py-1 shadow-md">
+    <div className="my-2 space-y-1 px-3 py-1 shadow-md">
       <div className="grid grid-cols-2">
         <div>
           <h3 className="scroll-m-20 justify-self-start text-xl font-semibold tracking-tight">
-            Spending
+            {props.children}
           </h3>
         </div>
         <div className="grid grid-cols-3 justify-items-center">
@@ -15,7 +17,7 @@ const BudgetHeader = (): JSX.Element => {
           <div>Left</div>
         </div>
       </div>
-    </Card>
+    </div>
   );
 };
 
