@@ -76,8 +76,8 @@ const BudgetCard = ({ budget, amount }: BudgetCardProps): JSX.Element => {
   };
 
   return (
-    <Card className="space-y-1 px-3 py-1 shadow-md" onClick={toggleIsEdit}>
-      <div className="my-2 grid grid-cols-2 items-center">
+    <Card className="hover:bg-card-select space-y-1 px-3 py-1 shadow-md" onClick={toggleIsEdit}>
+      <div className="grid h-12 grid-cols-2 items-center">
         <div className="flex flex-row items-center space-x-2">
           <h3 className="scroll-m-20 justify-self-start text-xl font-semibold tracking-tight">
             {getCategoryLabel(budget.category)}
@@ -95,16 +95,15 @@ const BudgetCard = ({ budget, amount }: BudgetCardProps): JSX.Element => {
             </ResponsiveButton>
           )}
         </div>
-        <div className="grid h-6 grid-cols-2 justify-items-end">
-          <div className="flex flex-row items-center space-x-1 justify-self-end">
-            <div className="text-md font-bold">${amount.toFixed()}</div>
-            <div className="text-md">of</div>
+        <div className="grid h-8 grid-cols-3 justify-items-center text-lg font-semibold">
+          <div>${amount.toFixed()}</div>
+          <div>
             {!isEdit ? (
-              <div className="text-md">${limit}</div>
+              <div>${limit}</div>
             ) : (
-              <>
+              <div className="flex flex-row items-baseline space-x-1">
                 <Input
-                  className="text-md h-8 w-12 justify-self-end px-2"
+                  className="text-md h-8 w-14 px-2"
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
@@ -114,7 +113,7 @@ const BudgetCard = ({ budget, amount }: BudgetCardProps): JSX.Element => {
                   }}
                 />
                 <ResponsiveButton
-                  className="h-8 w-8 p-0"
+                  className="h-9 w-9 p-0"
                   loading={doEditBudget.isPending}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -123,13 +122,10 @@ const BudgetCard = ({ budget, amount }: BudgetCardProps): JSX.Element => {
                 >
                   <CheckIcon />
                 </ResponsiveButton>
-              </>
+              </div>
             )}
           </div>
-          <div className="flex flex-row space-x-1 justify-self-end">
-            <div className="text-md font-bold">{getAmountLeft(limit, amount)}</div>
-            <div className="text-md">left</div>
-          </div>
+          <div>{getAmountLeft(limit, amount)}</div>
         </div>
       </div>
       <div className="grid grid-cols-2 items-center"></div>

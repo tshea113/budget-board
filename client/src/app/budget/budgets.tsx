@@ -6,6 +6,7 @@ import { getBudgets } from '@/lib/budgets';
 import BudgetCards from './budget-cards';
 import AddBudget from './add-budget';
 import { getTransactions } from '@/lib/transactions';
+import BudgetHeader from './budget-header';
 
 const Budgets = (): JSX.Element => {
   const initDate = (): Date => {
@@ -47,6 +48,7 @@ const Budgets = (): JSX.Element => {
           </div>
         </div>
         <div className="items-center align-middle">
+          <BudgetHeader />
           <BudgetCards
             budgetData={budgetsQuery.data?.data}
             transactionsData={transactionsQuery.data?.data}
