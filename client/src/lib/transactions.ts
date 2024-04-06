@@ -34,6 +34,14 @@ export const getCategoriesAsTree = (): Category[] => {
   return roots;
 };
 
+export const getParentCategory = (categoryValue: string): string => {
+  const category = categories.find((c) => c.value === categoryValue);
+
+  if (category == null) return '';
+
+  return category.parent === '' ? category.value : category.parent;
+};
+
 export const getIsCategory = (categoryValue: string): boolean => {
   const categories = getCategoriesAsTree();
   return categories.find((c) => c.value === categoryValue) !== undefined;

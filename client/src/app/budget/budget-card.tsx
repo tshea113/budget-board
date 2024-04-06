@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import request from '@/lib/request';
-import { getCategoryLabel } from '@/lib/transactions';
+import { getCategoryLabel, getParentCategory } from '@/lib/transactions';
 import { type Budget, type NewBudget } from '@/types/budget';
 import { CheckIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -54,7 +54,7 @@ const BudgetCard = ({ budget, amount }: BudgetCardProps): JSX.Element => {
     },
   });
 
-  const getProgress = (): number => {
+  const getProgress = (amount: number, limit: number): number => {
     const percentage = (amount / limit) * 100;
     if (percentage > 100) return 100;
     else return percentage;
@@ -75,13 +75,17 @@ const BudgetCard = ({ budget, amount }: BudgetCardProps): JSX.Element => {
     doEditBudget.mutate(limit);
   };
 
+  const getAmountSign = (amount: number): number => {
+    return getParentCategory(budget.category) === 'income' ? amount : amount * -1;
+  };
+
   return (
     <Card className="hover:bg-card-select space-y-1 px-3 py-1 shadow-md" onClick={toggleIsEdit}>
-      <div className="grid h-12 grid-cols-2 items-center">
+      <div className="grid h-10 grid-cols-2 items-center">
         <div className="flex flex-row items-center space-x-2">
-          <h3 className="scroll-m-20 justify-self-start text-xl font-semibold tracking-tight">
+          <div className="scroll-m-20 justify-self-start text-xl font-semibold tracking-tight">
             {getCategoryLabel(budget.category)}
-          </h3>
+          </div>
           {isEdit && (
             <ResponsiveButton
               variant="destructive"
@@ -96,14 +100,14 @@ const BudgetCard = ({ budget, amount }: BudgetCardProps): JSX.Element => {
           )}
         </div>
         <div className="grid h-8 grid-cols-3 justify-items-center text-lg font-semibold">
-          <div>${amount.toFixed()}</div>
+          <div>${getAmountSign(amount).toFixed()}</div>
           <div>
             {!isEdit ? (
               <div>${limit}</div>
             ) : (
               <div className="flex flex-row items-baseline space-x-1">
                 <Input
-                  className="text-md h-8 w-14 px-2"
+                  className="text-md h-8 w-20 px-2"
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
@@ -125,11 +129,10 @@ const BudgetCard = ({ budget, amount }: BudgetCardProps): JSX.Element => {
               </div>
             )}
           </div>
-          <div>{getAmountLeft(limit, amount)}</div>
+          <div>{getAmountLeft(budget.limit, getAmountSign(amount))}</div>
         </div>
       </div>
-      <div className="grid grid-cols-2 items-center"></div>
-      <Progress className="h-2" value={getProgress()} />
+      <Progress className="h-2" value={getProgress(getAmountSign(amount), budget.limit)} />
     </Card>
   );
 };

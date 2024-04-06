@@ -7,6 +7,8 @@ import BudgetCards from './budget-cards';
 import AddBudget from './add-budget';
 import { getTransactions } from '@/lib/transactions';
 import BudgetHeader from './budget-header';
+import { type Budget } from '@/types/budget';
+import { Button } from '@/components/ui/button';
 
 const Budgets = (): JSX.Element => {
   const initDate = (): Date => {
@@ -33,6 +35,26 @@ const Budgets = (): JSX.Element => {
     },
   });
 
+  enum BudgetGroup {
+    Income,
+    Spending,
+  }
+
+  const parseBudgetGroups = (
+    budgetData: Budget[] | undefined,
+    budgetGroup: BudgetGroup
+  ): Budget[] => {
+    if (budgetData == null) return [];
+
+    if (budgetGroup === BudgetGroup.Income) {
+      return budgetData.filter((b) => b.category === 'income') ?? [];
+    } else if (budgetGroup === BudgetGroup.Spending) {
+      return budgetData.filter((b) => b.category !== 'income') ?? [];
+    } else {
+      return budgetData;
+    }
+  };
+
   return (
     <div className="flex w-screen flex-col items-center">
       <div className="w-full space-y-2 2xl:max-w-screen-2xl">
@@ -41,19 +63,38 @@ const Budgets = (): JSX.Element => {
           <div className="justify-self-center">
             <MonthIterator date={date} setDate={setDate} />
           </div>
-          <div className="justify-self-end">
+          <div className="flex flex-row space-x-2 justify-self-end">
+            {(((budgetsQuery.data?.data as Budget[]) ?? null)?.length === 0 ?? false) && (
+              <Button variant="default">Carry over from last month</Button>
+            )}
             <AddButton>
               <AddBudget date={date} />
             </AddButton>
           </div>
         </div>
-        <div className="items-center align-middle">
-          <BudgetHeader />
-          <BudgetCards
-            budgetData={budgetsQuery.data?.data}
-            transactionsData={transactionsQuery.data?.data}
-            isPending={budgetsQuery.isPending || transactionsQuery.isPending}
-          />
+        <div className="space-y-10">
+          <div className="items-center align-middle">
+            <BudgetHeader>Income</BudgetHeader>
+            <BudgetCards
+              budgetData={parseBudgetGroups(
+                budgetsQuery.data?.data as Budget[],
+                BudgetGroup.Income
+              )}
+              transactionsData={transactionsQuery.data?.data}
+              isPending={budgetsQuery.isPending || transactionsQuery.isPending}
+            />
+          </div>
+          <div className="items-center align-middle">
+            <BudgetHeader>Spending</BudgetHeader>
+            <BudgetCards
+              budgetData={parseBudgetGroups(
+                budgetsQuery.data?.data as Budget[],
+                BudgetGroup.Spending
+              )}
+              transactionsData={transactionsQuery.data?.data}
+              isPending={budgetsQuery.isPending || transactionsQuery.isPending}
+            />
+          </div>
         </div>
       </div>
     </div>
