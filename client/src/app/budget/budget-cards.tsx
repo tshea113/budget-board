@@ -1,8 +1,8 @@
 import { type Budget } from '@/types/budget';
 import BudgetCard from './budget-card';
-import { TailSpin } from 'react-loader-spinner';
 import { type Transaction } from '@/types/transaction';
 import { getIsCategory } from '@/lib/transactions';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface BudgetCardsProps {
   budgetData: Budget[] | null;
@@ -29,7 +29,7 @@ const BudgetCards = (props: BudgetCardsProps): JSX.Element => {
   if (props.isPending) {
     return (
       <div className="flex items-center justify-center">
-        <TailSpin height="100" width="100" color="gray" />
+        <Skeleton className="h-[62px] w-full rounded-xl" />
       </div>
     );
   }
