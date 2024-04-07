@@ -38,11 +38,7 @@ const BudgetTotalCard = (props: BudgetTotalCardProps): JSX.Element => {
         total={getBudgetTotal(parseBudgetGroups(props.budgetData, BudgetGroup.Spending))}
       />
       <Separator className="my-2" />
-      <BudgetTotal
-        label={'Left Over'}
-        amount={getTransactionTotal(props.transactionData)}
-        total={2000}
-      />
+      <BudgetTotal label={'Left Over'} amount={getTransactionTotal(props.transactionData)} />
     </Card>
   );
 };

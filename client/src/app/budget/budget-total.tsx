@@ -4,19 +4,29 @@ import { getProgress } from '@/lib/utils';
 interface BudgetTotalProps {
   label: string;
   amount: number;
-  total: number;
+  total?: number;
 }
 
 const BudgetTotal = (props: BudgetTotalProps): JSX.Element => {
+  const getBudgetTotalString = (amount: number, total: number | undefined): string => {
+    if (total != null) {
+      return '$' + amount.toFixed() + ' of $' + total.toFixed();
+    } else {
+      return '$' + amount.toFixed();
+    }
+  };
+
   return (
     <>
       <div className="grid grid-cols-2">
         <div className="text-lg font-medium">{props.label}</div>
         <div className="text-md justify-self-end font-medium">
-          ${props.amount.toFixed()} of ${props.total.toFixed()}
+          {getBudgetTotalString(props.amount, props.total)}
         </div>
       </div>
-      <Progress className="h-2" value={getProgress(Math.abs(props.amount), props.total)} />
+      {props.total != null && (
+        <Progress className="h-2" value={getProgress(Math.abs(props.amount), props.total)} />
+      )}
     </>
   );
 };
