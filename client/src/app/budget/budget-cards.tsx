@@ -11,9 +11,12 @@ interface BudgetCardsProps {
 }
 
 const BudgetCards = (props: BudgetCardsProps): JSX.Element => {
-  const getTransactionAmountForBudget = (budget: Budget): number => {
+  const getTransactionAmountForBudget = (
+    budget: Budget,
+    transactionData: Transaction[]
+  ): number => {
     let data: Transaction[] =
-      props.transactionsData?.filter(
+      transactionData.filter(
         (t: Transaction) =>
           new Date(t.date).getMonth() === new Date(budget.date).getMonth() &&
           new Date(t.date).getUTCFullYear() === new Date(budget.date).getUTCFullYear()
@@ -50,7 +53,7 @@ const BudgetCards = (props: BudgetCardsProps): JSX.Element => {
             <BudgetCard
               key={budget.id}
               budget={budget}
-              amount={getTransactionAmountForBudget(budget)}
+              amount={getTransactionAmountForBudget(budget, props.transactionsData ?? [])}
             />
           ))}
       </div>

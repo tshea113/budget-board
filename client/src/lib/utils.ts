@@ -10,3 +10,9 @@ export const initMonth = (): Date => {
   date.setDate(1);
   return date;
 };
+
+export const getProgress = (amount: number, total: number): number => {
+  const percentage = (amount / total) * 100;
+  if (percentage > 100) return 100;
+  else return percentage;
+};

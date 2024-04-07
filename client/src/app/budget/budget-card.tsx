@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import request from '@/lib/request';
 import { getCategoryLabel, getParentCategory } from '@/lib/transactions';
+import { getProgress } from '@/lib/utils';
 import { type Budget, type NewBudget } from '@/types/budget';
 import { CheckIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -54,12 +55,6 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
     },
   });
 
-  const getProgress = (amount: number, limit: number): number => {
-    const percentage = (amount / limit) * 100;
-    if (percentage > 100) return 100;
-    else return percentage;
-  };
-
   const getAmountLeft = (total: number, amount: number): string => {
     return '$' + (total - amount).toFixed();
   };
@@ -80,7 +75,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
   };
 
   return (
-    <Card className="hover:bg-card-select space-y-1 px-3 py-1 shadow-md" onClick={toggleIsEdit}>
+    <Card className="space-y-1 px-3 py-1 shadow-md hover:bg-card-select" onClick={toggleIsEdit}>
       <div className="grid h-10 grid-cols-2 items-center">
         <div className="flex flex-row items-center space-x-2">
           <div className="scroll-m-20 justify-self-start text-xl font-semibold tracking-tight">
