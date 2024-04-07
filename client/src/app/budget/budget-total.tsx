@@ -16,7 +16,7 @@ const BudgetTotal = (props: BudgetTotalProps): JSX.Element => {
           ${props.amount.toFixed()} of ${props.total.toFixed()}
         </div>
       </div>
-      <Progress className="h-2" value={getProgress(props.amount, props.total)} />
+      <Progress className="h-2" value={getProgress(Math.abs(props.amount), props.total)} />
     </>
   );
 };

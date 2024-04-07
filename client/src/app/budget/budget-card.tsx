@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import request from '@/lib/request';
-import { getCategoryLabel, getParentCategory } from '@/lib/transactions';
+import { getCategoryLabel } from '@/lib/transactions';
 import { getProgress } from '@/lib/utils';
 import { type Budget, type NewBudget } from '@/types/budget';
 import { CheckIcon } from '@radix-ui/react-icons';
@@ -61,21 +61,16 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
 
   const toggleIsEdit = (): void => {
     setIsEdit(!isEdit);
-    if (isEdit) {
-      setLimit(props.budget.limit);
-    }
-  };
-
-  const submitLimitUpdate = (): void => {
-    doEditBudget.mutate(limit);
-  };
-
-  const getAmountSign = (amount: number): number => {
-    return getParentCategory(props.budget.category) === 'income' ? amount : amount * -1;
   };
 
   return (
-    <Card className="space-y-1 px-3 py-1 shadow-md hover:bg-card-select" onClick={toggleIsEdit}>
+    <Card
+      className="space-y-1 px-3 py-1 shadow-md hover:bg-card-select"
+      onClick={() => {
+        toggleIsEdit();
+        setLimit(props.budget.limit);
+      }}
+    >
       <div className="grid h-10 grid-cols-2 items-center">
         <div className="flex flex-row items-center space-x-2">
           <div className="scroll-m-20 justify-self-start text-xl font-semibold tracking-tight">
@@ -95,7 +90,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
           )}
         </div>
         <div className="grid h-8 grid-cols-3 justify-items-center text-lg font-semibold">
-          <div>${getAmountSign(props.amount).toFixed()}</div>
+          <div>${Math.abs(props.amount).toFixed()}</div>
           <div>
             {!isEdit ? (
               <div>${limit}</div>
@@ -116,7 +111,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
                   loading={doEditBudget.isPending}
                   onClick={(e) => {
                     e.stopPropagation();
-                    submitLimitUpdate();
+                    doEditBudget.mutate(limit);
                   }}
                 >
                   <CheckIcon />
@@ -124,13 +119,10 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
               </div>
             )}
           </div>
-          <div>{getAmountLeft(props.budget.limit, getAmountSign(props.amount))}</div>
+          <div>{getAmountLeft(props.budget.limit, Math.abs(props.amount))}</div>
         </div>
       </div>
-      <Progress
-        className="h-2"
-        value={getProgress(getAmountSign(props.amount), props.budget.limit)}
-      />
+      <Progress className="h-2" value={getProgress(Math.abs(props.amount), props.budget.limit)} />
     </Card>
   );
 };

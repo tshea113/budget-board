@@ -2,15 +2,16 @@ import MonthIterator from './month-iterator';
 import React from 'react';
 import AddButton from '@/components/add-button';
 import { useQuery } from '@tanstack/react-query';
-import { BudgetGroup, getBudgets, parseBudgetGroups } from '@/lib/budgets';
+import { BudgetGroup, getBudgets, getBudgetsForMonth, parseBudgetGroups } from '@/lib/budgets';
 import BudgetCards from './budget-cards';
 import AddBudget from './add-budget';
-import { getTransactions } from '@/lib/transactions';
+import { getTransactions, getTransactionsForMonth } from '@/lib/transactions';
 import BudgetHeader from './budget-header';
 import { type Budget } from '@/types/budget';
 import { Button } from '@/components/ui/button';
 import BudgetTotalCard from './budget-total-card';
 import { initMonth } from '@/lib/utils';
+import { type Transaction } from '@/types/transaction';
 
 const Budgets = (): JSX.Element => {
   const [date, setDate] = React.useState<Date>(initMonth());
@@ -56,7 +57,10 @@ const Budgets = (): JSX.Element => {
                 budgetsQuery.data?.data as Budget[],
                 BudgetGroup.Income
               )}
-              transactionsData={transactionsQuery.data?.data}
+              transactionsData={getTransactionsForMonth(
+                (transactionsQuery.data?.data as Transaction[]) ?? [],
+                date
+              )}
               isPending={budgetsQuery.isPending || transactionsQuery.isPending}
             />
           </div>
@@ -67,7 +71,10 @@ const Budgets = (): JSX.Element => {
                 budgetsQuery.data?.data as Budget[],
                 BudgetGroup.Spending
               )}
-              transactionsData={transactionsQuery.data?.data}
+              transactionsData={getTransactionsForMonth(
+                (transactionsQuery.data?.data as Transaction[]) ?? [],
+                date
+              )}
               isPending={budgetsQuery.isPending || transactionsQuery.isPending}
             />
           </div>
@@ -77,8 +84,11 @@ const Budgets = (): JSX.Element => {
         {/* TODO: Figure out a better way to horizontally position this */}
         <div />
         <BudgetTotalCard
-          budgetData={budgetsQuery.data?.data ?? []}
-          transactionData={transactionsQuery.data?.data ?? []}
+          budgetData={getBudgetsForMonth((budgetsQuery.data?.data as Budget[]) ?? [], date)}
+          transactionData={getTransactionsForMonth(
+            (transactionsQuery.data?.data as Transaction[]) ?? [],
+            date
+          )}
         />
       </div>
     </div>

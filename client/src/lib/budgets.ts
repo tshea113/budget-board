@@ -15,6 +15,16 @@ export const getBudgets = async (date: Date): Promise<AxiosResponse> => {
   });
 };
 
+export const getBudgetsForMonth = (budgetData: Budget[], date: Date): Budget[] => {
+  return (
+    budgetData.filter(
+      (b: Budget) =>
+        new Date(b.date).getMonth() === new Date(date).getMonth() &&
+        new Date(b.date).getUTCFullYear() === new Date(date).getUTCFullYear()
+    ) ?? []
+  );
+};
+
 export const parseBudgetGroups = (
   budgetData: Budget[] | undefined,
   budgetGroup: BudgetGroup
