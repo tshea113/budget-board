@@ -60,6 +60,39 @@ namespace BudgetBoard.Controllers
             }
         }
 
+        [HttpPost]
+        [Authorize]
+        [ActionName("AddMultiple")]
+        [Route("[action]")]
+        public async Task<IActionResult> Add([FromBody] Budget[] budgets)
+        {
+            try
+            {
+                var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                foreach (Budget budget in budgets)
+                {
+                    budget.ID = default;
+                    budget.UserID = user.ID;
+
+                    user.Budgets.Add(budget);
+                }
+
+                _userDataContext.SaveChanges();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPut]
         [Authorize]
         public async Task<IActionResult> Edit([FromBody] Budget editBudget)

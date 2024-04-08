@@ -25,7 +25,7 @@ export const getBudgetsForMonth = (budgetData: Budget[], date: Date): Budget[] =
   );
 };
 
-export const parseBudgetGroups = (
+export const getBudgetsForGroup = (
   budgetData: Budget[] | undefined,
   budgetGroup: BudgetGroup
 ): Budget[] => {

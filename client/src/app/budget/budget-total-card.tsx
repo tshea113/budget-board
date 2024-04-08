@@ -2,7 +2,7 @@ import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import BudgetTotal from './budget-total';
 import { type Budget } from '@/types/budget';
-import { BudgetGroup, parseBudgetGroups } from '@/lib/budgets';
+import { BudgetGroup, getBudgetsForGroup } from '@/lib/budgets';
 import { type Transaction } from '@/types/transaction';
 
 interface BudgetTotalCardProps {
@@ -28,14 +28,14 @@ const BudgetTotalCard = (props: BudgetTotalCardProps): JSX.Element => {
         amount={Math.abs(
           getTransactionTotal(props.transactionData.filter((t) => t.category === 'income'))
         )}
-        total={getBudgetTotal(parseBudgetGroups(props.budgetData, BudgetGroup.Income))}
+        total={getBudgetTotal(getBudgetsForGroup(props.budgetData, BudgetGroup.Income))}
       />
       <BudgetTotal
         label={'Spending'}
         amount={Math.abs(
           getTransactionTotal(props.transactionData.filter((t) => t.category !== 'income'))
         )}
-        total={getBudgetTotal(parseBudgetGroups(props.budgetData, BudgetGroup.Spending))}
+        total={getBudgetTotal(getBudgetsForGroup(props.budgetData, BudgetGroup.Spending))}
       />
       <Separator className="my-2" />
       <BudgetTotal label={'Left Over'} amount={getTransactionTotal(props.transactionData)} />

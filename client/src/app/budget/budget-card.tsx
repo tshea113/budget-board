@@ -6,6 +6,7 @@ import request from '@/lib/request';
 import { getCategoryLabel } from '@/lib/transactions';
 import { getProgress } from '@/lib/utils';
 import { type Budget, type NewBudget } from '@/types/budget';
+import { defaultGuid } from '@/types/user';
 import { CheckIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
@@ -27,7 +28,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
         date: props.budget.date,
         category: props.budget.category,
         limit: newTotal,
-        userId: '00000000-0000-0000-0000-000000000000',
+        userId: defaultGuid,
       };
       return await request({
         url: '/api/budget',

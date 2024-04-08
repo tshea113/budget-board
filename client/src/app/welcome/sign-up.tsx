@@ -72,7 +72,7 @@ const Signup = (): JSX.Element => {
         })}
         className="space-y-8"
       >
-        <AlertBanner alert={alert} />
+        <AlertBanner alert={alert} setAlert={setAlert} />
         <FormField
           control={form.control}
           name="email"
