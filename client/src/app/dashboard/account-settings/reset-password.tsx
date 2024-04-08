@@ -87,7 +87,7 @@ const ResetPassword = (): JSX.Element => {
             })}
             className="space-y-4"
           >
-            <AlertBanner alert={alert} />
+            <AlertBanner alert={alert} setAlert={setAlert} />
             <SuccessBanner message={message} />
             <FormField
               control={form.control}

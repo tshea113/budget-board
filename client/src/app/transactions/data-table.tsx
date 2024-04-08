@@ -152,7 +152,7 @@ const DataTable = <TData, TValue>({
   });
 
   return (
-    <div>
+    <div className="bg-card">
       <div className="rounded-md border">
         <Table>
           <TableHeader>

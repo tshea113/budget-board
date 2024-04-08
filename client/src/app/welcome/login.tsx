@@ -14,11 +14,11 @@ import * as z from 'zod';
 import { useState } from 'react';
 import ResponsiveButton from '@/components/responsive-button';
 import { firebaseAuth, getMessageForErrorCode, loginUser } from '@/lib/firebase';
-import request from '@/lib/request';
 import { Button } from '@/components/ui/button';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import SuccessBanner from '@/components/success-banner';
 import AlertBanner from '@/components/alert-banner';
+import { getUser } from '@/lib/user';
 
 const Login = (): JSX.Element => {
   const [alert, setAlert] = useState<string>('');
@@ -52,7 +52,7 @@ const Login = (): JSX.Element => {
       setAlert(getMessageForErrorCode(error));
     } else {
       // Need to make sure a user exists before proceeding
-      await request({ url: '/api/user', method: 'GET' });
+      await getUser();
     }
     setLoading(false);
   };
@@ -79,7 +79,7 @@ const Login = (): JSX.Element => {
         })}
         className="space-y-8"
       >
-        <AlertBanner alert={alert} />
+        <AlertBanner alert={alert} setAlert={setAlert} />
         <SuccessBanner message={message} />
         <FormField
           control={form.control}

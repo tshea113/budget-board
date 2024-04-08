@@ -2,13 +2,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getTransactions } from '@/lib/transactions';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import EmailVerified from '../email-verified';
+import EmailVerified from '../dashboard/email-verified';
 import DataTable from './data-table';
 import { columns } from './columns';
 import { type Transaction } from '@/types/transaction';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
-import SkeletonTranasctionTable from './skeleton-transaction-table';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Transactions = (): JSX.Element => {
   const [transactionError, setTransactionError] = useState<string>('');
@@ -29,7 +29,7 @@ const Transactions = (): JSX.Element => {
   };
 
   if (isPending) {
-    return <SkeletonTranasctionTable />;
+    return <Skeleton className="h-[550px] w-screen rounded-xl" />;
   }
 
   // TODO: This should probably just be an error alert
@@ -50,29 +50,24 @@ const Transactions = (): JSX.Element => {
   }
 
   return (
-    <div>
+    <div className="flex w-screen flex-col items-center">
       <EmailVerified />
-      <Card>
-        <CardHeader className="grid w-auto grid-cols-2">
-          <CardTitle className="justify-self-start">Transactions</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {transactionError.length > 0 && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{translateError(transactionError)}</AlertDescription>
-            </Alert>
-          )}
-          <DataTable
-            columns={columns}
-            data={data.data.sort((a: Transaction, b: Transaction) => {
-              // Sort the data by date in decending order
-              return new Date(b.date).getTime() - new Date(a.date).getTime();
-            })}
-            setError={setTransactionError}
-          />
-        </CardContent>
-      </Card>
+      <div className="w-full 2xl:max-w-screen-2xl">
+        {transactionError.length > 0 && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{translateError(transactionError)}</AlertDescription>
+          </Alert>
+        )}
+        <DataTable
+          columns={columns}
+          data={data.data.sort((a: Transaction, b: Transaction) => {
+            // Sort the data by date in decending order
+            return new Date(b.date).getTime() - new Date(a.date).getTime();
+          })}
+          setError={setTransactionError}
+        />
+      </div>
     </div>
   );
 };

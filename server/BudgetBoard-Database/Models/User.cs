@@ -6,6 +6,8 @@ public class User
     public string AccessToken { get; set; } = string.Empty;
     public DateTime LastSync { get; set; } = DateTime.MinValue;
     public ICollection<Account> Accounts { get; set; } = new List<Account>();
+
+    public ICollection<Budget> Budgets { get; set; } = new List<Budget>();
 }
 
 public class ResponseUser

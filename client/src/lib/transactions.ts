@@ -1,11 +1,29 @@
 import { type AxiosResponse } from 'axios';
 import request from './request';
-import { type Category, categories } from '@/types/transaction';
+import { type Category, categories, type Transaction } from '@/types/transaction';
 
 export const getTransactions = async (): Promise<AxiosResponse> =>
   await request({
     url: '/api/transaction',
   });
+
+export const getTransactionsForMonth = (
+  transactionData: Transaction[],
+  date: Date
+): Transaction[] => {
+  return (
+    transactionData.filter(
+      (t: Transaction) =>
+        new Date(t.date).getMonth() === new Date(date).getMonth() &&
+        new Date(t.date).getUTCFullYear() === new Date(date).getUTCFullYear()
+    ) ?? []
+  );
+};
+
+export const getCategoryLabel = (categoryValue: string): string => {
+  const foundCategory = categories.find((c) => c.value === categoryValue);
+  return foundCategory?.label ?? '';
+};
 
 export const getCategoriesAsTree = (): Category[] => {
   const map: Record<string, number> = {};
@@ -27,6 +45,19 @@ export const getCategoriesAsTree = (): Category[] => {
     }
   }
   return roots;
+};
+
+export const getParentCategory = (categoryValue: string): string => {
+  const category = categories.find((c) => c.value === categoryValue);
+
+  if (category == null) return '';
+
+  return category.parent === '' ? category.value : category.parent;
+};
+
+export const getIsCategory = (categoryValue: string): boolean => {
+  const categories = getCategoriesAsTree();
+  return categories.find((c) => c.value === categoryValue) !== undefined;
 };
 
 export const formatDate = (date: Date): string => {
