@@ -12,9 +12,9 @@ const BudgetHeader = (props: BudgetHeaderProps): JSX.Element => {
           </h3>
         </div>
         <div className="grid grid-cols-3 justify-items-center">
-          <div>Spent</div>
+          <div>Actual</div>
           <div>Budget</div>
-          <div>Left</div>
+          <div>Remaining</div>
         </div>
       </div>
     </div>

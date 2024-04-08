@@ -1,6 +1,7 @@
 import { type AxiosResponse } from 'axios';
 import request from './request';
 import { type Budget } from '@/types/budget';
+import { getParentCategory } from './transactions';
 
 export enum BudgetGroup {
   Income,
@@ -32,9 +33,9 @@ export const getBudgetsForGroup = (
   if (budgetData == null) return [];
 
   if (budgetGroup === BudgetGroup.Income) {
-    return budgetData.filter((b) => b.category === 'income') ?? [];
+    return budgetData.filter((b) => getParentCategory(b.category) === 'income') ?? [];
   } else if (budgetGroup === BudgetGroup.Spending) {
-    return budgetData.filter((b) => b.category !== 'income') ?? [];
+    return budgetData.filter((b) => getParentCategory(b.category) !== 'income') ?? [];
   } else {
     return budgetData;
   }
