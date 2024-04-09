@@ -19,7 +19,7 @@ public class TransactionController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get(bool getHidden = false)
     {
 
         var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
@@ -29,7 +29,7 @@ public class TransactionController : ControllerBase
             return NotFound();
         }
 
-        var transactions = user.Accounts.SelectMany(t => t.Transactions).ToList();
+        var transactions = user.Accounts.SelectMany(t => t.Transactions).Where(t => !(t.Account?.HideTransactions ?? false)).ToList();
 
         return Ok(transactions);
 

@@ -9,6 +9,7 @@ public class Account
     public string Type { get; set; } = "";
     public string Subtype { get; set; } = "";
     public float CurrentBalance { get; set; } = 0.0f;
+    public bool? HideTransactions { get; set; } = false;
     public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
     public required Guid UserID { get; set; }
     public User? User { get; set; } = null!;
