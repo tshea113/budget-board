@@ -7,6 +7,7 @@ import { columns } from './account-columns';
 import React from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
+import AccountsConfiguration from './accounts-configuration';
 
 const AccountCard = (): JSX.Element => {
   const [accountError, setAccountError] = React.useState<string>('');
@@ -55,6 +56,7 @@ const AccountCard = (): JSX.Element => {
         {/* <AddButton>
           <div />
         </AddButton> */}
+        <AccountsConfiguration />
       </CardHeader>
       <CardContent>
         {accountError.length > 0 && (

@@ -1,13 +1,13 @@
 interface Account {
   id: string;
+  syncID: string;
   name: string;
   institution: string;
   type: string;
   subtype: string;
   currentBalance: number;
-  userId: string;
-  source: string;
-  accountId: string;
+  hideTransactions: boolean;
+  userID: string;
 }
 
 interface NewAccount extends Partial<Account> {}

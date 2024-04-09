@@ -124,6 +124,7 @@ public class AccountController : ControllerBase
             account.Institution = newAccount.Institution;
             account.Type = newAccount.Type;
             account.Subtype = newAccount.Subtype;
+            account.HideTransactions = newAccount.HideTransactions;
 
             await _userDataContext.SaveChangesAsync();
 

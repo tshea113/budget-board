@@ -74,14 +74,14 @@ const AccountTable = ({ data, columns, setError }: AccountTableProps): JSX.Eleme
         if (editRow != null) {
           const editAccount: Account = {
             id: editRow.id,
+            syncID: editRow.syncID,
             name: editRow.name,
             institution: editRow.institution,
             type: editRow.type,
             subtype: editRow.subtype,
+            hideTransactions: editRow.hideTransactions,
             currentBalance: editRow.currentBalance,
-            source: editRow.source,
-            userId: editRow.id,
-            accountId: editRow.accountId,
+            userID: editRow.id,
           };
           mutate(editAccount);
         }
