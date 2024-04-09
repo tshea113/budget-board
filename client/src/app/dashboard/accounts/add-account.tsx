@@ -84,8 +84,7 @@ const AddAccount = (): JSX.Element => {
       institution: values.institution,
       type: values.type,
       subtype: values.subtype,
-      source: 'manual',
-      userId: data?.data.id,
+      userID: data?.data.id,
     };
     mutation.mutate(newAccount);
   };
