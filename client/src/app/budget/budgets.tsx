@@ -16,6 +16,48 @@ import { type AxiosResponse } from 'axios';
 import { defaultGuid } from '@/types/user';
 import ResponsiveButton from '@/components/responsive-button';
 import AlertBanner from '@/components/alert-banner';
+import UnbudgetCard from './unbudget-card';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+
+interface Unbudget {
+  category: string;
+  amount: string;
+}
+
+const getUnbudgetedTransactions = (budgets: Budget[], transactions: Transaction[]): Unbudget[] => {
+  if (budgets == null || transactions == null) return [];
+
+  // This creates an object that maps category => array of amounts
+  const groupedTransactions: [string, number[]][] = Object.entries(
+    transactions.reduce((result: any, item: Transaction) => {
+      (result[item['category']] = result[item['category']] || []).push(item.amount);
+      return result;
+    }, {})
+  );
+
+  const filteredGroupedTransactions = groupedTransactions.filter((t) => {
+    return !budgets.some(({ category }) => category === t[0]);
+  });
+
+  const unbudgetedTransactions: Unbudget[] = [];
+  filteredGroupedTransactions.forEach((element) => {
+    unbudgetedTransactions.push({
+      category: element[0],
+      amount: element[1]
+        .reduce((a, b) => {
+          return a + b;
+        })
+        .toFixed(),
+    });
+  });
+
+  return unbudgetedTransactions;
+};
 
 const Budgets = (): JSX.Element => {
   const [date, setDate] = React.useState<Date>(initMonth());
@@ -124,6 +166,25 @@ const Budgets = (): JSX.Element => {
               )}
               isPending={budgetsQuery.isPending || transactionsQuery.isPending}
             />
+            <Accordion type="single" collapsible>
+              <AccordionItem value="item-1">
+                <AccordionTrigger>
+                  <UnbudgetCard name="Unbudgeted Transactions" amount="0" />
+                </AccordionTrigger>
+                <AccordionContent>
+                  {getUnbudgetedTransactions(
+                    budgetsQuery.data?.data,
+                    transactionsQuery.data?.data
+                  ).map((unbudget: Unbudget) => (
+                    <UnbudgetCard
+                      key={unbudget.category}
+                      name={unbudget.category}
+                      amount={unbudget.amount}
+                    />
+                  ))}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         </div>
       </div>
