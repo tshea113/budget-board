@@ -26,7 +26,7 @@ import {
 
 interface Unbudget {
   category: string;
-  amount: string;
+  amount: number;
 }
 
 const getUnbudgetedTransactions = (budgets: Budget[], transactions: Transaction[]): Unbudget[] => {
@@ -48,11 +48,9 @@ const getUnbudgetedTransactions = (budgets: Budget[], transactions: Transaction[
   filteredGroupedTransactions.forEach((element) => {
     unbudgetedTransactions.push({
       category: element[0],
-      amount: element[1]
-        .reduce((a, b) => {
-          return a + b;
-        })
-        .toFixed(),
+      amount: element[1].reduce((a, b) => {
+        return a + b;
+      }),
     });
   });
 
@@ -166,20 +164,38 @@ const Budgets = (): JSX.Element => {
               )}
               isPending={budgetsQuery.isPending || transactionsQuery.isPending}
             />
-            <Accordion type="single" collapsible>
+            <Accordion type="single" collapsible className="w-2/3">
               <AccordionItem value="item-1">
                 <AccordionTrigger>
-                  <UnbudgetCard name="Unbudgeted Transactions" amount="0" />
+                  <div className="text-l scroll-m-20 justify-self-start font-semibold tracking-tight">
+                    Unbudgeted Transactions
+                  </div>
+                  <div className="text-l scroll-m-20 justify-self-start font-semibold tracking-tight">
+                    {getUnbudgetedTransactions(
+                      budgetsQuery.data?.data,
+                      getTransactionsForMonth(
+                        (transactionsQuery.data?.data as Transaction[]) ?? [],
+                        date
+                      )
+                    )
+                      .reduce((a: number, b: Unbudget) => {
+                        return a + b['amount'];
+                      }, 0)
+                      .toFixed()}
+                  </div>
                 </AccordionTrigger>
                 <AccordionContent>
                   {getUnbudgetedTransactions(
                     budgetsQuery.data?.data,
-                    transactionsQuery.data?.data
+                    getTransactionsForMonth(
+                      (transactionsQuery.data?.data as Transaction[]) ?? [],
+                      date
+                    )
                   ).map((unbudget: Unbudget) => (
                     <UnbudgetCard
                       key={unbudget.category}
                       name={unbudget.category}
-                      amount={unbudget.amount}
+                      amount={unbudget.amount.toFixed()}
                     />
                   ))}
                 </AccordionContent>
