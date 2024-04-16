@@ -75,7 +75,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
       <div className="grid h-10 grid-cols-2 items-center">
         <div className="flex flex-row items-center space-x-2">
           <div className="scroll-m-20 justify-self-start text-xl font-semibold tracking-tight">
-            {getCategoryLabel(props.budget.category)}
+            {getCategoryLabel(props.budget.category) ?? ''}
           </div>
           {isEdit && (
             <ResponsiveButton

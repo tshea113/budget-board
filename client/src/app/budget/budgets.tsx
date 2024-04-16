@@ -16,6 +16,7 @@ import { type AxiosResponse } from 'axios';
 import { defaultGuid } from '@/types/user';
 import ResponsiveButton from '@/components/responsive-button';
 import AlertBanner from '@/components/alert-banner';
+import Unbudgets from './unbudgets';
 
 const Budgets = (): JSX.Element => {
   const [date, setDate] = React.useState<Date>(initMonth());
@@ -126,6 +127,13 @@ const Budgets = (): JSX.Element => {
             />
           </div>
         </div>
+        <Unbudgets
+          transactions={getTransactionsForMonth(
+            (transactionsQuery.data?.data as Transaction[]) ?? [],
+            date
+          )}
+          budgets={(budgetsQuery.data?.data as Budget[]) ?? []}
+        />
       </div>
       <div className="flex h-96 w-1/4 flex-col justify-center">
         {/* TODO: Figure out a better way to horizontally position this */}

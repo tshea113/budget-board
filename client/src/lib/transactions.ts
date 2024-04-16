@@ -20,9 +20,9 @@ export const getTransactionsForMonth = (
   );
 };
 
-export const getCategoryLabel = (categoryValue: string): string => {
+export const getCategoryLabel = (categoryValue: string): string | null => {
   const foundCategory = categories.find((c) => c.value === categoryValue);
-  return foundCategory?.label ?? '';
+  return foundCategory?.label ?? null;
 };
 
 export const getCategoriesAsTree = (): Category[] => {

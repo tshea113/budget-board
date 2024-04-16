@@ -1,6 +1,6 @@
 import DatePicker from '@/components/date-picker';
 import { Input } from '@/components/ui/input';
-import { formatDate } from '@/lib/transactions';
+import { formatDate, getCategoryLabel } from '@/lib/transactions';
 import { type Column, type Row, type Table } from '@tanstack/react-table';
 import React from 'react';
 import CategoryInput from './category-input';
@@ -50,10 +50,6 @@ const EditableCell = <TData extends Transaction>({
     tableMeta?.updateData(row.index, column.id, day.toISOString());
   };
 
-  const getCategoryLabel = (categoryValue: string): string => {
-    return categories.find((c) => c.value === categoryValue)?.label ?? '';
-  };
-
   if (row.getIsSelected()) {
     if (column.columnDef.meta?.type === 'date') {
       return <DatePicker value={value as unknown as Date} setDatePick={onDatePick} />;
@@ -82,7 +78,7 @@ const EditableCell = <TData extends Transaction>({
       currency: column.columnDef.meta?.currency,
     }).format(getValue() as number);
   } else if (column.columnDef.meta?.type === 'category') {
-    displayValue = getCategoryLabel(value);
+    displayValue = getCategoryLabel(value) ?? '';
   }
   return <div>{displayValue}</div>;
 };
