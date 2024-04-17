@@ -8,6 +8,7 @@ import { Budget } from '@/types/budget';
 import { Transaction } from '@/types/transaction';
 import UnbudgetCard from './unbudget-card';
 import { getParentCategory } from '@/lib/transactions';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface Unbudget {
   category: string;
@@ -56,9 +57,18 @@ const getUnbudgetedTransactions = (budgets: Budget[], transactions: Transaction[
 interface UnbudgetProps {
   transactions: Transaction[];
   budgets: Budget[];
+  isPending: boolean;
 }
 
 const Unbudgets = (props: UnbudgetProps): JSX.Element => {
+  if (props.isPending) {
+    return (
+      <div className="flex items-center justify-center">
+        <Skeleton className="h-[62px] w-full rounded-xl" />
+      </div>
+    );
+  }
+
   return (
     <Accordion type="single" collapsible className="w-full">
       <AccordionItem value="item-1">
