@@ -7,6 +7,7 @@ import {
 import { Budget } from '@/types/budget';
 import { Transaction } from '@/types/transaction';
 import UnbudgetCard from './unbudget-card';
+import { getParentCategory } from '@/lib/transactions';
 
 interface Unbudget {
   category: string;
@@ -16,16 +17,27 @@ interface Unbudget {
 const getUnbudgetedTransactions = (budgets: Budget[], transactions: Transaction[]): Unbudget[] => {
   if (budgets == null || transactions == null) return [];
 
-  // This creates an object that maps category => array of amounts
+  // This creates an object that maps category/subcategory => array of amounts
   const groupedTransactions: [string, number[]][] = Object.entries(
     transactions.reduce((result: any, item: Transaction) => {
-      (result[item['category']] = result[item['category']] || []).push(item.amount);
+      (result[item['subcategory'] !== '' ? item['subcategory'] : item['category']] =
+        result[item['subcategory'] !== '' ? item['subcategory'] : item['category']] || []).push(
+        item.amount
+      );
       return result;
     }, {})
   );
 
   const filteredGroupedTransactions = groupedTransactions.filter((t) => {
-    return !budgets.some(({ category }) => category === t[0]);
+    return !budgets.some(({ category }) => {
+      if (category === getParentCategory(category)) {
+        // The budget is for a parent category, so check if it is the transaction's parent category
+        return category === getParentCategory(t[0]);
+      } else {
+        // The budget is a subcategory, so just check that it matches the transaction
+        return category === t[0];
+      }
+    });
   });
 
   const unbudgetedTransactions: Unbudget[] = [];
