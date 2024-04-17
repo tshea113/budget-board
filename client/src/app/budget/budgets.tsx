@@ -133,6 +133,7 @@ const Budgets = (): JSX.Element => {
             date
           )}
           budgets={(budgetsQuery.data?.data as Budget[]) ?? []}
+          isPending={budgetsQuery.isPending || transactionsQuery.isPending}
         />
       </div>
       <div className="flex h-96 w-1/4 flex-col justify-center">
