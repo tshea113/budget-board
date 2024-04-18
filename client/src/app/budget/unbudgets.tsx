@@ -51,7 +51,10 @@ const getUnbudgetedTransactions = (budgets: Budget[], transactions: Transaction[
     });
   });
 
-  return unbudgetedTransactions;
+  // Transfers can have two transactions that cancel each other out and result in
+  // zero net cash flow. For this reason, filter out any net 0 transactions categories.
+  // Also filtering very small transactions categories (less than $1) to reduce clutter.
+  return unbudgetedTransactions.filter((u) => Math.abs(u.amount) > 1);
 };
 
 interface UnbudgetProps {
