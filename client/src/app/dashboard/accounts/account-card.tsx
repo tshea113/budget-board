@@ -2,16 +2,17 @@ import SkeletonCard from '@/app/dashboard/skeleton-account-card';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getAccounts } from '@/lib/accounts';
 import { useQuery } from '@tanstack/react-query';
-import AccountTable from './account-table';
-import { columns } from './account-columns';
 import React from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import AccountsConfiguration from './accounts-configuration';
+import AccountItems from './account-items';
+import { Separator } from '@/components/ui/separator';
 
 const AccountCard = (): JSX.Element => {
-  const [accountError, setAccountError] = React.useState<string>('');
-  const { isPending, isError, data, error } = useQuery({
+  const [alert] = React.useState<string>('');
+
+  const accountsQuery = useQuery({
     queryKey: ['accounts'],
     queryFn: async () => {
       const response = await getAccounts();
@@ -27,11 +28,11 @@ const AccountCard = (): JSX.Element => {
     }
   };
 
-  if (isPending) {
+  if (accountsQuery.isPending) {
     return <SkeletonCard />;
   }
 
-  if (isError) {
+  if (accountsQuery.isError) {
     return (
       <Card className="w-full">
         <CardHeader className="flex flex-row items-center">
@@ -40,7 +41,7 @@ const AccountCard = (): JSX.Element => {
         <CardContent>
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{translateError(error.message)}</AlertDescription>
+            <AlertDescription>{translateError(accountsQuery.error.message)}</AlertDescription>
           </Alert>
         </CardContent>
       </Card>
@@ -49,24 +50,26 @@ const AccountCard = (): JSX.Element => {
 
   return (
     <Card className="w-full">
-      <CardHeader className="flex flex-row items-center">
-        <CardTitle>Accounts</CardTitle>
-        <div className="flex-grow" />
-        {/* TODO: Create a better add account interface, then re-enable button */}
-        {/* <AddButton>
+      <div className="flex flex-row items-center p-2">
+        <span className="w-1/2 text-2xl font-semibold tracking-tight">Accounts</span>
+        <div className="flex w-1/2 flex-row justify-end">
+          <AccountsConfiguration />
+          {/* TODO: Create a better add account interface, then re-enable button */}
+          {/* <AddButton>
           <div />
         </AddButton> */}
-        <AccountsConfiguration />
-      </CardHeader>
-      <CardContent>
-        {accountError.length > 0 && (
+        </div>
+      </div>
+      <Separator />
+      <div className="p-2">
+        {alert.length > 0 && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{translateError(accountError)}</AlertDescription>
+            <AlertDescription>{translateError(alert)}</AlertDescription>
           </Alert>
         )}
-        <AccountTable columns={columns} data={data.data} setError={setAccountError} />
-      </CardContent>
+        <AccountItems accounts={accountsQuery.data.data} />
+      </div>
     </Card>
   );
 };
