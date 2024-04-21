@@ -18,7 +18,7 @@ const SyncAccountButton = (): JSX.Element => {
         console.log(err.message);
       })
       .finally(() => {
-        void queryClient.invalidateQueries({ queryKey: ['transactions, accounts'] });
+        void queryClient.invalidateQueries({ queryKey: ['transactions', 'accounts'] });
         setLoading(false);
       });
   };

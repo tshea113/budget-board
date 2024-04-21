@@ -1,9 +1,10 @@
 import ResponsiveButton from '@/components/responsive-button';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
 import { updateAccount } from '@/lib/accounts';
 import { type Account } from '@/types/account';
-import { CheckIcon } from '@radix-ui/react-icons';
+import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 
@@ -15,6 +16,7 @@ const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.E
   const [hideTransactionsValue, setHideFromTransactionsValue] = React.useState(
     props.account.hideTransactions ?? false
   );
+  const [accountNameValue, setAccountNameValue] = React.useState(props.account.name);
   const [valueDirty, setValueDirty] = React.useState(false);
 
   const queryClient = useQueryClient();
@@ -24,7 +26,7 @@ const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.E
       const account: Account = {
         id: props.account.id,
         syncID: props.account.syncID,
-        name: props.account.name,
+        name: accountNameValue,
         institution: props.account.institution,
         type: props.account.type,
         subtype: props.account.subtype,
@@ -44,7 +46,15 @@ const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.E
   return (
     <Card className="m-2 p-3">
       <div className="flex h-6 flex-row items-center">
-        <div className="flex w-1/4">{props.account.name}</div>
+        <div className="flex w-1/4">
+          <Input
+            value={accountNameValue}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setAccountNameValue(e.target.value);
+              setValueDirty(true);
+            }}
+          />
+        </div>
         <div className="flex w-1/4 justify-center">
           <Checkbox
             id="hidden"
@@ -56,15 +66,26 @@ const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.E
           />
         </div>
         {valueDirty && (
-          <div>
+          <div className="flex flex-row items-center space-x-2">
             <ResponsiveButton
-              className="m-0 h-7 w-7 p-0"
+              className="m-0 h-7 w-10 p-0"
               onClick={() => {
                 doUpdateAccount.mutate();
               }}
               loading={doUpdateAccount.isPending}
             >
               <CheckIcon className="h-4 w-4" />
+            </ResponsiveButton>
+            <ResponsiveButton
+              className="m-0 h-7 w-10 p-0"
+              onClick={() => {
+                setAccountNameValue(props.account.name);
+                setHideFromTransactionsValue(props.account.hideTransactions);
+                setValueDirty(false);
+              }}
+              loading={false}
+            >
+              <Cross2Icon className="h-4 w-4" />
             </ResponsiveButton>
           </div>
         )}
