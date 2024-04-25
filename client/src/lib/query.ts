@@ -2,6 +2,7 @@ import { type UseQueryResult, useQuery } from '@tanstack/react-query';
 import { getAccounts } from './accounts';
 import { type AxiosResponse } from 'axios';
 import { getUser } from './user';
+import { getTransactions } from './transactions';
 
 export const useAccountsQuery = (): UseQueryResult<AxiosResponse<any, any>, Error> => {
   const accountsQuery = useQuery({
@@ -25,4 +26,16 @@ export const useUserQuery = (): UseQueryResult<AxiosResponse<any, any>, Error> =
   });
 
   return userQuery;
+};
+
+export const useTransactionsQuery = (): UseQueryResult<AxiosResponse<any, any>, Error> => {
+  const transactionsQuery = useQuery({
+    queryKey: ['transactions'],
+    queryFn: async () => {
+      const response = await getTransactions();
+      return response;
+    },
+  });
+
+  return transactionsQuery;
 };

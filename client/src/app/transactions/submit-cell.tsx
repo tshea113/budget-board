@@ -1,10 +1,13 @@
 import ResponsiveButton from '@/components/responsive-button';
 import { Button } from '@/components/ui/button';
-import request from '@/lib/request';
+import { useToast } from '@/components/ui/use-toast';
+import { translateAxiosError } from '@/lib/request';
+import { editTransaction } from '@/lib/transactions';
 import { type Transaction } from '@/types/transaction';
 import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type Table, type Row } from '@tanstack/react-table';
+import { type AxiosError } from 'axios';
 
 interface SubmitCellProps<TData> {
   row: Row<TData>;
@@ -13,23 +16,22 @@ interface SubmitCellProps<TData> {
 
 const SubmitCell = <TData,>({ row, table }: SubmitCellProps<TData>): JSX.Element => {
   const queryClient = useQueryClient();
-
-  const tableMeta = table.options.meta;
+  const { toast } = useToast();
 
   const mutation = useMutation({
     mutationFn: async (newTransaction: Transaction) => {
-      return await request({
-        url: '/api/transaction',
-        method: 'PUT',
-        data: newTransaction,
-      });
+      return await editTransaction(newTransaction);
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['transactions'] });
       row.toggleSelected(false);
     },
-    onError: (error: Error) => {
-      tableMeta?.setErrorInner(error.message);
+    onError: (error: AxiosError) => {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: translateAxiosError(error),
+      });
     },
   });
 
