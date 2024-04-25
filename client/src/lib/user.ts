@@ -13,3 +13,6 @@ export const setAccessToken = async (newToken: string): Promise<AxiosResponse> =
     method: 'POST',
     params: { newToken },
   });
+
+export const doSync = async (): Promise<AxiosResponse> =>
+  await request({ url: '/api/simplefin/sync', method: 'GET' });
