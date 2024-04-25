@@ -2,10 +2,13 @@ import ResponsiveButton from '@/components/responsive-button';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
+import { useToast } from '@/components/ui/use-toast';
 import { updateAccount } from '@/lib/accounts';
+import { translateAxiosError } from '@/lib/request';
 import { type Account } from '@/types/account';
 import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { type AxiosError } from 'axios';
 import React from 'react';
 
 interface AccountsConfigurationCardProps {
@@ -20,6 +23,7 @@ const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.E
   const [valueDirty, setValueDirty] = React.useState(false);
 
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   const doUpdateAccount = useMutation({
     mutationFn: async () => {
@@ -40,6 +44,13 @@ const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.E
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['accounts'] });
       setValueDirty(false);
+    },
+    onError: (error: AxiosError) => {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: translateAxiosError(error),
+      });
     },
   });
 
