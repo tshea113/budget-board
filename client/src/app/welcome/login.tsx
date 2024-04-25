@@ -16,14 +16,12 @@ import ResponsiveButton from '@/components/responsive-button';
 import { firebaseAuth, getMessageForErrorCode, loginUser } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { sendPasswordResetEmail } from 'firebase/auth';
-import SuccessBanner from '@/components/success-banner';
-import AlertBanner from '@/components/alert-banner';
 import { getUser } from '@/lib/user';
+import { useToast } from '@/components/ui/use-toast';
 
 const Login = (): JSX.Element => {
-  const [alert, setAlert] = useState<string>('');
-  const [message, setMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const { toast } = useToast();
 
   const formSchema = z.object({
     email: z
@@ -44,12 +42,14 @@ const Login = (): JSX.Element => {
   const submitUserLogin = async (values: z.infer<typeof formSchema>, e: any): Promise<void> => {
     e.preventDefault();
     setLoading(true);
-    setAlert('');
-    setMessage('');
 
     const error: string = await loginUser(values.email, values.password);
     if (error.length !== 0) {
-      setAlert(getMessageForErrorCode(error));
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: getMessageForErrorCode(error),
+      });
     } else {
       // Need to make sure a user exists before proceeding
       await getUser();
@@ -60,12 +60,17 @@ const Login = (): JSX.Element => {
   const resetPassword = (email: string): void => {
     sendPasswordResetEmail(firebaseAuth, email)
       .then(() => {
-        setMessage(
-          'A reset email has been sent to the provided address, if an associated account exists.'
-        );
+        toast({
+          description:
+            'A reset email has been sent to the provided address, if an associated account exists.',
+        });
       })
-      .catch((err: any) => {
-        setAlert(getMessageForErrorCode(err.code as string));
+      .catch((error: any) => {
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong.',
+          description: getMessageForErrorCode(error.code as string),
+        });
       });
   };
 
@@ -79,8 +84,6 @@ const Login = (): JSX.Element => {
         })}
         className="space-y-8"
       >
-        <AlertBanner alert={alert} setAlert={setAlert} />
-        <SuccessBanner message={message} />
         <FormField
           control={form.control}
           name="email"

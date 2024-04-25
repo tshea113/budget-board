@@ -1,4 +1,3 @@
-import AlertBanner from '@/components/alert-banner';
 import ResponsiveButton from '@/components/responsive-button';
 import {
   Form,
@@ -9,6 +8,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { useToast } from '@/components/ui/use-toast';
 import { createUser, getMessageForErrorCode } from '@/lib/firebase';
 import { getUser } from '@/lib/user';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,7 +18,7 @@ import * as z from 'zod';
 
 const Signup = (): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [alert, setAlert] = useState<string>('');
+  const { toast } = useToast();
 
   const formSchema = z
     .object({
@@ -50,11 +50,14 @@ const Signup = (): JSX.Element => {
   const submitUserSignup = async (values: z.infer<typeof formSchema>, e: any): Promise<void> => {
     e.preventDefault();
     setLoading(true);
-    setAlert('');
 
     const error: string = await createUser(values.email, values.password);
     if (error.length !== 0) {
-      setAlert(getMessageForErrorCode(error));
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: getMessageForErrorCode(error),
+      });
     } else {
       // Need to make sure a user exists before proceeding
       await getUser();
@@ -72,7 +75,6 @@ const Signup = (): JSX.Element => {
         })}
         className="space-y-8"
       >
-        <AlertBanner alert={alert} setAlert={setAlert} />
         <FormField
           control={form.control}
           name="email"
