@@ -6,3 +6,10 @@ export const getUser = async (): Promise<AxiosResponse> =>
     url: '/api/user',
     method: 'GET',
   });
+
+export const setAccessToken = async (newToken: string): Promise<AxiosResponse> =>
+  await request({
+    url: '/api/simplefin/updatetoken',
+    method: 'POST',
+    params: { newToken },
+  });

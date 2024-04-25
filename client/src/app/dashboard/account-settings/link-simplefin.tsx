@@ -4,45 +4,47 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import request from '@/lib/request';
-import { getUser } from '@/lib/user';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useToast } from '@/components/ui/use-toast';
+import { useUserQuery } from '@/lib/query';
+import { translateAxiosError } from '@/lib/request';
+import { setAccessToken } from '@/lib/user';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { type AxiosError } from 'axios';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
 const LinkSimpleFin = (): JSX.Element => {
   const [formVisible, setFormVisible] = React.useState<boolean>(false);
-  const form = useForm({
-    defaultValues: {
-      accessToken: '',
-    },
-  });
 
-  const { data: user } = useQuery({
-    queryKey: ['user'],
-    queryFn: async () => {
-      const response = await getUser();
-      return response;
-    },
-  });
+  const userQuery = useUserQuery();
 
   const queryClient = useQueryClient();
-  const mutation = useMutation({
+  const { toast } = useToast();
+  const doSetAccessToken = useMutation({
     mutationFn: async (newToken: string) => {
-      return await request({
-        url: '/api/simplefin/updatetoken',
-        method: 'POST',
-        params: { newToken },
-      });
+      return await setAccessToken(newToken);
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['accounts'] });
+    },
+    onError: (error: AxiosError) => {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: translateAxiosError(error),
+      });
     },
   });
 
   const toggleForm = (): void => {
     setFormVisible((addFormVisible) => !addFormVisible);
   };
+
+  const form = useForm({
+    defaultValues: {
+      accessToken: '',
+    },
+  });
 
   interface FormValues {
     accessToken: string;
@@ -53,7 +55,7 @@ const LinkSimpleFin = (): JSX.Element => {
       <CardHeader>Link an Account</CardHeader>
       <CardContent className="space-y-2">
         <Button variant="outline" onClick={toggleForm}>
-          {user?.data.accessToken
+          {userQuery.data?.data.accessToken
             ? 'Your SimpleFin account is linked!'
             : 'Link your SimpleFin account.'}
         </Button>
@@ -63,8 +65,8 @@ const LinkSimpleFin = (): JSX.Element => {
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
               onSubmit={form.handleSubmit(async (data: FormValues, event) => {
                 event?.preventDefault();
-                if (user?.data) {
-                  mutation.mutate(data.accessToken);
+                if (userQuery.data?.data) {
+                  doSetAccessToken.mutate(data.accessToken);
                 }
               })}
               className="space-y-4"
@@ -81,7 +83,7 @@ const LinkSimpleFin = (): JSX.Element => {
                   </FormItem>
                 )}
               />
-              <ResponsiveButton loading={mutation.isPending}>Save Changes</ResponsiveButton>
+              <ResponsiveButton loading={doSetAccessToken.isPending}>Save Changes</ResponsiveButton>
             </form>
           </Form>
         )}
