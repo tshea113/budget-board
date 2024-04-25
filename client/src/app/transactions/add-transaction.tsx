@@ -20,8 +20,7 @@ import { CalendarIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { type NewTransaction } from '@/types/transaction';
 import request from '@/lib/request';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getAccounts } from '@/lib/accounts';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Select,
   SelectContent,
@@ -30,6 +29,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { type Account } from '@/types/account';
+import { useTransactionsQuery } from '@/lib/query';
 
 const formSchema = z.object({
   date: z.date({
@@ -43,13 +43,7 @@ const formSchema = z.object({
 });
 
 const AddTransaction = (): JSX.Element => {
-  const { data } = useQuery({
-    queryKey: ['accounts'],
-    queryFn: async () => {
-      const response = await getAccounts();
-      return response;
-    },
-  });
+  const transactionsQuery = useTransactionsQuery();
 
   const queryClient = useQueryClient();
   const mutation = useMutation({
@@ -255,7 +249,7 @@ const AddTransaction = (): JSX.Element => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {data?.data.map((account: Account) => (
+                      {transactionsQuery.data?.data.map((account: Account) => (
                         <SelectItem key={account.id} value={account.id}>
                           {account.name}
                         </SelectItem>
