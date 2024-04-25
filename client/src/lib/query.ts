@@ -3,6 +3,7 @@ import { getAccounts } from './accounts';
 import { type AxiosResponse } from 'axios';
 import { getUser } from './user';
 import { getTransactions } from './transactions';
+import { getBudgets } from './budgets';
 
 export const useAccountsQuery = (): UseQueryResult<AxiosResponse<any, any>, Error> => {
   const accountsQuery = useQuery({
@@ -38,4 +39,16 @@ export const useTransactionsQuery = (): UseQueryResult<AxiosResponse<any, any>, 
   });
 
   return transactionsQuery;
+};
+
+export const useBudgetsQuery = (date: Date): UseQueryResult<AxiosResponse<any, any>, Error> => {
+  const budgetsQuery = useQuery({
+    queryKey: ['budgets', { date }],
+    queryFn: async () => {
+      const response = await getBudgets(date);
+      return response;
+    },
+  });
+
+  return budgetsQuery;
 };
