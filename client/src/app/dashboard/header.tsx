@@ -12,17 +12,24 @@ import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { useQueryClient } from '@tanstack/react-query';
 import { signOut } from 'firebase/auth';
 import AccountSettings from './account-settings/account-settings';
+import { useToast } from '@/components/ui/use-toast';
+import { type AxiosError } from 'axios';
+import { translateAxiosError } from '@/lib/request';
 
 const Header = (): JSX.Element => {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
   const Logout = (): void => {
     signOut(firebaseAuth)
       .then(() => {
         queryClient.removeQueries();
       })
-      .catch((err) => {
-        // TODO: Make this an alert dialog
-        console.log(err);
+      .catch((error: AxiosError) => {
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong.',
+          description: translateAxiosError(error),
+        });
       });
   };
 

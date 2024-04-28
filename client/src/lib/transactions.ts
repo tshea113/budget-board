@@ -5,6 +5,14 @@ import { type Category, categories, type Transaction } from '@/types/transaction
 export const getTransactions = async (): Promise<AxiosResponse> =>
   await request({
     url: '/api/transaction',
+    method: 'GET',
+  });
+
+export const editTransaction = async (newTransaction: Transaction): Promise<AxiosResponse> =>
+  await request({
+    url: '/api/transaction',
+    method: 'PUT',
+    data: newTransaction,
   });
 
 export const getTransactionsForMonth = (

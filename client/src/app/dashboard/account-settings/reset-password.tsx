@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import AlertBanner from '@/components/alert-banner';
 import ResponsiveButton from '@/components/responsive-button';
-import SuccessBanner from '@/components/success-banner';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
   Form,
@@ -12,6 +10,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { useToast } from '@/components/ui/use-toast';
 import { firebaseAuth, getMessageForErrorCode } from '@/lib/firebase';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
@@ -21,8 +20,7 @@ import { z } from 'zod';
 
 const ResetPassword = (): JSX.Element => {
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [alert, setAlert] = React.useState<string>('');
-  const [message, setMessage] = React.useState<string>('');
+  const { toast } = useToast();
 
   const formSchema = z
     .object({
@@ -54,8 +52,6 @@ const ResetPassword = (): JSX.Element => {
   ): Promise<void> => {
     e.preventDefault();
     setLoading(true);
-    setAlert('');
-    setMessage('');
 
     if (firebaseAuth.currentUser?.email) {
       const credential = EmailAuthProvider.credential(
@@ -66,9 +62,15 @@ const ResetPassword = (): JSX.Element => {
       try {
         await reauthenticateWithCredential(firebaseAuth.currentUser, credential);
         await updatePassword(firebaseAuth.currentUser, values.newPassword);
-        setMessage('Password successfully updated!');
+        toast({
+          description: 'Password successfully updated!',
+        });
       } catch (err: any) {
-        setAlert(getMessageForErrorCode(err.code as string));
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong.',
+          description: getMessageForErrorCode(err.code as string),
+        });
       }
 
       setLoading(false);
@@ -87,8 +89,6 @@ const ResetPassword = (): JSX.Element => {
             })}
             className="space-y-4"
           >
-            <AlertBanner alert={alert} setAlert={setAlert} />
-            <SuccessBanner message={message} />
             <FormField
               control={form.control}
               name="oldPassword"
