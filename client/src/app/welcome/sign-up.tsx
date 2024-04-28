@@ -55,6 +55,7 @@ const Signup = (): JSX.Element => {
     if (error.length !== 0) {
       toast({
         variant: 'destructive',
+        title: 'Error',
         description: getMessageForErrorCode(error),
       });
     } else {

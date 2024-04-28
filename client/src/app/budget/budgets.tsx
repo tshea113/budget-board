@@ -77,6 +77,7 @@ const Budgets = (): JSX.Element => {
                       } else {
                         toast({
                           variant: 'destructive',
+                          title: 'Error',
                           description: 'Last month has no budget!',
                         });
                       }
@@ -84,6 +85,7 @@ const Budgets = (): JSX.Element => {
                     .catch(() => {
                       toast({
                         variant: 'destructive',
+                        title: 'Error',
                         description: "There was an error copying last month's budget.",
                       });
                     });
