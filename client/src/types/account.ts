@@ -7,6 +7,7 @@ interface Account {
   subtype: string;
   currentBalance: number;
   hideTransactions: boolean;
+  hideAccount: boolean;
   userID: string;
 }
 

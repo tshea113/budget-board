@@ -6,7 +6,7 @@ import { type Account } from '@/types/account';
 import { useAccountsQuery } from '@/lib/query';
 
 const AccountsConfiguration = (): JSX.Element => {
-  const accountsQuery = useAccountsQuery();
+  const accountsQuery = useAccountsQuery(true);
 
   return (
     <Sheet>
@@ -19,6 +19,7 @@ const AccountsConfiguration = (): JSX.Element => {
         <SheetHeader>Accounts Configuration</SheetHeader>
         <div className="flex w-full flex-row items-center">
           <span className="w-1/4 px-8 py-2 text-center">Account</span>
+          <span className="w-1/4 px-8 py-2 text-center">Hide Account?</span>
           <span className="w-1/4 px-8 py-2 text-center">Hide Transactions?</span>
         </div>
         {(accountsQuery.data?.data ?? []).map((account: Account) => (

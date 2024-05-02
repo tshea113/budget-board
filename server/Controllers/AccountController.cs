@@ -19,7 +19,7 @@ public class AccountController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get(bool getHidden = false)
     {
         var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
 
@@ -28,7 +28,7 @@ public class AccountController : ControllerBase
             return NotFound();
         }
 
-        return Ok(user.Accounts);
+        return Ok(user.Accounts.Where(a => getHidden || !(a.HideAccount ?? false)));
     }
 
     [HttpGet("{guid}")]
@@ -125,6 +125,7 @@ public class AccountController : ControllerBase
             account.Type = newAccount.Type;
             account.Subtype = newAccount.Subtype;
             account.HideTransactions = newAccount.HideTransactions;
+            account.HideAccount = newAccount.HideAccount;
 
             await _userDataContext.SaveChangesAsync();
 

@@ -5,11 +5,14 @@ import { getUser } from './user';
 import { getTransactions } from './transactions';
 import { getBudgets } from './budgets';
 
-export const useAccountsQuery = (): UseQueryResult<AxiosResponse<any, any>, Error> => {
+export const useAccountsQuery = (
+  getHiddenAccounts: boolean = false
+): UseQueryResult<AxiosResponse<any, any>, Error> => {
+  const queryName = getHiddenAccounts ? 'accountsWithHidden' : 'accounts';
   const accountsQuery = useQuery({
-    queryKey: ['accounts'],
+    queryKey: [queryName],
     queryFn: async () => {
-      const response = await getAccounts();
+      const response = await getAccounts(getHiddenAccounts);
       return response;
     },
   });

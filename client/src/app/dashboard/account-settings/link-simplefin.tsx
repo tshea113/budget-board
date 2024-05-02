@@ -25,7 +25,7 @@ const LinkSimpleFin = (): JSX.Element => {
       return await setAccessToken(newToken);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['accounts'] });
+      void queryClient.invalidateQueries({ queryKey: ['accounts', 'accountsWithHidden'] });
     },
     onError: (error: AxiosError) => {
       toast({
