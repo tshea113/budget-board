@@ -53,7 +53,7 @@ const AddAccount = (): JSX.Element => {
       });
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['accounts'] });
+      void queryClient.invalidateQueries({ queryKey: ['accounts', 'accountsWithHidden'] });
     },
   });
 

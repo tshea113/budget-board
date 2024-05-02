@@ -16,8 +16,11 @@ interface AccountsConfigurationCardProps {
 }
 
 const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.Element => {
-  const [hideTransactionsValue, setHideFromTransactionsValue] = React.useState(
+  const [hideTransactionsValue, setHideTransactionsValue] = React.useState(
     props.account.hideTransactions ?? false
+  );
+  const [hideAccountValue, setHideAccountValue] = React.useState(
+    props.account.hideAccount ?? false
   );
   const [accountNameValue, setAccountNameValue] = React.useState(props.account.name);
   const [valueDirty, setValueDirty] = React.useState(false);
@@ -36,13 +39,14 @@ const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.E
         subtype: props.account.subtype,
         currentBalance: props.account.currentBalance,
         hideTransactions: hideTransactionsValue,
+        hideAccount: hideAccountValue,
         userID: props.account.userID,
       };
 
       return await updateAccount(account);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['accounts'] });
+      void queryClient.invalidateQueries({ queryKey: ['accounts', 'accountsWithHidden'] });
       setValueDirty(false);
     },
     onError: (error: AxiosError) => {
@@ -69,9 +73,19 @@ const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.E
         <div className="flex w-1/4 justify-center">
           <Checkbox
             id="hidden"
+            checked={hideAccountValue}
+            onCheckedChange={() => {
+              setHideAccountValue(!hideAccountValue);
+              setValueDirty(true);
+            }}
+          />
+        </div>
+        <div className="flex w-1/4 justify-center">
+          <Checkbox
+            id="hidden"
             checked={hideTransactionsValue}
             onCheckedChange={() => {
-              setHideFromTransactionsValue(!hideTransactionsValue);
+              setHideTransactionsValue(!hideTransactionsValue);
               setValueDirty(true);
             }}
           />
@@ -91,7 +105,8 @@ const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.E
               className="m-0 h-7 w-10 p-0"
               onClick={() => {
                 setAccountNameValue(props.account.name);
-                setHideFromTransactionsValue(props.account.hideTransactions);
+                setHideTransactionsValue(props.account.hideTransactions);
+                setHideAccountValue(props.account.hideAccount);
                 setValueDirty(false);
               }}
               loading={false}
