@@ -29,7 +29,9 @@ public class TransactionController : ControllerBase
             return NotFound();
         }
 
-        var transactions = user.Accounts.SelectMany(t => t.Transactions).Where(t => !(t.Account?.HideTransactions ?? false)).ToList();
+        var transactions = user.Accounts
+            .SelectMany(t => t.Transactions)
+            .Where(t => getHidden || !(t.Account?.HideTransactions ?? false));
 
         return Ok(transactions);
 
