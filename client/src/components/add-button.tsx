@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Button } from '@/components/ui/button';
 import { PlusIcon } from '@radix-ui/react-icons';
-import { Popover, PopoverContent, PopoverTrigger } from '@radix-ui/react-popover';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 
 interface AddButtonProps {
   children: JSX.Element;
@@ -15,7 +15,7 @@ const AddButton = ({ children }: AddButtonProps): JSX.Element => {
           <PlusIcon></PlusIcon>
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end" sideOffset={5}>
+      <PopoverContent align="end" sideOffset={5} alignOffset={15}>
         {children}
       </PopoverContent>
     </Popover>
