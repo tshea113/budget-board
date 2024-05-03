@@ -123,7 +123,11 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
           <div>{getAmountLeft(props.budget.limit, Math.abs(props.amount))}</div>
         </div>
       </div>
-      <Progress className="h-2" value={getProgress(Math.abs(props.amount), props.budget.limit)} />
+      <Progress
+        className="h-2 w-full"
+        value={getProgress(Math.abs(props.amount), props.budget.limit)}
+        max={100}
+      />
     </Card>
   );
 };

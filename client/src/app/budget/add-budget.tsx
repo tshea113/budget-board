@@ -1,4 +1,3 @@
-import { Card } from '@/components/ui/card';
 import {
   Form,
   FormControl,
@@ -65,7 +64,7 @@ const AddBudget = ({ date }: AddBudgetProps): JSX.Element => {
   };
 
   return (
-    <Card className="mb-2 w-full p-4">
+    <div className="w-full p-1">
       <Form {...form}>
         <form
           onSubmit={(event) => {
@@ -105,7 +104,7 @@ const AddBudget = ({ date }: AddBudgetProps): JSX.Element => {
           </div>
         </form>
       </Form>
-    </Card>
+    </div>
   );
 };
 
