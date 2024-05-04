@@ -18,10 +18,6 @@ const AccountCard = (): JSX.Element => {
         <span className="w-1/2 text-2xl font-semibold tracking-tight">Accounts</span>
         <div className="flex w-1/2 flex-row justify-end">
           <AccountsConfiguration />
-          {/* TODO: Create a better add account interface, then re-enable button */}
-          {/* <AddButton>
-          <div />
-        </AddButton> */}
         </div>
       </div>
       <Separator />
