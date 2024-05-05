@@ -2,11 +2,14 @@ import type { AxiosResponse } from 'axios';
 import request from './request';
 import { type Account } from '@/types/account';
 
-export const getAccounts = async (getHiddenAccounts: boolean): Promise<AxiosResponse> =>
+export const getAccounts = async (
+  getHiddenAccounts: boolean,
+  getDeletedAccounts: boolean
+): Promise<AxiosResponse> =>
   await request({
     url: '/api/account',
     method: 'GET',
-    params: { getHidden: getHiddenAccounts },
+    params: { getHidden: getHiddenAccounts, getDeleted: getDeletedAccounts },
   });
 
 export const updateAccount = async (newAccount: Account): Promise<AxiosResponse> => {

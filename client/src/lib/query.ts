@@ -6,13 +6,14 @@ import { getTransactions } from './transactions';
 import { getBudgets } from './budgets';
 
 export const useAccountsQuery = (
-  getHiddenAccounts: boolean = false
+  getHiddenAccounts: boolean = false,
+  getDeletedAccounts: boolean = false
 ): UseQueryResult<AxiosResponse<any, any>, Error> => {
   const queryName = getHiddenAccounts ? 'accountsWithHidden' : 'accounts';
   const accountsQuery = useQuery({
     queryKey: [queryName],
     queryFn: async () => {
-      const response = await getAccounts(getHiddenAccounts);
+      const response = await getAccounts(getHiddenAccounts, getDeletedAccounts);
       return response;
     },
   });

@@ -6,7 +6,7 @@ import { type Account } from '@/types/account';
 import { useAccountsQuery } from '@/lib/query';
 
 const AccountsConfiguration = (): JSX.Element => {
-  const accountsQuery = useAccountsQuery(true);
+  const accountsQuery = useAccountsQuery(true, true);
 
   return (
     <Sheet>
