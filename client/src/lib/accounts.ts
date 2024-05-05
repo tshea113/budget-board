@@ -16,3 +16,14 @@ export const updateAccount = async (newAccount: Account): Promise<AxiosResponse>
     data: newAccount,
   });
 };
+
+export const deleteAccount = async (
+  guid: string,
+  deleteTransactions: boolean
+): Promise<AxiosResponse> => {
+  return await request({
+    url: '/api/account',
+    method: 'DELETE',
+    params: { guid, deleteTransactions },
+  });
+};

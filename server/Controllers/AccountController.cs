@@ -73,7 +73,7 @@ public class AccountController : ControllerBase
 
     [HttpDelete]
     [Authorize]
-    public async Task<IActionResult> Delete(Guid guid)
+    public async Task<IActionResult> Delete(Guid guid, bool deleteTransactions = false)
     {
         try
         {
@@ -84,13 +84,20 @@ public class AccountController : ControllerBase
                 return NotFound();
             }
 
-            Account? account = await _userDataContext.Accounts.FindAsync(guid);
-            if (account == null)
+            var account = user.Accounts.Single(a => a.ID == guid);
+
+            if (account == null) return NotFound();
+
+            account.Deleted = true;
+
+            if (deleteTransactions)
             {
-                return NotFound();
+                foreach (var transaction in account.Transactions)
+                {
+                    transaction.Deleted = true;
+                }
             }
 
-            user.Accounts.Remove(account);
             await _userDataContext.SaveChangesAsync();
 
             return Ok();

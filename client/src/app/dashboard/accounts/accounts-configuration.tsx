@@ -17,10 +17,11 @@ const AccountsConfiguration = (): JSX.Element => {
       </SheetTrigger>
       <SheetContent side="top">
         <SheetHeader>Accounts Configuration</SheetHeader>
-        <div className="flex w-full flex-row items-center">
-          <span className="w-1/4 px-8 py-2 text-center">Account</span>
-          <span className="w-1/4 px-8 py-2 text-center">Hide Account?</span>
-          <span className="w-1/4 px-8 py-2 text-center">Hide Transactions?</span>
+        <div className="flex w-full flex-row items-center px-4">
+          <span className="w-1/5 px-8 py-2 text-center">Account</span>
+          <span className="w-1/5 px-8 py-2 text-center">Hide Account?</span>
+          <span className="w-1/5 px-8 py-2 text-center">Hide Transactions?</span>
+          <span className="w-1/5 px-8 py-2 text-center">Delete</span>
         </div>
         {(accountsQuery.data?.data ?? []).map((account: Account) => (
           <AccountsConfigurationCard key={account.id} account={account} />

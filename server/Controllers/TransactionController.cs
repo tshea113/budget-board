@@ -100,28 +100,31 @@ public class TransactionController : ControllerBase
     [Authorize]
     public async Task<IActionResult> Delete(Guid guid)
     {
-        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
-
-        if (user == null)
+        try
         {
-            return NotFound();
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var transaction = user.Accounts
+            .SelectMany(t => t.Transactions)
+            .Single(t => t.ID == guid);
+
+            if (transaction == null) return NotFound();
+
+            transaction.Deleted = true;
+            await _userDataContext.SaveChangesAsync();
+
+            return Ok();
         }
 
-        Transaction? transaction = await _userDataContext.Transactions.FindAsync(guid);
-        if (transaction == null)
+        catch (Exception ex)
         {
-            return NotFound();
+            return BadRequest(ex.Message);
         }
-
-        if (user.Accounts.Single(a => a.ID == transaction.AccountID) == null)
-        {
-            return BadRequest();
-        }
-
-        _userDataContext.Entry(transaction).State = EntityState.Deleted;
-        await _userDataContext.SaveChangesAsync();
-
-        return Ok();
     }
 
     [HttpPut]
