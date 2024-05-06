@@ -4,6 +4,7 @@ import { GearIcon } from '@radix-ui/react-icons';
 import AccountsConfigurationCard from './accounts-configuration-card';
 import { type Account } from '@/types/account';
 import { useAccountsQuery } from '@/lib/query';
+import DeletedAccountsCard from './deleted-accounts-card';
 
 const AccountsConfiguration = (): JSX.Element => {
   const accountsQuery = useAccountsQuery(true, true);
@@ -26,6 +27,9 @@ const AccountsConfiguration = (): JSX.Element => {
         {(accountsQuery.data?.data ?? []).map((account: Account) => (
           <AccountsConfigurationCard key={account.id} account={account} />
         ))}
+        <DeletedAccountsCard
+          deletedAccounts={accountsQuery.data?.data.filter((a: Account) => a.deleted !== null)}
+        />
       </SheetContent>
     </Sheet>
   );
