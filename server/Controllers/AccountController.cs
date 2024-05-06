@@ -28,7 +28,7 @@ public class AccountController : ControllerBase
             return NotFound();
         }
 
-        return Ok(user.Accounts.Where(a => (!a.HideAccount || getHidden) && (!a.Deleted || getDeleted)));
+        return Ok(user.Accounts.Where(a => (!a.HideAccount || getHidden) && (a.Deleted == null || getDeleted)));
     }
 
     [HttpGet("{guid}")]
@@ -88,13 +88,13 @@ public class AccountController : ControllerBase
 
             if (account == null) return NotFound();
 
-            account.Deleted = true;
+            account.Deleted = DateTime.Now.ToUniversalTime();
 
             if (deleteTransactions)
             {
                 foreach (var transaction in account.Transactions)
                 {
-                    transaction.Deleted = true;
+                    transaction.Deleted = DateTime.Now.ToUniversalTime();
                 }
             }
 

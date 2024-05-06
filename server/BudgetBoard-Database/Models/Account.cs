@@ -11,7 +11,7 @@ public class Account
     public float CurrentBalance { get; set; } = 0.0f;
     public bool HideTransactions { get; set; } = false;
     public bool HideAccount { get; set; } = false;
-    public bool Deleted { get; set; } = false;
+    public DateTime? Deleted { get; set; } = null;
     public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
     public required Guid UserID { get; set; }
     public User? User { get; set; } = null!;

@@ -31,13 +31,13 @@ namespace BudgetBoard.Database.Migrations
                     b.Property<float>("CurrentBalance")
                         .HasColumnType("real");
 
-                    b.Property<bool>("Deleted")
+                    b.Property<DateTime?>("Deleted")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("HideAccount")
                         .HasColumnType("boolean");
 
-                    b.Property<bool?>("HideAccount")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool?>("HideTransactions")
+                    b.Property<bool>("HideTransactions")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Institution")
@@ -113,8 +113,8 @@ namespace BudgetBoard.Database.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("boolean");
+                    b.Property<DateTime?>("Deleted")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("MerchantName")
                         .HasColumnType("text");

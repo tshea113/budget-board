@@ -115,7 +115,7 @@ public class TransactionController : ControllerBase
 
             if (transaction == null) return NotFound();
 
-            transaction.Deleted = true;
+            transaction.Deleted = DateTime.Now.ToUniversalTime();
             await _userDataContext.SaveChangesAsync();
 
             return Ok();
