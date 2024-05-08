@@ -3,12 +3,13 @@ import { Sheet, SheetContent, SheetHeader, SheetTrigger } from '@/components/ui/
 import { GearIcon } from '@radix-ui/react-icons';
 import AccountsConfigurationCard from './accounts-configuration-card';
 import { type Account } from '@/types/account';
-import { useAccountsQuery } from '@/lib/query';
 import DeletedAccountsCards from './deleted-accounts-cards';
 
-const AccountsConfiguration = (): JSX.Element => {
-  const accountsQuery = useAccountsQuery(true, true);
+interface AccountsConfigurationProps {
+  accounts: Account[];
+}
 
+const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element => {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -24,13 +25,13 @@ const AccountsConfiguration = (): JSX.Element => {
           <span className="w-1/5 px-8 py-2 text-center">Hide Transactions?</span>
           <span className="w-1/5 px-8 py-2 text-center">Delete</span>
         </div>
-        {(accountsQuery.data?.data.filter((a: Account) => a.deleted === null) ?? []).map(
+        {(props.accounts.filter((a: Account) => a.deleted === null) ?? []).map(
           (account: Account) => (
             <AccountsConfigurationCard key={account.id} account={account} />
           )
         )}
         <DeletedAccountsCards
-          deletedAccounts={accountsQuery.data?.data.filter((a: Account) => a.deleted !== null)}
+          deletedAccounts={props.accounts.filter((a: Account) => a.deleted !== null)}
         />
       </SheetContent>
     </Sheet>

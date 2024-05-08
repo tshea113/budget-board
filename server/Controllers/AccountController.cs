@@ -19,7 +19,7 @@ public class AccountController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> Get(bool getHidden = false, bool getDeleted = false)
+    public async Task<IActionResult> Get()
     {
         var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
 
@@ -28,7 +28,7 @@ public class AccountController : ControllerBase
             return NotFound();
         }
 
-        return Ok(user.Accounts.Where(a => (!a.HideAccount || getHidden) && (a.Deleted == null || getDeleted)));
+        return Ok(user.Accounts);
     }
 
     [HttpGet("{guid}")]
@@ -42,7 +42,7 @@ public class AccountController : ControllerBase
             return NotFound();
         }
 
-        var account = user.Accounts.First<Account>(a => a.ID == guid);
+        var account = user.Accounts.First(a => a.ID == guid);
 
         return Ok(account);
     }

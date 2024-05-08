@@ -2,14 +2,10 @@ import type { AxiosResponse } from 'axios';
 import request from './request';
 import { type Account } from '@/types/account';
 
-export const getAccounts = async (
-  getHiddenAccounts: boolean,
-  getDeletedAccounts: boolean
-): Promise<AxiosResponse> =>
+export const getAccounts = async (): Promise<AxiosResponse> =>
   await request({
     url: '/api/account',
     method: 'GET',
-    params: { getHidden: getHiddenAccounts, getDeleted: getDeletedAccounts },
   });
 
 export const updateAccount = async (newAccount: Account): Promise<AxiosResponse> => {
@@ -37,4 +33,8 @@ export const restoreAccount = async (guid: string): Promise<AxiosResponse> => {
     method: 'POST',
     params: { guid },
   });
+};
+
+export const filterVisibleAccounts = (accounts: Account[]): Account[] => {
+  return accounts.filter((a: Account) => !(a.hideAccount || a.deleted !== null));
 };
