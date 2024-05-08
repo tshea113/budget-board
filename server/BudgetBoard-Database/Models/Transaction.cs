@@ -14,7 +14,8 @@ public class Transaction
     public string? Subcategory { get; set; }
     [DisplayFormat(NullDisplayText = "No Merchant")]
     public string? MerchantName { get; set; }
-    public bool Pending { get; set; }
+    public bool Pending { get; set; } = false;
+    public DateTime? Deleted { get; set; } = null;
     public required string Source { get; set; }
     public required Guid AccountID { get; set; }
     public Account? Account { get; set; } = null!;

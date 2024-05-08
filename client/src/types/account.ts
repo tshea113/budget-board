@@ -8,6 +8,7 @@ interface Account {
   currentBalance: number;
   hideTransactions: boolean;
   hideAccount: boolean;
+  deleted: Date;
   userID: string;
 }
 

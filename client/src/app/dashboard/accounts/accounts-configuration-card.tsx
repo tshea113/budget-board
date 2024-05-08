@@ -10,6 +10,7 @@ import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
 import React from 'react';
+import DeleteAccount from './delete-account';
 
 interface AccountsConfigurationCardProps {
   account: Account;
@@ -40,13 +41,15 @@ const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.E
         currentBalance: props.account.currentBalance,
         hideTransactions: hideTransactionsValue,
         hideAccount: hideAccountValue,
+        deleted: props.account.deleted,
         userID: props.account.userID,
       };
 
       return await updateAccount(account);
     },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['accounts', 'accountsWithHidden'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['accounts'] });
+      await queryClient.invalidateQueries({ queryKey: ['transactions'] });
       setValueDirty(false);
     },
     onError: (error: AxiosError) => {
@@ -61,7 +64,7 @@ const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.E
   return (
     <Card className="m-2 p-3">
       <div className="flex h-6 flex-row items-center">
-        <div className="flex w-1/4">
+        <div className="flex w-1/5">
           <Input
             value={accountNameValue}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,7 +73,7 @@ const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.E
             }}
           />
         </div>
-        <div className="flex w-1/4 justify-center">
+        <div className="flex w-1/5 justify-center">
           <Checkbox
             id="hidden"
             checked={hideAccountValue}
@@ -80,7 +83,7 @@ const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.E
             }}
           />
         </div>
-        <div className="flex w-1/4 justify-center">
+        <div className="flex w-1/5 justify-center">
           <Checkbox
             id="hidden"
             checked={hideTransactionsValue}
@@ -90,8 +93,11 @@ const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.E
             }}
           />
         </div>
+        <div className="flex w-1/5 justify-center">
+          <DeleteAccount accountId={props.account.id} />
+        </div>
         {valueDirty && (
-          <div className="flex flex-row items-center space-x-2">
+          <div className="flex w-1/5 flex-row items-center space-x-2">
             <ResponsiveButton
               className="m-0 h-7 w-10 p-0"
               onClick={() => {

@@ -3,11 +3,13 @@ import { Sheet, SheetContent, SheetHeader, SheetTrigger } from '@/components/ui/
 import { GearIcon } from '@radix-ui/react-icons';
 import AccountsConfigurationCard from './accounts-configuration-card';
 import { type Account } from '@/types/account';
-import { useAccountsQuery } from '@/lib/query';
+import DeletedAccountsCards from './deleted-accounts-cards';
 
-const AccountsConfiguration = (): JSX.Element => {
-  const accountsQuery = useAccountsQuery(true);
+interface AccountsConfigurationProps {
+  accounts: Account[];
+}
 
+const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element => {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -17,14 +19,20 @@ const AccountsConfiguration = (): JSX.Element => {
       </SheetTrigger>
       <SheetContent side="top">
         <SheetHeader>Accounts Configuration</SheetHeader>
-        <div className="flex w-full flex-row items-center">
-          <span className="w-1/4 px-8 py-2 text-center">Account</span>
-          <span className="w-1/4 px-8 py-2 text-center">Hide Account?</span>
-          <span className="w-1/4 px-8 py-2 text-center">Hide Transactions?</span>
+        <div className="flex w-full flex-row items-center px-4">
+          <span className="w-1/5 px-8 py-2 text-center">Account</span>
+          <span className="w-1/5 px-8 py-2 text-center">Hide Account?</span>
+          <span className="w-1/5 px-8 py-2 text-center">Hide Transactions?</span>
+          <span className="w-1/5 px-8 py-2 text-center">Delete</span>
         </div>
-        {(accountsQuery.data?.data ?? []).map((account: Account) => (
-          <AccountsConfigurationCard key={account.id} account={account} />
-        ))}
+        {(props.accounts.filter((a: Account) => a.deleted === null) ?? []).map(
+          (account: Account) => (
+            <AccountsConfigurationCard key={account.id} account={account} />
+          )
+        )}
+        <DeletedAccountsCards
+          deletedAccounts={props.accounts.filter((a: Account) => a.deleted !== null)}
+        />
       </SheetContent>
     </Sheet>
   );

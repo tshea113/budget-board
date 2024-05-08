@@ -1,5 +1,6 @@
 import { type Account } from '@/types/account';
 import AccountGroup from './account-group';
+import { filterVisibleAccounts } from '@/lib/accounts';
 
 interface AccountItemsProps {
   accounts: Account[];
@@ -32,7 +33,7 @@ const getGroupedAccounts = (accounts: Account[]): GroupedAccounts[] => {
 const AccountItems = (props: AccountItemsProps): JSX.Element => {
   return (
     <div className="space-y-4">
-      {getGroupedAccounts(props.accounts).map((a) => (
+      {getGroupedAccounts(filterVisibleAccounts(props.accounts)).map((a) => (
         <AccountGroup key={a.institution} institution={a.institution} accounts={a.accounts} />
       ))}
     </div>

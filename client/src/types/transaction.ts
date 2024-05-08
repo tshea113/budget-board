@@ -6,6 +6,7 @@ interface Transaction {
   subcategory: string;
   merchantName: string;
   pending: boolean;
+  deleted: Date;
   source: string;
   accountId: string;
 }

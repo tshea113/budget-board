@@ -120,12 +120,6 @@ public class SimpleFinHandler
         }
     }
 
-    public void UpdateLastSync(User user)
-    {
-        user.LastSync = DateTime.Now;
-
-    }
-
     private static SimpleFinData GetUrlCredentials(string accessToken)
     {
         string[] url = accessToken.Split("//");

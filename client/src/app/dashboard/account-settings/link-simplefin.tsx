@@ -8,7 +8,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { useUserQuery } from '@/lib/query';
 import { translateAxiosError } from '@/lib/request';
 import { setAccessToken } from '@/lib/user';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -18,14 +18,10 @@ const LinkSimpleFin = (): JSX.Element => {
 
   const userQuery = useUserQuery();
 
-  const queryClient = useQueryClient();
   const { toast } = useToast();
   const doSetAccessToken = useMutation({
     mutationFn: async (newToken: string) => {
       return await setAccessToken(newToken);
-    },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['accounts', 'accountsWithHidden'] });
     },
     onError: (error: AxiosError) => {
       toast({

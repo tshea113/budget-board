@@ -14,7 +14,8 @@ namespace BudgetBoard.Database.Migrations
                 name: "HideTransactions",
                 table: "Account",
                 type: "boolean",
-                nullable: true);
+                nullable: false,
+                defaultValue: false);
         }
 
         /// <inheritdoc />

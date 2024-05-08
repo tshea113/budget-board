@@ -19,7 +19,7 @@ public class AccountController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> Get(bool getHidden = false)
+    public async Task<IActionResult> Get()
     {
         var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
 
@@ -28,7 +28,7 @@ public class AccountController : ControllerBase
             return NotFound();
         }
 
-        return Ok(user.Accounts.Where(a => getHidden || !(a.HideAccount ?? false)));
+        return Ok(user.Accounts);
     }
 
     [HttpGet("{guid}")]
@@ -42,7 +42,7 @@ public class AccountController : ControllerBase
             return NotFound();
         }
 
-        var account = user.Accounts.First<Account>(a => a.ID == guid);
+        var account = user.Accounts.First(a => a.ID == guid);
 
         return Ok(account);
     }
@@ -73,7 +73,7 @@ public class AccountController : ControllerBase
 
     [HttpDelete]
     [Authorize]
-    public async Task<IActionResult> Delete(Guid guid)
+    public async Task<IActionResult> Delete(Guid guid, bool deleteTransactions = false)
     {
         try
         {
@@ -84,13 +84,50 @@ public class AccountController : ControllerBase
                 return NotFound();
             }
 
-            Account? account = await _userDataContext.Accounts.FindAsync(guid);
-            if (account == null)
+            var account = user.Accounts.Single(a => a.ID == guid);
+
+            if (account == null) return NotFound();
+
+            account.Deleted = DateTime.Now.ToUniversalTime();
+
+            if (deleteTransactions)
+            {
+                foreach (var transaction in account.Transactions)
+                {
+                    transaction.Deleted = DateTime.Now.ToUniversalTime();
+                }
+            }
+
+            await _userDataContext.SaveChangesAsync();
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPost]
+    [Authorize]
+    [Route("[action]")]
+    public async Task<IActionResult> Restore(Guid guid)
+    {
+        try
+        {
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+
+            if (user == null)
             {
                 return NotFound();
             }
 
-            user.Accounts.Remove(account);
+            var account = user.Accounts.Single(a => a.ID == guid);
+
+            if (account == null) return NotFound();
+
+            account.Deleted = null;
+
             await _userDataContext.SaveChangesAsync();
 
             return Ok();

@@ -17,7 +17,7 @@ const AccountCard = (): JSX.Element => {
       <div className="flex flex-row items-center p-2">
         <span className="w-1/2 text-2xl font-semibold tracking-tight">Accounts</span>
         <div className="flex w-1/2 flex-row justify-end">
-          <AccountsConfiguration />
+          <AccountsConfiguration accounts={accountsQuery.data?.data ?? []} />
         </div>
       </div>
       <Separator />
