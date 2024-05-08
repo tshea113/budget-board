@@ -43,8 +43,8 @@ const AddBudget = ({ date }: AddBudgetProps): JSX.Element => {
         data: newBudget,
       });
     },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['budgets'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['budgets'] });
     },
   });
 

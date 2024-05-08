@@ -60,8 +60,8 @@ const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>): JSX.Ele
     mutationFn: async (newTransaction: Transaction) => {
       return await editTransaction(newTransaction);
     },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['transactions'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['transactions'] });
     },
     onError: (error: AxiosError) => {
       toast({

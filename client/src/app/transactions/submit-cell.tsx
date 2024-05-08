@@ -22,8 +22,8 @@ const SubmitCell = <TData,>({ row, table }: SubmitCellProps<TData>): JSX.Element
     mutationFn: async (newTransaction: Transaction) => {
       return await editTransaction(newTransaction);
     },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['transactions'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['transactions'] });
       row.toggleSelected(false);
     },
     onError: (error: AxiosError) => {
