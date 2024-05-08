@@ -1,9 +1,10 @@
 import ResponsiveButton from '@/components/responsive-button';
 import { Card } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
-import { deletePeriod, restoreAccount } from '@/lib/accounts';
+import { restoreAccount } from '@/lib/accounts';
 import { translateAxiosError } from '@/lib/request';
 import { type Account } from '@/types/account';
+import { ResetIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
 
@@ -14,12 +15,12 @@ interface DeletedAccountCardProps {
 const DeletedAccountCard = (props: DeletedAccountCardProps): JSX.Element => {
   const { toast } = useToast();
 
-  const getDaysUntilDeleted = (date: Date): string => {
+  const getDaysSinceDeleted = (date: Date): string => {
     const differenceInMs = new Date().getTime() - new Date(date).getTime();
 
     const differenceInDays = Math.round(differenceInMs / (1000 * 3600 * 24));
 
-    return (deletePeriod - differenceInDays).toString();
+    return differenceInDays.toString();
   };
 
   const queryClient = useQueryClient();
@@ -43,7 +44,7 @@ const DeletedAccountCard = (props: DeletedAccountCardProps): JSX.Element => {
     <Card key={props.deletedAccount.id} className="flex flex-row items-center p-2">
       <span className="w-1/5">{props.deletedAccount.name}</span>
       <span className="w-1/5">
-        {getDaysUntilDeleted(props.deletedAccount.deleted) + ' days until deleted'}
+        {getDaysSinceDeleted(props.deletedAccount.deleted) + ' days since deleted'}
       </span>
       <div className="w-1/5">
         <ResponsiveButton
@@ -53,7 +54,7 @@ const DeletedAccountCard = (props: DeletedAccountCardProps): JSX.Element => {
             doRestoreAccount.mutate(props.deletedAccount.id);
           }}
         >
-          Restore
+          <ResetIcon className="h-4 w-4" />
         </ResponsiveButton>
       </div>
     </Card>

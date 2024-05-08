@@ -6,7 +6,6 @@ import {
 } from '@/components/ui/accordion';
 import { type Account } from '@/types/account';
 import DeletedAccountCard from './deleted-account-card';
-import { deletePeriod } from '@/lib/accounts';
 
 interface DeletedAccountsCardsProps {
   deletedAccounts: Account[];
@@ -21,7 +20,7 @@ const DeletedAccountsCards = (props: DeletedAccountsCardsProps): JSX.Element => 
             <span>Deleted Accounts</span>
           </AccordionTrigger>
           <AccordionContent className="space-y-2">
-            <span>These accounts will be deleted after {deletePeriod} days</span>
+            <span>Deleted accounts will not sync transactions</span>
             {props.deletedAccounts.map((deletedAccount) => (
               <DeletedAccountCard key={deletedAccount.id} deletedAccount={deletedAccount} />
             ))}
