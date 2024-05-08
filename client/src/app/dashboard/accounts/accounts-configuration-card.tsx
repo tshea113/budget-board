@@ -49,6 +49,7 @@ const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.E
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['accounts'] });
+      await queryClient.invalidateQueries({ queryKey: ['transactions'] });
       setValueDirty(false);
     },
     onError: (error: AxiosError) => {

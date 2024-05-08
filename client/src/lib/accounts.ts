@@ -2,6 +2,8 @@ import type { AxiosResponse } from 'axios';
 import request from './request';
 import { type Account } from '@/types/account';
 
+export const deletePeriod: number = 120;
+
 export const getAccounts = async (): Promise<AxiosResponse> =>
   await request({
     url: '/api/account',

@@ -1,7 +1,7 @@
 import ResponsiveButton from '@/components/responsive-button';
 import { Card } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
-import { restoreAccount } from '@/lib/accounts';
+import { deletePeriod, restoreAccount } from '@/lib/accounts';
 import { translateAxiosError } from '@/lib/request';
 import { type Account } from '@/types/account';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -19,7 +19,7 @@ const DeletedAccountCard = (props: DeletedAccountCardProps): JSX.Element => {
 
     const differenceInDays = Math.round(differenceInMs / (1000 * 3600 * 24));
 
-    return (60 - differenceInDays).toString();
+    return (deletePeriod - differenceInDays).toString();
   };
 
   const queryClient = useQueryClient();
