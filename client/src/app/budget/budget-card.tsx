@@ -2,6 +2,7 @@ import ResponsiveButton from '@/components/responsive-button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
+import { getSignForBudget } from '@/lib/budgets';
 import request from '@/lib/request';
 import { getCategoryLabel } from '@/lib/transactions';
 import { getProgress } from '@/lib/utils';
@@ -91,7 +92,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
           )}
         </div>
         <div className="grid h-8 grid-cols-3 justify-items-center text-lg font-semibold">
-          <div>${Math.abs(props.amount).toFixed()}</div>
+          <div>${(props.amount * getSignForBudget(props.budget.category)).toFixed()}</div>
           <div>
             {!isEdit ? (
               <div>${limit}</div>
@@ -125,7 +126,10 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
       </div>
       <Progress
         className="h-2 w-full"
-        value={getProgress(Math.abs(props.amount), props.budget.limit)}
+        value={getProgress(
+          props.amount * getSignForBudget(props.budget.category),
+          props.budget.limit
+        )}
         max={100}
       />
     </Card>

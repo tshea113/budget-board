@@ -40,3 +40,21 @@ export const getBudgetsForGroup = (
     return budgetData;
   }
 };
+
+export const getBudgetGroupForCategory = (category: string): BudgetGroup => {
+  if (category === 'income') {
+    return BudgetGroup.Income;
+  } else {
+    return BudgetGroup.Spending;
+  }
+};
+
+export const getSignForBudget = (category: string): number => {
+  switch (getBudgetGroupForCategory(getParentCategory(category))) {
+    case BudgetGroup.Spending:
+      return -1;
+    case BudgetGroup.Income:
+    default:
+      return 1;
+  }
+};
