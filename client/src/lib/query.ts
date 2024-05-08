@@ -9,7 +9,7 @@ export const useAccountsQuery = (
   getHiddenAccounts: boolean = false,
   getDeletedAccounts: boolean = false
 ): UseQueryResult<AxiosResponse<any, any>, Error> => {
-  const queryName = getHiddenAccounts ? 'accountsWithHidden' : 'accounts';
+  const queryName = 'accounts';
   const accountsQuery = useQuery({
     queryKey: [queryName],
     queryFn: async () => {

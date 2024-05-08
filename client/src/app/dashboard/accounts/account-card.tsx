@@ -4,6 +4,7 @@ import AccountsConfiguration from './accounts-configuration';
 import AccountItems from './account-items';
 import { Separator } from '@/components/ui/separator';
 import { useAccountsQuery } from '@/lib/query';
+import { type Account } from '@/types/account';
 
 const AccountCard = (): JSX.Element => {
   const accountsQuery = useAccountsQuery();
@@ -22,7 +23,9 @@ const AccountCard = (): JSX.Element => {
       </div>
       <Separator />
       <div className="p-2">
-        <AccountItems accounts={accountsQuery.data?.data ?? []} />
+        <AccountItems
+          accounts={accountsQuery.data?.data.filter((a: Account) => !a.hideAccount) ?? []}
+        />
       </div>
     </Card>
   );

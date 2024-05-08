@@ -41,13 +41,14 @@ const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.E
         currentBalance: props.account.currentBalance,
         hideTransactions: hideTransactionsValue,
         hideAccount: hideAccountValue,
+        deleted: props.account.deleted,
         userID: props.account.userID,
       };
 
       return await updateAccount(account);
     },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['accounts', 'accountsWithHidden'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['accounts'] });
       setValueDirty(false);
     },
     onError: (error: AxiosError) => {

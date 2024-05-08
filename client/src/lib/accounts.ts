@@ -30,3 +30,11 @@ export const deleteAccount = async (
     params: { guid, deleteTransactions },
   });
 };
+
+export const restoreAccount = async (guid: string): Promise<AxiosResponse> => {
+  return await request({
+    url: '/api/account/restore',
+    method: 'POST',
+    params: { guid },
+  });
+};

@@ -108,6 +108,36 @@ public class AccountController : ControllerBase
         }
     }
 
+    [HttpPost]
+    [Authorize]
+    [Route("[action]")]
+    public async Task<IActionResult> Restore(Guid guid)
+    {
+        try
+        {
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var account = user.Accounts.Single(a => a.ID == guid);
+
+            if (account == null) return NotFound();
+
+            account.Deleted = null;
+
+            await _userDataContext.SaveChangesAsync();
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     [HttpPut]
     [Authorize]
     public async Task<IActionResult> Edit([FromBody] Account newAccount)

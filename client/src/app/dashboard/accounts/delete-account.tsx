@@ -6,6 +6,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { deleteAccount } from '@/lib/accounts';
 import { translateAxiosError } from '@/lib/request';
 import { TrashIcon } from '@radix-ui/react-icons';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
 import React from 'react';
 
@@ -15,25 +16,25 @@ interface DeleteAccountProps {
 
 const DeleteAccount = (props: DeleteAccountProps): JSX.Element => {
   const [deleteTransactionsValue, setDeleteTransactionsValue] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
 
   const { toast } = useToast();
 
-  const doDeleteAccount = (): void => {
-    setIsLoading(true);
-
-    deleteAccount(props.accountId, deleteTransactionsValue)
-      .catch((error: AxiosError) => {
-        toast({
-          variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
-          description: translateAxiosError(error),
-        });
-      })
-      .finally(() => {
-        setIsLoading(false);
+  const queryClient = useQueryClient();
+  const doDeleteAccount = useMutation({
+    mutationFn: async (deleteTransactions: boolean) => {
+      return await deleteAccount(props.accountId, deleteTransactions);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['accounts'] });
+    },
+    onError: (error: AxiosError) => {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: translateAxiosError(error),
       });
-  };
+    },
+  });
 
   return (
     <Popover>
@@ -60,7 +61,13 @@ const DeleteAccount = (props: DeleteAccountProps): JSX.Element => {
             </label>
           </div>
 
-          <ResponsiveButton loading={isLoading} variant="destructive" onClick={doDeleteAccount}>
+          <ResponsiveButton
+            loading={doDeleteAccount.isPending}
+            variant="destructive"
+            onClick={() => {
+              doDeleteAccount.mutate(deleteTransactionsValue);
+            }}
+          >
             Delete
           </ResponsiveButton>
         </div>
