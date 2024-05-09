@@ -43,7 +43,9 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
 }
 
-const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>): JSX.Element => {
+const TransactionsDataTable = <TData, TValue>(
+  props: DataTableProps<TData, TValue>
+): JSX.Element => {
   const [tableData, setTableData] = React.useState<TData[]>(props.data);
   const [originalData, setOriginalData] = React.useState<TData[]>(props.data);
   const [sorting, setSorting] = React.useState<SortingState>([
@@ -147,8 +149,8 @@ const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>): JSX.Ele
   });
 
   return (
-    <div className="bg-card">
-      <div className="rounded-md border">
+    <div>
+      <div className="rounded-md border bg-card">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -197,4 +199,4 @@ const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>): JSX.Ele
   );
 };
 
-export default DataTable;
+export default TransactionsDataTable;
