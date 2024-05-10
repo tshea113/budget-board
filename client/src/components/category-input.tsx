@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils';
 import { categories, type Category } from '@/types/transaction';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import React from 'react';
-import CommandSubcategory from '../dashboard/command-subcategory';
+import CommandSubcategory from './command-subcategory';
 
 interface CategoryInputProps {
   initialValue: string;

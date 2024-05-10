@@ -29,14 +29,11 @@ import { useToast } from '@/components/ui/use-toast';
 declare module '@tanstack/react-table' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   export interface TableMeta<TData> {
-    updateData: (rowIndex: number, columnId: string, value: string) => void;
-    updateCategory: (rowIndex: number, columnId: string, value: string) => void;
-    revertData: (rowIndex: number, revert: boolean) => void;
+    updateTransaction: (newTransaction: Transaction) => void;
     isPending: boolean;
+    isError: boolean;
   }
 }
-
-// TODO: Rows sort when data is edited. Need to pause sorting while edit is active.
 
 interface DataTableProps<TData, TValue> {
   columns: Array<ColumnDef<TData, TValue>>;
@@ -46,8 +43,6 @@ interface DataTableProps<TData, TValue> {
 const TransactionsDataTable = <TData, TValue>(
   props: DataTableProps<TData, TValue>
 ): JSX.Element => {
-  const [tableData, setTableData] = React.useState<TData[]>(props.data);
-  const [originalData, setOriginalData] = React.useState<TData[]>(props.data);
   const [sorting, setSorting] = React.useState<SortingState>([
     {
       id: 'date',
@@ -58,7 +53,7 @@ const TransactionsDataTable = <TData, TValue>(
 
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  const { mutate, isPending } = useMutation({
+  const doEditTransaction = useMutation({
     mutationFn: async (newTransaction: Transaction) => {
       return await editTransaction(newTransaction);
     },
@@ -75,7 +70,7 @@ const TransactionsDataTable = <TData, TValue>(
   });
 
   const table = useReactTable({
-    data: tableData,
+    data: props.data,
     columns: props.columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -95,55 +90,10 @@ const TransactionsDataTable = <TData, TValue>(
       rowSelection,
     },
     meta: {
-      isPending,
-      updateData: (rowIndex: number, columnId: string, value: string) => {
-        let newRow: TData | undefined;
-        setTableData((old) =>
-          old.map((row, index) => {
-            if (index === rowIndex) {
-              newRow = {
-                ...old[rowIndex],
-                [columnId]: value,
-              };
-              return newRow;
-            }
-            return row;
-          })
-        );
-        if (newRow) {
-          mutate(newRow as unknown as Transaction);
-        }
-      },
-      updateCategory: (rowIndex: number, category: string, subcategory: string) => {
-        let newRow: TData | undefined;
-        setTableData((old) =>
-          old.map((row, index) => {
-            if (index === rowIndex) {
-              newRow = {
-                ...old[rowIndex],
-                category,
-              };
-              return newRow;
-            }
-            return row;
-          })
-        );
-        if (newRow) {
-          const newTransaction = newRow as unknown as Transaction;
-          newTransaction.subcategory = subcategory;
-          mutate(newTransaction);
-        }
-      },
-      revertData: (rowIndex: number, revert: boolean) => {
-        if (revert) {
-          setTableData((old) =>
-            old.map((row, index) => (index === rowIndex ? originalData[rowIndex] : row))
-          );
-        } else {
-          setOriginalData((old) =>
-            old.map((row, index) => (index === rowIndex ? props.data[rowIndex] : row))
-          );
-        }
+      isPending: doEditTransaction.isPending,
+      isError: doEditTransaction.isError,
+      updateTransaction: (newTransaction: Transaction) => {
+        doEditTransaction.mutate(newTransaction);
       },
     },
   });
