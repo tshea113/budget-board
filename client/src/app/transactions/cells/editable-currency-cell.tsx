@@ -45,6 +45,9 @@ const EditableCurrencyCell = (props: EditableCurrencyCellProps): JSX.Element => 
           onCurrencyChange(e.target.value);
         }}
         onBlur={onCurrencyBlur}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
         type="text"
       />
     );

@@ -37,6 +37,9 @@ const EditableMerchantCell = (props: EditableTextCellProps): JSX.Element => {
           setMerchantValue(e.target.value);
         }}
         onBlur={onTextChange}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
         type="text"
       />
     );

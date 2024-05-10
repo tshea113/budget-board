@@ -124,7 +124,7 @@ const TransactionsDataTable = <TData, TValue>(
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                   onClick={() => {
-                    row.toggleSelected(true);
+                    row.toggleSelected(!row.getIsSelected());
                   }}
                 >
                   {row.getVisibleCells().map((cell) => (

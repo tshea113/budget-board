@@ -34,6 +34,9 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
           role="combobox"
           aria-expanded={open}
           className="w-[200px] justify-between"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
         >
           {value.length > 0
             ? categories.find((category) => category.value === value)?.label
