@@ -7,10 +7,10 @@ import { format } from 'date-fns';
 
 interface DatePickerProps {
   value: Date;
-  setDatePick: (day: Date) => void;
+  onDayClick: (day: Date) => void;
 }
 
-const DatePicker = ({ value, setDatePick }: DatePickerProps): JSX.Element => {
+const DatePicker = (props: DatePickerProps): JSX.Element => {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -18,19 +18,19 @@ const DatePicker = ({ value, setDatePick }: DatePickerProps): JSX.Element => {
           variant={'outline'}
           className={cn(
             'min-w-[200px] max-w-full justify-start text-left font-normal',
-            value == null && 'text-muted-foreground'
+            props.value == null && 'text-muted-foreground'
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {value != null ? format(value, 'PPP') : <span>Pick a date</span>}
+          {props.value != null ? format(props.value, 'PPP') : <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
         <Calendar
           mode="single"
-          selected={value}
-          defaultMonth={value}
-          onDayClick={setDatePick}
+          selected={props.value}
+          defaultMonth={props.value}
+          onDayClick={props.onDayClick}
           initialFocus
         />
       </PopoverContent>
