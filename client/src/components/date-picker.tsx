@@ -7,7 +7,8 @@ import { format } from 'date-fns';
 
 interface DatePickerProps {
   value: Date;
-  onDayClick: (day: Date) => void;
+  onDayClick?: (day: Date) => void;
+  onDayBlur?: (day: Date) => void;
 }
 
 const DatePicker = (props: DatePickerProps): JSX.Element => {
@@ -31,6 +32,7 @@ const DatePicker = (props: DatePickerProps): JSX.Element => {
           selected={props.value}
           defaultMonth={props.value}
           onDayClick={props.onDayClick}
+          onDayBlur={props.onDayBlur}
           initialFocus
         />
       </PopoverContent>

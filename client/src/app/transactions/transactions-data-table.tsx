@@ -58,7 +58,7 @@ const TransactionsDataTable = <TData, TValue>(
       return await editTransaction(newTransaction);
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['transactions'] });
+      await queryClient.refetchQueries({ queryKey: ['transactions'] });
     },
     onError: (error: AxiosError) => {
       toast({
