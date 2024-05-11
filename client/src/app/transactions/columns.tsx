@@ -79,6 +79,7 @@ const columns: Array<ColumnDef<Transaction>> = [
   },
   {
     id: 'loading',
+    size: 10,
     cell: (props) => (
       <LoadingCell
         isPending={props.table.options.meta?.isPending ?? false}

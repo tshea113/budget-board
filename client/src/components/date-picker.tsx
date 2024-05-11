@@ -18,7 +18,7 @@ const DatePicker = (props: DatePickerProps): JSX.Element => {
         <Button
           variant={'outline'}
           className={cn(
-            'min-w-[200px] max-w-full justify-start text-left font-normal',
+            'min-w-[50px] max-w-full justify-start text-left font-normal',
             props.value == null && 'text-muted-foreground'
           )}
           onClick={(e) => {

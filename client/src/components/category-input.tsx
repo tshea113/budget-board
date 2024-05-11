@@ -33,7 +33,7 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
           variant="dropdown"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="min-w-[50px] max-w-full justify-between"
           onClick={(e) => {
             e.stopPropagation();
           }}
