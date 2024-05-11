@@ -46,11 +46,21 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
       </PopoverTrigger>
       <PopoverContent className="w-[225px] p-0">
         <Command>
-          <CommandInput placeholder="Search categories" />
+          <CommandInput
+            placeholder="Search categories"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          />
           <CommandList>
             <CommandEmpty>No categories found.</CommandEmpty>
             {categoriesTree.map((category: Category) => (
-              <CommandGroup key={category.value}>
+              <CommandGroup
+                key={category.value}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
                 <CommandItem
                   className="font-bold"
                   value={category.value}
