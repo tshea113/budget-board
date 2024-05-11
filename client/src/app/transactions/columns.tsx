@@ -1,18 +1,11 @@
-import { type RowData, type ColumnDef } from '@tanstack/react-table';
+import { type ColumnDef } from '@tanstack/react-table';
 import { type Transaction } from '@/types/transaction';
 import DataTableHeader from '@/components/data-table-header';
-import EditableCell from './editable-cell';
 import LoadingCell from '../../components/loading-cell';
-// import AddTransactionButton from './add-transaction-button';
-
-declare module '@tanstack/react-table' {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  export interface ColumnMeta<TData extends RowData, TValue> {
-    type?: string;
-    options?: string[] | string[][] | undefined;
-    currency?: string;
-  }
-}
+import EditableDateCell from './cells/editable-date-cell';
+import EditableCategoryCell from './cells/editable-category-cell';
+import EditableMerchantCell from './cells/editable-text-cell';
+import EditableCurrencyCell from './cells/editable-currency-cell';
 
 const columns: Array<ColumnDef<Transaction>> = [
   {
@@ -20,20 +13,30 @@ const columns: Array<ColumnDef<Transaction>> = [
     header: ({ column }) => {
       return <DataTableHeader column={column} label={'Date'} />;
     },
-    cell: EditableCell,
-    meta: {
-      type: 'date',
-    },
+    cell: (props) => (
+      <EditableDateCell
+        date={new Date(props.getValue() as Date)}
+        isSelected={props.row.getIsSelected()}
+        isError={props.table.options.meta?.isError ?? false}
+        rowTransaction={props.row.original}
+        editCell={props.table.options.meta?.updateTransaction}
+      />
+    ),
   },
   {
     accessorKey: 'merchantName',
     header: ({ column }) => {
       return <DataTableHeader column={column} label={'Merchant'} />;
     },
-    cell: EditableCell,
-    meta: {
-      type: 'text',
-    },
+    cell: (props) => (
+      <EditableMerchantCell
+        merchant={props.getValue() as string}
+        isSelected={props.row.getIsSelected()}
+        isError={props.table.options.meta?.isError ?? false}
+        editCell={props.table.options.meta?.updateTransaction}
+        rowTransaction={props.row.original}
+      />
+    ),
   },
   {
     id: 'category',
@@ -49,25 +52,40 @@ const columns: Array<ColumnDef<Transaction>> = [
     header: ({ column }) => {
       return <DataTableHeader column={column} label={'Category'} />;
     },
-    cell: EditableCell,
-    meta: {
-      type: 'category',
-    },
+    cell: (props) => (
+      <EditableCategoryCell
+        category={props.getValue() as string}
+        isSelected={props.row.getIsSelected()}
+        isError={props.table.options.meta?.isError ?? false}
+        editCell={props.table.options.meta?.updateTransaction}
+        rowTransaction={props.row.original}
+      />
+    ),
   },
   {
     accessorKey: 'amount',
     header: ({ column }) => {
       return <DataTableHeader column={column} label={'Amount'} />;
     },
-    cell: EditableCell,
-    meta: {
-      type: 'number',
-      currency: 'USD',
-    },
+    cell: (props) => (
+      <EditableCurrencyCell
+        currency={props.getValue() as number}
+        isSelected={props.row.getIsSelected()}
+        isError={props.table.options.meta?.isError ?? false}
+        editCell={props.table.options.meta?.updateTransaction}
+        rowTransaction={props.row.original}
+      />
+    ),
   },
   {
     id: 'loading',
-    cell: LoadingCell,
+    size: 10,
+    cell: (props) => (
+      <LoadingCell
+        isPending={props.table.options.meta?.isPending ?? false}
+        isSelected={props.row.original.id === props.table.options.meta?.isPendingRow}
+      />
+    ),
   },
 ];
 

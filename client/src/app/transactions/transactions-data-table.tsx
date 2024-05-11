@@ -29,23 +29,19 @@ import { useToast } from '@/components/ui/use-toast';
 declare module '@tanstack/react-table' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   export interface TableMeta<TData> {
-    updateData: (rowIndex: number, columnId: string, value: string) => void;
-    updateCategory: (rowIndex: number, columnId: string, value: string) => void;
-    revertData: (rowIndex: number, revert: boolean) => void;
+    updateTransaction: (newTransaction: Transaction) => void;
     isPending: boolean;
+    isPendingRow: string;
+    isError: boolean;
   }
 }
 
-// TODO: Rows sort when data is edited. Need to pause sorting while edit is active.
-
-interface DataTableProps<TData, TValue> {
-  columns: Array<ColumnDef<TData, TValue>>;
-  data: TData[];
+interface DataTableProps {
+  columns: Array<ColumnDef<Transaction>>;
+  data: Transaction[];
 }
 
-const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>): JSX.Element => {
-  const [tableData, setTableData] = React.useState<TData[]>(props.data);
-  const [originalData, setOriginalData] = React.useState<TData[]>(props.data);
+const TransactionsDataTable = (props: DataTableProps): JSX.Element => {
   const [sorting, setSorting] = React.useState<SortingState>([
     {
       id: 'date',
@@ -53,15 +49,18 @@ const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>): JSX.Ele
     },
   ]);
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+  const [isPendingRow, setIsPendingRow] = React.useState('');
 
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  const { mutate, isPending } = useMutation({
+  const doEditTransaction = useMutation({
     mutationFn: async (newTransaction: Transaction) => {
+      setIsPendingRow(table.getSelectedRowModel().rows.at(0)?.id ?? '');
       return await editTransaction(newTransaction);
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['transactions'] });
+      setIsPendingRow('');
+      await queryClient.refetchQueries({ queryKey: ['transactions'] });
     },
     onError: (error: AxiosError) => {
       toast({
@@ -73,8 +72,9 @@ const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>): JSX.Ele
   });
 
   const table = useReactTable({
-    data: tableData,
+    data: props.data,
     columns: props.columns,
+    getRowId: (row: Transaction) => row.id,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -93,69 +93,25 @@ const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>): JSX.Ele
       rowSelection,
     },
     meta: {
-      isPending,
-      updateData: (rowIndex: number, columnId: string, value: string) => {
-        let newRow: TData | undefined;
-        setTableData((old) =>
-          old.map((row, index) => {
-            if (index === rowIndex) {
-              newRow = {
-                ...old[rowIndex],
-                [columnId]: value,
-              };
-              return newRow;
-            }
-            return row;
-          })
-        );
-        if (newRow) {
-          mutate(newRow as unknown as Transaction);
-        }
-      },
-      updateCategory: (rowIndex: number, category: string, subcategory: string) => {
-        let newRow: TData | undefined;
-        setTableData((old) =>
-          old.map((row, index) => {
-            if (index === rowIndex) {
-              newRow = {
-                ...old[rowIndex],
-                category,
-              };
-              return newRow;
-            }
-            return row;
-          })
-        );
-        if (newRow) {
-          const newTransaction = newRow as unknown as Transaction;
-          newTransaction.subcategory = subcategory;
-          mutate(newTransaction);
-        }
-      },
-      revertData: (rowIndex: number, revert: boolean) => {
-        if (revert) {
-          setTableData((old) =>
-            old.map((row, index) => (index === rowIndex ? originalData[rowIndex] : row))
-          );
-        } else {
-          setOriginalData((old) =>
-            old.map((row, index) => (index === rowIndex ? props.data[rowIndex] : row))
-          );
-        }
+      isPending: doEditTransaction.isPending,
+      isPendingRow,
+      isError: doEditTransaction.isError,
+      updateTransaction: (newTransaction: Transaction) => {
+        doEditTransaction.mutate(newTransaction);
       },
     },
   });
 
   return (
-    <div className="bg-card">
-      <div className="rounded-md border">
+    <div>
+      <div className="rounded-md border bg-card">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="selected">
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} style={{ width: `${header.getSize()}px` }}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(header.column.columnDef.header, header.getContext())}
@@ -172,11 +128,11 @@ const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>): JSX.Ele
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                   onClick={() => {
-                    row.toggleSelected(true);
+                    row.toggleSelected(!row.getIsSelected());
                   }}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} style={{ width: cell.column.getSize() }}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
@@ -197,4 +153,4 @@ const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>): JSX.Ele
   );
 };
 
-export default DataTable;
+export default TransactionsDataTable;

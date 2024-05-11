@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils';
 import { categories, type Category } from '@/types/transaction';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import React from 'react';
-import CommandSubcategory from '../dashboard/command-subcategory';
+import CommandSubcategory from './command-subcategory';
 
 interface CategoryInputProps {
   initialValue: string;
@@ -33,7 +33,10 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
           variant="dropdown"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="min-w-[50px] max-w-full justify-between"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
         >
           {value.length > 0
             ? categories.find((category) => category.value === value)?.label
@@ -43,11 +46,21 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
       </PopoverTrigger>
       <PopoverContent className="w-[225px] p-0">
         <Command>
-          <CommandInput placeholder="Search categories" />
+          <CommandInput
+            placeholder="Search categories"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          />
           <CommandList>
             <CommandEmpty>No categories found.</CommandEmpty>
             {categoriesTree.map((category: Category) => (
-              <CommandGroup key={category.value}>
+              <CommandGroup
+                key={category.value}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
                 <CommandItem
                   className="font-bold"
                   value={category.value}

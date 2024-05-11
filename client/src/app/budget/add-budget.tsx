@@ -9,12 +9,12 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import CategoryInput from '../transactions/category-input';
 import { Input } from '@/components/ui/input';
 import ResponsiveButton from '@/components/responsive-button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import request from '@/lib/request';
 import { type NewBudget } from '@/types/budget';
+import CategoryInput from '@/components/category-input';
 
 const formSchema = z.object({
   category: z.string().min(1).max(50),
