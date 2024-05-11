@@ -1,4 +1,4 @@
-import { type RowData, type ColumnDef } from '@tanstack/react-table';
+import { type ColumnDef } from '@tanstack/react-table';
 import { type Transaction } from '@/types/transaction';
 import DataTableHeader from '@/components/data-table-header';
 import LoadingCell from '../../components/loading-cell';
@@ -6,15 +6,6 @@ import EditableDateCell from './cells/editable-date-cell';
 import EditableCategoryCell from './cells/editable-category-cell';
 import EditableMerchantCell from './cells/editable-text-cell';
 import EditableCurrencyCell from './cells/editable-currency-cell';
-
-declare module '@tanstack/react-table' {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  export interface ColumnMeta<TData extends RowData, TValue> {
-    type?: string;
-    options?: string[] | string[][] | undefined;
-    currency?: string;
-  }
-}
 
 const columns: Array<ColumnDef<Transaction>> = [
   {
@@ -88,7 +79,12 @@ const columns: Array<ColumnDef<Transaction>> = [
   },
   {
     id: 'loading',
-    cell: LoadingCell,
+    cell: (props) => (
+      <LoadingCell
+        isPending={props.table.options.meta?.isPending ?? false}
+        isSelected={props.row.original.id === props.table.options.meta?.isPendingRow}
+      />
+    ),
   },
 ];
 

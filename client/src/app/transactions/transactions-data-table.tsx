@@ -31,18 +31,17 @@ declare module '@tanstack/react-table' {
   export interface TableMeta<TData> {
     updateTransaction: (newTransaction: Transaction) => void;
     isPending: boolean;
+    isPendingRow: string;
     isError: boolean;
   }
 }
 
-interface DataTableProps<TData, TValue> {
-  columns: Array<ColumnDef<TData, TValue>>;
-  data: TData[];
+interface DataTableProps {
+  columns: Array<ColumnDef<Transaction>>;
+  data: Transaction[];
 }
 
-const TransactionsDataTable = <TData, TValue>(
-  props: DataTableProps<TData, TValue>
-): JSX.Element => {
+const TransactionsDataTable = (props: DataTableProps): JSX.Element => {
   const [sorting, setSorting] = React.useState<SortingState>([
     {
       id: 'date',
@@ -50,14 +49,17 @@ const TransactionsDataTable = <TData, TValue>(
     },
   ]);
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+  const [isPendingRow, setIsPendingRow] = React.useState('');
 
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const doEditTransaction = useMutation({
     mutationFn: async (newTransaction: Transaction) => {
+      setIsPendingRow(table.getSelectedRowModel().rows.at(0)?.id ?? '');
       return await editTransaction(newTransaction);
     },
     onSuccess: async () => {
+      setIsPendingRow('');
       await queryClient.refetchQueries({ queryKey: ['transactions'] });
     },
     onError: (error: AxiosError) => {
@@ -72,6 +74,7 @@ const TransactionsDataTable = <TData, TValue>(
   const table = useReactTable({
     data: props.data,
     columns: props.columns,
+    getRowId: (row: Transaction) => row.id,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -91,6 +94,7 @@ const TransactionsDataTable = <TData, TValue>(
     },
     meta: {
       isPending: doEditTransaction.isPending,
+      isPendingRow,
       isError: doEditTransaction.isError,
       updateTransaction: (newTransaction: Transaction) => {
         doEditTransaction.mutate(newTransaction);
