@@ -15,6 +15,29 @@ export const editTransaction = async (newTransaction: Transaction): Promise<Axio
     data: newTransaction,
   });
 
+export const deleteTransaction = async (id: string): Promise<AxiosResponse> =>
+  await request({
+    url: '/api/transaction',
+    method: 'DELETE',
+    params: { guid: id },
+  });
+
+export const restoreTransaction = async (guid: string): Promise<AxiosResponse> => {
+  return await request({
+    url: '/api/transaction/restore',
+    method: 'POST',
+    params: { guid },
+  });
+};
+
+export const filterVisibleTransactions = (transactions: Transaction[]): Transaction[] => {
+  return transactions.filter((t: Transaction) => t.deleted === null);
+};
+
+export const filterInvisibleTransactions = (transactions: Transaction[]): Transaction[] => {
+  return transactions.filter((t: Transaction) => t.deleted !== null);
+};
+
 export const getTransactionsForMonth = (
   transactionData: Transaction[],
   date: Date

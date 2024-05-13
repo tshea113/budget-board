@@ -1,28 +1,28 @@
 import ResponsiveButton from '@/components/responsive-button';
 import { Card } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
-import { restoreAccount } from '@/lib/accounts';
 import { translateAxiosError } from '@/lib/request';
+import { restoreTransaction } from '@/lib/transactions';
 import { getDaysSinceDeleted } from '@/lib/utils';
-import { type Account } from '@/types/account';
+import { type Transaction } from '@/types/transaction';
 import { ResetIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
 
-interface DeletedAccountCardProps {
-  deletedAccount: Account;
+interface DeletedTransactionCardProps {
+  deletedTransaction: Transaction;
 }
 
-const DeletedAccountCard = (props: DeletedAccountCardProps): JSX.Element => {
+const DeletedTransactionCard = (props: DeletedTransactionCardProps): JSX.Element => {
   const { toast } = useToast();
 
   const queryClient = useQueryClient();
-  const doRestoreAccount = useMutation({
+  const doRestoreTransaction = useMutation({
     mutationFn: async (id: string) => {
-      return await restoreAccount(id);
+      return await restoreTransaction(id);
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['accounts'] });
+      await queryClient.invalidateQueries({ queryKey: ['transactions'] });
     },
     onError: (error: AxiosError) => {
       toast({
@@ -34,17 +34,17 @@ const DeletedAccountCard = (props: DeletedAccountCardProps): JSX.Element => {
   });
 
   return (
-    <Card key={props.deletedAccount.id} className="flex flex-row items-center p-2">
-      <span className="w-1/5">{props.deletedAccount.name}</span>
-      <span className="w-1/5">
-        {getDaysSinceDeleted(props.deletedAccount.deleted) + ' days since deleted'}
+    <Card key={props.deletedTransaction.id} className="flex flex-row items-center p-2">
+      <span className="w-1/3">{props.deletedTransaction.merchantName}</span>
+      <span className="w-1/3">
+        {getDaysSinceDeleted(props.deletedTransaction.deleted) + ' days since deleted'}
       </span>
-      <div className="w-1/5">
+      <div className="w-1/3">
         <ResponsiveButton
-          loading={doRestoreAccount.isPending}
-          className="h-8 w-8 p-1"
+          loading={doRestoreTransaction.isPending}
+          className="h-8 w-8 p-0"
           onClick={() => {
-            doRestoreAccount.mutate(props.deletedAccount.id);
+            doRestoreTransaction.mutate(props.deletedTransaction.id);
           }}
         >
           <ResetIcon className="h-4 w-4" />
@@ -54,4 +54,4 @@ const DeletedAccountCard = (props: DeletedAccountCardProps): JSX.Element => {
   );
 };
 
-export default DeletedAccountCard;
+export default DeletedTransactionCard;

@@ -27,7 +27,7 @@ const ResponsiveButton = ({
   if (loading) {
     return (
       <Button {...props} disabled>
-        <Loader2 className="h-6 w-6 animate-spin" />
+        <Loader2 className="h-5 w-5 animate-spin" />
       </Button>
     );
   } else {
