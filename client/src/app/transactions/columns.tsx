@@ -1,11 +1,12 @@
 import { type ColumnDef } from '@tanstack/react-table';
 import { type Transaction } from '@/types/transaction';
 import DataTableHeader from '@/components/data-table-header';
-import LoadingCell from '../../components/loading-cell';
+import LoadingCell from './cells/loading-cell';
 import EditableDateCell from './cells/editable-date-cell';
 import EditableCategoryCell from './cells/editable-category-cell';
 import EditableMerchantCell from './cells/editable-text-cell';
 import EditableCurrencyCell from './cells/editable-currency-cell';
+import TransactionsConfiguration from './transactions-configuration';
 
 const columns: Array<ColumnDef<Transaction>> = [
   {
@@ -80,10 +81,19 @@ const columns: Array<ColumnDef<Transaction>> = [
   {
     id: 'loading',
     size: 10,
+    header: (props) => {
+      return (
+        <TransactionsConfiguration
+          transactions={props.table.options.meta?.deletedTransactions ?? []}
+        />
+      );
+    },
     cell: (props) => (
       <LoadingCell
-        isPending={props.table.options.meta?.isPending ?? false}
-        isSelected={props.row.original.id === props.table.options.meta?.isPendingRow}
+        isPending={props.row.original.id === props.table.options.meta?.isPendingRow}
+        isSelected={props.row.getIsSelected()}
+        transactionId={props.row.original.id}
+        deleteTransaction={props.table.options.meta?.deleteTransaction}
       />
     ),
   },

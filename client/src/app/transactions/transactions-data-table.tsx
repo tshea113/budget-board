@@ -22,7 +22,12 @@ import DataTablePagination from '@/components/data-table-pagination';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type Transaction } from '@/types/transaction';
 import { translateAxiosError } from '@/lib/request';
-import { editTransaction } from '@/lib/transactions';
+import {
+  deleteTransaction,
+  editTransaction,
+  filterInvisibleTransactions,
+  filterVisibleTransactions,
+} from '@/lib/transactions';
 import { type AxiosError } from 'axios';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -30,9 +35,11 @@ declare module '@tanstack/react-table' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   export interface TableMeta<TData> {
     updateTransaction: (newTransaction: Transaction) => void;
+    deleteTransaction: (id: string) => void;
     isPending: boolean;
     isPendingRow: string;
     isError: boolean;
+    deletedTransactions: Transaction[];
   }
 }
 
@@ -70,9 +77,26 @@ const TransactionsDataTable = (props: DataTableProps): JSX.Element => {
       });
     },
   });
+  const doDeleteTransaction = useMutation({
+    mutationFn: async (id: string) => {
+      setIsPendingRow(table.getSelectedRowModel().rows.at(0)?.id ?? '');
+      return await deleteTransaction(id);
+    },
+    onSuccess: async () => {
+      setIsPendingRow('');
+      await queryClient.invalidateQueries({ queryKey: ['transactions'] });
+    },
+    onError: (error: AxiosError) => {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: translateAxiosError(error),
+      });
+    },
+  });
 
   const table = useReactTable({
-    data: props.data,
+    data: filterVisibleTransactions(props.data),
     columns: props.columns,
     getRowId: (row: Transaction) => row.id,
     getCoreRowModel: getCoreRowModel(),
@@ -99,6 +123,10 @@ const TransactionsDataTable = (props: DataTableProps): JSX.Element => {
       updateTransaction: (newTransaction: Transaction) => {
         doEditTransaction.mutate(newTransaction);
       },
+      deleteTransaction: (id: string) => {
+        doDeleteTransaction.mutate(id);
+      },
+      deletedTransactions: filterInvisibleTransactions(props.data),
     },
   });
 

@@ -16,3 +16,9 @@ export const getProgress = (amount: number, total: number): number => {
   if (percentage > 100) return 100;
   else return percentage;
 };
+
+export const getDaysSinceDeleted = (date: Date): string => {
+  const differenceInMs = new Date().getTime() - new Date(date).getTime();
+  const differenceInDays = Math.round(differenceInMs / (1000 * 3600 * 24));
+  return differenceInDays.toString();
+};

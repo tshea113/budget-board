@@ -96,7 +96,7 @@ public class TransactionController : ControllerBase
         }
     }
 
-    [HttpDelete("{guid}")]
+    [HttpDelete]
     [Authorize]
     public async Task<IActionResult> Delete(Guid guid)
     {
@@ -121,6 +121,38 @@ public class TransactionController : ControllerBase
             return Ok();
         }
 
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPost]
+    [Authorize]
+    [Route("[action]")]
+    public async Task<IActionResult> Restore(Guid guid)
+    {
+        try
+        {
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var transaction = user.Accounts
+            .SelectMany(t => t.Transactions)
+            .Single(t => t.ID == guid);
+
+            if (transaction == null) return NotFound();
+
+            transaction.Deleted = null;
+
+            await _userDataContext.SaveChangesAsync();
+
+            return Ok();
+        }
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
