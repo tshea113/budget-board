@@ -31,11 +31,15 @@ const EditableDateCell = (props: EditableDateCellProps): JSX.Element => {
     }
   };
 
-  if (props.isSelected) {
-    return <DatePicker value={dateValue} onDayClick={onDatePick} />;
-  } else {
-    return <span>{formatDate(props.date)}</span>;
-  }
+  return (
+    <div className="w-[200px]">
+      {props.isSelected ? (
+        <DatePicker value={dateValue} onDayClick={onDatePick} />
+      ) : (
+        <div className="w-full">{formatDate(props.date)}</div>
+      )}
+    </div>
+  );
 };
 
 export default EditableDateCell;

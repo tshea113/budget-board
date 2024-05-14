@@ -38,11 +38,15 @@ const EditableCategoryCell = (props: EditableCategoryCellProps): JSX.Element => 
     }
   };
 
-  if (props.isSelected) {
-    return <CategoryInput initialValue={categoryValue} onSelectChange={onCategoryPick} />;
-  } else {
-    return <span>{getCategoryLabel(props.category) ?? ''}</span>;
-  }
+  return (
+    <div className="w-[200px]">
+      {props.isSelected ? (
+        <CategoryInput initialValue={categoryValue} onSelectChange={onCategoryPick} />
+      ) : (
+        <span>{getCategoryLabel(props.category) ?? ''}</span>
+      )}
+    </div>
+  );
 };
 
 export default EditableCategoryCell;

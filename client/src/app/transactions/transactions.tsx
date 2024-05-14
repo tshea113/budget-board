@@ -14,7 +14,7 @@ const Transactions = (): JSX.Element => {
   return (
     <div className="flex w-screen flex-col items-center">
       <EmailVerified />
-      <div className="w-full 2xl:max-w-screen-2xl">
+      <div className="max-w-screen w-full px-4 2xl:max-w-screen-2xl">
         <TransactionsDataTable columns={columns} data={transactionsQuery.data?.data ?? []} />
       </div>
     </div>
