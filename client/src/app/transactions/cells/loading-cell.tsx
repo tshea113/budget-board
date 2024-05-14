@@ -10,27 +10,28 @@ interface LoadingCellProps {
 }
 
 const LoadingCell = (props: LoadingCellProps): JSX.Element => {
-  if (props.isSelected) {
-    return (
-      <ResponsiveButton
-        onClick={(e) => {
-          e.stopPropagation();
-          if (props.deleteTransaction != null) {
-            props.deleteTransaction(props.transactionId);
-          }
-        }}
-        className="h-10 w-10 p-0"
-        loading={props.isPending && props.isSelected}
-      >
-        <TrashIcon />
-      </ResponsiveButton>
-    );
-  } else {
-    if (props.isPending) {
-      return <TailSpin height="20" width="20" color="gray" />;
-    } else {
-      return <div className="m-3"></div>;
-    }
-  }
+  return (
+    <div className="w-[75px]">
+      {props.isSelected ? (
+        <ResponsiveButton
+          onClick={(e) => {
+            e.stopPropagation();
+            if (props.deleteTransaction != null) {
+              props.deleteTransaction(props.transactionId);
+            }
+          }}
+          className="h-10 w-10 p-0"
+          loading={props.isPending && props.isSelected}
+        >
+          <TrashIcon />
+        </ResponsiveButton>
+      ) : props.isPending ? (
+        <TailSpin height="20" width="20" color="gray" />
+      ) : (
+        <div className="w-full"></div>
+      )}
+    </div>
+  );
 };
+
 export default LoadingCell;

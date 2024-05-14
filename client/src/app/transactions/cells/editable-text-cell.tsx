@@ -29,23 +29,25 @@ const EditableMerchantCell = (props: EditableTextCellProps): JSX.Element => {
     }
   };
 
-  if (props.isSelected) {
-    return (
-      <Input
-        value={merchantValue}
-        onChange={(e) => {
-          setMerchantValue(e.target.value);
-        }}
-        onBlur={onTextChange}
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-        type="text"
-      />
-    );
-  } else {
-    return <span>{merchantValue}</span>;
-  }
+  return (
+    <div className="max-w-[400px]">
+      {props.isSelected ? (
+        <Input
+          value={merchantValue}
+          onChange={(e) => {
+            setMerchantValue(e.target.value);
+          }}
+          onBlur={onTextChange}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+          type="text"
+        />
+      ) : (
+        <div className="text-wrap">{merchantValue}</div>
+      )}
+    </div>
+  );
 };
 
 export default EditableMerchantCell;

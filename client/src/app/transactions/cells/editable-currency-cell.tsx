@@ -37,30 +37,30 @@ const EditableCurrencyCell = (props: EditableCurrencyCellProps): JSX.Element => 
     setCurrencyValue(newCurrency);
   };
 
-  if (props.isSelected) {
-    return (
-      <Input
-        value={currencyValue}
-        onChange={(e) => {
-          onCurrencyChange(e.target.value);
-        }}
-        onBlur={onCurrencyBlur}
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-        type="text"
-      />
-    );
-  } else {
-    return (
-      <span>
-        {new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-        }).format(parseFloat(currencyValue))}
-      </span>
-    );
-  }
+  return (
+    <div className="w-[120px]">
+      {props.isSelected ? (
+        <Input
+          value={currencyValue}
+          onChange={(e) => {
+            onCurrencyChange(e.target.value);
+          }}
+          onBlur={onCurrencyBlur}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+          type="text"
+        />
+      ) : (
+        <span>
+          {new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+          }).format(parseFloat(currencyValue))}
+        </span>
+      )}
+    </div>
+  );
 };
 
 export default EditableCurrencyCell;

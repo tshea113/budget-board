@@ -80,7 +80,6 @@ const columns: Array<ColumnDef<Transaction>> = [
   },
   {
     id: 'loading',
-    size: 10,
     header: (props) => {
       return (
         <TransactionsConfiguration
