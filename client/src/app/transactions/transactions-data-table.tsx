@@ -139,7 +139,7 @@ const TransactionsDataTable = (props: DataTableProps): JSX.Element => {
               <TableRow key={headerGroup.id} className="selected">
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} style={{ width: `${header.getSize()}px` }}>
+                    <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(header.column.columnDef.header, header.getContext())}
@@ -160,7 +160,7 @@ const TransactionsDataTable = (props: DataTableProps): JSX.Element => {
                   }}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} style={{ width: cell.column.getSize() }}>
+                    <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
