@@ -16,6 +16,14 @@ export const getBudgets = async (date: Date): Promise<AxiosResponse> => {
   });
 };
 
+export const AddMultipleBudgets = async (newBudgets: Budget[]): Promise<AxiosResponse> => {
+  return await request({
+    url: '/api/budget/addmultiple',
+    method: 'POST',
+    data: newBudgets,
+  });
+};
+
 export const getBudgetsForMonth = (budgetData: Budget[], date: Date): Budget[] => {
   return (
     budgetData.filter(

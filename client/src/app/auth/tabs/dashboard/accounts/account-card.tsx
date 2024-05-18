@@ -1,4 +1,4 @@
-import SkeletonCard from '@/app/dashboard/skeleton-account-card';
+import SkeletonCard from '@/app/auth/tabs/dashboard/skeleton-account-card';
 import { Card } from '@/components/ui/card';
 import AccountsConfiguration from './accounts-configuration';
 import AccountItems from './account-items';

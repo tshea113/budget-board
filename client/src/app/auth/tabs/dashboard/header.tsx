@@ -11,7 +11,7 @@ import { firebaseAuth } from '@/lib/firebase';
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { useQueryClient } from '@tanstack/react-query';
 import { signOut } from 'firebase/auth';
-import AccountSettings from './account-settings/account-settings';
+import AccountSettings from '../../account-settings/account-settings';
 import { useToast } from '@/components/ui/use-toast';
 import { type AxiosError } from 'axios';
 import { translateAxiosError } from '@/lib/request';
