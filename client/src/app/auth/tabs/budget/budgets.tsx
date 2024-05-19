@@ -10,7 +10,6 @@ import { type Transaction } from '@/types/transaction';
 import Unbudgets from './unbudgets';
 import { useBudgetsQuery, useTransactionsQuery } from '@/lib/query';
 import BudgetsToolbar from './budgets-toolbar';
-import Goals from './goals';
 
 const Budgets = (): JSX.Element => {
   const [date, setDate] = React.useState<Date>(initMonth());

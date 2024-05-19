@@ -1,15 +1,15 @@
-import SkeletonCard from '@/app/auth/tabs/dashboard/skeleton-account-card';
 import { Card } from '@/components/ui/card';
 import AccountsConfiguration from './accounts-configuration';
 import AccountItems from './account-items';
 import { Separator } from '@/components/ui/separator';
 import { useAccountsQuery } from '@/lib/query';
+import SkeletonAccountCard from './skeleton-account-card';
 
 const AccountCard = (): JSX.Element => {
   const accountsQuery = useAccountsQuery();
 
   if (accountsQuery.isPending) {
-    return <SkeletonCard />;
+    return <SkeletonAccountCard />;
   }
 
   return (

@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Welcome from './app/no-auth/welcome/welcome';
-import DashboardLayout from './app/auth/tabs/dashboard/layout';
+import DashboardLayout from './app/auth/layout';
 import ErrorPage from './components/error-page';
 import AuthProvider from './components/auth-provider';
 import AuthRoute from './components/auth-route';
