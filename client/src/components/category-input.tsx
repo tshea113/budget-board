@@ -10,10 +10,10 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { getCategoriesAsTree } from '@/lib/transactions';
 import { cn } from '@/lib/utils';
-import { categories, type Category } from '@/types/transaction';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import React from 'react';
 import CommandSubcategory from './command-subcategory';
+import { Category, categories } from '@/types/category';
 
 interface CategoryInputProps {
   initialValue: string;
