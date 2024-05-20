@@ -15,6 +15,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import request from '@/lib/request';
 import { type NewBudget } from '@/types/budget';
 import CategoryInput from '@/components/category-input';
+import { defaultGuid } from '@/types/user';
 
 const formSchema = z.object({
   category: z.string().min(1).max(50),
@@ -58,7 +59,7 @@ const AddBudget = ({ date }: AddBudgetProps): JSX.Element => {
       date,
       category: values.category,
       limit: values.limit,
-      userId: '00000000-0000-0000-0000-000000000000',
+      userId: defaultGuid,
     };
     mutation.mutate(newBudget);
   };
