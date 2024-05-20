@@ -8,6 +8,18 @@ export const getAccounts = async (): Promise<AxiosResponse> =>
     method: 'GET',
   });
 
+export const getAccount = async (guid: string): Promise<AxiosResponse> => {
+  return await request({
+    url: '/api/account',
+    method: 'GET',
+    params: { guid },
+  });
+};
+
+export const filterVisibleAccounts = (accounts: Account[]): Account[] => {
+  return accounts.filter((a: Account) => !(a.hideAccount || a.deleted !== null));
+};
+
 export const updateAccount = async (newAccount: Account): Promise<AxiosResponse> => {
   return await request({
     url: '/api/account',
@@ -33,8 +45,4 @@ export const restoreAccount = async (guid: string): Promise<AxiosResponse> => {
     method: 'POST',
     params: { guid },
   });
-};
-
-export const filterVisibleAccounts = (accounts: Account[]): Account[] => {
-  return accounts.filter((a: Account) => !(a.hideAccount || a.deleted !== null));
 };

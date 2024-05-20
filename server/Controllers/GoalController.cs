@@ -44,7 +44,29 @@ public class GoalController : ControllerBase
                 return NotFound();
             }
 
+            float runningBalance = 0.0f;
+            foreach (var account in goal.Accounts)
+            {
+                if (user.Accounts.Contains(account))
+                {
+                    runningBalance += account.CurrentBalance;
+                }
+            }
+
+            goal.InitialAmount = runningBalance;
+
             user.Goals.Add(goal);
+
+            var category = new Category
+            {
+                ID = new Guid(),
+                Label = goal.Name,
+                Value = goal.Name.ToLower(),
+                Parent = "goals",
+                UserID = user.ID,
+            };
+
+            user.Categories.Add(category);
             _userDataContext.SaveChanges();
 
             return Ok();
@@ -68,7 +90,7 @@ public class GoalController : ControllerBase
                 return NotFound();
             }
 
-            var goal = user.Goals.Single(a => a.ID == guid);
+            var goal = user.Goals.Single(g => g.ID == guid);
 
             if (goal == null) return NotFound();
 
@@ -89,6 +111,7 @@ public class GoalController : ControllerBase
         {
             var users = await _userDataContext.Users
                 .Include(u => u.Goals)
+                .Include(u => u.Accounts)
                 .ToListAsync();
             var user = users.Single(u => u.Uid == uid);
 

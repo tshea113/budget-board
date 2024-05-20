@@ -8,7 +8,7 @@ interface Transaction {
   pending: boolean;
   deleted: Date;
   source: string;
-  accountId: string;
+  accountID: string;
 }
 
 interface NewTransaction extends Partial<Transaction> {}

@@ -13,6 +13,7 @@ public class Account
     public bool HideAccount { get; set; } = false;
     public DateTime? Deleted { get; set; } = null;
     public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+    public ICollection<Goal> Goals { get; set; } = new List<Goal>();
     public required Guid UserID { get; set; }
     public User? User { get; set; } = null!;
 }

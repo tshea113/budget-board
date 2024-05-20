@@ -18,7 +18,7 @@ const Budgets = (): JSX.Element => {
   const transactionsQuery = useTransactionsQuery();
 
   return (
-    <div className="flex w-screen max-w-screen-2xl flex-row justify-center space-x-2">
+    <div className="flex w-full max-w-screen-2xl flex-row justify-center space-x-2">
       <div className="w-3/4 flex-grow space-y-2">
         <BudgetsToolbar budgets={budgetsQuery.data?.data ?? []} date={date} setDate={setDate} />
         <div className="space-y-10">
