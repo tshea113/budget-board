@@ -1,10 +1,12 @@
+import { Account } from './account';
+
 interface Goal {
   id: string;
   name: string;
   completeDate: Date;
   amount: number;
   initialAmount: number;
-  accountID: string;
+  accounts: Account[];
   userID: string;
 }
 

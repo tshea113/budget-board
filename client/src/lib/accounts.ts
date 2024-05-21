@@ -46,3 +46,13 @@ export const restoreAccount = async (guid: string): Promise<AxiosResponse> => {
     params: { guid },
   });
 };
+
+export const getAccountsById = (accountIds: string[], accounts: Account[]): Account[] => {
+  let selectedAccounts: Account[] = [];
+  accountIds.forEach((accountId) => {
+    const foundAccount = accounts.find((account) => account.id === accountId);
+    if (foundAccount) selectedAccounts.push(foundAccount);
+  });
+
+  return selectedAccounts;
+};
