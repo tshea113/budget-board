@@ -21,13 +21,9 @@ const ConvertNumberToCurrency = (number: number) => {
 const GoalCard = (props: GoalCardProps): JSX.Element => {
   const accountsQuery = useAccountsQuery();
 
-  const getAccountBalance = (accountId: string) => {
-    const account: Account = (accountsQuery.data?.data ?? []).find((account: Account) => {
-      return account.id === accountId;
-    });
-
-    if (account != null) {
-      return account.currentBalance;
+  const getAccountsBalance = (accounts: Account[]) => {
+    if (accounts.length > 0) {
+      return accounts.reduce((n, { currentBalance }) => n + currentBalance, 0);
     } else {
       return 0;
     }
@@ -46,7 +42,7 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
           </span>
           <div className="justify-self-end text-lg">
             <span className="font-semibold">
-              {ConvertNumberToCurrency(getAccountBalance(props.goal.accountID))}
+              {ConvertNumberToCurrency(getAccountsBalance(props.goal.accounts))}
             </span>
             <span> of </span>
             <span className="font-semibold">{ConvertNumberToCurrency(props.goal.amount)}</span>
@@ -55,7 +51,7 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
         <div>
           <Progress
             value={getProgress(
-              getAccountBalance(props.goal.accountID),
+              getAccountsBalance(props.goal.accounts),
               props.goal.amount - props.goal.initialAmount
             )}
             className="mt-3"

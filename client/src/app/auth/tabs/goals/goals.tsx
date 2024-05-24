@@ -1,8 +1,8 @@
-import AddButton from '@/components/add-button';
 import GoalCard from './goal-card';
 import { useGoalsQuery } from '@/lib/query';
 import { Goal } from '@/types/goal';
 import AddGoal from './add-goal';
+import AddButtonSheet from '@/components/add-button-sheet';
 
 const Goals = (): JSX.Element => {
   const goalsQuery = useGoalsQuery();
@@ -16,9 +16,9 @@ const Goals = (): JSX.Element => {
       <div className="grid grid-cols-2">
         <h3 className="justify-self-start text-xl font-semibold tracking-tight">Goals</h3>
         <div className="justify-self-end">
-          <AddButton>
+          <AddButtonSheet>
             <AddGoal />
-          </AddButton>
+          </AddButtonSheet>
         </div>
       </div>
       {(goalsQuery.data?.data ?? []).map((goal: Goal) => (

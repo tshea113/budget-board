@@ -33,7 +33,7 @@ public class GoalController : ControllerBase
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> Add([FromBody] Goal goal)
+    public async Task<IActionResult> Add([FromBody] NewGoal newGoal)
     {
         try
         {
@@ -45,28 +45,25 @@ public class GoalController : ControllerBase
             }
 
             float runningBalance = 0.0f;
-            foreach (var account in goal.Accounts)
+            var accounts = new List<Account>();
+            foreach (var accountId in newGoal.AccountIds)
             {
-                if (user.Accounts.Contains(account))
-                {
-                    runningBalance += account.CurrentBalance;
-                }
+                var account = user.Accounts.FirstOrDefault((a) => a.ID == new Guid(accountId));
+                runningBalance += account?.CurrentBalance ?? 0;
+                if (account != null) accounts.Add(account);
             }
 
-            goal.InitialAmount = runningBalance;
-
-            user.Goals.Add(goal);
-
-            var category = new Category
+            var goal = new Goal
             {
-                ID = new Guid(),
-                Label = goal.Name,
-                Value = goal.Name.ToLower(),
-                Parent = "goals",
+                Name = newGoal.Name,
+                CompleteDate = DateTime.Now.ToUniversalTime(), // TODO: User should assign
+                Amount = newGoal.Amount,
+                InitialAmount = runningBalance,
+                Accounts = accounts,
                 UserID = user.ID,
             };
 
-            user.Categories.Add(category);
+            user.Goals.Add(goal);
             _userDataContext.SaveChanges();
 
             return Ok();

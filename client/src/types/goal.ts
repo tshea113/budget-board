@@ -10,6 +10,8 @@ interface Goal {
   userID: string;
 }
 
-interface NewGoal extends Partial<Goal> {}
+interface NewGoal extends Partial<Goal> {
+  accountIds: string[];
+}
 
 export type { Goal, NewGoal };

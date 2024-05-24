@@ -11,6 +11,6 @@ export const getGoals = async (): Promise<AxiosResponse> =>
 export const addGoal = async (newGoal: NewGoal): Promise<AxiosResponse> =>
   await request({
     url: '/api/goal',
-    method: 'GET',
+    method: 'POST',
     data: newGoal,
   });

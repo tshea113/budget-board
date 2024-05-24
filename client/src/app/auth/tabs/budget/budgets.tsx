@@ -20,7 +20,12 @@ const Budgets = (): JSX.Element => {
   return (
     <div className="flex w-full max-w-screen-2xl flex-row justify-center space-x-2">
       <div className="w-3/4 flex-grow space-y-2">
-        <BudgetsToolbar budgets={budgetsQuery.data?.data ?? []} date={date} setDate={setDate} />
+        <BudgetsToolbar
+          budgets={budgetsQuery.data?.data ?? []}
+          date={date}
+          isPending={budgetsQuery.isPending}
+          setDate={setDate}
+        />
         <div className="space-y-10">
           <div className="items-center align-middle">
             <BudgetHeader>Income</BudgetHeader>

@@ -7,12 +7,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/components/ui/use-toast';
 import { AddMultipleBudgets, getBudgets } from '@/lib/budgets';
 import { defaultGuid } from '@/types/user';
-import AddButton from '@/components/add-button';
 import AddBudget from './add-budget';
+import AddButtonPopover from '@/components/add-button-popover';
 
 interface BudgetsToolbarProps {
   budgets: Budget[];
   date: Date;
+  isPending: boolean;
   setDate: (date: Date) => void;
 }
 
@@ -35,6 +36,37 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
     },
   });
 
+  const onCopyBudgets = (): void => {
+    const lastMonth = new Date(props.date);
+    lastMonth.setMonth(lastMonth.getMonth() - 1);
+
+    getBudgets(lastMonth)
+      .then((res: AxiosResponse<any, any>) => {
+        const budgets: Budget[] = res.data;
+        if (budgets.length !== 0) {
+          budgets.forEach((budget) => {
+            budget.id = defaultGuid;
+            budget.date = props.date;
+            budget.userId = defaultGuid;
+          });
+          doCopyBudget.mutate(res.data as Budget[]);
+        } else {
+          toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: 'Last month has no budget!',
+          });
+        }
+      })
+      .catch(() => {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: "There was an error copying last month's budget.",
+        });
+      });
+  };
+
   return (
     <div className="grid w-full grid-cols-3">
       <div />
@@ -42,47 +74,18 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
         <MonthIterator date={props.date} setDate={props.setDate} />
       </div>
       <div className="flex flex-row space-x-2 justify-self-end">
-        {((props.budgets as Budget[]) ?? null)?.length === 0 && (
+        {((props.budgets as Budget[]) ?? null)?.length === 0 && !props.isPending && (
           <ResponsiveButton
             variant="default"
             loading={doCopyBudget.isPending}
-            onClick={() => {
-              const lastMonth = new Date(props.date);
-              lastMonth.setMonth(lastMonth.getMonth() - 1);
-
-              getBudgets(lastMonth)
-                .then((res: AxiosResponse<any, any>) => {
-                  const budgets: Budget[] = res.data;
-                  if (budgets.length !== 0) {
-                    budgets.forEach((budget) => {
-                      budget.id = defaultGuid;
-                      budget.date = props.date;
-                      budget.userId = defaultGuid;
-                    });
-                    doCopyBudget.mutate(res.data as Budget[]);
-                  } else {
-                    toast({
-                      variant: 'destructive',
-                      title: 'Error',
-                      description: 'Last month has no budget!',
-                    });
-                  }
-                })
-                .catch(() => {
-                  toast({
-                    variant: 'destructive',
-                    title: 'Error',
-                    description: "There was an error copying last month's budget.",
-                  });
-                });
-            }}
+            onClick={() => onCopyBudgets}
           >
             Copy last month
           </ResponsiveButton>
         )}
-        <AddButton>
+        <AddButtonPopover>
           <AddBudget date={props.date} />
-        </AddButton>
+        </AddButtonPopover>
       </div>
     </div>
   );
