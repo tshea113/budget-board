@@ -1,6 +1,6 @@
 import { type Transaction } from '@/types/transaction';
 import React from 'react';
-import { getCategoryLabel } from '@/lib/transactions';
+import { getCategoryLabel, getIsCategory } from '@/lib/transactions';
 import CategoryInput from '@/components/category-input';
 import { categories } from '@/types/category';
 
@@ -27,10 +27,19 @@ const EditableCategoryCell = (props: EditableCategoryCellProps): JSX.Element => 
     if (category != null) {
       setCategoryValue(category.value);
 
+      let categoryValue = '';
+      let subcategoryValue = '';
+      if (getIsCategory(category.value)) {
+        categoryValue = category.value;
+      } else {
+        categoryValue = category.parent;
+        subcategoryValue = category.value;
+      }
+
       const newTransaction: Transaction = {
         ...props.rowTransaction,
-        category: category.parent,
-        subcategory: category.value,
+        category: categoryValue,
+        subcategory: subcategoryValue,
       };
 
       if (props.editCell != null) {
