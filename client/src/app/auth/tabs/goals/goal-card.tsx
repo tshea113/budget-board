@@ -1,32 +1,38 @@
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { sumAccountsTotalBalance } from '@/lib/accounts';
 import { useAccountsQuery } from '@/lib/query';
-import { getProgress } from '@/lib/utils';
-import { Account } from '@/types/account';
+import { getMonthsUntilDate, getProgress } from '@/lib/utils';
 import { Goal } from '@/types/goal';
 
 interface GoalCardProps {
   goal: Goal;
 }
 
-const ConvertNumberToCurrency = (number: number) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0,
-    minimumFractionDigits: 0,
-  }).format(number);
-};
-
 const GoalCard = (props: GoalCardProps): JSX.Element => {
   const accountsQuery = useAccountsQuery();
 
-  const getAccountsBalance = (accounts: Account[]) => {
-    if (accounts.length > 0) {
-      return accounts.reduce((n, { currentBalance }) => n + currentBalance, 0);
+  const getMonthlyContributionTotal = (goal: Goal): number => {
+    if (goal.monthlyContribution == null && goal.completeDate !== null) {
+      const monthsUntilComplete = getMonthsUntilDate(goal.completeDate);
+      return (
+        Math.abs(
+          props.goal.amount -
+            (sumAccountsTotalBalance(props.goal.accounts) - props.goal.initialAmount)
+        ) / monthsUntilComplete
+      );
     } else {
-      return 0;
+      return goal.monthlyContribution ?? 0;
     }
+  };
+
+  const ConvertNumberToCurrency = (number: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0,
+      minimumFractionDigits: 0,
+    }).format(number);
   };
 
   if (accountsQuery.isPending) {
@@ -42,29 +48,39 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
           </span>
           <div className="justify-self-end text-lg">
             <span className="font-semibold">
-              {ConvertNumberToCurrency(getAccountsBalance(props.goal.accounts))}
+              {ConvertNumberToCurrency(
+                sumAccountsTotalBalance(props.goal.accounts) - props.goal.initialAmount
+              )}
             </span>
             <span> of </span>
-            <span className="font-semibold">{ConvertNumberToCurrency(props.goal.amount)}</span>
+            <span className="font-semibold">
+              {ConvertNumberToCurrency(
+                props.goal.initialAmount < 0
+                  ? props.goal.amount - props.goal.initialAmount
+                  : props.goal.amount
+              )}
+            </span>
           </div>
         </div>
         <div>
           <Progress
             value={getProgress(
-              getAccountsBalance(props.goal.accounts),
-              props.goal.amount - props.goal.initialAmount
+              sumAccountsTotalBalance(props.goal.accounts) - props.goal.initialAmount,
+              props.goal.initialAmount < 0
+                ? props.goal.amount - props.goal.initialAmount
+                : props.goal.amount
             )}
             className="mt-3"
           />
         </div>
         <div className="grid grid-cols-2">
-          <div>
-            <span className="text-med">{props.goal.completeDate.toString()}</span>
-          </div>
+          <div></div>
           <div className="text-med justify-self-end">
-            <span className="font-semibold">{ConvertNumberToCurrency(100)}</span>
+            <span className="font-semibold">{ConvertNumberToCurrency(12)}</span>
             <span> of </span>
-            <span className="font-semibold">{ConvertNumberToCurrency(800)}</span>
+            <span className="font-semibold">
+              {ConvertNumberToCurrency(getMonthlyContributionTotal(props.goal))}
+            </span>
             <span> this month</span>
           </div>
         </div>

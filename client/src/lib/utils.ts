@@ -22,3 +22,9 @@ export const getDaysSinceDeleted = (date: Date): string => {
   const differenceInDays = Math.round(differenceInMs / (1000 * 3600 * 24));
   return differenceInDays.toString();
 };
+
+export const getMonthsUntilDate = (date: Date): number => {
+  const today = new Date();
+  const target = new Date(date);
+  return target.getMonth() - today.getMonth() + 12 * (target.getFullYear() - today.getFullYear());
+};

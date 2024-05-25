@@ -62,11 +62,21 @@ public class GoalController : ControllerBase
                 Name = newGoal.Name,
                 CompleteDate = newGoal.CompleteDate,
                 Amount = newGoal.Amount,
-                InitialAmount = runningBalance,
                 MonthlyContribution = newGoal.MonthlyContribution,
                 Accounts = accounts,
                 UserID = user.ID,
             };
+
+            if (newGoal.InitialAmount == null)
+            {
+                // The frontend will set the initial balance if we don't want to include existing balances
+                // in the goal.
+                goal.InitialAmount = runningBalance;
+            }
+            else
+            {
+                goal.InitialAmount = newGoal.InitialAmount;
+            }
 
             user.Goals.Add(goal);
             _userDataContext.SaveChanges();
@@ -113,6 +123,7 @@ public class GoalController : ControllerBase
         {
             var users = await _userDataContext.Users
                 .Include(u => u.Goals)
+                .ThenInclude((g) => g.Accounts)
                 .Include(u => u.Accounts)
                 .ToListAsync();
             var user = users.Single(u => u.Uid == uid);

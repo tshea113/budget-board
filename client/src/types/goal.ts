@@ -3,10 +3,10 @@ import { Account } from './account';
 interface Goal {
   id: string;
   name: string;
-  completeDate: Date;
+  completeDate: Date | null;
   amount: number;
   initialAmount: number;
-  monthlyContribution: number;
+  monthlyContribution: number | null;
   accounts: Account[];
   userID: string;
 }
@@ -16,9 +16,20 @@ interface NewGoal extends Partial<Goal> {
 }
 
 enum GoalType {
+  None = '',
+  SaveGoal = 'saveGoal',
+  PayGoal = 'payGoal',
+}
+
+enum GoalCondition {
   TimedGoal = 'timedGoal',
   MonthlyGoal = 'monthlyGoal',
 }
 
+enum GoalTarget {
+  TargetBalanceGoal = 'targetBalanceGoal',
+  TargetAmountGoal = 'targetAmountGoal',
+}
+
 export type { Goal, NewGoal };
-export { GoalType };
+export { GoalCondition, GoalTarget, GoalType };

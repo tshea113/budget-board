@@ -56,3 +56,11 @@ export const getAccountsById = (accountIds: string[], accounts: Account[]): Acco
 
   return selectedAccounts;
 };
+
+export const sumAccountsTotalBalance = (accounts: Account[]) => {
+  if (accounts.length > 0) {
+    return accounts.reduce((n, { currentBalance }) => n + currentBalance, 0);
+  } else {
+    return 0;
+  }
+};
