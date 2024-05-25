@@ -15,7 +15,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import GoalConditionSelect from './goal-condtion-select';
+import GoalConditionSelect from './goal-condition-select';
 import React from 'react';
 import DatePicker from '@/components/date-picker';
 import GoalApplyAccountSelect from './goal-apply-amount-select';

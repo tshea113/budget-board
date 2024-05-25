@@ -1,7 +1,7 @@
 import GoalCard from './goal-card';
 import { useGoalsQuery } from '@/lib/query';
 import { Goal } from '@/types/goal';
-import AddGoal from './add-goal';
+import AddGoal from './add-goal/add-goal';
 import AddButtonSheet from '@/components/add-button-sheet';
 import { Skeleton } from '@/components/ui/skeleton';
 
