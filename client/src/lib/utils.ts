@@ -28,3 +28,12 @@ export const getMonthsUntilDate = (date: Date): number => {
   const target = new Date(date);
   return target.getMonth() - today.getMonth() + 12 * (target.getFullYear() - today.getFullYear());
 };
+
+export const ConvertNumberToCurrency = (number: number) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0,
+    minimumFractionDigits: 0,
+  }).format(number);
+};

@@ -1,9 +1,12 @@
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { sumAccountsTotalBalance } from '@/lib/accounts';
-import { useAccountsQuery } from '@/lib/query';
-import { getTransactionsForMonth } from '@/lib/transactions';
-import { getMonthsUntilDate, getProgress } from '@/lib/utils';
+import {
+  getGoalTargetAmount,
+  getMonthlyContributionTotal,
+  sumTransactionsForGoalForMonth,
+} from '@/lib/goals';
+import { ConvertNumberToCurrency, getProgress } from '@/lib/utils';
 import { Goal } from '@/types/goal';
 
 interface GoalCardProps {
@@ -11,37 +14,6 @@ interface GoalCardProps {
 }
 
 const GoalCard = (props: GoalCardProps): JSX.Element => {
-  const accountsQuery = useAccountsQuery();
-
-  const getMonthlyContributionTotal = (goal: Goal): number => {
-    if (goal.monthlyContribution == null && goal.completeDate !== null) {
-      const monthsUntilComplete = getMonthsUntilDate(goal.completeDate);
-      return (
-        Math.abs(
-          (props.goal.initialAmount < 0
-            ? props.goal.amount - props.goal.initialAmount
-            : props.goal.amount) -
-            (sumAccountsTotalBalance(props.goal.accounts) - props.goal.initialAmount)
-        ) / monthsUntilComplete
-      );
-    } else {
-      return goal.monthlyContribution ?? 0;
-    }
-  };
-
-  const ConvertNumberToCurrency = (number: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      maximumFractionDigits: 0,
-      minimumFractionDigits: 0,
-    }).format(number);
-  };
-
-  if (accountsQuery.isPending) {
-    return <span>Loading...</span>;
-  }
-
   return (
     <Card>
       <div className="grid grid-rows-3 px-3 py-2">
@@ -58,9 +30,7 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
             <span> of </span>
             <span className="font-semibold">
               {ConvertNumberToCurrency(
-                props.goal.initialAmount < 0
-                  ? props.goal.amount - props.goal.initialAmount
-                  : props.goal.amount
+                getGoalTargetAmount(props.goal.amount, props.goal.initialAmount)
               )}
             </span>
           </div>
@@ -69,9 +39,7 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
           <Progress
             value={getProgress(
               sumAccountsTotalBalance(props.goal.accounts) - props.goal.initialAmount,
-              props.goal.initialAmount < 0
-                ? props.goal.amount - props.goal.initialAmount
-                : props.goal.amount
+              getGoalTargetAmount(props.goal.amount, props.goal.initialAmount)
             )}
             className="mt-3"
           />
@@ -80,12 +48,7 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
           <div></div>
           <div className="text-med justify-self-end">
             <span className="font-semibold">
-              {ConvertNumberToCurrency(
-                getTransactionsForMonth(
-                  props.goal.accounts.flatMap((a) => a.transactions),
-                  new Date()
-                ).reduce((n, { amount }) => n + amount, 0)
-              )}
+              {ConvertNumberToCurrency(sumTransactionsForGoalForMonth(props.goal))}
             </span>
             <span> of </span>
             <span className="font-semibold">
