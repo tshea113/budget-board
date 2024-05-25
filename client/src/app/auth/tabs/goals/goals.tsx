@@ -11,7 +11,7 @@ const Goals = (): JSX.Element => {
   return (
     <div className="flex w-full max-w-screen-2xl flex-col space-y-2">
       <div className="grid grid-cols-2">
-        <h3 className="justify-self-start text-xl font-semibold tracking-tight">Goals</h3>
+        <span className="justify-self-start text-xl font-semibold tracking-tight">Goals</span>
         <div className="justify-self-end">
           <AddButtonSheet>
             <AddGoal />
