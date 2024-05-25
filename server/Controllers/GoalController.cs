@@ -124,6 +124,7 @@ public class GoalController : ControllerBase
             var users = await _userDataContext.Users
                 .Include(u => u.Goals)
                 .ThenInclude((g) => g.Accounts)
+                .ThenInclude((a) => a.Transactions)
                 .Include(u => u.Accounts)
                 .ToListAsync();
             var user = users.Single(u => u.Uid == uid);

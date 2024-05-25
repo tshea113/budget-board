@@ -2,6 +2,7 @@ import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { sumAccountsTotalBalance } from '@/lib/accounts';
 import { useAccountsQuery } from '@/lib/query';
+import { getTransactionsForMonth } from '@/lib/transactions';
 import { getMonthsUntilDate, getProgress } from '@/lib/utils';
 import { Goal } from '@/types/goal';
 
@@ -17,7 +18,9 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
       const monthsUntilComplete = getMonthsUntilDate(goal.completeDate);
       return (
         Math.abs(
-          props.goal.amount -
+          (props.goal.initialAmount < 0
+            ? props.goal.amount - props.goal.initialAmount
+            : props.goal.amount) -
             (sumAccountsTotalBalance(props.goal.accounts) - props.goal.initialAmount)
         ) / monthsUntilComplete
       );
@@ -76,7 +79,14 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
         <div className="grid grid-cols-2">
           <div></div>
           <div className="text-med justify-self-end">
-            <span className="font-semibold">{ConvertNumberToCurrency(12)}</span>
+            <span className="font-semibold">
+              {ConvertNumberToCurrency(
+                getTransactionsForMonth(
+                  props.goal.accounts.flatMap((a) => a.transactions),
+                  new Date()
+                ).reduce((n, { amount }) => n + amount, 0)
+              )}
+            </span>
             <span> of </span>
             <span className="font-semibold">
               {ConvertNumberToCurrency(getMonthlyContributionTotal(props.goal))}
