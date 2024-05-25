@@ -49,16 +49,21 @@ public class GoalController : ControllerBase
             foreach (var accountId in newGoal.AccountIds)
             {
                 var account = user.Accounts.FirstOrDefault((a) => a.ID == new Guid(accountId));
-                runningBalance += account?.CurrentBalance ?? 0;
-                if (account != null) accounts.Add(account);
+                if (account != null)
+                {
+                    runningBalance += account.CurrentBalance;
+                    accounts.Add(account);
+                }
+
             }
 
             var goal = new Goal
             {
                 Name = newGoal.Name,
-                CompleteDate = DateTime.Now.ToUniversalTime(), // TODO: User should assign
+                CompleteDate = newGoal.CompleteDate,
                 Amount = newGoal.Amount,
                 InitialAmount = runningBalance,
+                MonthlyContribution = newGoal.MonthlyContribution,
                 Accounts = accounts,
                 UserID = user.ID,
             };

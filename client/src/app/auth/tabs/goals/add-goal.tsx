@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { addGoal } from '@/lib/goals';
-import { NewGoal } from '@/types/goal';
+import { GoalType, NewGoal } from '@/types/goal';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -24,19 +24,19 @@ const formSchema = z.object({
   amount: z.coerce.number().min(0),
   accountIds: z.array(z.string()).min(1),
   completeDate: z.date(),
-  monthlyAmount: z.coerce.number().min(0),
+  monthlyContribution: z.coerce.number().min(0),
 });
 
 const AddGoal = (): JSX.Element => {
-  const [goalSelectValue, setGoalSelectValue] = React.useState('timedGoal');
+  const [goalSelectValue, setGoalSelectValue] = React.useState<GoalType>(GoalType.TimedGoal);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
       amount: 0,
       accountIds: [],
-      completeDate: new Date(0),
-      monthlyAmount: 0,
+      completeDate: new Date(),
+      monthlyContribution: 0,
     },
   });
 
@@ -55,16 +55,23 @@ const AddGoal = (): JSX.Element => {
     amount: number;
     accountIds: string[];
     completeDate: Date;
-    monthlyAmount: number;
+    monthlyContribution: number;
   }
 
   const submitGoal: SubmitHandler<FormValues> = (values: z.infer<typeof formSchema>): any => {
-    const newGoal: NewGoal = {
+    let newGoal: NewGoal = {
       name: values.name,
       amount: values.amount,
       accountIds: values.accountIds,
-      completeDate: values.completeDate,
     };
+    if (goalSelectValue === GoalType.TimedGoal) {
+      newGoal.completeDate = values.completeDate;
+      newGoal.monthlyContribution = 0;
+    } else if (goalSelectValue === GoalType.MonthlyGoal) {
+      newGoal.completeDate = new Date(0);
+      newGoal.monthlyContribution = values.monthlyContribution;
+    }
+
     doAddGoal.mutate(newGoal);
   };
 
@@ -140,7 +147,7 @@ const AddGoal = (): JSX.Element => {
               {goalSelectValue === 'monthlyGoal' && (
                 <FormField
                   control={form.control}
-                  name="monthlyAmount"
+                  name="monthlyContribution"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
                       <FormLabel>Monthly Contribution</FormLabel>
