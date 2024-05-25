@@ -1,22 +1,43 @@
+import ResponsiveButton from '@/components/responsive-button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { sumAccountsTotalBalance } from '@/lib/accounts';
 import {
+  deleteGoal,
   getGoalTargetAmount,
   getMonthlyContributionTotal,
   sumTransactionsForGoalForMonth,
 } from '@/lib/goals';
 import { ConvertNumberToCurrency, getProgress } from '@/lib/utils';
 import { Goal } from '@/types/goal';
+import { TrashIcon } from '@radix-ui/react-icons';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import React from 'react';
 
 interface GoalCardProps {
   goal: Goal;
 }
 
 const GoalCard = (props: GoalCardProps): JSX.Element => {
+  const [isSelected, setIsSelected] = React.useState(false);
+
+  const ToggleIsSelected = (): void => {
+    setIsSelected(!isSelected);
+  };
+
+  const queryClient = useQueryClient();
+  const doDeleteGoal = useMutation({
+    mutationFn: async (id: string) => {
+      return deleteGoal(id);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['goals'] });
+    },
+  });
+
   return (
-    <Card>
-      <div className="grid grid-rows-3 px-3 py-2">
+    <Card className="flex flex-row" onClick={ToggleIsSelected}>
+      <div className="grid w-full grid-rows-3 px-3 py-2">
         <div className="grid grid-cols-2">
           <span className="justify-self-start text-xl font-semibold tracking-tight">
             {props.goal.name}
@@ -58,6 +79,22 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
           </div>
         </div>
       </div>
+      {isSelected && (
+        <div className="items-center justify-center">
+          <ResponsiveButton
+            variant="destructive"
+            className="h-full"
+            onClick={(e: any) => {
+              e.preventDefault();
+              e.stopPropagation();
+              doDeleteGoal.mutate(props.goal.id);
+            }}
+            loading={doDeleteGoal.isPending}
+          >
+            <TrashIcon />
+          </ResponsiveButton>
+        </div>
+      )}
     </Card>
   );
 };

@@ -18,6 +18,13 @@ export const addGoal = async (newGoal: NewGoal): Promise<AxiosResponse> =>
     data: newGoal,
   });
 
+export const deleteGoal = async (guid: string): Promise<AxiosResponse> =>
+  await request({
+    url: '/api/goal',
+    method: 'DELETE',
+    params: { guid },
+  });
+
 export const getGoalTargetAmount = (amount: number, initialAmount: number): number => {
   if (initialAmount < 0) {
     // An initial amount less than 0 indicates this is a debt. Since the goal of a debt
