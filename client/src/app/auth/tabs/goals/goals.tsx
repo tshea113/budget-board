@@ -3,13 +3,10 @@ import { useGoalsQuery } from '@/lib/query';
 import { Goal } from '@/types/goal';
 import AddGoal from './add-goal';
 import AddButtonSheet from '@/components/add-button-sheet';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Goals = (): JSX.Element => {
   const goalsQuery = useGoalsQuery();
-
-  if (goalsQuery.isPending) {
-    return <span>Loading...</span>;
-  }
 
   return (
     <div className="flex w-full max-w-screen-2xl flex-col space-y-2">
@@ -21,9 +18,13 @@ const Goals = (): JSX.Element => {
           </AddButtonSheet>
         </div>
       </div>
-      {(goalsQuery.data?.data ?? []).map((goal: Goal) => (
-        <GoalCard key={goal.id} goal={goal} />
-      ))}
+      {goalsQuery.isPending ? (
+        <div className="flex items-center justify-center">
+          <Skeleton className="h-[100px] w-full rounded-xl" />
+        </div>
+      ) : (
+        (goalsQuery.data?.data ?? []).map((goal: Goal) => <GoalCard key={goal.id} goal={goal} />)
+      )}
     </div>
   );
 };
