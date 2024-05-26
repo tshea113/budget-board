@@ -13,6 +13,7 @@ import { Goal } from '@/types/goal';
 import { TrashIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
+import GoalDetails from './goal-details';
 
 interface GoalCardProps {
   goal: Goal;
@@ -66,7 +67,9 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
           />
         </div>
         <div className="grid grid-cols-2">
-          <div></div>
+          <div>
+            <GoalDetails goal={props.goal} />
+          </div>
           <div className="text-med justify-self-end">
             <span className="font-semibold">
               {ConvertNumberToCurrency(sumTransactionsForGoalForMonth(props.goal))}
