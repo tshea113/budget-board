@@ -38,7 +38,7 @@ export const getGoalTargetAmount = (amount: number, initialAmount: number): numb
 
 export const sumTransactionsForGoalForMonth = (goal: Goal): number => {
   return getTransactionsForMonth(
-    goal.accounts.flatMap((a) => a.transactions),
+    goal.accounts.flatMap((a) => a.transactions ?? []),
     new Date()
   ).reduce((n, { amount }) => n + amount, 0);
 };
