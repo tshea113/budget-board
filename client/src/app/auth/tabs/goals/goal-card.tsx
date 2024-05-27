@@ -9,7 +9,7 @@ import {
   getMonthlyContributionTotal,
   sumTransactionsForGoalForMonth,
 } from '@/lib/goals';
-import { ConvertNumberToCurrency, getProgress } from '@/lib/utils';
+import { ConvertNumberToCurrency, cn, getProgress } from '@/lib/utils';
 import { Goal } from '@/types/goal';
 import { TrashIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -38,7 +38,13 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
   });
 
   return (
-    <Card className="flex flex-row" onClick={ToggleIsSelected}>
+    <Card
+      className={cn(
+        'flex flex-row hover:bg-card-select',
+        isSelected ? 'bg-card-select' : 'bg-card'
+      )}
+      onClick={ToggleIsSelected}
+    >
       <div className="grid w-full grid-rows-3 px-3 py-2">
         <div className="grid grid-cols-2">
           <span className="justify-self-start text-xl font-semibold tracking-tight">

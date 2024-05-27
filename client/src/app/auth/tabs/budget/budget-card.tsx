@@ -5,7 +5,7 @@ import { Progress } from '@/components/ui/progress';
 import { getSignForBudget } from '@/lib/budgets';
 import request from '@/lib/request';
 import { getCategoryLabel } from '@/lib/transactions';
-import { getProgress } from '@/lib/utils';
+import { cn, getProgress } from '@/lib/utils';
 import { type Budget, type NewBudget } from '@/types/budget';
 import { defaultGuid } from '@/types/user';
 import { CheckIcon } from '@radix-ui/react-icons';
@@ -67,7 +67,10 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
 
   return (
     <Card
-      className="space-y-1 px-3 py-1 shadow-md hover:bg-card-select"
+      className={cn(
+        'space-y-1 px-3 py-1 shadow-md hover:bg-card-select',
+        isEdit ? 'bg-card-select' : 'bg-card'
+      )}
       onClick={() => {
         toggleIsEdit();
         setLimit(props.budget.limit);
