@@ -11,7 +11,7 @@ interface Account {
   hideTransactions: boolean;
   hideAccount: boolean;
   deleted: Date;
-  transactions: Transaction[];
+  transactions?: Transaction[];
   userID: string;
 }
 
