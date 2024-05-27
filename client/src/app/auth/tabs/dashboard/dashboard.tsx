@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import AccountCard from './accounts/account-card';
 import WelcomeCard from './welcome-card';
-import EmailVerified from './email-verified';
+import EmailVerified from '../../../../components/email-verified';
 
 const Dashboard = (): JSX.Element => {
   return (

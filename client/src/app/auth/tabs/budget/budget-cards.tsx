@@ -32,7 +32,7 @@ const BudgetCards = (props: BudgetCardsProps): JSX.Element => {
   if (props.budgetData == null || props.budgetData.length === 0) {
     return (
       <div className="flex flex-col justify-center space-y-2">
-        <div className="flex items-center justify-center">No data</div>
+        <div className="flex items-center justify-center">No budgets</div>
       </div>
     );
   } else {

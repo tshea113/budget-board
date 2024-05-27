@@ -1,8 +1,8 @@
-import EmailVerified from '../dashboard/email-verified';
 import TransactionsDataTable from './transactions-data-table';
 import { columns } from './columns';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTransactionsQuery } from '@/lib/query';
+import EmailVerified from '../../../../components/email-verified';
 
 const Transactions = (): JSX.Element => {
   const transactionsQuery = useTransactionsQuery();

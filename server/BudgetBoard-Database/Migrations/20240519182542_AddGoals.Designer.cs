@@ -3,6 +3,7 @@ using System;
 using BudgetBoard.Database.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BudgetBoard.Database.Migrations
 {
     [DbContext(typeof(UserDataContext))]
-    partial class UserDataContextModelSnapshot : ModelSnapshot
+    [Migration("20240519182542_AddGoals")]
+    partial class AddGoals
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +24,6 @@ namespace BudgetBoard.Database.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("AccountGoal", b =>
-                {
-                    b.Property<Guid>("AccountsID")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("GoalsID")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("AccountsID", "GoalsID");
-
-                    b.HasIndex("GoalsID");
-
-                    b.ToTable("AccountGoal");
-                });
 
             modelBuilder.Entity("BudgetBoard.Database.Models.Account", b =>
                 {
@@ -110,34 +98,6 @@ namespace BudgetBoard.Database.Migrations
                     b.ToTable("Budget", (string)null);
                 });
 
-            modelBuilder.Entity("BudgetBoard.Database.Models.Category", b =>
-                {
-                    b.Property<Guid>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Label")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Parent")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("UserID")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("Category");
-                });
-
             modelBuilder.Entity("BudgetBoard.Database.Models.Goal", b =>
                 {
                     b.Property<Guid>("ID")
@@ -147,14 +107,8 @@ namespace BudgetBoard.Database.Migrations
                     b.Property<float>("Amount")
                         .HasColumnType("real");
 
-                    b.Property<DateTime?>("CompleteDate")
+                    b.Property<DateTime>("CompleteDate")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<float?>("InitialAmount")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("MonthlyContribution")
-                        .HasColumnType("real");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -236,21 +190,6 @@ namespace BudgetBoard.Database.Migrations
                     b.ToTable("User", (string)null);
                 });
 
-            modelBuilder.Entity("AccountGoal", b =>
-                {
-                    b.HasOne("BudgetBoard.Database.Models.Account", null)
-                        .WithMany()
-                        .HasForeignKey("AccountsID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BudgetBoard.Database.Models.Goal", null)
-                        .WithMany()
-                        .HasForeignKey("GoalsID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("BudgetBoard.Database.Models.Account", b =>
                 {
                     b.HasOne("BudgetBoard.Database.Models.User", "User")
@@ -266,17 +205,6 @@ namespace BudgetBoard.Database.Migrations
                 {
                     b.HasOne("BudgetBoard.Database.Models.User", "User")
                         .WithMany("Budgets")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("BudgetBoard.Database.Models.Category", b =>
-                {
-                    b.HasOne("BudgetBoard.Database.Models.User", "User")
-                        .WithMany("Categories")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -316,8 +244,6 @@ namespace BudgetBoard.Database.Migrations
                     b.Navigation("Accounts");
 
                     b.Navigation("Budgets");
-
-                    b.Navigation("Categories");
 
                     b.Navigation("Goals");
                 });

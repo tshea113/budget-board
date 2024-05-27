@@ -1,3 +1,5 @@
+import { Transaction } from './transaction';
+
 interface Account {
   id: string;
   syncID: string;
@@ -9,6 +11,7 @@ interface Account {
   hideTransactions: boolean;
   hideAccount: boolean;
   deleted: Date;
+  transactions?: Transaction[];
   userID: string;
 }
 

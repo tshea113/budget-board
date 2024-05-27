@@ -7,7 +7,7 @@ interface AddButtonProps {
   children: JSX.Element;
 }
 
-const AddButton = ({ children }: AddButtonProps): JSX.Element => {
+const AddButtonPopover = ({ children }: AddButtonProps): JSX.Element => {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -22,4 +22,4 @@ const AddButton = ({ children }: AddButtonProps): JSX.Element => {
   );
 };
 
-export default AddButton;
+export default AddButtonPopover;

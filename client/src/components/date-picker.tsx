@@ -7,6 +7,8 @@ import { format } from 'date-fns';
 
 interface DatePickerProps {
   value: Date;
+  fromYear?: number;
+  toYear?: number;
   onDayClick?: (day: Date) => void;
   onDayBlur?: (day: Date) => void;
 }
@@ -37,6 +39,8 @@ const DatePicker = (props: DatePickerProps): JSX.Element => {
           onDayClick={props.onDayClick}
           onDayBlur={props.onDayBlur}
           initialFocus
+          fromYear={props.fromYear ?? new Date().getFullYear()}
+          toYear={props.toYear ?? new Date().getFullYear() + 10}
         />
       </PopoverContent>
     </Popover>

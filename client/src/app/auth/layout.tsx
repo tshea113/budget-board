@@ -1,4 +1,4 @@
-import Tab from './tab';
+import Tab from './tabs/tab';
 import Header from './header';
 const DashboardLayout = (): JSX.Element => {
   return (

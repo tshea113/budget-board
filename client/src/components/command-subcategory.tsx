@@ -1,6 +1,6 @@
 import { CommandItem } from '@/components/ui/command';
 import { cn } from '@/lib/utils';
-import { type Category } from '@/types/transaction';
+import { Category } from '@/types/category';
 import { Check } from 'lucide-react';
 import React from 'react';
 

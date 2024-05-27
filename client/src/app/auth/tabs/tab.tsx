@@ -1,8 +1,9 @@
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TabsContent } from '@radix-ui/react-tabs';
-import Dashboard from './dashboard';
-import Transactions from '../transactions/transactions';
-import Budgets from '../budget/budgets';
+import Dashboard from './dashboard/dashboard';
+import Budgets from './budget/budgets';
+import Transactions from './transactions/transactions';
+import Goals from './goals/goals';
 
 const Tab = (): JSX.Element => {
   return (
@@ -17,8 +18,8 @@ const Tab = (): JSX.Element => {
         <TabsTrigger className="flex-grow" value="budget">
           Budget
         </TabsTrigger>
-        <TabsTrigger className="flex-grow" value="trends">
-          Trends
+        <TabsTrigger className="flex-grow" value="goals">
+          Goals
         </TabsTrigger>
       </TabsList>
       <TabsContent className="m-1" value="dashboard">
@@ -30,8 +31,8 @@ const Tab = (): JSX.Element => {
       <TabsContent className="m-1 flex flex-row justify-center" value="budget">
         <Budgets />
       </TabsContent>
-      <TabsContent className="m-1" value="trends">
-        Trends goes here!
+      <TabsContent className="m-1 flex flex-row justify-center" value="goals">
+        <Goals />
       </TabsContent>
     </Tabs>
   );

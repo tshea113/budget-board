@@ -1,6 +1,7 @@
 import { type AxiosResponse } from 'axios';
 import request from './request';
-import { type Category, categories, type Transaction } from '@/types/transaction';
+import { type Transaction } from '@/types/transaction';
+import { Category, categories } from '@/types/category';
 
 export const getTransactions = async (): Promise<AxiosResponse> =>
   await request({
