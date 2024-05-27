@@ -12,7 +12,7 @@ const GoalDetails = (props: GoalDetailsProps): JSX.Element => {
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant="ghost"
+          variant="link"
           className="h-6 p-1"
           onClick={(e) => {
             e.stopPropagation();
@@ -26,7 +26,9 @@ const GoalDetails = (props: GoalDetailsProps): JSX.Element => {
           <div className="flex flex-col">
             <span className="pb-1 text-base font-semibold">Accounts</span>
             {props.goal.accounts.map((account: Account) => (
-              <span className="text-sm">{account.name}</span>
+              <span key={account.id} className="text-sm">
+                {account.name}
+              </span>
             ))}
           </div>
         </div>

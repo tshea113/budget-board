@@ -62,3 +62,29 @@ export const getMonthlyContributionTotal = (goal: Goal): number => {
     return goal.monthlyContribution ?? 0;
   }
 };
+
+export const calculateCompleteDate = (goal: Goal): string => {
+  let dateString = '';
+  if (goal.completeDate) {
+    dateString = new Date(goal.completeDate).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+    });
+  } else if (goal.monthlyContribution) {
+    let amountLeft = 0;
+    if (goal.initialAmount < 0) {
+      amountLeft = Math.abs(sumAccountsTotalBalance(goal.accounts));
+    } else {
+      amountLeft = goal.amount - (sumAccountsTotalBalance(goal.accounts) - goal.initialAmount);
+    }
+    const numberOfMonthsLeft = amountLeft / goal.monthlyContribution;
+    const returnDate = new Date();
+    dateString = new Date(
+      returnDate.setMonth(returnDate.getMonth() + numberOfMonthsLeft)
+    ).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+    });
+  }
+  return dateString;
+};

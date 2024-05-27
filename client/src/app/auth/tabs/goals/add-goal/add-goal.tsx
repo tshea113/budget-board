@@ -92,7 +92,7 @@ const AddGoal = (): JSX.Element => {
   };
 
   return (
-    <div className="w-full p-1">
+    <div className="w-full max-w-screen-2xl p-1">
       <Form {...form}>
         <form
           onSubmit={(event) => {

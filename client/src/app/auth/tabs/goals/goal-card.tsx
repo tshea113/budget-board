@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { sumAccountsTotalBalance } from '@/lib/accounts';
 import {
+  calculateCompleteDate,
   deleteGoal,
   getGoalTargetAmount,
   getMonthlyContributionTotal,
@@ -66,11 +67,15 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
             className="mt-3"
           />
         </div>
-        <div className="grid grid-cols-2">
-          <div>
+        <div className="grid grid-cols-2 pt-1">
+          <div className="flex flex-row space-x-2">
+            <div className="text-base">
+              <span>{'Projected: '}</span>
+              <span className="font-semibold">{calculateCompleteDate(props.goal)}</span>
+            </div>
             <GoalDetails goal={props.goal} />
           </div>
-          <div className="text-med justify-self-end">
+          <div className="justify-self-end text-base">
             <span className="font-semibold">
               {ConvertNumberToCurrency(sumTransactionsForGoalForMonth(props.goal))}
             </span>
