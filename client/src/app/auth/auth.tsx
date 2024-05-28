@@ -1,6 +1,6 @@
 import Tab from './tabs/tab';
 import Header from './header';
-const DashboardLayout = (): JSX.Element => {
+const Auth = (): JSX.Element => {
   return (
     <div className="m-3 justify-center">
       <Header />
@@ -9,4 +9,4 @@ const DashboardLayout = (): JSX.Element => {
   );
 };
 
-export default DashboardLayout;
+export default Auth;

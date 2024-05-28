@@ -1,6 +1,5 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Welcome from './app/no-auth/welcome/welcome';
-import DashboardLayout from './app/auth/layout';
 import ErrorPage from './components/error-page';
 import AuthProvider from './components/auth-provider';
 import AuthRoute from './components/auth-route';
@@ -8,6 +7,7 @@ import NoAuthRoute from './components/no-auth-route';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from './components/theme-provider';
 import { Toaster } from './components/ui/toaster';
+import Auth from './app/auth/auth';
 
 const router = createBrowserRouter([
   {
@@ -23,7 +23,7 @@ const router = createBrowserRouter([
     path: '/dashboard',
     element: (
       <AuthRoute>
-        <DashboardLayout />
+        <Auth />
       </AuthRoute>
     ),
   },
