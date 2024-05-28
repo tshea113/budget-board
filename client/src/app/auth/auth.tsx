@@ -1,5 +1,5 @@
 import Tab from './tabs/tab';
-import Header from './header';
+import Header from './header/header';
 const Auth = (): JSX.Element => {
   return (
     <div className="m-3 justify-center">
