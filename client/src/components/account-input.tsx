@@ -62,23 +62,25 @@ const AccountInput = (props: AccountInputProps): JSX.Element => {
           <CommandList>
             <CommandEmpty>No accounts found.</CommandEmpty>
             <CommandGroup>
-              {(accountsQuery.data?.data ?? []).map((account: Account) => {
-                const isSelected = selectedValuesSet.current.has(account);
+              {(accountsQuery.data?.data ?? [])
+                .filter((a: Account) => a.deleted === null)
+                .map((account: Account) => {
+                  const isSelected = selectedValuesSet.current.has(account);
 
-                return (
-                  <CommandItem
-                    className="font-bold"
-                    key={account.id}
-                    value={account.id}
-                    onSelect={() => toggleSelect(account)}
-                  >
-                    <div className={cn(isSelected ? 'opacity-100' : 'opacity-0')}>
-                      <Check className="mr-2 h-4 w-4" />
-                    </div>
-                    <span>{account.name}</span>
-                  </CommandItem>
-                );
-              })}
+                  return (
+                    <CommandItem
+                      className="font-bold"
+                      key={account.id}
+                      value={account.id}
+                      onSelect={() => toggleSelect(account)}
+                    >
+                      <div className={cn(isSelected ? 'opacity-100' : 'opacity-0')}>
+                        <Check className="mr-2 h-4 w-4" />
+                      </div>
+                      <span>{account.name}</span>
+                    </CommandItem>
+                  );
+                })}
             </CommandGroup>
           </CommandList>
         </Command>
