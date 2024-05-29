@@ -47,6 +47,15 @@ namespace BudgetBoard.Controllers
                     return NotFound();
                 }
 
+                // Do not allow duplicate categories in a given month
+                if (user.Budgets.Any((b) =>
+                    b.Date.Month == budget.Date.Month
+                    && b.Date.Year == budget.Date.Year
+                    && b.Category == budget.Category))
+                {
+                    return BadRequest("Budget category already exists for this month!");
+                }
+
                 budget.UserID = user.ID;
 
                 user.Budgets.Add(budget);

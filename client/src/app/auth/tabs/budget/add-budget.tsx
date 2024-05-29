@@ -12,10 +12,12 @@ import { z } from 'zod';
 import { Input } from '@/components/ui/input';
 import ResponsiveButton from '@/components/responsive-button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import request from '@/lib/request';
+import request, { translateAxiosError } from '@/lib/request';
 import { type NewBudget } from '@/types/budget';
 import CategoryInput from '@/components/category-input';
 import { defaultGuid } from '@/types/user';
+import { useToast } from '@/components/ui/use-toast';
+import { AxiosError } from 'axios';
 
 const formSchema = z.object({
   category: z.string().min(1).max(50),
@@ -35,6 +37,7 @@ const AddBudget = ({ date }: AddBudgetProps): JSX.Element => {
     },
   });
 
+  const { toast } = useToast();
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: async (newBudget: NewBudget) => {
@@ -46,6 +49,13 @@ const AddBudget = ({ date }: AddBudgetProps): JSX.Element => {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['budgets'] });
+    },
+    onError: (error: AxiosError) => {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: translateAxiosError(error),
+      });
     },
   });
 
