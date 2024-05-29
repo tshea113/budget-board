@@ -17,11 +17,19 @@ const request = async ({ ...options }): Promise<AxiosResponse> => {
   return await client(options).then(onSuccess).catch(onError);
 };
 
+const getErrorString = (error: AxiosResponse | undefined): string => {
+  if (typeof error?.data === 'string') {
+    return error.data;
+  } else {
+    return 'There was an error with your request.';
+  }
+};
+
 export const translateAxiosError = (error: AxiosError): string => {
   if (error.code === 'ERR_BAD_REQUEST') {
-    return 'There was an error with your request.';
+    return getErrorString(error.response);
   } else if (error.code === 'ERR_NETWORK') {
-    return 'There was an error connecting to the server.';
+    return getErrorString(error.response);
   } else {
     return 'Internal server error';
   }
