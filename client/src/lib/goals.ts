@@ -36,12 +36,11 @@ export const getGoalTargetAmount = (amount: number, initialAmount: number): numb
   }
 };
 
-export const sumTransactionsForGoalForMonth = (goal: Goal): number => {
-  return getTransactionsForMonth(
+export const sumTransactionsForGoalForMonth = (goal: Goal): number =>
+  getTransactionsForMonth(
     goal.accounts.flatMap((a) => a.transactions ?? []),
     new Date()
   ).reduce((n, { amount }) => n + amount, 0);
-};
 
 export const getMonthlyContributionTotal = (goal: Goal): number => {
   if (goal.monthlyContribution == null && goal.completeDate !== null) {
@@ -75,7 +74,8 @@ export const calculateCompleteDate = (goal: Goal): string => {
     if (goal.initialAmount < 0) {
       amountLeft = Math.abs(sumAccountsTotalBalance(goal.accounts));
     } else {
-      amountLeft = goal.amount - (sumAccountsTotalBalance(goal.accounts) - goal.initialAmount);
+      amountLeft =
+        goal.amount - (sumAccountsTotalBalance(goal.accounts) - goal.initialAmount);
     }
     const numberOfMonthsLeft = amountLeft / goal.monthlyContribution;
     const returnDate = new Date();

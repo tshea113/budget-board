@@ -5,7 +5,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { translateAxiosError } from '@/lib/request';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/components/ui/use-toast';
-import { AddMultipleBudgets, getBudgets } from '@/lib/budgets';
+import { addMultipleBudgets, getBudgets } from '@/lib/budgets';
 import { defaultGuid } from '@/types/user';
 import AddBudget from './add-budget';
 import AddButtonPopover from '@/components/add-button-popover';
@@ -22,7 +22,7 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
   const { toast } = useToast();
   const doCopyBudget = useMutation({
     mutationFn: async (newBudgets: Budget[]) => {
-      return await AddMultipleBudgets(newBudgets);
+      return await addMultipleBudgets(newBudgets);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['budgets'] });

@@ -8,7 +8,7 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY as string,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN as string,
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID as string,
@@ -18,14 +18,13 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID as string,
 };
 
-const firebaseApp = initializeApp(firebaseConfig);
-const firebaseAuth = getAuth(firebaseApp);
+export const firebaseApp = initializeApp(firebaseConfig);
+export const firebaseAuth = getAuth(firebaseApp);
 
-async function getToken(): Promise<string | undefined> {
-  return await firebaseAuth.currentUser?.getIdToken();
-}
+export const getToken = async (): Promise<string | undefined> =>
+  await firebaseAuth.currentUser?.getIdToken();
 
-const createUser = async (email: string, password: string): Promise<string> => {
+export const createUser = async (email: string, password: string): Promise<string> => {
   let errorCode: string = '';
   try {
     await createUserWithEmailAndPassword(firebaseAuth, email, password).then(
@@ -41,7 +40,7 @@ const createUser = async (email: string, password: string): Promise<string> => {
   return errorCode;
 };
 
-const loginUser = async (email: string, password: string): Promise<string> => {
+export const loginUser = async (email: string, password: string): Promise<string> => {
   let errorCode: string = '';
   try {
     await signInWithEmailAndPassword(firebaseAuth, email, password);
@@ -51,7 +50,7 @@ const loginUser = async (email: string, password: string): Promise<string> => {
   return errorCode;
 };
 
-const sendVerificationEmail = async (): Promise<string> => {
+export const sendVerificationEmail = async (): Promise<string> => {
   let errorCode: string = '';
   try {
     if (firebaseAuth.currentUser != null) {
@@ -65,11 +64,11 @@ const sendVerificationEmail = async (): Promise<string> => {
   return errorCode;
 };
 
-const logOut = async (): Promise<void> => {
+export const logOut = async (): Promise<void> => {
   await signOut(firebaseAuth);
 };
 
-const getMessageForErrorCode = (errorCode: string): string => {
+export const getMessageForErrorCode = (errorCode: string): string => {
   switch (errorCode) {
     case 'auth/invalid-credential':
       return 'This email or password is not valid.';
@@ -86,15 +85,4 @@ const getMessageForErrorCode = (errorCode: string): string => {
     default:
       return 'An unknown error occurred.';
   }
-};
-
-export {
-  firebaseApp,
-  firebaseAuth,
-  getToken,
-  createUser,
-  loginUser,
-  sendVerificationEmail,
-  logOut,
-  getMessageForErrorCode,
 };

@@ -6,8 +6,8 @@ import { getTransactions } from './transactions';
 import { getBudgets } from './budgets';
 import { getGoals } from './goals';
 
-export const useAccountsQuery = (): UseQueryResult<AxiosResponse<any, any>, Error> => {
-  const accountsQuery = useQuery({
+export const useAccountsQuery = (): UseQueryResult<AxiosResponse<any, any>, Error> =>
+  useQuery({
     queryKey: ['accounts'],
     queryFn: async () => {
       const response = await getAccounts();
@@ -15,11 +15,8 @@ export const useAccountsQuery = (): UseQueryResult<AxiosResponse<any, any>, Erro
     },
   });
 
-  return accountsQuery;
-};
-
-export const useUserQuery = (): UseQueryResult<AxiosResponse<any, any>, Error> => {
-  const userQuery = useQuery({
+export const useUserQuery = (): UseQueryResult<AxiosResponse<any, any>, Error> =>
+  useQuery({
     queryKey: ['user'],
     queryFn: async () => {
       const response = await getUser();
@@ -27,11 +24,8 @@ export const useUserQuery = (): UseQueryResult<AxiosResponse<any, any>, Error> =
     },
   });
 
-  return userQuery;
-};
-
-export const useTransactionsQuery = (): UseQueryResult<AxiosResponse<any, any>, Error> => {
-  const transactionsQuery = useQuery({
+export const useTransactionsQuery = (): UseQueryResult<AxiosResponse<any, any>, Error> =>
+  useQuery({
     queryKey: ['transactions'],
     queryFn: async () => {
       const response = await getTransactions();
@@ -39,11 +33,10 @@ export const useTransactionsQuery = (): UseQueryResult<AxiosResponse<any, any>, 
     },
   });
 
-  return transactionsQuery;
-};
-
-export const useBudgetsQuery = (date: Date): UseQueryResult<AxiosResponse<any, any>, Error> => {
-  const budgetsQuery = useQuery({
+export const useBudgetsQuery = (
+  date: Date
+): UseQueryResult<AxiosResponse<any, any>, Error> =>
+  useQuery({
     queryKey: ['budgets', { date }],
     queryFn: async () => {
       const response = await getBudgets(date);
@@ -51,17 +44,11 @@ export const useBudgetsQuery = (date: Date): UseQueryResult<AxiosResponse<any, a
     },
   });
 
-  return budgetsQuery;
-};
-
-export const useGoalsQuery = (): UseQueryResult<AxiosResponse<any, any>, Error> => {
-  const goalsQuery = useQuery({
+export const useGoalsQuery = (): UseQueryResult<AxiosResponse<any, any>, Error> =>
+  useQuery({
     queryKey: ['goals'],
     queryFn: async () => {
       const response = await getGoals();
       return response;
     },
   });
-
-  return goalsQuery;
-};

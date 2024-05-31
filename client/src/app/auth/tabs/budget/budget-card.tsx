@@ -2,11 +2,10 @@ import ResponsiveButton from '@/components/responsive-button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
-import { getSignForBudget } from '@/lib/budgets';
-import request from '@/lib/request';
+import { deleteBudget, editBudget, getSignForBudget } from '@/lib/budgets';
 import { getCategoryLabel } from '@/lib/transactions';
 import { cn, getProgress } from '@/lib/utils';
-import { type Budget, type NewBudget } from '@/types/budget';
+import { type Budget } from '@/types/budget';
 import { defaultGuid } from '@/types/user';
 import { CheckIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -24,18 +23,14 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
   const queryClient = useQueryClient();
   const doEditBudget = useMutation({
     mutationFn: async (newTotal: number) => {
-      const newBudget: NewBudget = {
+      const newBudget: Budget = {
         id: props.budget.id,
         date: props.budget.date,
         category: props.budget.category,
         limit: newTotal,
         userId: defaultGuid,
       };
-      return await request({
-        url: '/api/budget',
-        method: 'PUT',
-        data: newBudget,
-      });
+      return await editBudget(newBudget);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['budgets'] });
@@ -45,11 +40,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
 
   const doDeleteBudget = useMutation({
     mutationFn: async (id: string) => {
-      return await request({
-        url: '/api/budget',
-        method: 'DELETE',
-        params: { id },
-      });
+      return await deleteBudget(id);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['budgets'] });
