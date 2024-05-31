@@ -23,34 +23,28 @@ export const deleteTransaction = async (id: string): Promise<AxiosResponse> =>
     params: { guid: id },
   });
 
-export const restoreTransaction = async (guid: string): Promise<AxiosResponse> => {
-  return await request({
+export const restoreTransaction = async (guid: string): Promise<AxiosResponse> =>
+  await request({
     url: '/api/transaction/restore',
     method: 'POST',
     params: { guid },
   });
-};
 
-export const filterVisibleTransactions = (transactions: Transaction[]): Transaction[] => {
-  return transactions.filter((t: Transaction) => t.deleted === null);
-};
+export const filterVisibleTransactions = (transactions: Transaction[]): Transaction[] =>
+  transactions.filter((t: Transaction) => t.deleted === null);
 
-export const filterInvisibleTransactions = (transactions: Transaction[]): Transaction[] => {
-  return transactions.filter((t: Transaction) => t.deleted !== null);
-};
+export const filterInvisibleTransactions = (transactions: Transaction[]): Transaction[] =>
+  transactions.filter((t: Transaction) => t.deleted !== null);
 
 export const getTransactionsForMonth = (
   transactionData: Transaction[],
   date: Date
-): Transaction[] => {
-  return (
-    transactionData.filter(
-      (t: Transaction) =>
-        new Date(t.date).getMonth() === new Date(date).getMonth() &&
-        new Date(t.date).getUTCFullYear() === new Date(date).getUTCFullYear()
-    ) ?? []
-  );
-};
+): Transaction[] =>
+  transactionData.filter(
+    (t: Transaction) =>
+      new Date(t.date).getMonth() === new Date(date).getMonth() &&
+      new Date(t.date).getUTCFullYear() === new Date(date).getUTCFullYear()
+  ) ?? [];
 
 export const getCategoryLabel = (categoryValue: string): string | null => {
   const foundCategory = categories.find((c) => c.value === categoryValue);

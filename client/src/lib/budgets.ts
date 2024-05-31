@@ -1,6 +1,6 @@
 import { type AxiosResponse } from 'axios';
 import request from './request';
-import { type Budget } from '@/types/budget';
+import { NewBudget, type Budget } from '@/types/budget';
 import { getParentCategory } from './transactions';
 
 export enum BudgetGroup {
@@ -16,23 +16,40 @@ export const getBudgets = async (date: Date): Promise<AxiosResponse> => {
   });
 };
 
-export const AddMultipleBudgets = async (newBudgets: Budget[]): Promise<AxiosResponse> => {
-  return await request({
+export const addBudget = async (newBudget: NewBudget): Promise<AxiosResponse> =>
+  await request({
+    url: '/api/budget',
+    method: 'POST',
+    data: newBudget,
+  });
+
+export const addMultipleBudgets = async (newBudgets: Budget[]): Promise<AxiosResponse> =>
+  await request({
     url: '/api/budget/addmultiple',
     method: 'POST',
     data: newBudgets,
   });
-};
 
-export const getBudgetsForMonth = (budgetData: Budget[], date: Date): Budget[] => {
-  return (
-    budgetData.filter(
-      (b: Budget) =>
-        new Date(b.date).getMonth() === new Date(date).getMonth() &&
-        new Date(b.date).getUTCFullYear() === new Date(date).getUTCFullYear()
-    ) ?? []
-  );
-};
+export const editBudget = async (budget: Budget): Promise<AxiosResponse> =>
+  await request({
+    url: '/api/budget',
+    method: 'PUT',
+    data: budget,
+  });
+
+export const deleteBudget = async (id: string): Promise<AxiosResponse> =>
+  await request({
+    url: '/api/budget',
+    method: 'DELETE',
+    params: { id },
+  });
+
+export const getBudgetsForMonth = (budgetData: Budget[], date: Date): Budget[] =>
+  budgetData.filter(
+    (b: Budget) =>
+      new Date(b.date).getMonth() === new Date(date).getMonth() &&
+      new Date(b.date).getUTCFullYear() === new Date(date).getUTCFullYear()
+  ) ?? [];
 
 export const getBudgetsForGroup = (
   budgetData: Budget[] | undefined,
