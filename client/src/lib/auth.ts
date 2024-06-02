@@ -19,10 +19,12 @@ export const login = async (email: string, password: string): Promise<string> =>
 };
 
 export const logout = async (): Promise<AxiosResponse> =>
-  await request({
-    url: '/logout',
-    method: 'POST',
-  });
+  // TODO: Fix logout
+  new Promise(() => console.log('logout called'));
+// await request({
+//   url: '/logout',
+//   method: 'POST',
+// });
 
 export const getUserInfo = async (): Promise<AxiosResponse> =>
   await request({
