@@ -5,6 +5,7 @@ import { getUser } from './user';
 import { getTransactions } from './transactions';
 import { getBudgets } from './budgets';
 import { getGoals } from './goals';
+import { getUserInfo } from './auth';
 
 export const useAccountsQuery = (): UseQueryResult<AxiosResponse<any, any>, Error> =>
   useQuery({
@@ -49,6 +50,15 @@ export const useGoalsQuery = (): UseQueryResult<AxiosResponse<any, any>, Error> 
     queryKey: ['goals'],
     queryFn: async () => {
       const response = await getGoals();
+      return response;
+    },
+  });
+
+export const useUserInfoQuery = (): UseQueryResult<AxiosResponse<any, any>, Error> =>
+  useQuery({
+    queryKey: ['info'],
+    queryFn: async () => {
+      const response = await getUserInfo();
       return response;
     },
   });

@@ -23,3 +23,9 @@ export const logout = async (): Promise<AxiosResponse> =>
     url: '/logout',
     method: 'POST',
   });
+
+export const getUserInfo = async (): Promise<AxiosResponse> =>
+  await request({
+    url: '/manage/info',
+    method: 'GET',
+  });
