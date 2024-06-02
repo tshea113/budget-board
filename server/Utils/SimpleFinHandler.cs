@@ -59,7 +59,7 @@ public class SimpleFinHandler
         return response;
     }
 
-    public void SyncAccounts(User user, List<Models.SimpleFinDetails.Account> accounts)
+    public void SyncAccounts(ApplicationUser user, List<Models.SimpleFinDetails.Account> accounts)
     {
         foreach (var account in accounts)
         {
@@ -78,7 +78,7 @@ public class SimpleFinHandler
                     Name = account.Name,
                     Institution = account.Org.Name ?? string.Empty,
                     CurrentBalance = float.Parse(account.Balance, CultureInfo.InvariantCulture.NumberFormat),
-                    UserID = user.ID
+                    UserID = user.Id
                 };
 
                 AccountHandler.AddAccount(user, _userDataContext, newAccount);
@@ -86,7 +86,7 @@ public class SimpleFinHandler
         }
     }
 
-    public void SyncTransactions(User user, List<Models.SimpleFinDetails.Account> accounts)
+    public void SyncTransactions(ApplicationUser user, List<Models.SimpleFinDetails.Account> accounts)
     {
         var userTransactions = TransactionHandler.GetTransactions(user);
         foreach (var account in accounts)

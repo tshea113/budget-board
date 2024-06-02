@@ -6,7 +6,7 @@ public class UserHandler
 {
     UserHandler() { }
 
-    public static void UpdateLastSync(User userData, UserDataContext userDataContext)
+    public static void UpdateLastSync(ApplicationUser userData, UserDataContext userDataContext)
     {
         userData.LastSync = DateTime.Now.ToUniversalTime();
         userDataContext.SaveChanges();

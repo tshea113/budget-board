@@ -13,11 +13,9 @@ import { Input } from '@/components/ui/input';
 import * as z from 'zod';
 import { useState } from 'react';
 import ResponsiveButton from '@/components/responsive-button';
-import { firebaseAuth, getMessageForErrorCode, loginUser } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
-import { sendPasswordResetEmail } from 'firebase/auth';
-import { getUser } from '@/lib/user';
 import { useToast } from '@/components/ui/use-toast';
+import { login } from '@/lib/auth';
 
 const Login = (): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -39,39 +37,28 @@ const Login = (): JSX.Element => {
     },
   });
 
-  const submitUserLogin = async (values: z.infer<typeof formSchema>, e: any): Promise<void> => {
+  const submitUserLogin = async (
+    values: z.infer<typeof formSchema>,
+    e: any
+  ): Promise<void> => {
     e.preventDefault();
     setLoading(true);
 
-    const error: string = await loginUser(values.email, values.password);
+    const error: string = await login(values.email, values.password);
+    // TODO: Fix this error handling
     if (error.length !== 0) {
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: getMessageForErrorCode(error),
+        description: error,
       });
-    } else {
-      // Need to make sure a user exists before proceeding
-      await getUser();
     }
     setLoading(false);
   };
 
   const resetPassword = (email: string): void => {
-    sendPasswordResetEmail(firebaseAuth, email)
-      .then(() => {
-        toast({
-          description:
-            'A reset email has been sent to the provided address, if an associated account exists.',
-        });
-      })
-      .catch((error: any) => {
-        toast({
-          variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
-          description: getMessageForErrorCode(error.code as string),
-        });
-      });
+    // TODO: Implement
+    console.log(email);
   };
 
   return (

@@ -1,9 +1,11 @@
 ﻿using BudgetBoard.Database.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBoard.Database.Data
 {
-    public class UserDataContext : DbContext
+    public class UserDataContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
         public UserDataContext(DbContextOptions<UserDataContext> options) :
             base(options)
@@ -14,7 +16,7 @@ namespace BudgetBoard.Database.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<User>(u =>
+            modelBuilder.Entity<ApplicationUser>(u =>
             {
                 u.HasMany(e => e.Accounts)
                 .WithOne(e => e.User)
@@ -44,7 +46,7 @@ namespace BudgetBoard.Database.Data
             modelBuilder.UseIdentityColumns();
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<ApplicationUser> Users { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Budget> Budgets { get; set; }

@@ -1,30 +1,37 @@
-import { type User, onAuthStateChanged } from 'firebase/auth';
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import { firebaseAuth } from '@/lib/firebase';
+import React from 'react';
+import request from '@/lib/request';
+import { AxiosError } from 'axios';
 
 export const AuthContext = createContext({});
 
 const AuthProvider = ({ children }: { children: any }): JSX.Element => {
-  const [currentUserState, setCurrentUserState] = useState<User | null>(firebaseAuth.currentUser);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    const unsubscribe = (): void => {
-      onAuthStateChanged(firebaseAuth, (currentUser) => {
-        setCurrentUserState(currentUser);
+  React.useEffect(() => {
+    setLoading(true);
+    request({
+      url: '/api/user/isSignedIn',
+      method: 'GET',
+    })
+      .then((res) => {
+        setIsLoggedIn(res.data);
+      })
+      .catch((error: AxiosError) => {
+        console.log(error);
+        if (error.code === 'ERR_BAD_REQUEST') {
+          setIsLoggedIn(false);
+        }
+      })
+      .finally(() => {
         setLoading(false);
       });
-    };
-
-    return () => {
-      unsubscribe();
-    };
-  }, [firebaseAuth.currentUser]);
+  }, []);
 
   const authValue = {
-    currentUserState,
-    setCurrentUserState,
+    isLoggedIn,
     loading,
   };
 

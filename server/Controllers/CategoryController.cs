@@ -21,7 +21,7 @@ public class CategoryController : ControllerBase
     [Authorize]
     public async Task<IActionResult> Get()
     {
-        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
         if (user == null)
         {
@@ -37,7 +37,7 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
             if (user == null)
             {
@@ -61,7 +61,7 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
             if (user == null)
             {
@@ -83,14 +83,14 @@ public class CategoryController : ControllerBase
         }
     }
 
-    private async Task<User?> GetCurrentUser(string uid)
+    private async Task<ApplicationUser?> GetCurrentUser(string id)
     {
         try
         {
             var users = await _userDataContext.Users
                 .Include(u => u.Categories)
                 .ToListAsync();
-            var user = users.Single(u => u.Uid == uid);
+            var user = users.Single(u => u.Id == new Guid(id));
 
             return user;
         }

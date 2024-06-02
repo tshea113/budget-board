@@ -21,7 +21,7 @@ namespace BudgetBoard.Controllers
         [Authorize]
         public async Task<IActionResult> Get(DateTime date)
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
             if (user == null)
             {
@@ -40,7 +40,7 @@ namespace BudgetBoard.Controllers
         {
             try
             {
-                var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+                var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
                 if (user == null)
                 {
@@ -56,7 +56,7 @@ namespace BudgetBoard.Controllers
                     return BadRequest("Budget category already exists for this month!");
                 }
 
-                budget.UserID = user.ID;
+                budget.UserID = user.Id;
 
                 user.Budgets.Add(budget);
                 _userDataContext.SaveChanges();
@@ -77,7 +77,7 @@ namespace BudgetBoard.Controllers
         {
             try
             {
-                var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+                var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
                 if (user == null)
                 {
@@ -87,7 +87,7 @@ namespace BudgetBoard.Controllers
                 foreach (Budget budget in budgets)
                 {
                     budget.ID = default;
-                    budget.UserID = user.ID;
+                    budget.UserID = user.Id;
 
                     user.Budgets.Add(budget);
                 }
@@ -106,7 +106,7 @@ namespace BudgetBoard.Controllers
         [Authorize]
         public async Task<IActionResult> Edit([FromBody] Budget editBudget)
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
             if (user == null)
             {
@@ -130,7 +130,7 @@ namespace BudgetBoard.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
             if (user == null)
             {
@@ -149,14 +149,14 @@ namespace BudgetBoard.Controllers
             return Ok();
         }
 
-        private async Task<User?> GetCurrentUser(string uid)
+        private async Task<ApplicationUser?> GetCurrentUser(string id)
         {
             try
             {
                 var users = await _userDataContext.Users
                     .Include(u => u.Budgets)
                     .ToListAsync();
-                var user = users.Single(u => u.Uid == uid);
+                var user = users.Single(u => u.Id == new Guid(id));
 
                 return user;
             }

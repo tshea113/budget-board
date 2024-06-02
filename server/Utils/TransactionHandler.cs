@@ -6,12 +6,12 @@ public class TransactionHandler
 {
     public TransactionHandler() { }
 
-    public static List<Transaction> GetTransactions(User userData)
+    public static List<Transaction> GetTransactions(ApplicationUser userData)
     {
         return userData.Accounts.SelectMany(t => t.Transactions).ToList();
     }
 
-    public static void AddTransaction(User userData, UserDataContext userDataContext, Transaction transaction)
+    public static void AddTransaction(ApplicationUser userData, UserDataContext userDataContext, Transaction transaction)
     {
         Account? account = userDataContext.Accounts.Find(transaction.AccountID);
         if (account == null)

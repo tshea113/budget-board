@@ -10,7 +10,7 @@ public class Goal
     public float? MonthlyContribution { get; set; }
     public ICollection<Account> Accounts { get; set; } = new List<Account>();
     public required Guid UserID { get; set; }
-    public User? User { get; set; } = null!;
+    public ApplicationUser? User { get; set; } = null!;
 }
 
 public class NewGoal
