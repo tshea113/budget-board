@@ -53,9 +53,10 @@ builder.Services.AddIdentityApiEndpoints<ApplicationUser>(opt =>
 builder.Services.ConfigureApplicationCookie(options =>
 {
     // Cookie settings
+    options.Cookie.Name = "access_cookie";
     options.Cookie.HttpOnly = true;
     options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
 
     options.SlidingExpiration = true;
 });
