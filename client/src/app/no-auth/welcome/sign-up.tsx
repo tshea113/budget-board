@@ -9,9 +9,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { createUser, getMessageForErrorCode } from '@/lib/firebase';
-import { getUser } from '@/lib/user';
+import { register } from '@/lib/auth';
+import { translateAxiosError } from '@/lib/request';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -47,22 +48,31 @@ const Signup = (): JSX.Element => {
     },
   });
 
-  const submitUserSignup = async (values: z.infer<typeof formSchema>, e: any): Promise<void> => {
+  const submitUserSignup = async (
+    values: z.infer<typeof formSchema>,
+    e: any
+  ): Promise<void> => {
     e.preventDefault();
     setLoading(true);
 
-    const error: string = await createUser(values.email, values.password);
-    if (error.length !== 0) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: getMessageForErrorCode(error),
+    register(values.email, values.password)
+      .then(() => {
+        toast({
+          variant: 'default',
+          title: 'Success!',
+          description: 'Account created! Check your email for confirmation.',
+        });
+      })
+      .catch((error: AxiosError) => {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: translateAxiosError(error),
+        });
+      })
+      .finally(() => {
+        setLoading(false);
       });
-    } else {
-      // Need to make sure a user exists before proceeding
-      await getUser();
-    }
-    setLoading(false);
   };
 
   return (

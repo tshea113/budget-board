@@ -1,6 +1,7 @@
 using BudgetBoard.Database.Data;
 using BudgetBoard.Database.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -91,9 +92,15 @@ app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapPost("/logout", async (SignInManager<IdentityUser> signInManager) =>
+app.MapPost("/logout", async (SignInManager<ApplicationUser> signInManager,
+    [FromBody] object empty) =>
 {
-    await signInManager.SignOutAsync().ConfigureAwait(false);
+    if (empty != null)
+    {
+        await signInManager.SignOutAsync();
+        return Results.Ok();
+    }
+    return Results.Unauthorized();
 }).RequireAuthorization(); // So that only authorized users can use this endpoint
 
 app.MapControllers();

@@ -15,14 +15,19 @@ import { type AxiosError } from 'axios';
 import { translateAxiosError } from '@/lib/request';
 import { logout } from '@/lib/auth';
 import { useUserInfoQuery } from '@/lib/query';
+import React from 'react';
+import { AuthContext } from '@/components/auth-provider';
 
 const Header = (): JSX.Element => {
+  const { setIsLoggedIn } = React.useContext<any>(AuthContext);
+
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const Logout = (): void => {
     logout()
       .then(() => {
         queryClient.removeQueries();
+        setIsLoggedIn(false);
       })
       .catch((error: AxiosError) => {
         toast({

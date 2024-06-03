@@ -16,10 +16,16 @@ import ResponsiveButton from '@/components/responsive-button';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { login } from '@/lib/auth';
+import { AxiosError } from 'axios';
+import { translateAxiosError } from '@/lib/request';
+import React from 'react';
+import { AuthContext } from '@/components/auth-provider';
 
 const Login = (): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false);
   const { toast } = useToast();
+
+  const { setIsLoggedIn } = React.useContext<any>(AuthContext);
 
   const formSchema = z.object({
     email: z
@@ -44,16 +50,21 @@ const Login = (): JSX.Element => {
     e.preventDefault();
     setLoading(true);
 
-    const error: string = await login(values.email, values.password);
-    // TODO: Fix this error handling
-    if (error.length !== 0) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: error,
+    login(values.email, values.password)
+      .then((res) => {
+        console.log(res);
+        setIsLoggedIn(true);
+      })
+      .catch((error: AxiosError) => {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: translateAxiosError(error),
+        });
+      })
+      .finally(() => {
+        setLoading(false);
       });
-    }
-    setLoading(false);
   };
 
   const resetPassword = (email: string): void => {

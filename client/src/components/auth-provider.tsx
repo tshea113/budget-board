@@ -6,6 +6,12 @@ import { AxiosError } from 'axios';
 
 export const AuthContext = createContext({});
 
+export interface AuthContextValue {
+  isLoggedIn: boolean;
+  setIsLoggedIn: (isLoggedIn: boolean) => void;
+  loading: boolean;
+}
+
 const AuthProvider = ({ children }: { children: any }): JSX.Element => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -30,8 +36,9 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
       });
   }, []);
 
-  const authValue = {
+  const authValue: AuthContextValue = {
     isLoggedIn,
+    setIsLoggedIn,
     loading,
   };
 
