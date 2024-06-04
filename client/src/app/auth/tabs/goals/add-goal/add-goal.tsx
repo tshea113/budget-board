@@ -21,6 +21,7 @@ import DatePicker from '@/components/date-picker';
 import GoalApplyAccountSelect from './goal-apply-amount-select';
 import GoalTypeSelect from './goal-type-select';
 import { cn } from '@/lib/utils';
+import { AuthContext } from '@/components/auth-provider';
 
 const formSchema = z.object({
   name: z.string().min(1).max(50),
@@ -47,10 +48,12 @@ const AddGoal = (): JSX.Element => {
     },
   });
 
+  const { accessToken } = React.useContext<any>(AuthContext);
+
   const queryClient = useQueryClient();
   const doAddGoal = useMutation({
     mutationFn: async (newGoal: NewGoal) => {
-      return addGoal(newGoal);
+      return addGoal(accessToken, newGoal);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['goals'] });
@@ -65,7 +68,9 @@ const AddGoal = (): JSX.Element => {
     monthlyContribution: number;
   }
 
-  const submitGoal: SubmitHandler<FormValues> = (values: z.infer<typeof formSchema>): any => {
+  const submitGoal: SubmitHandler<FormValues> = (
+    values: z.infer<typeof formSchema>
+  ): any => {
     let newGoal: NewGoal = {
       name: values.name,
       accountIds: values.accountIds,

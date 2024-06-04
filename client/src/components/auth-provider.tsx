@@ -1,44 +1,24 @@
 import { createContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import React from 'react';
-import request from '@/lib/request';
-import { AxiosError } from 'axios';
 
 export const AuthContext = createContext({});
 
 export interface AuthContextValue {
-  isLoggedIn: boolean;
-  setIsLoggedIn: (isLoggedIn: boolean) => void;
+  accessToken: string;
+  setAccessToken: (isLoggedIn: string) => void;
   loading: boolean;
 }
 
 const AuthProvider = ({ children }: { children: any }): JSX.Element => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [accessToken, setAccessToken] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
-  React.useEffect(() => {
-    setLoading(true);
-    request({
-      url: '/api/user/isSignedIn',
-      method: 'GET',
-    })
-      .then((res) => {
-        setIsLoggedIn(res.data);
-      })
-      .catch((error: AxiosError) => {
-        console.log(error);
-        if (error.code === 'ERR_BAD_REQUEST') {
-          setIsLoggedIn(false);
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+  React.useEffect(() => {}, []);
 
   const authValue: AuthContextValue = {
-    isLoggedIn,
-    setIsLoggedIn,
+    accessToken,
+    setAccessToken,
     loading,
   };
 

@@ -30,6 +30,7 @@ import {
 } from '@/lib/transactions';
 import { type AxiosError } from 'axios';
 import { useToast } from '@/components/ui/use-toast';
+import { AuthContext } from '@/components/auth-provider';
 
 declare module '@tanstack/react-table' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -58,12 +59,14 @@ const TransactionsDataTable = (props: DataTableProps): JSX.Element => {
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
   const [isPendingRow, setIsPendingRow] = React.useState('');
 
+  const { accessToken } = React.useContext<any>(AuthContext);
+
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const doEditTransaction = useMutation({
     mutationFn: async (newTransaction: Transaction) => {
       setIsPendingRow(table.getSelectedRowModel().rows.at(0)?.id ?? '');
-      return await editTransaction(newTransaction);
+      return await editTransaction(accessToken, newTransaction);
     },
     onSuccess: async () => {
       setIsPendingRow('');
@@ -80,7 +83,7 @@ const TransactionsDataTable = (props: DataTableProps): JSX.Element => {
   const doDeleteTransaction = useMutation({
     mutationFn: async (id: string) => {
       setIsPendingRow(table.getSelectedRowModel().rows.at(0)?.id ?? '');
-      return await deleteTransaction(id);
+      return await deleteTransaction(accessToken, id);
     },
     onSuccess: async () => {
       setIsPendingRow('');

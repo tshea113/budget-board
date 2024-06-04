@@ -3,32 +3,53 @@ import request from './request';
 import { type Transaction } from '@/types/transaction';
 import { Category, categories } from '@/types/category';
 
-export const getTransactions = async (): Promise<AxiosResponse> =>
-  await request({
-    url: '/api/transaction',
-    method: 'GET',
-  });
+export const getTransactions = async (accessToken: string): Promise<AxiosResponse> =>
+  await request(
+    {
+      url: '/api/transaction',
+      method: 'GET',
+    },
+    accessToken
+  );
 
-export const editTransaction = async (newTransaction: Transaction): Promise<AxiosResponse> =>
-  await request({
-    url: '/api/transaction',
-    method: 'PUT',
-    data: newTransaction,
-  });
+export const editTransaction = async (
+  accessToken: string,
+  newTransaction: Transaction
+): Promise<AxiosResponse> =>
+  await request(
+    {
+      url: '/api/transaction',
+      method: 'PUT',
+      data: newTransaction,
+    },
+    accessToken
+  );
 
-export const deleteTransaction = async (id: string): Promise<AxiosResponse> =>
-  await request({
-    url: '/api/transaction',
-    method: 'DELETE',
-    params: { guid: id },
-  });
+export const deleteTransaction = async (
+  accessToken: string,
+  id: string
+): Promise<AxiosResponse> =>
+  await request(
+    {
+      url: '/api/transaction',
+      method: 'DELETE',
+      params: { guid: id },
+    },
+    accessToken
+  );
 
-export const restoreTransaction = async (guid: string): Promise<AxiosResponse> =>
-  await request({
-    url: '/api/transaction/restore',
-    method: 'POST',
-    params: { guid },
-  });
+export const restoreTransaction = async (
+  accessToken: string,
+  guid: string
+): Promise<AxiosResponse> =>
+  await request(
+    {
+      url: '/api/transaction/restore',
+      method: 'POST',
+      params: { guid },
+    },
+    accessToken
+  );
 
 export const filterVisibleTransactions = (transactions: Transaction[]): Transaction[] =>
   transactions.filter((t: Transaction) => t.deleted === null);
@@ -86,6 +107,10 @@ export const getIsCategory = (categoryValue: string): boolean => {
 };
 
 export const formatDate = (date: Date): string => {
-  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  };
   return new Date(date).toLocaleDateString([], options);
 };

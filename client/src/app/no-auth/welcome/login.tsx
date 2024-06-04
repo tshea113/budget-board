@@ -25,7 +25,7 @@ const Login = (): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false);
   const { toast } = useToast();
 
-  const { setIsLoggedIn } = React.useContext<any>(AuthContext);
+  const { setAccessToken } = React.useContext<any>(AuthContext);
 
   const formSchema = z.object({
     email: z
@@ -53,9 +53,10 @@ const Login = (): JSX.Element => {
     login(values.email, values.password)
       .then((res) => {
         console.log(res);
-        setIsLoggedIn(true);
+        setAccessToken(res.data.accessToken);
       })
       .catch((error: AxiosError) => {
+        console.log(error);
         toast({
           variant: 'destructive',
           title: 'Error',

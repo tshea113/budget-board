@@ -7,58 +7,69 @@ import { getBudgets } from './budgets';
 import { getGoals } from './goals';
 import { getUserInfo } from './auth';
 
-export const useAccountsQuery = (): UseQueryResult<AxiosResponse<any, any>, Error> =>
+export const useAccountsQuery = (
+  accessToken: string
+): UseQueryResult<AxiosResponse<any, any>, Error> =>
   useQuery({
     queryKey: ['accounts'],
     queryFn: async () => {
-      const response = await getAccounts();
+      const response = await getAccounts(accessToken);
       return response;
     },
   });
 
-export const useUserQuery = (): UseQueryResult<AxiosResponse<any, any>, Error> =>
+export const useUserQuery = (
+  accessToken: string
+): UseQueryResult<AxiosResponse<any, any>, Error> =>
   useQuery({
     queryKey: ['user'],
     queryFn: async () => {
-      const response = await getUser();
+      const response = await getUser(accessToken);
       return response;
     },
   });
 
-export const useTransactionsQuery = (): UseQueryResult<AxiosResponse<any, any>, Error> =>
+export const useTransactionsQuery = (
+  accessToken: string
+): UseQueryResult<AxiosResponse<any, any>, Error> =>
   useQuery({
     queryKey: ['transactions'],
     queryFn: async () => {
-      const response = await getTransactions();
+      const response = await getTransactions(accessToken);
       return response;
     },
   });
 
 export const useBudgetsQuery = (
+  accessToken: string,
   date: Date
 ): UseQueryResult<AxiosResponse<any, any>, Error> =>
   useQuery({
     queryKey: ['budgets', { date }],
     queryFn: async () => {
-      const response = await getBudgets(date);
+      const response = await getBudgets(accessToken, date);
       return response;
     },
   });
 
-export const useGoalsQuery = (): UseQueryResult<AxiosResponse<any, any>, Error> =>
+export const useGoalsQuery = (
+  accessToken: string
+): UseQueryResult<AxiosResponse<any, any>, Error> =>
   useQuery({
     queryKey: ['goals'],
     queryFn: async () => {
-      const response = await getGoals();
+      const response = await getGoals(accessToken);
       return response;
     },
   });
 
-export const useUserInfoQuery = (): UseQueryResult<AxiosResponse<any, any>, Error> =>
+export const useUserInfoQuery = (
+  accessToken: string
+): UseQueryResult<AxiosResponse<any, any>, Error> =>
   useQuery({
     queryKey: ['info'],
     queryFn: async () => {
-      const response = await getUserInfo();
+      const response = await getUserInfo(accessToken);
       return response;
     },
   });

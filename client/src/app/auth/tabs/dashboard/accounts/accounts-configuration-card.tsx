@@ -11,12 +11,15 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
 import React from 'react';
 import DeleteAccount from './delete-account';
+import { AuthContext } from '@/components/auth-provider';
 
 interface AccountsConfigurationCardProps {
   account: Account;
 }
 
-const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.Element => {
+const AccountsConfigurationCard = (
+  props: AccountsConfigurationCardProps
+): JSX.Element => {
   const [hideTransactionsValue, setHideTransactionsValue] = React.useState(
     props.account.hideTransactions ?? false
   );
@@ -25,6 +28,8 @@ const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.E
   );
   const [accountNameValue, setAccountNameValue] = React.useState(props.account.name);
   const [valueDirty, setValueDirty] = React.useState(false);
+
+  const { accessToken } = React.useContext<any>(AuthContext);
 
   const queryClient = useQueryClient();
   const { toast } = useToast();
@@ -45,7 +50,7 @@ const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.E
         userID: props.account.userID,
       };
 
-      return await updateAccount(account);
+      return await updateAccount(accessToken, account);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['accounts'] });

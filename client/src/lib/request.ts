@@ -6,7 +6,14 @@ const client = axios.create({
   withCredentials: true,
 });
 
-const request = async ({ ...options }): Promise<AxiosResponse> => {
+const request = async (
+  { ...options },
+  accessToken: string = ''
+): Promise<AxiosResponse> => {
+  if (accessToken.length > 0) {
+    client.defaults.headers.common.Authorization = 'Bearer ' + accessToken;
+  }
+
   const onSuccess = (response: AxiosResponse): AxiosResponse => response;
   const onError = (error: Error): any => {
     // optionaly catch errors and add some additional logging here

@@ -3,7 +3,7 @@ import request from './request';
 
 export const login = async (email: string, password: string): Promise<AxiosResponse> =>
   await request({
-    url: '/login?useCookies=true',
+    url: '/login',
     method: 'POST',
     data: {
       email,
@@ -21,15 +21,21 @@ export const register = async (email: string, password: string): Promise<AxiosRe
     },
   });
 
-export const logout = async (): Promise<AxiosResponse> =>
-  await request({
-    url: '/logout',
-    method: 'POST',
-    data: {},
-  });
+export const logout = async (accessToken: string): Promise<AxiosResponse> =>
+  await request(
+    {
+      url: '/logout',
+      method: 'POST',
+      data: {},
+    },
+    accessToken
+  );
 
-export const getUserInfo = async (): Promise<AxiosResponse> =>
-  await request({
-    url: '/manage/info',
-    method: 'GET',
-  });
+export const getUserInfo = async (accessToken: string): Promise<AxiosResponse> =>
+  await request(
+    {
+      url: '/manage/info',
+      method: 'GET',
+    },
+    accessToken
+  );

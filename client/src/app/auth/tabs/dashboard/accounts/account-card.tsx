@@ -4,9 +4,12 @@ import AccountItems from './account-items';
 import { Separator } from '@/components/ui/separator';
 import { useAccountsQuery } from '@/lib/query';
 import SkeletonAccountCard from './skeleton-account-card';
+import React from 'react';
+import { AuthContext } from '@/components/auth-provider';
 
 const AccountCard = (): JSX.Element => {
-  const accountsQuery = useAccountsQuery();
+  const { accessToken } = React.useContext<any>(AuthContext);
+  const accountsQuery = useAccountsQuery(accessToken);
 
   if (accountsQuery.isPending) {
     return <SkeletonAccountCard />;

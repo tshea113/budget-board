@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { Account } from '@/types/account';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import React from 'react';
+import { AuthContext } from './auth-provider';
 
 interface AccountInputProps {
   initialValues?: string[];
@@ -20,7 +21,9 @@ interface AccountInputProps {
 }
 
 const AccountInput = (props: AccountInputProps): JSX.Element => {
-  const accountsQuery = useAccountsQuery();
+  const { accessToken } = React.useContext<any>(AuthContext);
+
+  const accountsQuery = useAccountsQuery(accessToken);
 
   const [isOpen, setIsOpen] = React.useState(false);
   const [selectedValues, setSelectedValues] = React.useState<Account[]>(

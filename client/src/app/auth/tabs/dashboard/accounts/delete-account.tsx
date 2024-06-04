@@ -1,3 +1,4 @@
+import { AuthContext } from '@/components/auth-provider';
 import ResponsiveButton from '@/components/responsive-button';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -17,12 +18,13 @@ interface DeleteAccountProps {
 const DeleteAccount = (props: DeleteAccountProps): JSX.Element => {
   const [deleteTransactionsValue, setDeleteTransactionsValue] = React.useState(false);
 
-  const { toast } = useToast();
+  const { accessToken } = React.useContext<any>(AuthContext);
 
+  const { toast } = useToast();
   const queryClient = useQueryClient();
   const doDeleteAccount = useMutation({
     mutationFn: async (deleteTransactions: boolean) => {
-      return await deleteAccount(props.accountId, deleteTransactions);
+      return await deleteAccount(accessToken, props.accountId, deleteTransactions);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['accounts'] });

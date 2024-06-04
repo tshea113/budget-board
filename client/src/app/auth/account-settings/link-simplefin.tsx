@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+import { AuthContext } from '@/components/auth-provider';
 import ResponsiveButton from '@/components/responsive-button';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -16,12 +17,14 @@ import { useForm } from 'react-hook-form';
 const LinkSimpleFin = (): JSX.Element => {
   const [formVisible, setFormVisible] = React.useState<boolean>(false);
 
-  const userQuery = useUserQuery();
+  const { accessToken } = React.useContext<any>(AuthContext);
+
+  const userQuery = useUserQuery(accessToken);
 
   const { toast } = useToast();
   const doSetAccessToken = useMutation({
     mutationFn: async (newToken: string) => {
-      return await setAccessToken(newToken);
+      return await setAccessToken(accessToken, newToken);
     },
     onError: (error: AxiosError) => {
       toast({
@@ -79,7 +82,9 @@ const LinkSimpleFin = (): JSX.Element => {
                   </FormItem>
                 )}
               />
-              <ResponsiveButton loading={doSetAccessToken.isPending}>Save Changes</ResponsiveButton>
+              <ResponsiveButton loading={doSetAccessToken.isPending}>
+                Save Changes
+              </ResponsiveButton>
             </form>
           </Form>
         )}

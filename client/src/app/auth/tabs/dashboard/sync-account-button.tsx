@@ -1,17 +1,20 @@
+import { AuthContext } from '@/components/auth-provider';
 import ResponsiveButton from '@/components/responsive-button';
 import { useToast } from '@/components/ui/use-toast';
 import { translateAxiosError } from '@/lib/request';
 import { doSync } from '@/lib/user';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
+import React from 'react';
 
 const SyncAccountButton = (): JSX.Element => {
-  const { toast } = useToast();
+  const { accessToken } = React.useContext<any>(AuthContext);
 
+  const { toast } = useToast();
   const queryClient = useQueryClient();
   const doSyncMutation = useMutation({
     mutationFn: async () => {
-      return await doSync();
+      return await doSync(accessToken);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['transactions'] });

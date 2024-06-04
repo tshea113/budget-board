@@ -9,6 +9,8 @@ import { addMultipleBudgets, getBudgets } from '@/lib/budgets';
 import { defaultGuid } from '@/types/user';
 import AddBudget from './add-budget';
 import AddButtonPopover from '@/components/add-button-popover';
+import React from 'react';
+import { AuthContext } from '@/components/auth-provider';
 
 interface BudgetsToolbarProps {
   budgets: Budget[];
@@ -18,11 +20,13 @@ interface BudgetsToolbarProps {
 }
 
 const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
+  const { accessToken } = React.useContext<any>(AuthContext);
+
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const doCopyBudget = useMutation({
     mutationFn: async (newBudgets: Budget[]) => {
-      return await addMultipleBudgets(newBudgets);
+      return await addMultipleBudgets(accessToken, newBudgets);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['budgets'] });
@@ -40,7 +44,7 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
     const lastMonth = new Date(props.date);
     lastMonth.setMonth(lastMonth.getMonth() - 1);
 
-    getBudgets(lastMonth)
+    getBudgets(accessToken, lastMonth)
       .then((res: AxiosResponse<any, any>) => {
         const budgets: Budget[] = res.data;
         if (budgets.length !== 0) {

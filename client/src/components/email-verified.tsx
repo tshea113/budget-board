@@ -3,13 +3,17 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { useUserInfoQuery } from '@/lib/query';
 import { AlertCircle } from 'lucide-react';
+import React from 'react';
+import { AuthContext } from './auth-provider';
 
 const EmailVerified = (): JSX.Element | null => {
   const resendVerification = (): void => {
     // TODO: Send verification email
   };
 
-  const userInfoQuery = useUserInfoQuery();
+  const { accessToken } = React.useContext<any>(AuthContext);
+
+  const userInfoQuery = useUserInfoQuery(accessToken);
 
   if ((!userInfoQuery.data?.data.isEmailConfirmed ?? true) && !userInfoQuery.isPending) {
     return (

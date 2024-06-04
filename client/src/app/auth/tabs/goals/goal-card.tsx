@@ -15,6 +15,7 @@ import { TrashIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import GoalDetails from './goal-details';
+import { AuthContext } from '@/components/auth-provider';
 
 interface GoalCardProps {
   goal: Goal;
@@ -27,10 +28,12 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
     setIsSelected(!isSelected);
   };
 
+  const { accessToken } = React.useContext<any>(AuthContext);
+
   const queryClient = useQueryClient();
   const doDeleteGoal = useMutation({
     mutationFn: async (id: string) => {
-      return deleteGoal(id);
+      return deleteGoal(accessToken, id);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['goals'] });

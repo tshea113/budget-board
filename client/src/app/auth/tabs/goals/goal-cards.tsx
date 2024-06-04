@@ -2,9 +2,13 @@ import { useGoalsQuery } from '@/lib/query';
 import { Goal } from '@/types/goal';
 import GoalCard from './goal-card';
 import { Skeleton } from '@/components/ui/skeleton';
+import React from 'react';
+import { AuthContext } from '@/components/auth-provider';
 
 const GoalCards = (): JSX.Element => {
-  const goalsQuery = useGoalsQuery();
+  const { accessToken } = React.useContext<any>(AuthContext);
+
+  const goalsQuery = useGoalsQuery(accessToken);
 
   if (goalsQuery.isPending) {
     return (
@@ -22,7 +26,9 @@ const GoalCards = (): JSX.Element => {
     );
   }
 
-  return (goalsQuery.data?.data ?? []).map((goal: Goal) => <GoalCard key={goal.id} goal={goal} />);
+  return (goalsQuery.data?.data ?? []).map((goal: Goal) => (
+    <GoalCard key={goal.id} goal={goal} />
+  ));
 };
 
 export default GoalCards;

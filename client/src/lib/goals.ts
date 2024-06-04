@@ -5,25 +5,40 @@ import { getTransactionsForMonth } from './transactions';
 import { getMonthsUntilDate } from './utils';
 import { sumAccountsTotalBalance } from './accounts';
 
-export const getGoals = async (): Promise<AxiosResponse> =>
-  await request({
-    url: '/api/goal',
-    method: 'GET',
-  });
+export const getGoals = async (accessToken: string): Promise<AxiosResponse> =>
+  await request(
+    {
+      url: '/api/goal',
+      method: 'GET',
+    },
+    accessToken
+  );
 
-export const addGoal = async (newGoal: NewGoal): Promise<AxiosResponse> =>
-  await request({
-    url: '/api/goal',
-    method: 'POST',
-    data: newGoal,
-  });
+export const addGoal = async (
+  accessToken: string,
+  newGoal: NewGoal
+): Promise<AxiosResponse> =>
+  await request(
+    {
+      url: '/api/goal',
+      method: 'POST',
+      data: newGoal,
+    },
+    accessToken
+  );
 
-export const deleteGoal = async (guid: string): Promise<AxiosResponse> =>
-  await request({
-    url: '/api/goal',
-    method: 'DELETE',
-    params: { guid },
-  });
+export const deleteGoal = async (
+  accessToken: string,
+  guid: string
+): Promise<AxiosResponse> =>
+  await request(
+    {
+      url: '/api/goal',
+      method: 'DELETE',
+      params: { guid },
+    },
+    accessToken
+  );
 
 export const getGoalTargetAmount = (amount: number, initialAmount: number): number => {
   if (initialAmount < 0) {

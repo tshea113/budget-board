@@ -19,15 +19,15 @@ import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
 
 const Header = (): JSX.Element => {
-  const { setIsLoggedIn } = React.useContext<any>(AuthContext);
+  const { accessToken, setAccessToken } = React.useContext<any>(AuthContext);
 
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const Logout = (): void => {
-    logout()
+    logout(accessToken)
       .then(() => {
         queryClient.removeQueries();
-        setIsLoggedIn(false);
+        setAccessToken('');
       })
       .catch((error: AxiosError) => {
         toast({
@@ -38,7 +38,7 @@ const Header = (): JSX.Element => {
       });
   };
 
-  const userInfoQuery = useUserInfoQuery();
+  const userInfoQuery = useUserInfoQuery(accessToken);
 
   return (
     <div className="grid grid-cols-2">

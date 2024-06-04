@@ -6,12 +6,12 @@ import { Navigate } from 'react-router-dom';
 import PageLoading from './page-loading';
 
 const AuthRoute = ({ children }: { children: any }): JSX.Element => {
-  const { isLoggedIn, loading } = useContext<any>(AuthContext);
+  const { accessToken, loading } = useContext<any>(AuthContext);
 
   if (loading) {
     return <PageLoading />;
   }
-  if (isLoggedIn) {
+  if (accessToken.length > 0) {
     return children;
   }
   return <Navigate to="/" />;
