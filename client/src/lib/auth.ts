@@ -31,6 +31,13 @@ export const logout = async (accessToken: string): Promise<AxiosResponse> =>
     accessToken
   );
 
+export const refresh = async (refreshToken: string): Promise<AxiosResponse> =>
+  await request({
+    url: '/refresh',
+    method: 'POST',
+    data: { refreshToken },
+  });
+
 export const getUserInfo = async (accessToken: string): Promise<AxiosResponse> =>
   await request(
     {

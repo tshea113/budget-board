@@ -1,5 +1,6 @@
+import { refresh } from '@/lib/auth';
+import { AxiosError } from 'axios';
 import { createContext, useState } from 'react';
-import PropTypes from 'prop-types';
 import React from 'react';
 
 export const AuthContext = createContext({});
@@ -14,7 +15,26 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
   const [accessToken, setAccessToken] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
-  React.useEffect(() => {}, []);
+  React.useEffect(() => {
+    setLoading(true);
+    const refreshToken = localStorage.getItem('refresh-token');
+    if (refreshToken) {
+      console.log(refreshToken);
+      refresh(refreshToken)
+        .then((res) => {
+          localStorage.setItem('refresh-token', res.data.refreshToken);
+          setAccessToken(res.data.accessToken);
+        })
+        .catch((error: AxiosError) => {
+          console.log(error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
+    }
+  }, []);
 
   const authValue: AuthContextValue = {
     accessToken,
@@ -23,10 +43,6 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
   };
 
   return <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>;
-};
-
-AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired,
 };
 
 export default AuthProvider;

@@ -28,6 +28,7 @@ const Header = (): JSX.Element => {
       .then(() => {
         queryClient.removeQueries();
         setAccessToken('');
+        localStorage.removeItem('refresh-token');
       })
       .catch((error: AxiosError) => {
         toast({

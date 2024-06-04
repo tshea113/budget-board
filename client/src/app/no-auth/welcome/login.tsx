@@ -52,8 +52,8 @@ const Login = (): JSX.Element => {
 
     login(values.email, values.password)
       .then((res) => {
-        console.log(res);
         setAccessToken(res.data.accessToken);
+        localStorage.setItem('refresh-token', res.data.refreshToken);
       })
       .catch((error: AxiosError) => {
         console.log(error);
