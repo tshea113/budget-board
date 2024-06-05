@@ -1,21 +1,28 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { useUserInfoQuery } from '@/lib/query';
 import { AlertCircle } from 'lucide-react';
 import React from 'react';
 import { AuthContext } from './auth-provider';
+import { useQuery } from '@tanstack/react-query';
 
 const EmailVerified = (): JSX.Element | null => {
   const resendVerification = (): void => {
     // TODO: Send verification email
   };
 
-  const { accessToken } = React.useContext<any>(AuthContext);
+  const { request } = React.useContext<any>(AuthContext);
 
-  const userInfoQuery = useUserInfoQuery(accessToken);
+  const userInfoQuery = useQuery({
+    queryKey: ['info'],
+    queryFn: async () =>
+      await request({
+        url: '/manage/info',
+        method: 'GET',
+      }),
+  });
 
-  if ((!userInfoQuery.data?.data.isEmailConfirmed ?? true) && !userInfoQuery.isPending) {
+  if (!(userInfoQuery.data?.data.isEmailConfirmed ?? true) && !userInfoQuery.isPending) {
     return (
       <Alert variant="destructive" className="mb-2 p-1">
         <AlertDescription className="flex items-center">

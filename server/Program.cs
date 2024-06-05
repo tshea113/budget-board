@@ -1,5 +1,6 @@
 using BudgetBoard.Database.Data;
 using BudgetBoard.Database.Models;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -50,15 +51,9 @@ builder.Services.AddIdentityApiEndpoints<ApplicationUser>(opt =>
 })
     .AddEntityFrameworkStores<UserDataContext>();
 
-builder.Services.ConfigureApplicationCookie(options =>
+builder.Services.AddOptions<BearerTokenOptions>(IdentityConstants.BearerScheme).Configure(options =>
 {
-    // Cookie settings
-    options.Cookie.Name = "access_cookie";
-    options.Cookie.HttpOnly = true;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-
-    options.SlidingExpiration = true;
+    // options.BearerTokenExpiration = TimeSpan.FromSeconds(10);
 });
 
 builder.Services.AddControllers()

@@ -8,17 +8,32 @@ import BudgetTotalCard from './budget-total-card';
 import { initMonth } from '@/lib/utils';
 import { type Transaction } from '@/types/transaction';
 import Unbudgets from './unbudgets';
-import { useBudgetsQuery, useTransactionsQuery } from '@/lib/query';
 import BudgetsToolbar from './budgets-toolbar';
 import { AuthContext } from '@/components/auth-provider';
+import { useQuery } from '@tanstack/react-query';
 
 const Budgets = (): JSX.Element => {
   const [date, setDate] = React.useState<Date>(initMonth());
 
-  const { accessToken } = React.useContext<any>(AuthContext);
+  const { request } = React.useContext<any>(AuthContext);
 
-  const budgetsQuery = useBudgetsQuery(accessToken, date);
-  const transactionsQuery = useTransactionsQuery(accessToken);
+  const budgetsQuery = useQuery({
+    queryKey: ['budgets', { date }],
+    queryFn: async () =>
+      await request({
+        url: '/api/budget' + '?date=' + date.toISOString(),
+        method: 'GET',
+      }),
+  });
+
+  const transactionsQuery = useQuery({
+    queryKey: ['transactions'],
+    queryFn: async () =>
+      await request({
+        url: '/api/transaction',
+        method: 'GET',
+      }),
+  });
 
   return (
     <div className="flex w-full max-w-screen-2xl flex-row justify-center space-x-2">

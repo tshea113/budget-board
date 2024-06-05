@@ -3,8 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { updateAccount } from '@/lib/accounts';
-import { translateAxiosError } from '@/lib/request';
+import { translateAxiosError } from '@/lib/requests';
 import { type Account } from '@/types/account';
 import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -29,14 +28,14 @@ const AccountsConfigurationCard = (
   const [accountNameValue, setAccountNameValue] = React.useState(props.account.name);
   const [valueDirty, setValueDirty] = React.useState(false);
 
-  const { accessToken } = React.useContext<any>(AuthContext);
+  const { request } = React.useContext<any>(AuthContext);
 
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
   const doUpdateAccount = useMutation({
     mutationFn: async () => {
-      const account: Account = {
+      const newAccount: Account = {
         id: props.account.id,
         syncID: props.account.syncID,
         name: accountNameValue,
@@ -50,7 +49,11 @@ const AccountsConfigurationCard = (
         userID: props.account.userID,
       };
 
-      return await updateAccount(accessToken, account);
+      return await request({
+        url: '/api/account',
+        method: 'PUT',
+        data: newAccount,
+      });
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['accounts'] });

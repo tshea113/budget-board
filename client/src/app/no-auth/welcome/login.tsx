@@ -15,9 +15,8 @@ import { useState } from 'react';
 import ResponsiveButton from '@/components/responsive-button';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
-import { login } from '@/lib/auth';
-import { AxiosError } from 'axios';
-import { translateAxiosError } from '@/lib/request';
+import { AxiosError, AxiosResponse } from 'axios';
+import { translateAxiosError } from '@/lib/requests';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
 
@@ -25,7 +24,7 @@ const Login = (): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false);
   const { toast } = useToast();
 
-  const { setAccessToken } = React.useContext<any>(AuthContext);
+  const { request, setAccessToken } = React.useContext<any>(AuthContext);
 
   const formSchema = z.object({
     email: z
@@ -50,8 +49,18 @@ const Login = (): JSX.Element => {
     e.preventDefault();
     setLoading(true);
 
-    login(values.email, values.password)
-      .then((res) => {
+    const email = values.email;
+    const password = values.password;
+
+    request({
+      url: '/login',
+      method: 'POST',
+      data: {
+        email,
+        password,
+      },
+    })
+      .then((res: AxiosResponse) => {
         setAccessToken(res.data.accessToken);
         localStorage.setItem('refresh-token', res.data.refreshToken);
       })

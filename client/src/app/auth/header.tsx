@@ -8,23 +8,25 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import AccountSettings from './account-settings/account-settings';
 import { useToast } from '@/components/ui/use-toast';
 import { type AxiosError } from 'axios';
-import { translateAxiosError } from '@/lib/request';
-import { logout } from '@/lib/auth';
-import { useUserInfoQuery } from '@/lib/query';
+import { translateAxiosError } from '@/lib/requests';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
 
 const Header = (): JSX.Element => {
-  const { accessToken, setAccessToken } = React.useContext<any>(AuthContext);
+  const { request, setAccessToken } = React.useContext<any>(AuthContext);
 
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const Logout = (): void => {
-    logout(accessToken)
+    request({
+      url: '/logout',
+      method: 'POST',
+      data: {},
+    })
       .then(() => {
         queryClient.removeQueries();
         setAccessToken('');
@@ -39,7 +41,14 @@ const Header = (): JSX.Element => {
       });
   };
 
-  const userInfoQuery = useUserInfoQuery(accessToken);
+  const userInfoQuery = useQuery({
+    queryKey: ['info'],
+    queryFn: async () =>
+      await request({
+        url: '/manage/info',
+        method: 'GET',
+      }),
+  });
 
   return (
     <div className="grid grid-cols-2">

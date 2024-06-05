@@ -2,8 +2,7 @@ import { AuthContext } from '@/components/auth-provider';
 import ResponsiveButton from '@/components/responsive-button';
 import { Card } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
-import { restoreAccount } from '@/lib/accounts';
-import { translateAxiosError } from '@/lib/request';
+import { translateAxiosError } from '@/lib/requests';
 import { getDaysSinceDeleted } from '@/lib/utils';
 import { type Account } from '@/types/account';
 import { ResetIcon } from '@radix-ui/react-icons';
@@ -16,14 +15,17 @@ interface DeletedAccountCardProps {
 }
 
 const DeletedAccountCard = (props: DeletedAccountCardProps): JSX.Element => {
-  const { accessToken } = React.useContext<any>(AuthContext);
+  const { request } = React.useContext<any>(AuthContext);
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const doRestoreAccount = useMutation({
-    mutationFn: async (id: string) => {
-      return await restoreAccount(accessToken, id);
-    },
+    mutationFn: async (id: string) =>
+      await request({
+        url: '/api/account/restore',
+        method: 'POST',
+        params: { guid: id },
+      }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['accounts'] });
     },

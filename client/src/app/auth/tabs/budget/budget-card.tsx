@@ -3,7 +3,7 @@ import ResponsiveButton from '@/components/responsive-button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
-import { deleteBudget, editBudget, getSignForBudget } from '@/lib/budgets';
+import { getSignForBudget } from '@/lib/budgets';
 import { getCategoryLabel } from '@/lib/transactions';
 import { cn, getProgress } from '@/lib/utils';
 import { type Budget } from '@/types/budget';
@@ -21,7 +21,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
   const [isEdit, setIsEdit] = React.useState(false);
   const [limit, setLimit] = React.useState(props.budget.limit);
 
-  const { accessToken } = React.useContext<any>(AuthContext);
+  const { request } = React.useContext<any>(AuthContext);
 
   const queryClient = useQueryClient();
   const doEditBudget = useMutation({
@@ -33,7 +33,11 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
         limit: newTotal,
         userId: defaultGuid,
       };
-      return await editBudget(accessToken, newBudget);
+      return await request({
+        url: '/api/budget',
+        method: 'PUT',
+        data: newBudget,
+      });
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['budgets'] });
@@ -42,9 +46,12 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
   });
 
   const doDeleteBudget = useMutation({
-    mutationFn: async (id: string) => {
-      return await deleteBudget(accessToken, id);
-    },
+    mutationFn: async (id: string) =>
+      await request({
+        url: '/api/budget',
+        method: 'DELETE',
+        params: { id },
+      }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['budgets'] });
       setIsEdit(false);

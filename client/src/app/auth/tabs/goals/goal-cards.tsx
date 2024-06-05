@@ -1,14 +1,21 @@
-import { useGoalsQuery } from '@/lib/query';
 import { Goal } from '@/types/goal';
 import GoalCard from './goal-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
+import { useQuery } from '@tanstack/react-query';
 
 const GoalCards = (): JSX.Element => {
-  const { accessToken } = React.useContext<any>(AuthContext);
+  const { request } = React.useContext<any>(AuthContext);
 
-  const goalsQuery = useGoalsQuery(accessToken);
+  const goalsQuery = useQuery({
+    queryKey: ['goals'],
+    queryFn: async () =>
+      await request({
+        url: '/api/goal',
+        method: 'GET',
+      }),
+  });
 
   if (goalsQuery.isPending) {
     return (

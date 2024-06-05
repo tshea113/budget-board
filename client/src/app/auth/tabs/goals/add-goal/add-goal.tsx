@@ -9,7 +9,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { addGoal } from '@/lib/goals';
 import { GoalCondition, GoalType, NewGoal } from '@/types/goal';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -48,13 +47,16 @@ const AddGoal = (): JSX.Element => {
     },
   });
 
-  const { accessToken } = React.useContext<any>(AuthContext);
+  const { request } = React.useContext<any>(AuthContext);
 
   const queryClient = useQueryClient();
   const doAddGoal = useMutation({
-    mutationFn: async (newGoal: NewGoal) => {
-      return addGoal(accessToken, newGoal);
-    },
+    mutationFn: async (newGoal: NewGoal) =>
+      await request({
+        url: '/api/goal',
+        method: 'POST',
+        data: newGoal,
+      }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['goals'] });
     },

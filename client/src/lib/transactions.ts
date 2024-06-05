@@ -1,55 +1,5 @@
-import { type AxiosResponse } from 'axios';
-import request from './request';
 import { type Transaction } from '@/types/transaction';
 import { Category, categories } from '@/types/category';
-
-export const getTransactions = async (accessToken: string): Promise<AxiosResponse> =>
-  await request(
-    {
-      url: '/api/transaction',
-      method: 'GET',
-    },
-    accessToken
-  );
-
-export const editTransaction = async (
-  accessToken: string,
-  newTransaction: Transaction
-): Promise<AxiosResponse> =>
-  await request(
-    {
-      url: '/api/transaction',
-      method: 'PUT',
-      data: newTransaction,
-    },
-    accessToken
-  );
-
-export const deleteTransaction = async (
-  accessToken: string,
-  id: string
-): Promise<AxiosResponse> =>
-  await request(
-    {
-      url: '/api/transaction',
-      method: 'DELETE',
-      params: { guid: id },
-    },
-    accessToken
-  );
-
-export const restoreTransaction = async (
-  accessToken: string,
-  guid: string
-): Promise<AxiosResponse> =>
-  await request(
-    {
-      url: '/api/transaction/restore',
-      method: 'POST',
-      params: { guid },
-    },
-    accessToken
-  );
 
 export const filterVisibleTransactions = (transactions: Transaction[]): Transaction[] =>
   transactions.filter((t: Transaction) => t.deleted === null);

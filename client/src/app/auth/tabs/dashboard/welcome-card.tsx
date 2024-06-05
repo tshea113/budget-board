@@ -1,13 +1,20 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import SyncAccountButton from './sync-account-button';
-import { useUserInfoQuery } from '@/lib/query';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
+import { useQuery } from '@tanstack/react-query';
 
 const WelcomeCard = (): JSX.Element => {
-  const { accessToken } = React.useContext<any>(AuthContext);
+  const { request } = React.useContext<any>(AuthContext);
 
-  const userInfoQuery = useUserInfoQuery(accessToken);
+  const userInfoQuery = useQuery({
+    queryKey: ['info'],
+    queryFn: async () =>
+      await request({
+        url: '/manage/info',
+        method: 'GET',
+      }),
+  });
 
   return (
     <Card className="w-full">

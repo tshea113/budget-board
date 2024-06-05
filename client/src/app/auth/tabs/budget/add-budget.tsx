@@ -12,13 +12,12 @@ import { z } from 'zod';
 import { Input } from '@/components/ui/input';
 import ResponsiveButton from '@/components/responsive-button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { translateAxiosError } from '@/lib/request';
+import { translateAxiosError } from '@/lib/requests';
 import { type NewBudget } from '@/types/budget';
 import CategoryInput from '@/components/category-input';
 import { defaultGuid } from '@/types/user';
 import { useToast } from '@/components/ui/use-toast';
 import { AxiosError } from 'axios';
-import { addBudget } from '@/lib/budgets';
 import { AuthContext } from '@/components/auth-provider';
 import React from 'react';
 
@@ -40,14 +39,17 @@ const AddBudget = ({ date }: AddBudgetProps): JSX.Element => {
     },
   });
 
-  const { accessToken } = React.useContext<any>(AuthContext);
+  const { request } = React.useContext<any>(AuthContext);
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: async (newBudget: NewBudget) => {
-      return await addBudget(accessToken, newBudget);
-    },
+    mutationFn: async (newBudget: NewBudget) =>
+      await request({
+        url: '/api/budget',
+        method: 'POST',
+        data: newBudget,
+      }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['budgets'] });
     },

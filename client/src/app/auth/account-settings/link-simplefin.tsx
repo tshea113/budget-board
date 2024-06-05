@@ -6,10 +6,8 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { useUserQuery } from '@/lib/query';
-import { translateAxiosError } from '@/lib/request';
-import { setAccessToken } from '@/lib/user';
-import { useMutation } from '@tanstack/react-query';
+import { translateAxiosError } from '@/lib/requests';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -17,15 +15,25 @@ import { useForm } from 'react-hook-form';
 const LinkSimpleFin = (): JSX.Element => {
   const [formVisible, setFormVisible] = React.useState<boolean>(false);
 
-  const { accessToken } = React.useContext<any>(AuthContext);
+  const { request } = React.useContext<any>(AuthContext);
 
-  const userQuery = useUserQuery(accessToken);
+  const userQuery = useQuery({
+    queryKey: ['user'],
+    queryFn: async () =>
+      await request({
+        url: '/api/user',
+        method: 'GET',
+      }),
+  });
 
   const { toast } = useToast();
   const doSetAccessToken = useMutation({
-    mutationFn: async (newToken: string) => {
-      return await setAccessToken(accessToken, newToken);
-    },
+    mutationFn: async (newToken: string) =>
+      await request({
+        url: '/api/simplefin/updatetoken',
+        method: 'POST',
+        params: { newToken },
+      }),
     onError: (error: AxiosError) => {
       toast({
         variant: 'destructive',

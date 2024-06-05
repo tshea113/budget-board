@@ -1,3 +1,4 @@
+import { AuthContext } from '@/components/auth-provider';
 import ResponsiveButton from '@/components/responsive-button';
 import {
   Form,
@@ -9,10 +10,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { register } from '@/lib/auth';
-import { translateAxiosError } from '@/lib/request';
+import { translateAxiosError } from '@/lib/requests';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
+import React from 'react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -48,6 +49,8 @@ const Signup = (): JSX.Element => {
     },
   });
 
+  const { request } = React.useContext<any>(AuthContext);
+
   const submitUserSignup = async (
     values: z.infer<typeof formSchema>,
     e: any
@@ -55,7 +58,17 @@ const Signup = (): JSX.Element => {
     e.preventDefault();
     setLoading(true);
 
-    register(values.email, values.password)
+    const email = values.email;
+    const password = values.password;
+
+    request({
+      url: '/register',
+      method: 'POST',
+      data: {
+        email,
+        password,
+      },
+    })
       .then(() => {
         toast({
           variant: 'default',

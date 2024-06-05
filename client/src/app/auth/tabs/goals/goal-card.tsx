@@ -4,7 +4,6 @@ import { Progress } from '@/components/ui/progress';
 import { sumAccountsTotalBalance } from '@/lib/accounts';
 import {
   calculateCompleteDate,
-  deleteGoal,
   getGoalTargetAmount,
   getMonthlyContributionTotal,
   sumTransactionsForGoalForMonth,
@@ -28,13 +27,16 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
     setIsSelected(!isSelected);
   };
 
-  const { accessToken } = React.useContext<any>(AuthContext);
+  const { request } = React.useContext<any>(AuthContext);
 
   const queryClient = useQueryClient();
   const doDeleteGoal = useMutation({
-    mutationFn: async (id: string) => {
-      return deleteGoal(accessToken, id);
-    },
+    mutationFn: async (id: string) =>
+      await request({
+        url: '/api/goal',
+        method: 'DELETE',
+        params: { guid: id },
+      }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['goals'] });
     },

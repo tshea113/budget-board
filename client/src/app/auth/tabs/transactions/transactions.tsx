@@ -1,14 +1,22 @@
 import TransactionsDataTable from './transactions-data-table';
 import { columns } from './columns';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useTransactionsQuery } from '@/lib/query';
 import EmailVerified from '../../../../components/email-verified';
 import { AuthContext } from '@/components/auth-provider';
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 const Transactions = (): JSX.Element => {
-  const { accessToken } = React.useContext<any>(AuthContext);
-  const transactionsQuery = useTransactionsQuery(accessToken);
+  const { request } = React.useContext<any>(AuthContext);
+
+  const transactionsQuery = useQuery({
+    queryKey: ['transactions'],
+    queryFn: async () =>
+      await request({
+        url: '/api/transaction',
+        method: 'GET',
+      }),
+  });
 
   if (transactionsQuery.isPending) {
     return <Skeleton className="h-[550px] w-screen rounded-xl" />;

@@ -1,78 +1,10 @@
-import { type AxiosResponse } from 'axios';
-import request from './request';
-import { NewBudget, type Budget } from '@/types/budget';
+import { type Budget } from '@/types/budget';
 import { getParentCategory } from './transactions';
 
 export enum BudgetGroup {
   Income,
   Spending,
 }
-
-export const getBudgets = async (
-  accessToken: string,
-  date: Date
-): Promise<AxiosResponse> => {
-  const dateString = '?date=' + date.toISOString();
-  return await request(
-    {
-      url: '/api/budget' + dateString,
-      method: 'GET',
-    },
-    accessToken
-  );
-};
-
-export const addBudget = async (
-  accessToken: string,
-  newBudget: NewBudget
-): Promise<AxiosResponse> =>
-  await request(
-    {
-      url: '/api/budget',
-      method: 'POST',
-      data: newBudget,
-    },
-    accessToken
-  );
-
-export const addMultipleBudgets = async (
-  accessToken: string,
-  newBudgets: Budget[]
-): Promise<AxiosResponse> =>
-  await request(
-    {
-      url: '/api/budget/addmultiple',
-      method: 'POST',
-      data: newBudgets,
-    },
-    accessToken
-  );
-
-export const editBudget = async (
-  accessToken: string,
-  budget: Budget
-): Promise<AxiosResponse> =>
-  await request(
-    {
-      url: '/api/budget',
-      method: 'PUT',
-      data: budget,
-    },
-    accessToken
-  );
-
-export const deleteBudget = async (
-  accessToken: string,
-  id: string
-): Promise<AxiosResponse> =>
-  await request(
-    {
-      url: '/api/budget',
-      method: 'DELETE',
-      params: { id },
-    },
-    accessToken
-  );
 
 export const getBudgetsForMonth = (budgetData: Budget[], date: Date): Budget[] =>
   budgetData.filter(
