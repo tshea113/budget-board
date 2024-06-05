@@ -53,7 +53,8 @@ builder.Services.AddIdentityApiEndpoints<ApplicationUser>(opt =>
 
 builder.Services.AddOptions<BearerTokenOptions>(IdentityConstants.BearerScheme).Configure(options =>
 {
-    // options.BearerTokenExpiration = TimeSpan.FromSeconds(10);
+    // TODO: Remove as this is only for testing
+    options.BearerTokenExpiration = TimeSpan.FromSeconds(10);
 });
 
 builder.Services.AddControllers()

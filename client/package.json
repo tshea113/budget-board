@@ -39,7 +39,6 @@
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
     "eslint-config-love": "^47.0.0",
-    "firebase": "^10.12.0",
     "lucide-react": "^0.378.0",
     "postcss": "^8.4.38",
     "prop-types": "^15.8.1",

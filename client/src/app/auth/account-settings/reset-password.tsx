@@ -11,9 +11,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { firebaseAuth, getMessageForErrorCode } from '@/lib/firebase';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -24,8 +22,12 @@ const ResetPassword = (): JSX.Element => {
 
   const formSchema = z
     .object({
-      oldPassword: z.string().min(7, { message: 'Password must be at least 7 characters' }),
-      newPassword: z.string().min(7, { message: 'Password must be at least 7 characters' }),
+      oldPassword: z
+        .string()
+        .min(7, { message: 'Password must be at least 7 characters' }),
+      newPassword: z
+        .string()
+        .min(7, { message: 'Password must be at least 7 characters' }),
       confirm: z.string().min(7, { message: 'Password must be at least 7 characters' }),
     })
     .superRefine(({ confirm, newPassword }, ctx) => {
@@ -53,28 +55,9 @@ const ResetPassword = (): JSX.Element => {
     e.preventDefault();
     setLoading(true);
 
-    if (firebaseAuth.currentUser?.email) {
-      const credential = EmailAuthProvider.credential(
-        firebaseAuth.currentUser.email,
-        values.oldPassword
-      );
+    //TODO: do
 
-      try {
-        await reauthenticateWithCredential(firebaseAuth.currentUser, credential);
-        await updatePassword(firebaseAuth.currentUser, values.newPassword);
-        toast({
-          description: 'Password successfully updated!',
-        });
-      } catch (err: any) {
-        toast({
-          variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
-          description: getMessageForErrorCode(err.code as string),
-        });
-      }
-
-      setLoading(false);
-    }
+    setLoading(false);
   };
 
   return (
