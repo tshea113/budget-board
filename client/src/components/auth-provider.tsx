@@ -22,28 +22,22 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
   });
 
   const request = async ({ ...options }): Promise<AxiosResponse> => {
-    if (accessToken) {
-      client.defaults.headers.common.Authorization = 'Bearer ' + accessToken;
-    }
-
     const onSuccess = (response: AxiosResponse): AxiosResponse => response;
     const onError = (error: AxiosError): any => {
-      if (error.code === 'ERR_BAD_REQUEST') {
-        const refreshToken = localStorage.getItem('refresh-token');
-        if (refreshToken) {
-          request({
-            url: '/refresh',
-            method: 'POST',
-            data: { refreshToken },
-          }).then((res: AxiosResponse) => {
-            localStorage.setItem('refresh-token', res.data.refreshToken);
-            setAccessToken(res.data.accessToken);
-            return;
-          });
-        }
-      }
       throw error;
     };
+
+    const refreshToken = localStorage.getItem('refresh-token');
+    if (refreshToken) {
+      const res: AxiosResponse = await client({
+        url: '/refresh',
+        method: 'POST',
+        data: { refreshToken },
+      });
+      localStorage.setItem('refresh-token', res.data.refreshToken);
+      setAccessToken(res.data.accessToken);
+      client.defaults.headers.common.Authorization = 'Bearer ' + res.data.accessToken;
+    }
 
     return await client(options).then(onSuccess).catch(onError);
   };
@@ -61,8 +55,8 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
           localStorage.setItem('refresh-token', res.data.refreshToken);
           setAccessToken(res.data.accessToken);
         })
-        .catch((error: AxiosError) => {
-          console.log(error);
+        .catch(() => {
+          // do nothing
         })
         .finally(() => {
           setLoading(false);

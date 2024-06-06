@@ -11,7 +11,8 @@ const AuthRoute = ({ children }: { children: any }): JSX.Element => {
   if (loading) {
     return <PageLoading />;
   }
-  if (accessToken != null) {
+
+  if (accessToken) {
     return children;
   }
   return <Navigate to="/" />;

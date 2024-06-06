@@ -1,7 +1,9 @@
 using BudgetBoard.Database.Data;
 using BudgetBoard.Database.Models;
+using BudgetBoard.Utils;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -47,9 +49,11 @@ builder.Services.AddIdentityApiEndpoints<ApplicationUser>(opt =>
     opt.Password.RequiredLength = 8;
     opt.User.RequireUniqueEmail = true;
     opt.Password.RequireNonAlphanumeric = false;
-    opt.SignIn.RequireConfirmedEmail = false;
+    opt.SignIn.RequireConfirmedEmail = true;
 })
     .AddEntityFrameworkStores<UserDataContext>();
+
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 builder.Services.AddOptions<BearerTokenOptions>(IdentityConstants.BearerScheme).Configure(options =>
 {

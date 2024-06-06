@@ -19,8 +19,14 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { translateAxiosError } from '@/lib/requests';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
+import { LoginCardState } from './welcome';
 
-const Login = (): JSX.Element => {
+interface LoginProps {
+  setLoginCardState: (loginCardState: LoginCardState) => void;
+  setEmail: (email: string) => void;
+}
+
+const Login = (props: LoginProps): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false);
   const { toast } = useToast();
 
@@ -65,7 +71,6 @@ const Login = (): JSX.Element => {
         localStorage.setItem('refresh-token', res.data.refreshToken);
       })
       .catch((error: AxiosError) => {
-        console.log(error);
         toast({
           variant: 'destructive',
           title: 'Error',
@@ -78,8 +83,29 @@ const Login = (): JSX.Element => {
   };
 
   const resetPassword = (email: string): void => {
-    // TODO: Implement
-    console.log(email);
+    if (email) {
+      request({
+        url: '/forgotPassword',
+        method: 'POST',
+        data: {
+          email,
+        },
+      }).then(() => {
+        props.setLoginCardState(LoginCardState.ResetPassword);
+        props.setEmail(email);
+        toast({
+          variant: 'default',
+          title: 'Success!',
+          description: 'An email has been set with a reset code.',
+        });
+      });
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Please enter your email to reset your password.',
+      });
+    }
   };
 
   return (
