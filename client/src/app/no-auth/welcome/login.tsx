@@ -59,7 +59,7 @@ const Login = (props: LoginProps): JSX.Element => {
     const password = values.password;
 
     request({
-      url: '/login',
+      url: '/api/login',
       method: 'POST',
       data: {
         email,
@@ -85,7 +85,7 @@ const Login = (props: LoginProps): JSX.Element => {
   const resetPassword = (email: string): void => {
     if (email) {
       request({
-        url: '/forgotPassword',
+        url: '/api/forgotPassword',
         method: 'POST',
         data: {
           email,

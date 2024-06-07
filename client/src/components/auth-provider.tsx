@@ -30,7 +30,7 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
     const refreshToken = localStorage.getItem('refresh-token');
     if (refreshToken) {
       const res: AxiosResponse = await client({
-        url: '/refresh',
+        url: '/api/refresh',
         method: 'POST',
         data: { refreshToken },
       });
@@ -47,7 +47,7 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
     const refreshToken = localStorage.getItem('refresh-token');
     if (refreshToken) {
       request({
-        url: '/refresh',
+        url: '/api/refresh',
         method: 'POST',
         data: { refreshToken },
       })

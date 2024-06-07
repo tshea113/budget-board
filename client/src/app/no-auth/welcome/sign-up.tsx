@@ -62,7 +62,7 @@ const Signup = (): JSX.Element => {
     const password = values.password;
 
     request({
-      url: '/register',
+      url: '/api/register',
       method: 'POST',
       data: {
         email,

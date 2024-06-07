@@ -61,7 +61,7 @@ const ResetPassword = (): JSX.Element => {
     setLoading(true);
 
     request({
-      url: '/manage/info',
+      url: '/api/manage/info',
       method: 'POST',
       data: {
         newPassword: values.newPassword,
