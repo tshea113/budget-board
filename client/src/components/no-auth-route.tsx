@@ -6,12 +6,13 @@ import { Navigate } from 'react-router-dom';
 import PageLoading from './page-loading';
 
 const NoAuthRoute = ({ children }: { children: any }): JSX.Element => {
-  const { currentUserState, loading } = useContext<any>(AuthContext);
+  const { accessToken, loading } = useContext<any>(AuthContext);
 
   if (loading) {
     return <PageLoading />;
   }
-  if (currentUserState == null) {
+
+  if (!accessToken) {
     return children;
   }
 

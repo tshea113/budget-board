@@ -2,11 +2,22 @@ import { Card } from '@/components/ui/card';
 import AccountsConfiguration from './accounts-configuration';
 import AccountItems from './account-items';
 import { Separator } from '@/components/ui/separator';
-import { useAccountsQuery } from '@/lib/query';
 import SkeletonAccountCard from './skeleton-account-card';
+import React from 'react';
+import { AuthContext } from '@/components/auth-provider';
+import { useQuery } from '@tanstack/react-query';
 
 const AccountCard = (): JSX.Element => {
-  const accountsQuery = useAccountsQuery();
+  const { request } = React.useContext<any>(AuthContext);
+  const accountsQuery = useQuery({
+    queryKey: ['accounts'],
+    queryFn: async () => {
+      return await request({
+        url: '/api/account',
+        method: 'GET',
+      });
+    },
+  });
 
   if (accountsQuery.isPending) {
     return <SkeletonAccountCard />;

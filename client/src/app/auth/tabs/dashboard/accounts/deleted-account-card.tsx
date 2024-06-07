@@ -1,26 +1,31 @@
+import { AuthContext } from '@/components/auth-provider';
 import ResponsiveButton from '@/components/responsive-button';
 import { Card } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
-import { restoreAccount } from '@/lib/accounts';
-import { translateAxiosError } from '@/lib/request';
+import { translateAxiosError } from '@/lib/requests';
 import { getDaysSinceDeleted } from '@/lib/utils';
 import { type Account } from '@/types/account';
 import { ResetIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
+import React from 'react';
 
 interface DeletedAccountCardProps {
   deletedAccount: Account;
 }
 
 const DeletedAccountCard = (props: DeletedAccountCardProps): JSX.Element => {
-  const { toast } = useToast();
+  const { request } = React.useContext<any>(AuthContext);
 
+  const { toast } = useToast();
   const queryClient = useQueryClient();
   const doRestoreAccount = useMutation({
-    mutationFn: async (id: string) => {
-      return await restoreAccount(id);
-    },
+    mutationFn: async (id: string) =>
+      await request({
+        url: '/api/account/restore',
+        method: 'POST',
+        params: { guid: id },
+      }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['accounts'] });
     },

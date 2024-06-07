@@ -21,7 +21,7 @@ public class GoalController : ControllerBase
     [Authorize]
     public async Task<IActionResult> Get()
     {
-        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
         if (user == null)
         {
@@ -37,7 +37,7 @@ public class GoalController : ControllerBase
     {
         try
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
             if (user == null)
             {
@@ -64,7 +64,7 @@ public class GoalController : ControllerBase
                 Amount = newGoal.Amount,
                 MonthlyContribution = newGoal.MonthlyContribution,
                 Accounts = accounts,
-                UserID = user.ID,
+                UserID = user.Id,
             };
 
             if (newGoal.InitialAmount == null)
@@ -95,7 +95,7 @@ public class GoalController : ControllerBase
     {
         try
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
             if (user == null)
             {
@@ -117,7 +117,7 @@ public class GoalController : ControllerBase
         }
     }
 
-    private async Task<User?> GetCurrentUser(string uid)
+    private async Task<ApplicationUser?> GetCurrentUser(string id)
     {
         try
         {
@@ -127,7 +127,7 @@ public class GoalController : ControllerBase
                 .ThenInclude((a) => a.Transactions)
                 .Include(u => u.Accounts)
                 .ToListAsync();
-            var user = users.Single(u => u.Uid == uid);
+            var user = users.Single(u => u.Id == new Guid(id));
 
             return user;
         }

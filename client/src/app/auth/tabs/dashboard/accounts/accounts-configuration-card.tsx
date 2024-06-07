@@ -3,20 +3,22 @@ import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { updateAccount } from '@/lib/accounts';
-import { translateAxiosError } from '@/lib/request';
+import { translateAxiosError } from '@/lib/requests';
 import { type Account } from '@/types/account';
 import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
 import React from 'react';
 import DeleteAccount from './delete-account';
+import { AuthContext } from '@/components/auth-provider';
 
 interface AccountsConfigurationCardProps {
   account: Account;
 }
 
-const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.Element => {
+const AccountsConfigurationCard = (
+  props: AccountsConfigurationCardProps
+): JSX.Element => {
   const [hideTransactionsValue, setHideTransactionsValue] = React.useState(
     props.account.hideTransactions ?? false
   );
@@ -26,12 +28,14 @@ const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.E
   const [accountNameValue, setAccountNameValue] = React.useState(props.account.name);
   const [valueDirty, setValueDirty] = React.useState(false);
 
+  const { request } = React.useContext<any>(AuthContext);
+
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
   const doUpdateAccount = useMutation({
     mutationFn: async () => {
-      const account: Account = {
+      const newAccount: Account = {
         id: props.account.id,
         syncID: props.account.syncID,
         name: accountNameValue,
@@ -45,7 +49,11 @@ const AccountsConfigurationCard = (props: AccountsConfigurationCardProps): JSX.E
         userID: props.account.userID,
       };
 
-      return await updateAccount(account);
+      return await request({
+        url: '/api/account',
+        method: 'PUT',
+        data: newAccount,
+      });
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['accounts'] });

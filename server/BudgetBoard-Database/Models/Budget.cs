@@ -6,5 +6,5 @@ public class Budget
     public required string Category { get; set; }
     public float Limit { get; set; } = 0.0f;
     public required Guid UserID { get; set; }
-    public User? User { get; set; } = null!;
+    public ApplicationUser? User { get; set; } = null!;
 }

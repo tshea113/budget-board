@@ -4,7 +4,6 @@ import { Progress } from '@/components/ui/progress';
 import { sumAccountsTotalBalance } from '@/lib/accounts';
 import {
   calculateCompleteDate,
-  deleteGoal,
   getGoalTargetAmount,
   getMonthlyContributionTotal,
   sumTransactionsForGoalForMonth,
@@ -15,6 +14,7 @@ import { TrashIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import GoalDetails from './goal-details';
+import { AuthContext } from '@/components/auth-provider';
 
 interface GoalCardProps {
   goal: Goal;
@@ -27,11 +27,16 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
     setIsSelected(!isSelected);
   };
 
+  const { request } = React.useContext<any>(AuthContext);
+
   const queryClient = useQueryClient();
   const doDeleteGoal = useMutation({
-    mutationFn: async (id: string) => {
-      return deleteGoal(id);
-    },
+    mutationFn: async (id: string) =>
+      await request({
+        url: '/api/goal',
+        method: 'DELETE',
+        params: { guid: id },
+      }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['goals'] });
     },

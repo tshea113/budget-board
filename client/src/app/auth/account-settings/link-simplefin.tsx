@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+import { AuthContext } from '@/components/auth-provider';
 import ResponsiveButton from '@/components/responsive-button';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { useUserQuery } from '@/lib/query';
-import { translateAxiosError } from '@/lib/request';
-import { setAccessToken } from '@/lib/user';
-import { useMutation } from '@tanstack/react-query';
+import { translateAxiosError } from '@/lib/requests';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -16,13 +15,25 @@ import { useForm } from 'react-hook-form';
 const LinkSimpleFin = (): JSX.Element => {
   const [formVisible, setFormVisible] = React.useState<boolean>(false);
 
-  const userQuery = useUserQuery();
+  const { request } = React.useContext<any>(AuthContext);
+
+  const userQuery = useQuery({
+    queryKey: ['user'],
+    queryFn: async () =>
+      await request({
+        url: '/api/user',
+        method: 'GET',
+      }),
+  });
 
   const { toast } = useToast();
   const doSetAccessToken = useMutation({
-    mutationFn: async (newToken: string) => {
-      return await setAccessToken(newToken);
-    },
+    mutationFn: async (newToken: string) =>
+      await request({
+        url: '/api/simplefin/updatetoken',
+        method: 'POST',
+        params: { newToken },
+      }),
     onError: (error: AxiosError) => {
       toast({
         variant: 'destructive',
@@ -79,7 +90,9 @@ const LinkSimpleFin = (): JSX.Element => {
                   </FormItem>
                 )}
               />
-              <ResponsiveButton loading={doSetAccessToken.isPending}>Save Changes</ResponsiveButton>
+              <ResponsiveButton loading={doSetAccessToken.isPending}>
+                Save Changes
+              </ResponsiveButton>
             </form>
           </Form>
         )}

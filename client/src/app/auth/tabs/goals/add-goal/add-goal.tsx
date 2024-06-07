@@ -9,7 +9,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { addGoal } from '@/lib/goals';
 import { GoalCondition, GoalType, NewGoal } from '@/types/goal';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -21,6 +20,7 @@ import DatePicker from '@/components/date-picker';
 import GoalApplyAccountSelect from './goal-apply-amount-select';
 import GoalTypeSelect from './goal-type-select';
 import { cn } from '@/lib/utils';
+import { AuthContext } from '@/components/auth-provider';
 
 const formSchema = z.object({
   name: z.string().min(1).max(50),
@@ -47,11 +47,16 @@ const AddGoal = (): JSX.Element => {
     },
   });
 
+  const { request } = React.useContext<any>(AuthContext);
+
   const queryClient = useQueryClient();
   const doAddGoal = useMutation({
-    mutationFn: async (newGoal: NewGoal) => {
-      return addGoal(newGoal);
-    },
+    mutationFn: async (newGoal: NewGoal) =>
+      await request({
+        url: '/api/goal',
+        method: 'POST',
+        data: newGoal,
+      }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['goals'] });
     },
@@ -65,7 +70,9 @@ const AddGoal = (): JSX.Element => {
     monthlyContribution: number;
   }
 
-  const submitGoal: SubmitHandler<FormValues> = (values: z.infer<typeof formSchema>): any => {
+  const submitGoal: SubmitHandler<FormValues> = (
+    values: z.infer<typeof formSchema>
+  ): any => {
     let newGoal: NewGoal = {
       name: values.name,
       accountIds: values.accountIds,

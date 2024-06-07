@@ -1,6 +1,7 @@
 ﻿using BudgetBoard.Database.Data;
 using BudgetBoard.Database.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,17 +12,19 @@ namespace BudgetBoard.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly UserDataContext _userDataContext;
+    private UserManager<ApplicationUser> _userManager;
 
-    public AccountController(UserDataContext context)
+    public AccountController(UserDataContext context, UserManager<ApplicationUser> userManager)
     {
         _userDataContext = context;
+        _userManager = userManager;
     }
 
     [HttpGet]
     [Authorize]
     public async Task<IActionResult> Get()
     {
-        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+        var user = await GetCurrentUser(_userManager.GetUserId(User) ?? string.Empty);
 
         if (user == null)
         {
@@ -35,7 +38,7 @@ public class AccountController : ControllerBase
     [Authorize]
     public async Task<IActionResult> Get(Guid guid)
     {
-        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
         if (user == null)
         {
@@ -53,7 +56,7 @@ public class AccountController : ControllerBase
     {
         try
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
             if (user == null)
             {
@@ -77,7 +80,7 @@ public class AccountController : ControllerBase
     {
         try
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
             if (user == null)
             {
@@ -115,7 +118,7 @@ public class AccountController : ControllerBase
     {
         try
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
             if (user == null)
             {
@@ -144,7 +147,7 @@ public class AccountController : ControllerBase
     {
         try
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
             if (user == null)
             {
@@ -174,7 +177,7 @@ public class AccountController : ControllerBase
         }
     }
 
-    private async Task<User?> GetCurrentUser(string uid)
+    private async Task<ApplicationUser?> GetCurrentUser(string id)
     {
         try
         {
@@ -182,7 +185,7 @@ public class AccountController : ControllerBase
                 .Include(u => u.Accounts)
                 .ThenInclude(a => a.Transactions)
                 .ToListAsync();
-            var user = users.Single(u => u.Uid == uid);
+            var user = users.Single(u => u.Id == new Guid(id));
 
             return user;
         }

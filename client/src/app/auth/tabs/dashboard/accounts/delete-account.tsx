@@ -1,10 +1,10 @@
+import { AuthContext } from '@/components/auth-provider';
 import ResponsiveButton from '@/components/responsive-button';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useToast } from '@/components/ui/use-toast';
-import { deleteAccount } from '@/lib/accounts';
-import { translateAxiosError } from '@/lib/request';
+import { translateAxiosError } from '@/lib/requests';
 import { TrashIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
@@ -17,13 +17,17 @@ interface DeleteAccountProps {
 const DeleteAccount = (props: DeleteAccountProps): JSX.Element => {
   const [deleteTransactionsValue, setDeleteTransactionsValue] = React.useState(false);
 
-  const { toast } = useToast();
+  const { request } = React.useContext<any>(AuthContext);
 
+  const { toast } = useToast();
   const queryClient = useQueryClient();
   const doDeleteAccount = useMutation({
-    mutationFn: async (deleteTransactions: boolean) => {
-      return await deleteAccount(props.accountId, deleteTransactions);
-    },
+    mutationFn: async (deleteTransactions: boolean) =>
+      await request({
+        url: '/api/account',
+        method: 'DELETE',
+        params: { guid: props.accountId, deleteTransactions },
+      }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['accounts'] });
     },

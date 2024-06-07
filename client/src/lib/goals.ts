@@ -1,29 +1,7 @@
-import { AxiosResponse } from 'axios';
-import request from './request';
-import { Goal, NewGoal } from '@/types/goal';
+import { Goal } from '@/types/goal';
 import { getTransactionsForMonth } from './transactions';
 import { getMonthsUntilDate } from './utils';
 import { sumAccountsTotalBalance } from './accounts';
-
-export const getGoals = async (): Promise<AxiosResponse> =>
-  await request({
-    url: '/api/goal',
-    method: 'GET',
-  });
-
-export const addGoal = async (newGoal: NewGoal): Promise<AxiosResponse> =>
-  await request({
-    url: '/api/goal',
-    method: 'POST',
-    data: newGoal,
-  });
-
-export const deleteGoal = async (guid: string): Promise<AxiosResponse> =>
-  await request({
-    url: '/api/goal',
-    method: 'DELETE',
-    params: { guid },
-  });
 
 export const getGoalTargetAmount = (amount: number, initialAmount: number): number => {
   if (initialAmount < 0) {

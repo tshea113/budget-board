@@ -1,20 +1,34 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { firebaseAuth, sendVerificationEmail } from '@/lib/firebase';
 import { AlertCircle } from 'lucide-react';
+import React from 'react';
+import { AuthContext } from './auth-provider';
+import { useQuery } from '@tanstack/react-query';
 
 const EmailVerified = (): JSX.Element | null => {
   const resendVerification = (): void => {
-    void sendVerificationEmail();
+    // TODO: Send verification email
   };
 
-  if (!firebaseAuth.currentUser?.emailVerified) {
+  const { request } = React.useContext<any>(AuthContext);
+
+  const userInfoQuery = useQuery({
+    queryKey: ['info'],
+    queryFn: async () =>
+      await request({
+        url: '/manage/info',
+        method: 'GET',
+      }),
+  });
+
+  if (!(userInfoQuery.data?.data.isEmailConfirmed ?? true) && !userInfoQuery.isPending) {
     return (
       <Alert variant="destructive" className="mb-2 p-1">
         <AlertDescription className="flex items-center">
           <AlertCircle className="mr-1 h-4 w-4" />
-          Before you can get started, you will need to check your email for a validation link.
+          Before you can get started, you will need to check your email for a validation
+          link.
           <Button onClick={resendVerification} className="mx-2 my-0" variant="link">
             Resend Verification
           </Button>

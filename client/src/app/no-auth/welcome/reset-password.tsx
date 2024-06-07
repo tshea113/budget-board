@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { AuthContext } from '@/components/auth-provider';
 import ResponsiveButton from '@/components/responsive-button';
-import { Card } from '@/components/ui/card';
 import {
   Form,
   FormControl,
@@ -18,16 +17,20 @@ import { AxiosError } from 'axios';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { LoginCardState } from './welcome';
 
-const ResetPassword = (): JSX.Element => {
+interface ResetPasswordProps {
+  setLoginCardState: (loginCardState: LoginCardState) => void;
+  email: string;
+}
+
+const ResetPassword = (props: ResetPasswordProps): JSX.Element => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const { toast } = useToast();
 
   const formSchema = z
     .object({
-      oldPassword: z
-        .string()
-        .min(7, { message: 'Password must be at least 7 characters' }),
+      resetCode: z.string(),
       newPassword: z
         .string()
         .min(7, { message: 'Password must be at least 7 characters' }),
@@ -45,7 +48,7 @@ const ResetPassword = (): JSX.Element => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      oldPassword: '',
+      resetCode: '',
       newPassword: '',
       confirm: '',
     },
@@ -61,18 +64,20 @@ const ResetPassword = (): JSX.Element => {
     setLoading(true);
 
     request({
-      url: '/manage/info',
+      url: '/resetPassword',
       method: 'POST',
       data: {
+        email: props.email,
+        resetCode: values.resetCode,
         newPassword: values.newPassword,
-        oldPassword: values.oldPassword,
       },
     })
       .then(() => {
+        props.setLoginCardState(LoginCardState.Login);
         toast({
           variant: 'default',
           title: 'Success!',
-          description: 'Password successfully updated.',
+          description: 'Password successfully updated. Please log in.',
         });
       })
       .catch((error: AxiosError) => {
@@ -88,59 +93,57 @@ const ResetPassword = (): JSX.Element => {
   };
 
   return (
-    <Card className="mt-5 p-6">
-      <Form {...form}>
-        <h1 className="text-xl font-bold">Reset Password</h1>
-        <form
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          onSubmit={form.handleSubmit(async (data, event) => {
-            await submitPasswordUpdate(data, event);
-          })}
-          className="space-y-4"
-        >
-          <FormField
-            control={form.control}
-            name="oldPassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Old Password</FormLabel>
-                <FormControl>
-                  <Input {...field} type="password" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="newPassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>New Password</FormLabel>
-                <FormControl>
-                  <Input {...field} type="password" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="confirm"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
-                <FormControl>
-                  <Input {...field} type="password" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <ResponsiveButton loading={loading}>Submit</ResponsiveButton>
-        </form>
-      </Form>
-    </Card>
+    <Form {...form}>
+      <h1 className="text-xl font-bold">Reset Password</h1>
+      <form
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        onSubmit={form.handleSubmit(async (data, event) => {
+          await submitPasswordUpdate(data, event);
+        })}
+        className="space-y-4"
+      >
+        <FormField
+          control={form.control}
+          name="resetCode"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Reset Code</FormLabel>
+              <FormControl>
+                <Input {...field} type="text" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="newPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>New Password</FormLabel>
+              <FormControl>
+                <Input {...field} type="password" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="confirm"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirm Password</FormLabel>
+              <FormControl>
+                <Input {...field} type="password" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <ResponsiveButton loading={loading}>Submit</ResponsiveButton>
+      </form>
+    </Form>
   );
 };
 

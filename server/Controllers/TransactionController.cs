@@ -22,7 +22,7 @@ public class TransactionController : ControllerBase
     public async Task<IActionResult> Get(bool getHidden = false)
     {
 
-        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
         if (user == null)
         {
@@ -43,7 +43,7 @@ public class TransactionController : ControllerBase
     {
         try
         {
-            User? user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+            ApplicationUser? user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
             if (user == null)
             {
@@ -72,7 +72,7 @@ public class TransactionController : ControllerBase
     {
         try
         {
-            User? user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+            ApplicationUser? user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
             if (user == null)
             {
@@ -102,7 +102,7 @@ public class TransactionController : ControllerBase
     {
         try
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
             if (user == null)
             {
@@ -134,7 +134,7 @@ public class TransactionController : ControllerBase
     {
         try
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
             if (user == null)
             {
@@ -163,7 +163,7 @@ public class TransactionController : ControllerBase
     [Authorize]
     public async Task<IActionResult> Edit([FromBody] Transaction newTransaction)
     {
-        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
         if (user == null)
         {
@@ -194,7 +194,7 @@ public class TransactionController : ControllerBase
         return Ok();
     }
 
-    private async Task<User?> GetCurrentUser(string uid)
+    private async Task<ApplicationUser?> GetCurrentUser(string id)
     {
         try
         {
@@ -202,7 +202,7 @@ public class TransactionController : ControllerBase
                 .Include(u => u.Accounts)
                 .ThenInclude(a => a.Transactions)
                 .ToListAsync();
-            var user = users.Single(u => u.Uid == uid);
+            var user = users.Single(u => u.Id == new Guid(id));
 
             return user;
         }

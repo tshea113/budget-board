@@ -8,21 +8,29 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { firebaseAuth } from '@/lib/firebase';
-import { useQueryClient } from '@tanstack/react-query';
-import { signOut } from 'firebase/auth';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import AccountSettings from './account-settings/account-settings';
 import { useToast } from '@/components/ui/use-toast';
 import { type AxiosError } from 'axios';
-import { translateAxiosError } from '@/lib/request';
+import { translateAxiosError } from '@/lib/requests';
+import React from 'react';
+import { AuthContext } from '@/components/auth-provider';
 
 const Header = (): JSX.Element => {
+  const { request, setAccessToken } = React.useContext<any>(AuthContext);
+
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const Logout = (): void => {
-    signOut(firebaseAuth)
+    request({
+      url: '/logout',
+      method: 'POST',
+      data: {},
+    })
       .then(() => {
         queryClient.removeQueries();
+        setAccessToken('');
+        localStorage.removeItem('refresh-token');
       })
       .catch((error: AxiosError) => {
         toast({
@@ -32,6 +40,15 @@ const Header = (): JSX.Element => {
         });
       });
   };
+
+  const userInfoQuery = useQuery({
+    queryKey: ['info'],
+    queryFn: async () =>
+      await request({
+        url: '/manage/info',
+        method: 'GET',
+      }),
+  });
 
   return (
     <div className="grid grid-cols-2">
@@ -47,7 +64,7 @@ const Header = (): JSX.Element => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>
-              {firebaseAuth.currentUser?.email ?? 'not available'}
+              {userInfoQuery.data?.data.email ?? 'not available'}
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <SheetItem triggerChildren={<p>Account</p>} side={'right'}>

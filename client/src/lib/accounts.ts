@@ -1,46 +1,7 @@
-import type { AxiosResponse } from 'axios';
-import request from './request';
 import { type Account } from '@/types/account';
-
-export const getAccounts = async (): Promise<AxiosResponse> =>
-  await request({
-    url: '/api/account',
-    method: 'GET',
-  });
-
-export const getAccount = async (guid: string): Promise<AxiosResponse> =>
-  await request({
-    url: '/api/account',
-    method: 'GET',
-    params: { guid },
-  });
 
 export const filterVisibleAccounts = (accounts: Account[]): Account[] =>
   accounts.filter((a: Account) => !(a.hideAccount || a.deleted !== null));
-
-export const updateAccount = async (newAccount: Account): Promise<AxiosResponse> =>
-  await request({
-    url: '/api/account',
-    method: 'PUT',
-    data: newAccount,
-  });
-
-export const deleteAccount = async (
-  guid: string,
-  deleteTransactions: boolean
-): Promise<AxiosResponse> =>
-  await request({
-    url: '/api/account',
-    method: 'DELETE',
-    params: { guid, deleteTransactions },
-  });
-
-export const restoreAccount = async (guid: string): Promise<AxiosResponse> =>
-  await request({
-    url: '/api/account/restore',
-    method: 'POST',
-    params: { guid },
-  });
 
 export const getAccountsById = (accountIds: string[], accounts: Account[]): Account[] => {
   let selectedAccounts: Account[] = [];

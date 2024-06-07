@@ -8,11 +8,12 @@ import {
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { getAccountsById } from '@/lib/accounts';
-import { useAccountsQuery } from '@/lib/query';
 import { cn } from '@/lib/utils';
 import { Account } from '@/types/account';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import React from 'react';
+import { AuthContext } from './auth-provider';
+import { useQuery } from '@tanstack/react-query';
 
 interface AccountInputProps {
   initialValues?: string[];
@@ -20,7 +21,16 @@ interface AccountInputProps {
 }
 
 const AccountInput = (props: AccountInputProps): JSX.Element => {
-  const accountsQuery = useAccountsQuery();
+  const { request } = React.useContext<any>(AuthContext);
+
+  const accountsQuery = useQuery({
+    queryKey: ['accounts'],
+    queryFn: async () =>
+      await request({
+        url: '/api/account',
+        method: 'GET',
+      }),
+  });
 
   const [isOpen, setIsOpen] = React.useState(false);
   const [selectedValues, setSelectedValues] = React.useState<Account[]>(

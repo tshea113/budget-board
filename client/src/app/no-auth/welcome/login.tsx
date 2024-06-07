@@ -13,15 +13,24 @@ import { Input } from '@/components/ui/input';
 import * as z from 'zod';
 import { useState } from 'react';
 import ResponsiveButton from '@/components/responsive-button';
-import { firebaseAuth, getMessageForErrorCode, loginUser } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
-import { sendPasswordResetEmail } from 'firebase/auth';
-import { getUser } from '@/lib/user';
 import { useToast } from '@/components/ui/use-toast';
+import { AxiosError, AxiosResponse } from 'axios';
+import { translateAxiosError } from '@/lib/requests';
+import React from 'react';
+import { AuthContext } from '@/components/auth-provider';
+import { LoginCardState } from './welcome';
 
-const Login = (): JSX.Element => {
+interface LoginProps {
+  setLoginCardState: (loginCardState: LoginCardState) => void;
+  setEmail: (email: string) => void;
+}
+
+const Login = (props: LoginProps): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false);
   const { toast } = useToast();
+
+  const { request, setAccessToken } = React.useContext<any>(AuthContext);
 
   const formSchema = z.object({
     email: z
@@ -39,39 +48,64 @@ const Login = (): JSX.Element => {
     },
   });
 
-  const submitUserLogin = async (values: z.infer<typeof formSchema>, e: any): Promise<void> => {
+  const submitUserLogin = async (
+    values: z.infer<typeof formSchema>,
+    e: any
+  ): Promise<void> => {
     e.preventDefault();
     setLoading(true);
 
-    const error: string = await loginUser(values.email, values.password);
-    if (error.length !== 0) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: getMessageForErrorCode(error),
+    const email = values.email;
+    const password = values.password;
+
+    request({
+      url: '/login',
+      method: 'POST',
+      data: {
+        email,
+        password,
+      },
+    })
+      .then((res: AxiosResponse) => {
+        setAccessToken(res.data.accessToken);
+        localStorage.setItem('refresh-token', res.data.refreshToken);
+      })
+      .catch((error: AxiosError) => {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: translateAxiosError(error),
+        });
+      })
+      .finally(() => {
+        setLoading(false);
       });
-    } else {
-      // Need to make sure a user exists before proceeding
-      await getUser();
-    }
-    setLoading(false);
   };
 
   const resetPassword = (email: string): void => {
-    sendPasswordResetEmail(firebaseAuth, email)
-      .then(() => {
+    if (email) {
+      request({
+        url: '/forgotPassword',
+        method: 'POST',
+        data: {
+          email,
+        },
+      }).then(() => {
+        props.setLoginCardState(LoginCardState.ResetPassword);
+        props.setEmail(email);
         toast({
-          description:
-            'A reset email has been sent to the provided address, if an associated account exists.',
-        });
-      })
-      .catch((error: any) => {
-        toast({
-          variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
-          description: getMessageForErrorCode(error.code as string),
+          variant: 'default',
+          title: 'Success!',
+          description: 'An email has been set with a reset code.',
         });
       });
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Please enter your email to reset your password.',
+      });
+    }
   };
 
   return (

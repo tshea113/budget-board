@@ -21,15 +21,14 @@ import {
 import DataTablePagination from '@/components/data-table-pagination';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type Transaction } from '@/types/transaction';
-import { translateAxiosError } from '@/lib/request';
+import { translateAxiosError } from '@/lib/requests';
 import {
-  deleteTransaction,
-  editTransaction,
   filterInvisibleTransactions,
   filterVisibleTransactions,
 } from '@/lib/transactions';
 import { type AxiosError } from 'axios';
 import { useToast } from '@/components/ui/use-toast';
+import { AuthContext } from '@/components/auth-provider';
 
 declare module '@tanstack/react-table' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -58,12 +57,18 @@ const TransactionsDataTable = (props: DataTableProps): JSX.Element => {
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
   const [isPendingRow, setIsPendingRow] = React.useState('');
 
+  const { request } = React.useContext<any>(AuthContext);
+
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const doEditTransaction = useMutation({
     mutationFn: async (newTransaction: Transaction) => {
       setIsPendingRow(table.getSelectedRowModel().rows.at(0)?.id ?? '');
-      return await editTransaction(newTransaction);
+      return await request({
+        url: '/api/transaction',
+        method: 'PUT',
+        data: newTransaction,
+      });
     },
     onSuccess: async () => {
       setIsPendingRow('');
@@ -80,7 +85,11 @@ const TransactionsDataTable = (props: DataTableProps): JSX.Element => {
   const doDeleteTransaction = useMutation({
     mutationFn: async (id: string) => {
       setIsPendingRow(table.getSelectedRowModel().rows.at(0)?.id ?? '');
-      return await deleteTransaction(id);
+      return await request({
+        url: '/api/transaction',
+        method: 'DELETE',
+        params: { guid: id },
+      });
     },
     onSuccess: async () => {
       setIsPendingRow('');

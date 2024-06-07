@@ -7,5 +7,5 @@ public class Category
     public required string Value { get; set; }
     public required string Parent { get; set; }
     public required Guid UserID { get; set; }
-    public User? User { get; set; } = null!;
+    public ApplicationUser? User { get; set; } = null!;
 }

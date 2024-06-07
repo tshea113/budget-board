@@ -27,7 +27,7 @@ public class SimpleFinController : Controller
     [Authorize]
     public async Task<IActionResult> Sync()
     {
-        var user = GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+        var user = GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
         if (user == null)
         {
             return NotFound();
@@ -66,7 +66,7 @@ public class SimpleFinController : Controller
     [Authorize]
     public async Task<IActionResult> UpdateToken(string newToken)
     {
-        var user = GetCurrentUser(User.Claims.Single(c => c.Type == "id").Value);
+        var user = GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
         if (user == null)
         {
@@ -97,7 +97,7 @@ public class SimpleFinController : Controller
 
     }
 
-    private User? GetCurrentUser(string uid)
+    private ApplicationUser? GetCurrentUser(string id)
     {
         try
         {
@@ -105,7 +105,7 @@ public class SimpleFinController : Controller
                 .Include(user => user.Accounts)
                 .ThenInclude(a => a.Transactions)
                 .ToList();
-            var user = users.Single(u => u.Uid == uid);
+            var user = users.Single(u => u.Id == new Guid(id));
 
             return user;
         }
