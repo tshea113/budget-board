@@ -11,6 +11,7 @@ const NoAuthRoute = ({ children }: { children: any }): JSX.Element => {
   if (loading) {
     return <PageLoading />;
   }
+
   if (!accessToken) {
     return children;
   }
