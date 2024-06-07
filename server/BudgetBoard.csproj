@@ -38,4 +38,8 @@
     <ProjectReference Include="BudgetBoard-Database\BudgetBoard.Database.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Overrides\" />
+  </ItemGroup>
+
 </Project>

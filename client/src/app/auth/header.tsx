@@ -23,7 +23,7 @@ const Header = (): JSX.Element => {
   const { toast } = useToast();
   const Logout = (): void => {
     request({
-      url: '/logout',
+      url: '/api/logout',
       method: 'POST',
       data: {},
     })
@@ -45,7 +45,7 @@ const Header = (): JSX.Element => {
     queryKey: ['info'],
     queryFn: async () =>
       await request({
-        url: '/manage/info',
+        url: '/api/manage/info',
         method: 'GET',
       }),
   });

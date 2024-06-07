@@ -64,7 +64,7 @@ const ResetPassword = (props: ResetPasswordProps): JSX.Element => {
     setLoading(true);
 
     request({
-      url: '/resetPassword',
+      url: '/api/resetPassword',
       method: 'POST',
       data: {
         email: props.email,

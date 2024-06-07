@@ -81,7 +81,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // Create routes for the identity endpoints
-app.MapIdentityApi<ApplicationUser>();
+app.MyMapIdentityApi<ApplicationUser>();
 
 // Activate the CORS policy
 app.UseCors(MyAllowSpecificOrigins);
@@ -93,7 +93,7 @@ app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapPost("/logout", async (SignInManager<ApplicationUser> signInManager,
+app.MapPost("/api/logout", async (SignInManager<ApplicationUser> signInManager,
     [FromBody] object empty) =>
 {
     if (empty != null)

@@ -11,7 +11,7 @@ const WelcomeCard = (): JSX.Element => {
     queryKey: ['info'],
     queryFn: async () =>
       await request({
-        url: '/manage/info',
+        url: '/api/manage/info',
         method: 'GET',
       }),
   });
