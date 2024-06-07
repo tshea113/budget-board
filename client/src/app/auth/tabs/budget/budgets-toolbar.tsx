@@ -87,7 +87,7 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
           <ResponsiveButton
             variant="default"
             loading={doCopyBudget.isPending}
-            onClick={() => onCopyBudgets}
+            onClick={onCopyBudgets}
           >
             Copy last month
           </ResponsiveButton>
