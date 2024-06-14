@@ -26,19 +26,26 @@ const BudgetTotalCard = (props: BudgetTotalCardProps): JSX.Element => {
       <BudgetTotal
         label={'Income'}
         amount={Math.abs(
-          getTransactionTotal(props.transactionData.filter((t) => t.category === 'income'))
+          getTransactionTotal(
+            props.transactionData.filter((t) => t.category === 'income')
+          )
         )}
         total={getBudgetTotal(getBudgetsForGroup(props.budgetData, BudgetGroup.Income))}
       />
       <BudgetTotal
         label={'Spending'}
         amount={Math.abs(
-          getTransactionTotal(props.transactionData.filter((t) => t.category !== 'income'))
+          getTransactionTotal(
+            props.transactionData.filter((t) => t.category !== 'income')
+          )
         )}
         total={getBudgetTotal(getBudgetsForGroup(props.budgetData, BudgetGroup.Spending))}
       />
       <Separator className="my-2" />
-      <BudgetTotal label={'Remaining'} amount={getTransactionTotal(props.transactionData)} />
+      <BudgetTotal
+        label={'Remaining'}
+        amount={getTransactionTotal(props.transactionData)}
+      />
     </Card>
   );
 };

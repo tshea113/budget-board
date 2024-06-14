@@ -36,8 +36,8 @@ const Budgets = (): JSX.Element => {
   });
 
   return (
-    <div className="flex w-full max-w-screen-2xl flex-row justify-center space-x-2">
-      <div className="w-3/4 flex-grow space-y-2">
+    <div className="flex w-full max-w-screen-2xl flex-col justify-center gap-2 lg:grid lg:grid-flow-col lg:grid-cols-12">
+      <div className="space-y-2 lg:col-span-9">
         <BudgetsToolbar
           budgets={budgetsQuery.data?.data ?? []}
           date={date}
@@ -83,9 +83,7 @@ const Budgets = (): JSX.Element => {
           isPending={budgetsQuery.isPending || transactionsQuery.isPending}
         />
       </div>
-      <div className="flex h-96 w-1/4 flex-col justify-center">
-        {/* TODO: Figure out a better way to horizontally position this */}
-        <div />
+      <div className="h-96 lg:col-span-3">
         <BudgetTotalCard
           budgetData={getBudgetsForMonth(
             (budgetsQuery.data?.data as Budget[]) ?? [],
