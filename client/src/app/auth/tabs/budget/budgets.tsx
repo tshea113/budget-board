@@ -1,8 +1,6 @@
 import React from 'react';
 import { BudgetGroup, getBudgetsForMonth, getBudgetsForGroup } from '@/lib/budgets';
-import BudgetCards from './budget-cards';
 import { getTransactionsForMonth } from '@/lib/transactions';
-import BudgetHeader from './budget-header';
 import { type Budget } from '@/types/budget';
 import BudgetTotalCard from './budget-total-card';
 import { initMonth } from '@/lib/utils';
@@ -11,6 +9,7 @@ import Unbudgets from './unbudgets';
 import BudgetsToolbar from './budgets-toolbar';
 import { AuthContext } from '@/components/auth-provider';
 import { useQuery } from '@tanstack/react-query';
+import BudgetCardsGroup from './budget-cards-group/budget-cards-group';
 
 const Budgets = (): JSX.Element => {
   const [date, setDate] = React.useState<Date>(initMonth());
@@ -21,8 +20,9 @@ const Budgets = (): JSX.Element => {
     queryKey: ['budgets', { date }],
     queryFn: async () =>
       await request({
-        url: '/api/budget' + '?date=' + date.toISOString(),
+        url: '/api/budget',
         method: 'GET',
+        params: { date },
       }),
   });
 
@@ -45,9 +45,8 @@ const Budgets = (): JSX.Element => {
           setDate={setDate}
         />
         <div className="space-y-10">
-          <div className="items-center align-middle">
-            <BudgetHeader>Income</BudgetHeader>
-            <BudgetCards
+          <BudgetCardsGroup
+            header={'Income'}
               budgetData={getBudgetsForGroup(
                 budgetsQuery.data?.data as Budget[],
                 BudgetGroup.Income
@@ -58,10 +57,8 @@ const Budgets = (): JSX.Element => {
               )}
               isPending={budgetsQuery.isPending || transactionsQuery.isPending}
             />
-          </div>
-          <div className="items-center align-middle">
-            <BudgetHeader>Spending</BudgetHeader>
-            <BudgetCards
+          <BudgetCardsGroup
+            header={'Spending'}
               budgetData={getBudgetsForGroup(
                 budgetsQuery.data?.data as Budget[],
                 BudgetGroup.Spending
@@ -72,7 +69,6 @@ const Budgets = (): JSX.Element => {
               )}
               isPending={budgetsQuery.isPending || transactionsQuery.isPending}
             />
-          </div>
         </div>
         <Unbudgets
           transactions={getTransactionsForMonth(

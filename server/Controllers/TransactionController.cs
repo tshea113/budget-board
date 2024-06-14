@@ -19,7 +19,7 @@ public class TransactionController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> Get(bool getHidden = false)
+    public async Task<IActionResult> Get(bool getHidden = false, DateTime? date = null)
     {
 
         var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
@@ -32,6 +32,11 @@ public class TransactionController : ControllerBase
         var transactions = user.Accounts
             .SelectMany(t => t.Transactions)
             .Where(t => getHidden || !(t.Account?.HideTransactions ?? false));
+
+        if (date != null)
+        {
+            transactions = transactions.Where(t => t.Date.Month == date?.Month && t.Date.Year == date?.Year);
+        }
 
         return Ok(transactions);
 

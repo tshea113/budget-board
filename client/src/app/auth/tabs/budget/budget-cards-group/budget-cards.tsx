@@ -1,8 +1,8 @@
 import { type Budget } from '@/types/budget';
-import BudgetCard from './budget-card';
 import { type Transaction } from '@/types/transaction';
 import { getIsCategory } from '@/lib/transactions';
 import { Skeleton } from '@/components/ui/skeleton';
+import BudgetCard from './budget-card';
 
 interface BudgetCardsProps {
   budgetData: Budget[] | null;

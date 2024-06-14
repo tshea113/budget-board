@@ -29,7 +29,7 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
         data: newBudgets,
       }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['budgets'] });
+      await queryClient.invalidateQueries({ queryKey: ['budgets', props.date] });
     },
     onError: (error: AxiosError) => {
       toast({
@@ -47,8 +47,9 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
     lastMonth.setMonth(lastMonth.getMonth() - 1);
 
     request({
-      url: '/api/budget' + lastMonth,
+      url: '/api/budget',
       method: 'GET',
+      params: { date: lastMonth },
     })
       .then((res: AxiosResponse<any, any>) => {
         const budgets: Budget[] = res.data;
