@@ -39,12 +39,12 @@ const DeletedAccountCard = (props: DeletedAccountCardProps): JSX.Element => {
   });
 
   return (
-    <Card key={props.deletedAccount.id} className="flex flex-row items-center p-2">
-      <span className="w-1/5">{props.deletedAccount.name}</span>
-      <span className="w-1/5">
+    <Card key={props.deletedAccount.id} className="grid grid-cols-3 items-center p-2">
+      <span>{props.deletedAccount.name}</span>
+      <span className="justify-self-center">
         {getDaysSinceDeleted(props.deletedAccount.deleted) + ' days since deleted'}
       </span>
-      <div className="w-1/5">
+      <div className="justify-self-center">
         <ResponsiveButton
           loading={doRestoreAccount.isPending}
           className="h-8 w-8 p-1"

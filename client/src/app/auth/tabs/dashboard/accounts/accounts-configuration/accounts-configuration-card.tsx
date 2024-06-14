@@ -11,6 +11,7 @@ import { type AxiosError } from 'axios';
 import React from 'react';
 import DeleteAccount from './delete-account';
 import { AuthContext } from '@/components/auth-provider';
+import { Label } from '@/components/ui/label';
 
 interface AccountsConfigurationCardProps {
   account: Account;
@@ -70,44 +71,42 @@ const AccountsConfigurationCard = (
   });
 
   return (
-    <Card className="m-2 p-3">
-      <div className="flex h-6 flex-row items-center">
-        <div className="flex w-1/5">
-          <Input
-            value={accountNameValue}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setAccountNameValue(e.target.value);
-              setValueDirty(true);
-            }}
-          />
-        </div>
-        <div className="flex w-1/5 justify-center">
-          <Checkbox
-            id="hidden"
-            checked={hideAccountValue}
-            onCheckedChange={() => {
-              setHideAccountValue(!hideAccountValue);
-              setValueDirty(true);
-            }}
-          />
-        </div>
-        <div className="flex w-1/5 justify-center">
-          <Checkbox
-            id="hidden"
-            checked={hideTransactionsValue}
-            onCheckedChange={() => {
-              setHideTransactionsValue(!hideTransactionsValue);
-              setValueDirty(true);
-            }}
-          />
-        </div>
-        <div className="flex w-1/5 justify-center">
-          <DeleteAccount accountId={props.account.id} />
-        </div>
-        {valueDirty && (
-          <div className="flex w-1/5 flex-row items-center space-x-2">
+    <Card className="grid grid-cols-6 grid-rows-2 items-center justify-items-center space-x-2 p-1 md:grid-cols-4 md:grid-rows-1">
+      <Input
+        className="col-span-6 md:col-span-1"
+        value={accountNameValue}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          setAccountNameValue(e.target.value);
+          setValueDirty(true);
+        }}
+      />
+      <div className="col-span-2 flex flex-row space-x-2 md:col-span-1">
+        <Checkbox
+          id="hidden"
+          checked={hideAccountValue}
+          onCheckedChange={() => {
+            setHideAccountValue(!hideAccountValue);
+            setValueDirty(true);
+          }}
+        />
+        <Label className="md:hidden">Hide Account?</Label>
+      </div>
+      <div className="col-span-2 flex flex-row space-x-2 md:col-span-1">
+        <Checkbox
+          id="hidden"
+          checked={hideTransactionsValue}
+          onCheckedChange={() => {
+            setHideTransactionsValue(!hideTransactionsValue);
+            setValueDirty(true);
+          }}
+        />
+        <Label className="md:hidden">Hide Transactions?</Label>
+      </div>
+      <div className="col-span-2 md:col-span-1">
+        {valueDirty ? (
+          <div className="flex flex-row items-center space-x-2">
             <ResponsiveButton
-              className="m-0 h-7 w-10 p-0"
+              className="m-0 h-7 w-7 p-0"
               onClick={() => {
                 doUpdateAccount.mutate();
               }}
@@ -116,7 +115,7 @@ const AccountsConfigurationCard = (
               <CheckIcon className="h-4 w-4" />
             </ResponsiveButton>
             <ResponsiveButton
-              className="m-0 h-7 w-10 p-0"
+              className="m-0 h-7 w-7 p-0"
               onClick={() => {
                 setAccountNameValue(props.account.name);
                 setHideTransactionsValue(props.account.hideTransactions);
@@ -128,6 +127,8 @@ const AccountsConfigurationCard = (
               <Cross2Icon className="h-4 w-4" />
             </ResponsiveButton>
           </div>
+        ) : (
+          <DeleteAccount accountId={props.account.id} />
         )}
       </div>
     </Card>
