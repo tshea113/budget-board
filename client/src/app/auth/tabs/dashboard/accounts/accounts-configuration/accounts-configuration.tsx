@@ -22,7 +22,7 @@ const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element =
         <div className="flex h-full w-full flex-row justify-center">
           <div className="w-full space-y-3 2xl:max-w-screen-2xl">
             <ScrollArea className="h-full">
-              <SheetHeader>Accounts Configuration</SheetHeader>
+              <SheetHeader className="pb-2">Accounts Configuration</SheetHeader>
               <AccountsConfigurationCards accounts={props.accounts} />
               <DeletedAccountsCards
                 deletedAccounts={props.accounts.filter(

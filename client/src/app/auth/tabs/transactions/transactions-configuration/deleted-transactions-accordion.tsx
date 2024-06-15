@@ -11,10 +11,17 @@ interface DeletedTransactionsAccordionProps {
   deletedTransactions: Transaction[];
 }
 
-const DeletedTransactionsAccordion = (props: DeletedTransactionsAccordionProps): JSX.Element => {
+const DeletedTransactionsAccordion = (
+  props: DeletedTransactionsAccordionProps
+): JSX.Element => {
   return (
     <div className="mx-2 px-3">
-      <Accordion type="single" collapsible className="w-full" defaultValue="deleted-account">
+      <Accordion
+        type="single"
+        collapsible
+        className="w-full"
+        defaultValue="deleted-account"
+      >
         <AccordionItem value="deleted-account">
           <AccordionTrigger>
             <span>Deleted Transactions</span>

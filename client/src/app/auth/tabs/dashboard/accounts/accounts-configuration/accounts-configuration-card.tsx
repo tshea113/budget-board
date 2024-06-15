@@ -71,7 +71,7 @@ const AccountsConfigurationCard = (
   });
 
   return (
-    <Card className="grid grid-cols-6 grid-rows-2 items-center justify-items-center space-x-2 p-1 md:grid-cols-4 md:grid-rows-1">
+    <Card className="grid grid-cols-6 grid-rows-2 items-center justify-items-center space-x-2 p-2 md:grid-cols-4 md:grid-rows-1">
       <Input
         className="col-span-6 md:col-span-1"
         value={accountNameValue}

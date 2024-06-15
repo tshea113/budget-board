@@ -6,7 +6,7 @@ import EditableDateCell from './cells/editable-date-cell';
 import EditableCategoryCell from './cells/editable-category-cell';
 import EditableMerchantCell from './cells/editable-text-cell';
 import EditableCurrencyCell from './cells/editable-currency-cell';
-import TransactionsConfiguration from './transactions-configuration';
+import TransactionsConfiguration from './transactions-configuration/transactions-configuration';
 
 const columns: Array<ColumnDef<Transaction>> = [
   {

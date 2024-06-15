@@ -67,7 +67,7 @@ const Header = (): JSX.Element => {
               {userInfoQuery.data?.data.email ?? 'not available'}
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <SheetItem triggerChildren={<p>Account</p>} side={'right'}>
+            <SheetItem triggerChildren={<p>Account</p>} side="right">
               <AccountSettings />
             </SheetItem>
             <DropdownMenuItem onClick={Logout}>Logout</DropdownMenuItem>
