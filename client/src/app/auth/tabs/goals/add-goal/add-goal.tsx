@@ -113,8 +113,10 @@ const AddGoal = (): JSX.Element => {
             <>
               <div
                 className={cn(
-                  'grid items-center justify-center gap-4',
-                  goalTypeValue === GoalType.SaveGoal ? 'grid-cols-3' : 'grid-cols-2'
+                  'grid grid-cols-1 items-start justify-center gap-4',
+                  goalTypeValue === GoalType.SaveGoal
+                    ? 'grid-rows-3 sm:grid-cols-3 sm:grid-rows-1'
+                    : 'grid-rows-2 sm:grid-cols-2 sm:grid-rows-1'
                 )}
               >
                 <div className="space-y-2">

@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card';
-import AccountsConfiguration from './accounts-configuration';
+import AccountsConfiguration from './accounts-configuration/accounts-configuration';
 import AccountItems from './account-items';
 import { Separator } from '@/components/ui/separator';
 import SkeletonAccountCard from './skeleton-account-card';

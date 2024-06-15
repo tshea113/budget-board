@@ -22,7 +22,10 @@ const DeletedAccountsCards = (props: DeletedAccountsCardsProps): JSX.Element => 
           <AccordionContent className="space-y-2">
             <span>Deleted accounts will not sync transactions</span>
             {props.deletedAccounts.map((deletedAccount) => (
-              <DeletedAccountCard key={deletedAccount.id} deletedAccount={deletedAccount} />
+              <DeletedAccountCard
+                key={deletedAccount.id}
+                deletedAccount={deletedAccount}
+              />
             ))}
           </AccordionContent>
         </AccordionItem>
