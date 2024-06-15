@@ -51,11 +51,11 @@ const Header = (): JSX.Element => {
   });
 
   return (
-    <div className="grid grid-cols-2">
-      <h2 className="scroll-m-20 justify-self-start p-2 text-3xl font-semibold tracking-tight first:mt-0">
+    <div className="grid grid-cols-10">
+      <h2 className="col-span-8 justify-self-start p-2 text-3xl font-semibold tracking-tight first:mt-0">
         Budget Board
       </h2>
-      <div className="justify-self-end p-2">
+      <div className="col-span-2 justify-self-end p-2">
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Avatar>

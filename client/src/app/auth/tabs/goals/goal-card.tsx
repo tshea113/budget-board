@@ -50,8 +50,8 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
       )}
       onClick={ToggleIsSelected}
     >
-      <div className="grid w-full grid-rows-3 px-3 py-2">
-        <div className="grid grid-cols-2">
+      <div className="flex w-full flex-col px-3 py-2">
+        <div className="grid grid-cols-1 grid-rows-2 sm:grid-cols-2 sm:grid-rows-1">
           <span className="justify-self-start text-xl font-semibold tracking-tight">
             {props.goal.name}
           </span>
@@ -78,8 +78,8 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
             className="mt-3"
           />
         </div>
-        <div className="grid grid-cols-2 pt-1">
-          <div className="flex flex-row space-x-2">
+        <div className="grid grid-cols-1 grid-rows-2 pt-1 sm:grid-cols-2 sm:grid-rows-1">
+          <div className="col-span-2 flex flex-row space-x-2 sm:col-span-1">
             <div className="text-base">
               <span>{'Projected: '}</span>
               <span className="font-semibold">{calculateCompleteDate(props.goal)}</span>
