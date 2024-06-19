@@ -18,19 +18,15 @@ const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element =
           <GearIcon className="h-4 w-4" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="top" className="h-full">
-        <div className="flex h-full w-full flex-row justify-center">
-          <div className="w-full space-y-3 2xl:max-w-screen-2xl">
-            <ScrollArea className="h-full">
-              <SheetHeader className="pb-2">Accounts Configuration</SheetHeader>
-              <AccountsConfigurationCards accounts={props.accounts} />
-              <DeletedAccountsCards
-                deletedAccounts={props.accounts.filter(
-                  (a: Account) => a.deleted !== null
-                )}
-              />
-            </ScrollArea>
-          </div>
+      <SheetContent side="top" className="flex h-full w-full flex-row justify-center">
+        <div className="w-full space-y-3 2xl:max-w-screen-2xl">
+          <ScrollArea className="h-full pr-3">
+            <SheetHeader className="pb-2">Accounts Configuration</SheetHeader>
+            <AccountsConfigurationCards accounts={props.accounts} />
+            <DeletedAccountsCards
+              deletedAccounts={props.accounts.filter((a: Account) => a.deleted !== null)}
+            />
+          </ScrollArea>
         </div>
       </SheetContent>
     </Sheet>

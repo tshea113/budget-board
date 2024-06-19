@@ -21,6 +21,7 @@ import GoalApplyAccountSelect from './goal-apply-amount-select';
 import GoalTypeSelect from './goal-type-select';
 import { cn } from '@/lib/utils';
 import { AuthContext } from '@/components/auth-provider';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const formSchema = z.object({
   name: z.string().min(1).max(50),
@@ -99,14 +100,13 @@ const AddGoal = (): JSX.Element => {
   };
 
   return (
-    <div className="w-full max-w-screen-2xl p-1">
+    <ScrollArea className="h-full pr-3">
       <Form {...form}>
         <form
           onSubmit={(event) => {
             event.preventDefault();
             void form.handleSubmit(submitGoal)(event);
           }}
-          className="space-y-8"
         >
           <GoalTypeSelect defaultValue={goalTypeValue} onValueChange={setgoalTypeValue} />
           {goalTypeValue.length > 0 && (
@@ -119,7 +119,7 @@ const AddGoal = (): JSX.Element => {
                     : 'grid-rows-2 sm:grid-cols-2 sm:grid-rows-1'
                 )}
               >
-                <div className="space-y-2">
+                <div className="m-2 space-y-2">
                   <FormField
                     control={form.control}
                     name="name"
@@ -151,7 +151,7 @@ const AddGoal = (): JSX.Element => {
                   />
                 </div>
                 {goalTypeValue === GoalType.SaveGoal && (
-                  <div className="space-y-4">
+                  <div className="m-2 space-y-4">
                     <FormField
                       control={form.control}
                       name="amount"
@@ -171,7 +171,7 @@ const AddGoal = (): JSX.Element => {
                     />
                   </div>
                 )}
-                <div className="space-y-4">
+                <div className="m-2 space-y-4">
                   <GoalConditionSelect
                     defaultValue={goalConditionValue}
                     onValueChange={setGoalConditionValue}
@@ -213,7 +213,7 @@ const AddGoal = (): JSX.Element => {
           )}
         </form>
       </Form>
-    </div>
+    </ScrollArea>
   );
 };
 

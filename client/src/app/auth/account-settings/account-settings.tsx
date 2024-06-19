@@ -7,7 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 const AccountSettings = (): JSX.Element => {
   return (
     <div className="h-full space-y-4">
-      <ScrollArea className="h-full">
+      <ScrollArea className="h-full pr-3">
         <SheetHeader>
           <SheetTitle>Account</SheetTitle>
           <SheetDescription>Make changes to your account here.</SheetDescription>
