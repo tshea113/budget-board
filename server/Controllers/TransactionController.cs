@@ -206,6 +206,7 @@ public class TransactionController : ControllerBase
             var users = await _userDataContext.Users
                 .Include(u => u.Accounts)
                 .ThenInclude(a => a.Transactions)
+                .AsSplitQuery()
                 .ToListAsync();
             var user = users.Single(u => u.Id == new Guid(id));
 

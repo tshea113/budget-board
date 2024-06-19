@@ -104,6 +104,7 @@ public class SimpleFinController : Controller
             var users = _userDataContext.Users
                 .Include(user => user.Accounts)
                 .ThenInclude(a => a.Transactions)
+                .AsSplitQuery()
                 .ToList();
             var user = users.Single(u => u.Id == new Guid(id));
 
