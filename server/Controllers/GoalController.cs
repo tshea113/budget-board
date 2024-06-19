@@ -126,6 +126,7 @@ public class GoalController : ControllerBase
                 .ThenInclude((g) => g.Accounts)
                 .ThenInclude((a) => a.Transactions)
                 .Include(u => u.Accounts)
+                .AsSplitQuery()
                 .ToListAsync();
             var user = users.Single(u => u.Id == new Guid(id));
 
