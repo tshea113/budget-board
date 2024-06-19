@@ -14,7 +14,7 @@ interface GoalTypeSelectProps {
 
 const GoalTypeSelect = (props: GoalTypeSelectProps): JSX.Element => {
   return (
-    <div className="mt-2 flex flex-row space-x-2">
+    <div className="m-2 flex flex-row space-x-2">
       <Select defaultValue={props.defaultValue} onValueChange={props.onValueChange}>
         <SelectTrigger className="w-full">
           <SelectValue placeholder="I want to set a goal to..." />

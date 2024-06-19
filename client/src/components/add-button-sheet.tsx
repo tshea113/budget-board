@@ -15,8 +15,8 @@ const AddButtonSheet = ({ children }: AddButtonProps): JSX.Element => {
           <PlusIcon></PlusIcon>
         </Button>
       </SheetTrigger>
-      <SheetContent side="top" className="flex flex-col justify-center">
-        <div className="flex w-full flex-row justify-center">{children}</div>
+      <SheetContent side="top" className="flex h-full w-full flex-row justify-center">
+        <div className="w-full 2xl:max-w-screen-2xl">{children}</div>
       </SheetContent>
     </Sheet>
   );
