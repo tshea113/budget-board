@@ -42,7 +42,7 @@ const DeletedTransactionCard = (props: DeletedTransactionCardProps): JSX.Element
   return (
     <Card
       key={props.deletedTransaction.id}
-      className="grid grid-cols-2 grid-rows-2 place-items-center p-2 md:grid-cols-3 md:grid-rows-1"
+      className="grid grid-cols-2 grid-rows-2 place-items-center bg-card-select p-2 md:grid-cols-3 md:grid-rows-1"
     >
       <span className="col-span-2 justify-self-start md:col-span-1">
         {props.deletedTransaction.merchantName}
