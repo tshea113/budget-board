@@ -33,7 +33,7 @@ public class CategoryController : ControllerBase
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> Add([FromBody] Category category)
+    public async Task<IActionResult> Add([FromBody] NewCategory newCategory)
     {
         try
         {
@@ -43,6 +43,14 @@ public class CategoryController : ControllerBase
             {
                 return NotFound();
             }
+
+            var category = new Category
+            {
+                Label = newCategory.Label,
+                Value = newCategory.Value,
+                Parent = newCategory.Parent,
+                UserID = user.Id,
+            };
 
             user.Categories.Add(category);
             _userDataContext.SaveChanges();

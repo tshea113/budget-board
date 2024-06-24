@@ -9,3 +9,10 @@ public class Category
     public required Guid UserID { get; set; }
     public ApplicationUser? User { get; set; } = null!;
 }
+
+public class NewCategory
+{
+    public required string Label { get; set; }
+    public required string Value { get; set; }
+    public required string Parent { get; set; }
+}

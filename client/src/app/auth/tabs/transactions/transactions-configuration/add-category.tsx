@@ -41,7 +41,12 @@ const AddCategory = (props: AddCategoryProps): JSX.Element => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: async (category: Category) => console.log(category),
+    mutationFn: async (category: Category) =>
+      await request({
+        url: '/api/category',
+        method: 'POST',
+        data: category,
+      }),
     onSuccess: async () => {
       console.log('bingus');
     },
@@ -102,7 +107,11 @@ const AddCategory = (props: AddCategoryProps): JSX.Element => {
                 <FormItem className="flex max-w-[400px] grow flex-col">
                   <FormLabel>Parent</FormLabel>
                   <FormControl>
-                    <Input type="text" {...field} />
+                    <CategoryInput
+                      initialValue={field.value}
+                      onSelectChange={field.onChange}
+                      parentsOnly={true}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
