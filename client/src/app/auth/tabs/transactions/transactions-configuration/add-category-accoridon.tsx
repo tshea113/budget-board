@@ -1,4 +1,10 @@
-import { Accordion, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+import AddCategory from './add-category';
 
 const AddCategoryAccordion = (): JSX.Element => {
   return (
@@ -8,6 +14,9 @@ const AddCategoryAccordion = (): JSX.Element => {
           <AccordionTrigger>
             <span>Add Category</span>
           </AccordionTrigger>
+          <AccordionContent>
+            <AddCategory />
+          </AccordionContent>
         </AccordionItem>
       </Accordion>
     </div>
