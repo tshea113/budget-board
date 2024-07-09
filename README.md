@@ -32,6 +32,12 @@ Feel free to leave feedback!
 
 ## Setup
 
+### EF Core Migration
+
+TODO: Need to apply the ef migration
+
+### Docker Compose
+
 You will need to configure the docker-compose.override as follows:
 
 ```
@@ -58,6 +64,13 @@ services:
 | CLIENT_URL              | This is the domain/ip you will use to access your deployed project. If hosting locally this will be `http://localhost`. |
 | ports                   | The default values here are fine unless you have a reason to change them.                                               |
 | VITE_API_URL            | See CLIENT_URL. These will be the same unless you have a reason to change.                                              |
+
+### Nginx
+
+There are two example nginx.conf files depending on how you would like to deploy.
+
+- The http example is ready to deploy as is (just need to remove the .example extension). This will deploy the app at `http://localhost`.
+- The https example has placeholders for your domain name and for your ssl cert and key names (assuming they are stored at the given location). You will need to fill those in and remove the .example extension.
 
 ## Deploy
 
