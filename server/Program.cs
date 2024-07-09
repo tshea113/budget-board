@@ -72,6 +72,8 @@ builder.Services.AddHttpClient();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var autoUpdateDb = builder.Configuration.GetValue<bool>("AUTO_UPDATE_DB");
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -105,5 +107,20 @@ app.MapPost("/api/logout", async (SignInManager<ApplicationUser> signInManager,
 }).RequireAuthorization(); // So that only authorized users can use this endpoint
 
 app.MapControllers();
+
+// Automatically apply any Db changes
+if (autoUpdateDb)
+{
+    System.Diagnostics.Debug.WriteLine("Updating Db with latest migration...");
+    using (var serviceScope = app.Services.CreateScope())
+    {
+        var dbContext = serviceScope.ServiceProvider.GetRequiredService<UserDataContext>();
+        dbContext.Database.Migrate();
+    }
+}
+else
+{
+    System.Diagnostics.Debug.WriteLine("Automatic Db updates not enabled.");
+}
 
 app.Run();
