@@ -2,8 +2,15 @@ services:
   backend:
     environment:
       - Logging__LogLevel__Default=Information
-      - CONNECTION_STRING_USERS={DbServerString}
+      - POSTGRES_HOST=host
+      - POSTGRES_DATABASE=database
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
       - CLIENT_URL=https://example.com
+      - AUTO_UPDATE_DB=false
+      - EMAIL_SENDER=test@gmail.com,
+      - EMAIL_SENDER_PASSWORD=yourPassword,
+      - EMAIL_SMTP_HOST=smtp.gmail.com,
     ports:
       - 8080:8080
   client:
