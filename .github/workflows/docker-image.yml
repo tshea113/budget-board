@@ -4,9 +4,7 @@ on:
   pull_request:
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -18,6 +16,13 @@ jobs:
             image: money-minder-server
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file ${{ matrix.dockerfile }} --tag ${{ matrix.image }}:$(date +%s)
+      - uses: actions/checkout@v3
+
+      - name: Rename file
+        run: mv client/nginx(http).conf.example client/nginx.conf
+
+      - name: Delete file
+        run: rm -f client/nginx(http).conf.example
+
+      - name: Build the Docker image
+        run: docker build . --file ${{ matrix.dockerfile }} --tag ${{ matrix.image }}:$(date +%s)
