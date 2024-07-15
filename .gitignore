@@ -24,7 +24,6 @@ $RECYCLE.BIN/
 .env*
 *.override.yml
 **/node_modules/
-nginx.conf
 
 # Yarn
 client/.yarn/install-state.gz
