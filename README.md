@@ -93,9 +93,10 @@ If you do want to use a gmail account there are many articles online about how t
 
 ### Nginx
 
-The default configuration deploys the app on http port 80.
+There are two example nginx.conf files depending on how you would like to deploy.
 
-If you would like to configure the app for https, you can reference the example file. The https example has placeholders for your domain name and for your ssl cert and key names (assuming they are stored at the given location). You will need to fill those in and remove the .example extension.
+- The http example is ready to deploy as is (just need to remove the .example extension). This will deploy the app at `http://localhost`.
+- The https example has placeholders for your domain name and for your ssl cert and key names (assuming they are stored at the given location). You will need to fill those in and remove the .example extension.
 
 ## Deploy
 
