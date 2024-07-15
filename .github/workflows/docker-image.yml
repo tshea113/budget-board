@@ -22,7 +22,7 @@ jobs:
         run: mv "client/nginx(http).conf.example" client/nginx.conf
 
       - name: Delete file
-        run: rm -f client/nginx(http).conf.example
+        run: rm -f "client/nginx(http).conf.example"
 
       - name: Build the Docker image
         run: docker build . --file ${{ matrix.dockerfile }} --tag ${{ matrix.image }}:$(date +%s)
