@@ -13,10 +13,10 @@ server {
 server {
   listen 443 ssl;
 
-  ssl_certificate /etc/ssl/certs/budgetboard.net.crt;
-  ssl_certificate_key /etc/ssl/private/budgetboard.net.key;
+  ssl_certificate /etc/ssl/certs/{YourCertName}.crt;
+  ssl_certificate_key /etc/ssl/private/{YourKeyName}.key;
 
-  server_name budgetboard.net;
+  server_name {YourDomainName};
   access_log /var/log/nginx/nginx.vhost.access.log;
   error_log /var/log/nginx/nginx.vhost.error.log;
   location / {
