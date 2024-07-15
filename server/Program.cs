@@ -33,14 +33,36 @@ builder.Services.AddCors(options =>
 });
 
 // Setup the Db
-var dbConfig = builder.Configuration.GetValue<string>("CONNECTION_STRING_USERS");
-if (string.IsNullOrEmpty(dbConfig))
+var postgresHost = builder.Configuration.GetValue<string>("POSTGRES_HOST");
+if (string.IsNullOrEmpty(postgresHost))
 {
-    throw new ArgumentNullException(nameof(dbConfig));
+    throw new ArgumentNullException(nameof(postgresHost));
 }
 
+var postgresDatabase = builder.Configuration.GetValue<string>("POSTGRES_DATABASE");
+if (string.IsNullOrEmpty(postgresDatabase))
+{
+    throw new ArgumentNullException(nameof(postgresDatabase));
+}
+
+var postgresUser = builder.Configuration.GetValue<string>("POSTGRES_USER");
+if (string.IsNullOrEmpty(postgresUser))
+{
+    throw new ArgumentNullException(nameof(postgresUser));
+}
+
+var postgresPassword = builder.Configuration.GetValue<string>("POSTGRES_PASSWORD");
+
+var connectionString = new string("Host={HOST};Port=5432;Database={DATABASE};Username={USER};Password={PASSWORD}")
+    .Replace("{HOST}", postgresHost)
+    .Replace("{DATABASE}", postgresDatabase)
+    .Replace("{USER}", postgresUser)
+    .Replace("{PASSWORD}", postgresPassword);
+
+System.Diagnostics.Debug.WriteLine("Connection string: " + connectionString);
+
 builder.Services.AddDbContext<UserDataContext>(
-    o => o.UseNpgsql(dbConfig));
+    o => o.UseNpgsql(connectionString));
 
 builder.Services.AddAuthorization();
 
@@ -71,6 +93,8 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var autoUpdateDb = builder.Configuration.GetValue<bool>("AUTO_UPDATE_DB");
 
 var app = builder.Build();
 
@@ -105,5 +129,20 @@ app.MapPost("/api/logout", async (SignInManager<ApplicationUser> signInManager,
 }).RequireAuthorization(); // So that only authorized users can use this endpoint
 
 app.MapControllers();
+
+// Automatically apply any Db changes
+if (autoUpdateDb)
+{
+    System.Diagnostics.Debug.WriteLine("Updating Db with latest migration...");
+    using (var serviceScope = app.Services.CreateScope())
+    {
+        var dbContext = serviceScope.ServiceProvider.GetRequiredService<UserDataContext>();
+        dbContext.Database.Migrate();
+    }
+}
+else
+{
+    System.Diagnostics.Debug.WriteLine("Automatic Db updates not enabled.");
+}
 
 app.Run();
