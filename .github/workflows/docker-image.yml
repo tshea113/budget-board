@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Rename file
-        run: mv client/nginx(http).conf.example client/nginx.conf
+        run: mv "client/nginx(http).conf.example" client/nginx.conf
 
       - name: Delete file
         run: rm -f client/nginx(http).conf.example
