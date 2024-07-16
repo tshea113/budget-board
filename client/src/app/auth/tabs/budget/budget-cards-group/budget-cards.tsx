@@ -1,6 +1,6 @@
 import { type Budget } from '@/types/budget';
 import { type Transaction } from '@/types/transaction';
-import { getIsCategory } from '@/lib/transactions';
+import { getIsCategory } from '@/lib/category';
 import { Skeleton } from '@/components/ui/skeleton';
 import BudgetCard from './budget-card';
 

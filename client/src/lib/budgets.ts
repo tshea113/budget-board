@@ -1,5 +1,5 @@
 import { type Budget } from '@/types/budget';
-import { getParentCategory } from './transactions';
+import { getParentCategory } from './category';
 
 export enum BudgetGroup {
   Income,

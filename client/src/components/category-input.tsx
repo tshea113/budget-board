@@ -8,7 +8,7 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { getCategoriesAsTree } from '@/lib/transactions';
+import { getCategoriesAsTree } from '@/lib/category';
 import { cn } from '@/lib/utils';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import React from 'react';

@@ -1,6 +1,6 @@
 import { type Transaction } from '@/types/transaction';
 import React from 'react';
-import { getCategoryLabel, getIsCategory } from '@/lib/transactions';
+import { getCategoryLabel, getIsCategory } from '@/lib/category';
 import CategoryInput from '@/components/category-input';
 import { categories } from '@/types/category';
 

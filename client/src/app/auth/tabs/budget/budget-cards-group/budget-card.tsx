@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { getSignForBudget } from '@/lib/budgets';
-import { getCategoryLabel } from '@/lib/transactions';
+import { getCategoryLabel } from '@/lib/category';
 import { cn, getProgress } from '@/lib/utils';
 import { type Budget } from '@/types/budget';
 import { defaultGuid } from '@/types/user';
