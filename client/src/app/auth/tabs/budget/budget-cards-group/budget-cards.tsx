@@ -1,8 +1,11 @@
 import { type Budget } from '@/types/budget';
 import { type Transaction } from '@/types/transaction';
-import { getIsCategory } from '@/lib/category';
+import { getCategories, getIsCategory } from '@/lib/category';
 import { Skeleton } from '@/components/ui/skeleton';
 import BudgetCard from './budget-card';
+import React from 'react';
+import { AuthContext } from '@/components/auth-provider';
+import { useQuery } from '@tanstack/react-query';
 
 interface BudgetCardsProps {
   budgetData: Budget[] | null;
@@ -11,12 +14,26 @@ interface BudgetCardsProps {
 }
 
 const BudgetCards = (props: BudgetCardsProps): JSX.Element => {
+  const { request } = React.useContext<any>(AuthContext);
+  const categoriesQuery = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () =>
+      await request({
+        url: '/api/category',
+        method: 'GET',
+      }),
+  });
+
+  const allCategories = getCategories(categoriesQuery.data?.data ?? []);
+
   const sumTransactionAmountsByCategory = (
     transactionData: Transaction[],
     category: string
   ): number => {
     const data = transactionData.filter((t: Transaction) => {
-      return (getIsCategory(category) ? t.category : t.subcategory) === category;
+      return (
+        (getIsCategory(allCategories, category) ? t.category : t.subcategory) === category
+      );
     });
 
     return data.reduce((n, { amount }) => n + amount, 0);

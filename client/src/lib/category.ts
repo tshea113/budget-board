@@ -1,15 +1,18 @@
-import { categories, Category } from '@/types/category';
+import { categories as constantCategories, Category } from '@/types/category';
 
-export const getCategories = (): Category[] => {
-  return categories;
+export const getCategories = (customCategories: Category[]): Category[] => {
+  return constantCategories.concat(customCategories);
 };
 
-export const getCategoryLabel = (categoryValue: string): string | null => {
+export const getCategoryLabel = (
+  categories: Category[],
+  categoryValue: string
+): string | null => {
   const foundCategory = categories.find((c) => c.value === categoryValue);
   return foundCategory?.label ?? null;
 };
 
-export const getCategoriesAsTree = (): Category[] => {
+export const getCategoriesAsTree = (categories: Category[]): Category[] => {
   const map: Record<string, number> = {};
   let node: Category;
   const roots: Category[] = [];
@@ -31,7 +34,10 @@ export const getCategoriesAsTree = (): Category[] => {
   return roots;
 };
 
-export const getParentCategory = (categoryValue: string): string => {
+export const getParentCategory = (
+  categories: Category[],
+  categoryValue: string
+): string => {
   const category = categories.find((c) => c.value === categoryValue);
 
   if (category == null) return '';
@@ -39,6 +45,6 @@ export const getParentCategory = (categoryValue: string): string => {
   return category.parent === '' ? category.value : category.parent;
 };
 
-export const getIsCategory = (categoryValue: string): boolean => {
+export const getIsCategory = (categories: Category[], categoryValue: string): boolean => {
   return categories.find((c) => c.value === categoryValue)?.parent === '';
 };

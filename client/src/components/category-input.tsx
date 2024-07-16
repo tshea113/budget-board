@@ -8,12 +8,14 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { getCategoriesAsTree } from '@/lib/category';
+import { getCategories, getCategoriesAsTree } from '@/lib/category';
 import { cn } from '@/lib/utils';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import React from 'react';
 import CommandSubcategory from './command-subcategory';
-import { Category, categories } from '@/types/category';
+import { Category } from '@/types/category';
+import { useQuery } from '@tanstack/react-query';
+import { AuthContext } from './auth-provider';
 
 interface CategoryInputProps {
   initialValue: string;
@@ -25,7 +27,18 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(props.initialValue);
 
-  const categoriesTree = getCategoriesAsTree();
+  const { request } = React.useContext<any>(AuthContext);
+  const categoriesQuery = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () =>
+      await request({
+        url: '/api/category',
+        method: 'GET',
+      }),
+  });
+
+  const allCategories = getCategories(categoriesQuery.data?.data ?? []);
+  const categoriesTree = getCategoriesAsTree(allCategories);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -40,7 +53,7 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
           }}
         >
           {value.length > 0
-            ? categories.find((category) => category.value === value)?.label
+            ? allCategories.find((category) => category.value === value)?.label
             : 'Select category...'}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>

@@ -10,11 +10,23 @@ import BudgetsToolbar from './budgets-toolbar';
 import { AuthContext } from '@/components/auth-provider';
 import { useQuery } from '@tanstack/react-query';
 import BudgetCardsGroup from './budget-cards-group/budget-cards-group';
+import { getCategories } from '@/lib/category';
 
 const Budgets = (): JSX.Element => {
   const [date, setDate] = React.useState<Date>(initMonth());
 
   const { request } = React.useContext<any>(AuthContext);
+
+  const categoriesQuery = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () =>
+      await request({
+        url: '/api/category',
+        method: 'GET',
+      }),
+  });
+
+  const allCategories = getCategories(categoriesQuery.data?.data ?? []);
 
   const budgetsQuery = useQuery({
     queryKey: ['budgets', { date }],
@@ -47,28 +59,30 @@ const Budgets = (): JSX.Element => {
         <div className="space-y-10">
           <BudgetCardsGroup
             header={'Income'}
-              budgetData={getBudgetsForGroup(
-                budgetsQuery.data?.data as Budget[],
-                BudgetGroup.Income
-              )}
-              transactionsData={getTransactionsForMonth(
-                (transactionsQuery.data?.data as Transaction[]) ?? [],
-                date
-              )}
-              isPending={budgetsQuery.isPending || transactionsQuery.isPending}
-            />
+            budgetData={getBudgetsForGroup(
+              allCategories,
+              budgetsQuery.data?.data as Budget[],
+              BudgetGroup.Income
+            )}
+            transactionsData={getTransactionsForMonth(
+              (transactionsQuery.data?.data as Transaction[]) ?? [],
+              date
+            )}
+            isPending={budgetsQuery.isPending || transactionsQuery.isPending}
+          />
           <BudgetCardsGroup
             header={'Spending'}
-              budgetData={getBudgetsForGroup(
-                budgetsQuery.data?.data as Budget[],
-                BudgetGroup.Spending
-              )}
-              transactionsData={getTransactionsForMonth(
-                (transactionsQuery.data?.data as Transaction[]) ?? [],
-                date
-              )}
-              isPending={budgetsQuery.isPending || transactionsQuery.isPending}
-            />
+            budgetData={getBudgetsForGroup(
+              allCategories,
+              budgetsQuery.data?.data as Budget[],
+              BudgetGroup.Spending
+            )}
+            transactionsData={getTransactionsForMonth(
+              (transactionsQuery.data?.data as Transaction[]) ?? [],
+              date
+            )}
+            isPending={budgetsQuery.isPending || transactionsQuery.isPending}
+          />
         </div>
         <Unbudgets
           transactions={getTransactionsForMonth(

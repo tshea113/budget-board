@@ -4,12 +4,12 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { getSignForBudget } from '@/lib/budgets';
-import { getCategoryLabel } from '@/lib/category';
+import { getCategories, getCategoryLabel } from '@/lib/category';
 import { cn, getProgress } from '@/lib/utils';
 import { type Budget } from '@/types/budget';
 import { defaultGuid } from '@/types/user';
 import { CheckIcon } from '@radix-ui/react-icons';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 
 interface BudgetCardProps {
@@ -22,6 +22,17 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
   const [limit, setLimit] = React.useState(props.budget.limit);
 
   const { request } = React.useContext<any>(AuthContext);
+
+  const categoriesQuery = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () =>
+      await request({
+        url: '/api/category',
+        method: 'GET',
+      }),
+  });
+
+  const allCategories = getCategories(categoriesQuery.data?.data ?? []);
 
   const queryClient = useQueryClient();
   const doEditBudget = useMutation({
@@ -80,7 +91,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
       <div className="grid h-10 grid-cols-2 items-center">
         <div className="flex flex-row items-center space-x-2">
           <div className="scroll-m-20 justify-self-start text-xl font-semibold tracking-tight">
-            {getCategoryLabel(props.budget.category) ?? ''}
+            {getCategoryLabel(allCategories, props.budget.category) ?? ''}
           </div>
           {isEdit && (
             <ResponsiveButton
@@ -96,7 +107,12 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
           )}
         </div>
         <div className="grid h-8 grid-cols-3 justify-items-center text-lg font-semibold">
-          <div>${(props.amount * getSignForBudget(props.budget.category)).toFixed()}</div>
+          <div>
+            $
+            {(
+              props.amount * getSignForBudget(allCategories, props.budget.category)
+            ).toFixed()}
+          </div>
           <div>
             {!isEdit ? (
               <div>${limit}</div>
@@ -131,7 +147,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
       <Progress
         className="h-2 w-full"
         value={getProgress(
-          props.amount * getSignForBudget(props.budget.category),
+          props.amount * getSignForBudget(allCategories, props.budget.category),
           props.budget.limit
         )}
         max={100}

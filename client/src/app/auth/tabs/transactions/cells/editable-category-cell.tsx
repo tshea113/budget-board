@@ -1,8 +1,9 @@
 import { type Transaction } from '@/types/transaction';
 import React from 'react';
-import { getCategoryLabel, getIsCategory } from '@/lib/category';
+import { getCategories, getCategoryLabel, getIsCategory } from '@/lib/category';
 import CategoryInput from '@/components/category-input';
-import { categories } from '@/types/category';
+import { AuthContext } from '@/components/auth-provider';
+import { useQuery } from '@tanstack/react-query';
 
 interface EditableCategoryCellProps {
   category: string;
@@ -15,6 +16,19 @@ interface EditableCategoryCellProps {
 const EditableCategoryCell = (props: EditableCategoryCellProps): JSX.Element => {
   const [categoryValue, setCategoryValue] = React.useState(props.category);
 
+  const { request } = React.useContext<any>(AuthContext);
+
+  const categoriesQuery = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () =>
+      await request({
+        url: '/api/category',
+        method: 'GET',
+      }),
+  });
+
+  const allCategories = getCategories(categoriesQuery.data?.data ?? []);
+
   React.useEffect(() => {
     if (props.isError) {
       setCategoryValue(props.category);
@@ -22,14 +36,14 @@ const EditableCategoryCell = (props: EditableCategoryCellProps): JSX.Element => 
   }, [props.isError]);
 
   const onCategoryPick = (newValue: string): void => {
-    const category = categories.find((c) => c.value === newValue);
+    const category = allCategories.find((c) => c.value === newValue);
 
     if (category != null) {
       setCategoryValue(category.value);
 
       let categoryValue = '';
       let subcategoryValue = '';
-      if (getIsCategory(category.value)) {
+      if (getIsCategory(allCategories, category.value)) {
         categoryValue = category.value;
       } else {
         categoryValue = category.parent;
@@ -53,7 +67,7 @@ const EditableCategoryCell = (props: EditableCategoryCellProps): JSX.Element => 
       {props.isSelected ? (
         <CategoryInput initialValue={categoryValue} onSelectChange={onCategoryPick} />
       ) : (
-        <span>{getCategoryLabel(props.category) ?? ''}</span>
+        <span>{getCategoryLabel(allCategories, props.category) ?? ''}</span>
       )}
     </div>
   );

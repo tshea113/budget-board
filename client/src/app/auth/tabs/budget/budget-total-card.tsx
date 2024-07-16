@@ -4,6 +4,10 @@ import BudgetTotal from './budget-total';
 import { type Budget } from '@/types/budget';
 import { BudgetGroup, getBudgetsForGroup } from '@/lib/budgets';
 import { type Transaction } from '@/types/transaction';
+import React from 'react';
+import { AuthContext } from '@/components/auth-provider';
+import { useQuery } from '@tanstack/react-query';
+import { getCategories } from '@/lib/category';
 
 interface BudgetTotalCardProps {
   budgetData: Budget[];
@@ -11,6 +15,18 @@ interface BudgetTotalCardProps {
 }
 
 const BudgetTotalCard = (props: BudgetTotalCardProps): JSX.Element => {
+  const { request } = React.useContext<any>(AuthContext);
+  const categoriesQuery = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () =>
+      await request({
+        url: '/api/category',
+        method: 'GET',
+      }),
+  });
+
+  const allCategories = getCategories(categoriesQuery.data?.data ?? []);
+
   const getBudgetTotal = (budgetData: Budget[]): number => {
     return budgetData.reduce((n, { limit }) => n + limit, 0);
   };
@@ -30,7 +46,9 @@ const BudgetTotalCard = (props: BudgetTotalCardProps): JSX.Element => {
             props.transactionData.filter((t) => t.category === 'income')
           )
         )}
-        total={getBudgetTotal(getBudgetsForGroup(props.budgetData, BudgetGroup.Income))}
+        total={getBudgetTotal(
+          getBudgetsForGroup(allCategories, props.budgetData, BudgetGroup.Income)
+        )}
       />
       <BudgetTotal
         label={'Spending'}
@@ -39,7 +57,9 @@ const BudgetTotalCard = (props: BudgetTotalCardProps): JSX.Element => {
             props.transactionData.filter((t) => t.category !== 'income')
           )
         )}
-        total={getBudgetTotal(getBudgetsForGroup(props.budgetData, BudgetGroup.Spending))}
+        total={getBudgetTotal(
+          getBudgetsForGroup(allCategories, props.budgetData, BudgetGroup.Spending)
+        )}
       />
       <Separator className="my-2" />
       <BudgetTotal

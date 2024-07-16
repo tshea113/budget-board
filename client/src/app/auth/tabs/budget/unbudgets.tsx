@@ -7,8 +7,12 @@ import {
 import { Budget } from '@/types/budget';
 import { Transaction } from '@/types/transaction';
 import UnbudgetCard from './unbudget-card';
-import { getParentCategory } from '@/lib/category';
+import { getCategories, getParentCategory } from '@/lib/category';
 import { Skeleton } from '@/components/ui/skeleton';
+import React from 'react';
+import { AuthContext } from '@/components/auth-provider';
+import { useQuery } from '@tanstack/react-query';
+import { Category } from '@/types/category';
 
 interface Unbudget {
   category: string;
@@ -16,6 +20,7 @@ interface Unbudget {
 }
 
 const getUnbudgetedTransactions = (
+  allCategories: Category[],
   budgets: Budget[],
   transactions: Transaction[]
 ): Unbudget[] => {
@@ -33,9 +38,9 @@ const getUnbudgetedTransactions = (
 
   const filteredGroupedTransactions = groupedTransactions.filter((t) => {
     return !budgets.some(({ category }) => {
-      if (category === getParentCategory(category)) {
+      if (category === getParentCategory(allCategories, category)) {
         // The budget is for a parent category, so check if it is the transaction's parent category
-        return category === getParentCategory(t[0]);
+        return category === getParentCategory(allCategories, t[0]);
       } else {
         // The budget is a subcategory, so just check that it matches the transaction
         return category === t[0];
@@ -66,6 +71,18 @@ interface UnbudgetProps {
 }
 
 const Unbudgets = (props: UnbudgetProps): JSX.Element => {
+  const { request } = React.useContext<any>(AuthContext);
+  const categoriesQuery = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () =>
+      await request({
+        url: '/api/category',
+        method: 'GET',
+      }),
+  });
+
+  const allCategories = getCategories(categoriesQuery.data?.data ?? []);
+
   if (props.isPending) {
     return (
       <div className="flex items-center justify-center">
@@ -85,7 +102,11 @@ const Unbudgets = (props: UnbudgetProps): JSX.Element => {
             <div className="w-1/2">
               <div className="w-1/3 text-center text-lg font-semibold tracking-tight">
                 $
-                {getUnbudgetedTransactions(props.budgets, props.transactions)
+                {getUnbudgetedTransactions(
+                  allCategories,
+                  props.budgets,
+                  props.transactions
+                )
                   .reduce((a: number, b: Unbudget) => {
                     return a + b.amount;
                   }, 0)
@@ -95,15 +116,17 @@ const Unbudgets = (props: UnbudgetProps): JSX.Element => {
           </div>
         </AccordionTrigger>
         <AccordionContent className="space-y-1">
-          {getUnbudgetedTransactions(props.budgets, props.transactions).map(
-            (unbudget: Unbudget) => (
-              <UnbudgetCard
-                key={unbudget.category}
-                name={unbudget.category}
-                amount={unbudget.amount.toFixed()}
-              />
-            )
-          )}
+          {getUnbudgetedTransactions(
+            allCategories,
+            props.budgets,
+            props.transactions
+          ).map((unbudget: Unbudget) => (
+            <UnbudgetCard
+              key={unbudget.category}
+              name={unbudget.category}
+              amount={unbudget.amount.toFixed()}
+            />
+          ))}
         </AccordionContent>
       </AccordionItem>
     </Accordion>
