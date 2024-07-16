@@ -48,7 +48,7 @@ const AddCategory = (props: AddCategoryProps): JSX.Element => {
         data: category,
       }),
     onSuccess: async () => {
-      console.log('bingus');
+      await queryClient.invalidateQueries({ queryKey: ['categories'] });
     },
     onError: (error: AxiosError) => {
       toast({
