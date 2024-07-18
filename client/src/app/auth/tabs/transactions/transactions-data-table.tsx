@@ -62,45 +62,74 @@ const TransactionsDataTable = (props: DataTableProps): JSX.Element => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const doEditTransaction = useMutation({
-    mutationFn: async (newTransaction: Transaction) => {
-      setIsPendingRow(table.getSelectedRowModel().rows.at(0)?.id ?? '');
-      return await request({
+    mutationFn: async (newTransaction: Transaction) =>
+      await request({
         url: '/api/transaction',
         method: 'PUT',
         data: newTransaction,
-      });
+      }),
+    onMutate: async (variables: Transaction) => {
+      setIsPendingRow(table.getSelectedRowModel().rows.at(0)?.id ?? '');
+
+      await queryClient.cancelQueries({ queryKey: ['transactions'] });
+
+      const previousTransactions: Transaction[] =
+        queryClient.getQueryData(['transactions']) ?? [];
+
+      queryClient.setQueryData(['transactions'], (oldTransactions: Transaction[]) =>
+        oldTransactions.map((oldTransaction) =>
+          oldTransaction.id === variables.id ? variables : oldTransaction
+        )
+      );
+
+      return { previousTransactions };
     },
-    onSuccess: async () => {
-      setIsPendingRow('');
-      await queryClient.refetchQueries({ queryKey: ['transactions'] });
-    },
-    onError: (error: AxiosError) => {
+    onError: (error: AxiosError, _variables: Transaction, context) => {
+      queryClient.setQueryData(['transactions'], context?.previousTransactions ?? []);
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
         description: translateAxiosError(error),
       });
     },
+    onSettled: () => {
+      setIsPendingRow('');
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
+    },
   });
+
   const doDeleteTransaction = useMutation({
-    mutationFn: async (id: string) => {
-      setIsPendingRow(table.getSelectedRowModel().rows.at(0)?.id ?? '');
-      return await request({
+    mutationFn: async (id: string) =>
+      await request({
         url: '/api/transaction',
         method: 'DELETE',
         params: { guid: id },
-      });
+      }),
+    onMutate: async (variables: string) => {
+      setIsPendingRow(table.getSelectedRowModel().rows.at(0)?.id ?? '');
+
+      await queryClient.cancelQueries({ queryKey: ['transactions'] });
+
+      const previousTransactions: Transaction[] =
+        queryClient.getQueryData(['transactions']) ?? [];
+
+      queryClient.setQueryData(['transactions'], (oldTransactions: Transaction[]) =>
+        oldTransactions.filter((oldTransaction) => oldTransaction.id !== variables)
+      );
+
+      return { previousTransactions };
     },
-    onSuccess: async () => {
-      setIsPendingRow('');
-      await queryClient.invalidateQueries({ queryKey: ['transactions'] });
-    },
-    onError: (error: AxiosError) => {
+    onError: (error: AxiosError, _variables: string, context) => {
+      queryClient.setQueryData(['transactions'], context?.previousTransactions ?? []);
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
         description: translateAxiosError(error),
       });
+    },
+    onSettled: async () => {
+      setIsPendingRow('');
+      await queryClient.invalidateQueries({ queryKey: ['transactions'] });
     },
   });
 
@@ -135,7 +164,7 @@ const TransactionsDataTable = (props: DataTableProps): JSX.Element => {
       deleteTransaction: (id: string) => {
         doDeleteTransaction.mutate(id);
       },
-      deletedTransactions: filterInvisibleTransactions(props.data),
+      deletedTransactions: filterInvisibleTransactions(props.data ?? []),
     },
   });
 
