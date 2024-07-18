@@ -19,12 +19,19 @@ const Budgets = (): JSX.Element => {
 
   const budgetsQuery = useQuery({
     queryKey: ['budgets', { date }],
-    queryFn: async () =>
-      await request({
+    queryFn: async (): Promise<Budget[]> => {
+      const res: AxiosResponse = await request({
         url: '/api/budget',
         method: 'GET',
         params: { date },
-      }),
+      });
+
+      if (res.status == 200) {
+        return res.data;
+      }
+
+      return [];
+    },
   });
 
   const transactionsQuery = useQuery({
@@ -47,7 +54,7 @@ const Budgets = (): JSX.Element => {
     <div className="flex w-full max-w-screen-2xl flex-col justify-center gap-2 lg:grid lg:grid-flow-col lg:grid-cols-12">
       <div className="space-y-2 lg:col-span-9">
         <BudgetsToolbar
-          budgets={budgetsQuery.data?.data ?? []}
+          budgets={budgetsQuery.data ?? []}
           date={date}
           isPending={budgetsQuery.isPending}
           setDate={setDate}
@@ -55,19 +62,13 @@ const Budgets = (): JSX.Element => {
         <div className="space-y-10">
           <BudgetCardsGroup
             header={'Income'}
-            budgetData={getBudgetsForGroup(
-              budgetsQuery.data?.data as Budget[],
-              BudgetGroup.Income
-            )}
+            budgetData={getBudgetsForGroup(budgetsQuery.data, BudgetGroup.Income)}
             transactionsData={getTransactionsForMonth(transactionsQuery.data ?? [], date)}
             isPending={budgetsQuery.isPending || transactionsQuery.isPending}
           />
           <BudgetCardsGroup
             header={'Spending'}
-            budgetData={getBudgetsForGroup(
-              budgetsQuery.data?.data as Budget[],
-              BudgetGroup.Spending
-            )}
+            budgetData={getBudgetsForGroup(budgetsQuery.data, BudgetGroup.Spending)}
             transactionsData={getTransactionsForMonth(
               (transactionsQuery.data as Transaction[]) ?? [],
               date
@@ -80,16 +81,13 @@ const Budgets = (): JSX.Element => {
             (transactionsQuery.data as Transaction[]) ?? [],
             date
           )}
-          budgets={(budgetsQuery.data?.data as Budget[]) ?? []}
+          budgets={budgetsQuery.data ?? []}
           isPending={budgetsQuery.isPending || transactionsQuery.isPending}
         />
       </div>
       <div className="h-96 lg:col-span-3">
         <BudgetTotalCard
-          budgetData={getBudgetsForMonth(
-            (budgetsQuery.data?.data as Budget[]) ?? [],
-            date
-          )}
+          budgetData={getBudgetsForMonth(budgetsQuery.data ?? [], date)}
           transactionData={getTransactionsForMonth(
             (transactionsQuery.data as Transaction[]) ?? [],
             date

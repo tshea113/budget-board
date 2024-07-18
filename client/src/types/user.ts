@@ -1,16 +1,18 @@
-interface User {
+export interface User {
   uid: string;
   accessToken: string;
 }
 
-interface ResponseUser {
+export interface ResponseUser {
   uid: string;
   accessToken: boolean;
 }
 
-const defaultGuid: string = '00000000-0000-0000-0000-000000000000';
+export interface InfoResponse {
+  email: string;
+  isEmailConfirmed: boolean;
+}
 
-interface NewUser extends Partial<User> {}
+export const defaultGuid: string = '00000000-0000-0000-0000-000000000000';
 
-export type { User, NewUser, ResponseUser };
-export { defaultGuid };
+export interface NewUser extends Partial<User> {}

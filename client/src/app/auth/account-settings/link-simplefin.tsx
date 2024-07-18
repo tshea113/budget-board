@@ -7,8 +7,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
 import { translateAxiosError } from '@/lib/requests';
+import { User } from '@/types/user';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { type AxiosError } from 'axios';
+import { AxiosResponse, type AxiosError } from 'axios';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -19,11 +20,18 @@ const LinkSimpleFin = (): JSX.Element => {
 
   const userQuery = useQuery({
     queryKey: ['user'],
-    queryFn: async () =>
-      await request({
+    queryFn: async (): Promise<User | undefined> => {
+      const res: AxiosResponse = await await request({
         url: '/api/user',
         method: 'GET',
-      }),
+      });
+
+      if (res.status == 200) {
+        return res.data;
+      }
+
+      return undefined;
+    },
   });
 
   const { toast } = useToast();
@@ -62,7 +70,7 @@ const LinkSimpleFin = (): JSX.Element => {
       <CardHeader>Link an Account</CardHeader>
       <CardContent className="space-y-2">
         <Button variant="outline" onClick={toggleForm}>
-          {userQuery.data?.data.accessToken
+          {userQuery.data?.accessToken
             ? 'Your SimpleFin account is linked!'
             : 'Link your SimpleFin account.'}
         </Button>
@@ -72,7 +80,7 @@ const LinkSimpleFin = (): JSX.Element => {
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
               onSubmit={form.handleSubmit(async (data: FormValues, event) => {
                 event?.preventDefault();
-                if (userQuery.data?.data) {
+                if (userQuery.data) {
                   doSetAccessToken.mutate(data.accessToken);
                 }
               })}

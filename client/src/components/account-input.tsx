@@ -14,6 +14,7 @@ import { Check, ChevronsUpDown } from 'lucide-react';
 import React from 'react';
 import { AuthContext } from './auth-provider';
 import { useQuery } from '@tanstack/react-query';
+import { AxiosResponse } from 'axios';
 
 interface AccountInputProps {
   initialValues?: string[];
@@ -25,16 +26,23 @@ const AccountInput = (props: AccountInputProps): JSX.Element => {
 
   const accountsQuery = useQuery({
     queryKey: ['accounts'],
-    queryFn: async () =>
-      await request({
+    queryFn: async (): Promise<Account[]> => {
+      const res: AxiosResponse = await await request({
         url: '/api/account',
         method: 'GET',
-      }),
+      });
+
+      if (res.status == 200) {
+        return res.data;
+      }
+
+      return [];
+    },
   });
 
   const [isOpen, setIsOpen] = React.useState(false);
   const [selectedValues, setSelectedValues] = React.useState<Account[]>(
-    getAccountsById(props.initialValues ?? [], accountsQuery.data?.data ?? [])
+    getAccountsById(props.initialValues ?? [], accountsQuery.data ?? [])
   );
   const selectedValuesSet = React.useRef(new Set(selectedValues));
 
@@ -72,7 +80,7 @@ const AccountInput = (props: AccountInputProps): JSX.Element => {
           <CommandList>
             <CommandEmpty>No accounts found.</CommandEmpty>
             <CommandGroup>
-              {(accountsQuery.data?.data ?? []).map((account: Account) => {
+              {(accountsQuery.data ?? []).map((account: Account) => {
                 const isSelected = selectedValuesSet.current.has(account);
 
                 return (
