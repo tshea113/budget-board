@@ -11,10 +11,11 @@ import {
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import AccountSettings from './account-settings/account-settings';
 import { useToast } from '@/components/ui/use-toast';
-import { type AxiosError } from 'axios';
+import { AxiosResponse, type AxiosError } from 'axios';
 import { translateAxiosError } from '@/lib/requests';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
+import { InfoResponse } from '@/types/user';
 
 const Header = (): JSX.Element => {
   const { request, setAccessToken } = React.useContext<any>(AuthContext);
@@ -43,11 +44,18 @@ const Header = (): JSX.Element => {
 
   const userInfoQuery = useQuery({
     queryKey: ['info'],
-    queryFn: async () =>
-      await request({
+    queryFn: async (): Promise<InfoResponse | undefined> => {
+      const res: AxiosResponse = await request({
         url: '/api/manage/info',
         method: 'GET',
-      }),
+      });
+
+      if (res.status == 200) {
+        return res.data;
+      }
+
+      return undefined;
+    },
   });
 
   return (
@@ -64,7 +72,7 @@ const Header = (): JSX.Element => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>
-              {userInfoQuery.data?.data.email ?? 'not available'}
+              {userInfoQuery.data?.email ?? 'not available'}
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <SheetItem triggerChildren={<p>Account</p>} side="right">
