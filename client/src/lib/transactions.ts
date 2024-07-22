@@ -9,7 +9,7 @@ export const filterInvisibleTransactions = (transactions: Transaction[]): Transa
 
 export const filterTransactionsByCategory = (
   transactions: Transaction[],
-  categoryValue: string
+  categoryValue: string | null
 ) => transactions.filter((t: Transaction) => t.category === categoryValue);
 
 export const getTransactionsForMonth = (
