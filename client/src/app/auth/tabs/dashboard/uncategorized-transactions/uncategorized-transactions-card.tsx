@@ -33,15 +33,18 @@ const UncategorizedTransactionsCard = (): JSX.Element => {
   ) {
     return (
       <Card className="w-full bg-background p-2">
-        <span className="w-1/2 text-2xl font-semibold tracking-tight">
+        <span className="text-2xl font-semibold tracking-tight">
           Uncategorized Transactions
         </span>
         <ScrollArea className="flex h-full max-h-[300px] flex-col py-2 pr-3">
-          {filterTransactionsByCategory(transactionsQuery.data ?? [], null).map(
-            (transaction: Transaction) => (
-              <TransactionCard key={transaction.id} transaction={transaction} />
-            )
-          )}
+          {filterTransactionsByCategory(
+            transactionsQuery.data?.sort(
+              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+            ) ?? [],
+            null
+          ).map((transaction: Transaction) => (
+            <TransactionCard key={transaction.id} transaction={transaction} />
+          ))}
         </ScrollArea>
       </Card>
     );
