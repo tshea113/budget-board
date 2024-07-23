@@ -27,7 +27,10 @@ const UncategorizedTransactionsCard = (): JSX.Element => {
     },
   });
 
-  if (filterTransactionsByCategory(transactionsQuery.data ?? [], null).length !== 0) {
+  if (
+    filterTransactionsByCategory(transactionsQuery.data ?? [], null).length !== 0 &&
+    transactionsQuery.isSuccess
+  ) {
     return (
       <Card className="w-full bg-background p-2">
         <span className="w-1/2 text-2xl font-semibold tracking-tight">
