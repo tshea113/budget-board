@@ -7,6 +7,11 @@ export const filterVisibleTransactions = (transactions: Transaction[]): Transact
 export const filterInvisibleTransactions = (transactions: Transaction[]): Transaction[] =>
   transactions.filter((t: Transaction) => t.deleted !== null);
 
+export const filterTransactionsByCategory = (
+  transactions: Transaction[],
+  categoryValue: string | null
+) => transactions.filter((t: Transaction) => t.category === categoryValue);
+
 export const getTransactionsForMonth = (
   transactionData: Transaction[],
   date: Date
