@@ -19,6 +19,12 @@ const PageIterator = (props: PageIteratorProps): JSX.Element => {
       props.setPage(newPage);
     }
   };
+
+  // Page selector not needed if we only have a single page
+  if (props.maxPages === 1) {
+    return <></>;
+  }
+
   return (
     <div
       className={cn(
