@@ -24,7 +24,7 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(props.initialValue);
 
-  const categoriesTree = getCategoriesAsTree();
+  const categoriesTree = React.useMemo(getCategoriesAsTree, []);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
