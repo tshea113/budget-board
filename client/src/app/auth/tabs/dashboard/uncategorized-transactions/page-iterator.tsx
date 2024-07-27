@@ -29,7 +29,7 @@ const PageIterator = (props: PageIteratorProps): JSX.Element => {
       <Button className="p-2" variant="ghost" onClick={() => changePage(props.page - 1)}>
         <ChevronLeftIcon />
       </Button>
-      <div className="text-lg font-semibold">
+      <div className="font-semibold">
         Page {props.page} of {props.maxPages}
       </div>
       <Button className="p-2" variant="ghost" onClick={() => changePage(props.page + 1)}>
