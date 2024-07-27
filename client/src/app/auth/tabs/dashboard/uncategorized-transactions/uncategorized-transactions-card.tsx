@@ -7,8 +7,12 @@ import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import { filterTransactionsByCategory } from '@/lib/transactions';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import PageIterator from './page-iterator';
 
 const UncategorizedTransactionsCard = (): JSX.Element => {
+  const [page, setPage] = React.useState(1);
+  const [itemsPerPage, _setItemsPerPage] = React.useState(50);
+
   const { request } = React.useContext<any>(AuthContext);
 
   const transactionsQuery = useQuery({
@@ -27,24 +31,33 @@ const UncategorizedTransactionsCard = (): JSX.Element => {
     },
   });
 
-  if (
-    filterTransactionsByCategory(transactionsQuery.data ?? [], null).length !== 0 &&
-    transactionsQuery.isSuccess
-  ) {
+  const filteredTransactions = React.useMemo(
+    () => filterTransactionsByCategory(transactionsQuery.data ?? [], null),
+    [transactionsQuery.data]
+  );
+
+  if (filteredTransactions.length !== 0 && transactionsQuery.isSuccess) {
     return (
       <Card className="w-full bg-background p-2">
-        <span className="text-2xl font-semibold tracking-tight">
-          Uncategorized Transactions
-        </span>
+        <div className="flex flex-col items-center sm:grid sm:grid-cols-2">
+          <span className="text-2xl font-semibold tracking-tight">
+            Uncategorized Transactions
+          </span>
+          <PageIterator
+            className="justify-self-end"
+            page={page}
+            setPage={setPage}
+            maxPages={Math.ceil(filteredTransactions.length / itemsPerPage)}
+          />
+        </div>
+
         <ScrollArea className="flex h-full max-h-[300px] flex-col py-2 pr-3">
-          {filterTransactionsByCategory(
-            transactionsQuery.data?.sort(
-              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-            ) ?? [],
-            null
-          ).map((transaction: Transaction) => (
-            <TransactionCard key={transaction.id} transaction={transaction} />
-          ))}
+          {filteredTransactions
+            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+            .slice((page - 1) * itemsPerPage, (page - 1) * itemsPerPage + itemsPerPage)
+            .map((transaction: Transaction) => (
+              <TransactionCard key={transaction.id} transaction={transaction} />
+            ))}
         </ScrollArea>
       </Card>
     );
