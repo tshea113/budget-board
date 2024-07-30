@@ -33,7 +33,7 @@ const UncategorizedTransactionsCard = (): JSX.Element => {
 
   const filteredTransactions = React.useMemo(
     () => filterTransactionsByCategory(transactionsQuery.data ?? [], null),
-    [transactionsQuery.data]
+    [transactionsQuery]
   );
 
   if (filteredTransactions.length !== 0 && transactionsQuery.isSuccess) {
