@@ -9,6 +9,7 @@ import { Transaction } from '@/types/transaction';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import React from 'react';
+import { TailSpin } from 'react-loader-spinner';
 
 interface TransactionCardProps {
   transaction: Transaction;
@@ -75,17 +76,22 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
   return (
     <Card className="my-2">
       <div className="my-1 flex flex-col space-y-2 px-2 sm:grid sm:grid-cols-10 sm:grid-rows-1 sm:items-center sm:space-y-0">
-        <span className="col-span-2 pr-3 sm:col-span-1">
-          {formatDate(props.transaction.date)}
+        <span className="pr-3 sm:col-span-1">{formatDate(props.transaction.date)}</span>
+        <span className="sm:col-span-3 md:col-span-5 lg:col-span-4 xl:col-span-5">
+          {props.transaction.merchantName}
         </span>
-        <span className="sm:col-span-5">{props.transaction.merchantName}</span>
-        <span className="sm:col-span-3">
+        <span className="flex flex-row items-center sm:col-span-4 md:col-span-3 lg:col-span-4 xl:col-span-3">
           <CategoryInput
             initialValue={props.transaction.category ?? ''}
             onSelectChange={onCategoryPick}
           />
+          {doEditTransaction.isPending && (
+            <div className="mx-4">
+              <TailSpin height="25" width="25" color="gray" />
+            </div>
+          )}
         </span>
-        <span className="sm:col-span-1">
+        <span className="sm:col-span-2 md:col-span-1">
           {new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD',
