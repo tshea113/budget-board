@@ -6,7 +6,7 @@ interface AccountItemProps {
 
 const AccountItem = (props: AccountItemProps): JSX.Element => {
   return (
-    <div className="grid grid-rows-2 p-1">
+    <div className="grid grid-rows-2 px-1">
       <div className="row-span-1 grid grid-cols-10">
         <div className="col-span-6 text-left">
           <span className="text-base tracking-tight">{props.account.name}</span>
