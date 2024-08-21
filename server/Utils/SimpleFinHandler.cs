@@ -59,25 +59,27 @@ public class SimpleFinHandler
         return response;
     }
 
-    public void SyncAccounts(ApplicationUser user, List<Models.SimpleFinDetails.Account> accounts)
+    public void SyncAccounts(ApplicationUser user, List<Models.SimpleFinDetails.Account> accountsData)
     {
-        foreach (var account in accounts)
+        foreach (var accountData in accountsData)
         {
-            var foundAccount = AccountHandler.GetAccount(user, account.Id);
+            var foundAccount = AccountHandler.GetAccount(user, accountData.Id);
             if (foundAccount != null)
             {
-                foundAccount.CurrentBalance = float.Parse(account.Balance, CultureInfo.InvariantCulture.NumberFormat);
-
-                AccountHandler.UpdateAccount(user, _userDataContext, foundAccount);
+                // TODO: Currently only syncing the account balance and the date for that balance. Should we also
+                // sync the other info? Do we expect that to change?
+                foundAccount.CurrentBalance = float.Parse(accountData.Balance, CultureInfo.InvariantCulture.NumberFormat);
+                foundAccount.BalanceDate = DateTime.UnixEpoch.AddSeconds(accountData.BalanceDate);
             }
             else
             {
                 var newAccount = new Database.Models.Account
                 {
-                    SyncID = account.Id,
-                    Name = account.Name,
-                    Institution = account.Org.Name ?? string.Empty,
-                    CurrentBalance = float.Parse(account.Balance, CultureInfo.InvariantCulture.NumberFormat),
+                    SyncID = accountData.Id,
+                    Name = accountData.Name,
+                    Institution = accountData.Org.Name ?? string.Empty,
+                    CurrentBalance = float.Parse(accountData.Balance, CultureInfo.InvariantCulture.NumberFormat),
+                    BalanceDate = DateTime.UnixEpoch.AddSeconds(accountData.BalanceDate),
                     UserID = user.Id
                 };
 

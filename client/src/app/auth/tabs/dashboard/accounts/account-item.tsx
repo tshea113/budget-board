@@ -6,15 +6,23 @@ interface AccountItemProps {
 
 const AccountItem = (props: AccountItemProps): JSX.Element => {
   return (
-    <div className="grid grid-cols-10 p-1">
-      <div className="col-span-6 text-left">
-        <span className="text-base tracking-tight">{props.account.name}</span>
+    <div className="grid grid-rows-2 px-1">
+      <div className="row-span-1 grid grid-cols-10">
+        <div className="col-span-6 text-left">
+          <span className="text-base tracking-tight">{props.account.name}</span>
+        </div>
+        <span className="col-span-4 text-right">
+          {new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+          }).format(props.account.currentBalance)}
+        </span>
       </div>
-      <span className="col-span-4 text-right">
-        {new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-        }).format(props.account.currentBalance)}
+      <span className="row-span-1 text-left text-sm text-muted-foreground">
+        Last updated:{' '}
+        {props.account.balanceDate
+          ? new Date(props.account.balanceDate).toLocaleString()
+          : 'Never!'}
       </span>
     </div>
   );

@@ -20,12 +20,12 @@ public class AccountHandler
         userDataContext.SaveChanges();
     }
 
-    public static void UpdateAccount(ApplicationUser userData, UserDataContext userDataContext, Account newAccount)
+    public static bool UpdateAccount(ApplicationUser userData, UserDataContext userDataContext, Account newAccount)
     {
         Account? account = userData.Accounts.Single(a => a.ID == newAccount.ID);
         if (account == null)
         {
-            return;
+            return false;
         }
 
         account.Name = newAccount.Name;
@@ -33,7 +33,9 @@ public class AccountHandler
         account.Type = newAccount.Type;
         account.Subtype = newAccount.Subtype;
         account.CurrentBalance = newAccount.CurrentBalance;
+        account.BalanceDate = newAccount.BalanceDate;
 
         userDataContext.SaveChanges();
+        return true;
     }
 }

@@ -8,6 +8,7 @@ interface Account {
   type: string;
   subtype: string;
   currentBalance: number;
+  balanceDate: Date;
   hideTransactions: boolean;
   hideAccount: boolean;
   deleted: Date;
