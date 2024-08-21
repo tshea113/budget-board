@@ -18,8 +18,11 @@ const AccountItem = (props: AccountItemProps): JSX.Element => {
           }).format(props.account.currentBalance)}
         </span>
       </div>
-      <span className="row-span-1 text-right text-sm text-muted-foreground">
-        Last updated: {new Date(props.account.balanceDate).toLocaleString()}
+      <span className="row-span-1 text-left text-sm text-muted-foreground">
+        Last updated:{' '}
+        {props.account.balanceDate
+          ? new Date(props.account.balanceDate).toLocaleString()
+          : 'Never!'}
       </span>
     </div>
   );
