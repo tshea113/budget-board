@@ -44,6 +44,7 @@ const AccountsConfigurationCard = (
         type: props.account.type,
         subtype: props.account.subtype,
         currentBalance: props.account.currentBalance,
+        balanceDate: props.account.balanceDate,
         hideTransactions: hideTransactionsValue,
         hideAccount: hideAccountValue,
         deleted: props.account.deleted,
