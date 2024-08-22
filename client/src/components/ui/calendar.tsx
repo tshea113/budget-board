@@ -8,7 +8,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
-function Calendar({ className, classNames, showOutsideDays = true, ...props }: CalendarProps) {
+function Calendar({
+  className,
+  classNames,
+  showOutsideDays = true,
+  ...props
+}: CalendarProps) {
   const handleCalendarChange = (
     _value: string | number,
     _e: React.ChangeEventHandler<HTMLSelectElement>
@@ -31,7 +36,8 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         caption: 'flex justify-center pt-1 relative items-center',
         caption_label: 'text-sm font-medium',
         caption_dropdowns: 'flex justify-center gap-1 grow dropdowns pl-8 pr-9',
-        vhidden: 'hidden [.is-between_&]:flex [.is-end_&]:flex [.is-start.is-end_&]:hidden',
+        vhidden:
+          'hidden [.is-between_&]:flex [.is-end_&]:flex [.is-start.is-end_&]:hidden',
         nav: 'space-x-1 flex items-center',
         nav_button: cn(
           buttonVariants({ variant: 'outline' }),
@@ -59,7 +65,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         day_hidden: 'invisible',
         ...classNames,
       }}
-      captionLayout="dropdown-buttons"
+      captionLayout="dropdown"
       components={{
         IconLeft: () => <ChevronLeft className="h-4 w-4" />,
         IconRight: () => <ChevronRight className="h-4 w-4" />,
