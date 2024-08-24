@@ -9,10 +9,10 @@ const Dashboard = (): JSX.Element => {
     <div>
       <EmailVerified />
       <div className="flex flex-col gap-2 lg:grid lg:grid-flow-col lg:grid-cols-10 lg:grid-rows-5">
-        <div className="col-span-3 row-span-full">
+        <div className="col-span-3 row-span-full 2xl:col-span-2">
           <AccountCard />
         </div>
-        <div className="col-span-8 space-y-2">
+        <div className="col-span-7 space-y-2 2xl:col-span-8">
           <WelcomeCard />
           <UncategorizedTransactionsCard />
         </div>
