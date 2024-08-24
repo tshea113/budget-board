@@ -6,7 +6,7 @@ import UncategorizedTransactionsCard from './uncategorized-transactions/uncatego
 
 const Dashboard = (): JSX.Element => {
   return (
-    <div>
+    <div className="flex flex-col items-center">
       <EmailVerified />
       <div className="flex flex-col gap-2 lg:grid lg:grid-flow-col lg:grid-cols-10 lg:grid-rows-5">
         <div className="col-span-3 row-span-full 2xl:col-span-2">
