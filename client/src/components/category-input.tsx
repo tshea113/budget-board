@@ -8,15 +8,16 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { getCategoriesAsTree } from '@/lib/transactions';
 import { cn } from '@/lib/utils';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import React from 'react';
 import CommandSubcategory from './command-subcategory';
-import { Category, categories } from '@/types/category';
+import { ICategory, ICategoryNode } from '@/types/category';
+import { buildCategoriesTree } from '@/lib/category';
 
 interface CategoryInputProps {
   initialValue: string;
+  categories: ICategory[];
   onSelectChange: (category: string) => void;
 }
 
@@ -24,7 +25,10 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(props.initialValue);
 
-  const categoriesTree = React.useMemo(getCategoriesAsTree, []);
+  const categoriesTree = React.useMemo(
+    () => buildCategoriesTree(props.categories),
+    [props.categories]
+  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -39,7 +43,12 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
           }}
         >
           {value.length > 0
-            ? categories.find((category) => category.value === value)?.label
+            ? props.categories.find(
+                (category) =>
+                  category.value.localeCompare(value, undefined, {
+                    sensitivity: 'base',
+                  }) === 0
+              )?.value
             : 'Select category...'}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -54,7 +63,7 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
           />
           <CommandList>
             <CommandEmpty>No categories found.</CommandEmpty>
-            {categoriesTree.map((category: Category) => (
+            {categoriesTree.map((category: ICategoryNode) => (
               <CommandGroup
                 key={category.value}
                 onClick={(e) => {
@@ -76,7 +85,7 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
                       value === category.value ? 'opacity-100' : 'opacity-0'
                     )}
                   />
-                  {category.label}
+                  {category.value}
                 </CommandItem>
                 <CommandSubcategory
                   category={category}

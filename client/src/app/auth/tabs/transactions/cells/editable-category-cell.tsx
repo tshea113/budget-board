@@ -1,8 +1,7 @@
-import { type Transaction } from '@/types/transaction';
+import { transactionCategories, type Transaction } from '@/types/transaction';
 import React from 'react';
-import { getCategoryLabel, getIsCategory } from '@/lib/transactions';
 import CategoryInput from '@/components/category-input';
-import { categories } from '@/types/category';
+import { getFormattedCategoryValue, getIsParentCategory } from '@/lib/category';
 
 interface EditableCategoryCellProps {
   category: string;
@@ -22,18 +21,18 @@ const EditableCategoryCell = (props: EditableCategoryCellProps): JSX.Element => 
   }, [props.isError]);
 
   const onCategoryPick = (newValue: string): void => {
-    const category = categories.find((c) => c.value === newValue);
+    const category = transactionCategories.find((c) => c.value === newValue);
 
     if (category != null) {
       setCategoryValue(category.value);
 
       let categoryValue = '';
       let subcategoryValue = '';
-      if (getIsCategory(category.value)) {
-        categoryValue = category.value;
+      if (getIsParentCategory(category.value, transactionCategories)) {
+        categoryValue = category.value.toLowerCase();
       } else {
-        categoryValue = category.parent;
-        subcategoryValue = category.value;
+        categoryValue = category.parent.toLowerCase();
+        subcategoryValue = category.value.toLowerCase();
       }
 
       const newTransaction: Transaction = {
@@ -51,9 +50,13 @@ const EditableCategoryCell = (props: EditableCategoryCellProps): JSX.Element => 
   return (
     <div className="w-[200px]">
       {props.isSelected ? (
-        <CategoryInput initialValue={categoryValue} onSelectChange={onCategoryPick} />
+        <CategoryInput
+          initialValue={categoryValue}
+          onSelectChange={onCategoryPick}
+          categories={transactionCategories}
+        />
       ) : (
-        <span>{getCategoryLabel(props.category) ?? ''}</span>
+        <span>{getFormattedCategoryValue(props.category, transactionCategories)}</span>
       )}
     </div>
   );

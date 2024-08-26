@@ -2,10 +2,10 @@ import { AuthContext } from '@/components/auth-provider';
 import CategoryInput from '@/components/category-input';
 import { Card } from '@/components/ui/card';
 import { toast } from '@/components/ui/use-toast';
+import { getIsParentCategory } from '@/lib/category';
 import { translateAxiosError } from '@/lib/requests';
-import { formatDate, getIsCategory } from '@/lib/transactions';
-import { categories } from '@/types/category';
-import { Transaction } from '@/types/transaction';
+import { formatDate } from '@/lib/transactions';
+import { Transaction, transactionCategories } from '@/types/transaction';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import React from 'react';
@@ -54,12 +54,12 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
   });
 
   const onCategoryPick = (newValue: string): void => {
-    const category = categories.find((c) => c.value === newValue);
+    const category = transactionCategories.find((c) => c.value === newValue);
 
     if (category != null) {
       let categoryValue = '';
       let subcategoryValue = '';
-      if (getIsCategory(category.value)) {
+      if (getIsParentCategory(category.value, transactionCategories)) {
         categoryValue = category.value;
       } else {
         categoryValue = category.parent;
@@ -84,6 +84,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
           <CategoryInput
             initialValue={props.transaction.category ?? ''}
             onSelectChange={onCategoryPick}
+            categories={transactionCategories}
           />
           {doEditTransaction.isPending && (
             <div className="mx-4">
