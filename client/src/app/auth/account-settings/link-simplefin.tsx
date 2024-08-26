@@ -21,7 +21,7 @@ const LinkSimpleFin = (): JSX.Element => {
   const userQuery = useQuery({
     queryKey: ['user'],
     queryFn: async (): Promise<User | undefined> => {
-      const res: AxiosResponse = await await request({
+      const res: AxiosResponse = await request({
         url: '/api/user',
         method: 'GET',
       });
