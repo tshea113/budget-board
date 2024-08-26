@@ -44,7 +44,7 @@ const columns: Array<ColumnDef<Transaction>> = [
     accessorFn: (row: Transaction) => {
       if (row?.category === null && row?.subcategory === null) {
         return '';
-      } else if (row.subcategory.length !== 0) {
+      } else if (row.subcategory && row.subcategory.length > 0) {
         return row.subcategory;
       } else {
         return row.category;
