@@ -96,4 +96,8 @@ export const accountCategories: ICategory[] = [
     value: 'Cash',
     parent: '',
   },
+  {
+    value: 'Other',
+    parent: '',
+  },
 ];

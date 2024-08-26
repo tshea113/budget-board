@@ -10,8 +10,9 @@ const AccountsConfigurationCards = (
 ): JSX.Element => {
   return (
     <>
-      <div className="hidden w-full grid-cols-11 items-center py-2 md:grid md:grid-cols-4">
-        <span className="col-span-4 text-center md:col-span-1">Account</span>
+      <div className="hidden w-full grid-cols-11 items-center py-2 md:grid md:grid-cols-7">
+        <span className="col-span-4 text-center md:col-span-2">Account</span>
+        <span className="col-span-2 text-center md:col-span-2">Category</span>
         <span className="col-span-2 text-center md:col-span-1">Hide Account?</span>
         <span className="col-span-2 text-center md:col-span-1">Hide Transactions?</span>
         <span className="col-span-3 text-center md:col-span-1">Delete</span>

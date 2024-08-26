@@ -4,7 +4,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
 import { translateAxiosError } from '@/lib/requests';
-import { type Account } from '@/types/account';
+import { accountCategories, type Account } from '@/types/account';
 import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
@@ -12,6 +12,12 @@ import React from 'react';
 import DeleteAccount from './delete-account';
 import { AuthContext } from '@/components/auth-provider';
 import { Label } from '@/components/ui/label';
+import CategoryInput from '@/components/category-input';
+import {
+  buildCategoriesTree,
+  getIsParentCategory,
+  getParentCategory,
+} from '@/lib/category';
 
 interface AccountsConfigurationCardProps {
   account: Account;
@@ -27,6 +33,10 @@ const AccountsConfigurationCard = (
     props.account.hideAccount ?? false
   );
   const [accountNameValue, setAccountNameValue] = React.useState(props.account.name);
+  const [accountTypeValue, setAccountTypeValue] = React.useState(props.account.type);
+  const [accountSubTypeValue, setAccountSubTypeValue] = React.useState(
+    props.account.subtype
+  );
   const [valueDirty, setValueDirty] = React.useState(false);
 
   const { request } = React.useContext<any>(AuthContext);
@@ -41,8 +51,8 @@ const AccountsConfigurationCard = (
         syncID: props.account.syncID,
         name: accountNameValue,
         institution: props.account.institution,
-        type: props.account.type,
-        subtype: props.account.subtype,
+        type: accountTypeValue,
+        subtype: accountSubTypeValue,
         currentBalance: props.account.currentBalance,
         balanceDate: props.account.balanceDate,
         hideTransactions: hideTransactionsValue,
@@ -72,15 +82,32 @@ const AccountsConfigurationCard = (
   });
 
   return (
-    <Card className="grid grid-cols-6 grid-rows-2 items-center justify-items-center space-x-2 p-2 md:grid-cols-4 md:grid-rows-1">
+    <Card className="grid grid-cols-6 grid-rows-3 items-center justify-items-center space-y-1 p-2 md:grid-cols-7 md:grid-rows-1">
       <Input
-        className="col-span-6 md:col-span-1"
+        className="col-span-6 md:col-span-2"
         value={accountNameValue}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           setAccountNameValue(e.target.value);
           setValueDirty(true);
         }}
       />
+      <div className="col-span-6 md:col-span-2">
+        <CategoryInput
+          initialValue={
+            props.account.subtype && props.account.subtype.length > 0
+              ? props.account.subtype ?? ''
+              : props.account.type ?? ''
+          }
+          onSelectChange={function (type: string): void {
+            setAccountTypeValue(getParentCategory(type, accountCategories));
+            getIsParentCategory(type, accountCategories)
+              ? setAccountSubTypeValue('')
+              : setAccountSubTypeValue(type);
+            setValueDirty(true);
+          }}
+          categoriesTree={buildCategoriesTree(accountCategories)}
+        />
+      </div>
       <div className="col-span-2 flex flex-row space-x-2 md:col-span-1">
         <Checkbox
           id="hidden"
@@ -121,6 +148,8 @@ const AccountsConfigurationCard = (
                 setAccountNameValue(props.account.name);
                 setHideTransactionsValue(props.account.hideTransactions);
                 setHideAccountValue(props.account.hideAccount);
+                setAccountTypeValue(props.account.type);
+                setAccountSubTypeValue(props.account.subtype);
                 setValueDirty(false);
               }}
               loading={false}
