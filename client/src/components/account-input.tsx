@@ -27,7 +27,7 @@ const AccountInput = (props: AccountInputProps): JSX.Element => {
   const accountsQuery = useQuery({
     queryKey: ['accounts'],
     queryFn: async (): Promise<Account[]> => {
-      const res: AxiosResponse = await await request({
+      const res: AxiosResponse = await request({
         url: '/api/account',
         method: 'GET',
       });

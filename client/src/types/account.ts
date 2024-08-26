@@ -1,6 +1,7 @@
+import { ICategory } from './category';
 import { Transaction } from './transaction';
 
-interface Account {
+export interface Account {
   id: string;
   syncID: string;
   name: string;
@@ -16,14 +17,87 @@ interface Account {
   userID: string;
 }
 
-interface NewAccount extends Partial<Account> {}
+export interface NewAccount extends Partial<Account> {}
 
-const Type: string[] = ['Depository', 'Credit', 'Loan', 'Investment', 'Other'];
-
-const SubType: string[][] = [
-  ['Checking', 'Savings', 'Money Market', 'CD', 'Treasury', 'Sweep'],
-  ['Credit Card'],
+export const accountCategories: ICategory[] = [
+  {
+    value: 'Checking',
+    parent: '',
+  },
+  {
+    value: 'Savings',
+    parent: '',
+  },
+  {
+    value: 'Money Market',
+    parent: 'Savings',
+  },
+  {
+    value: 'Certificate of Deposit',
+    parent: 'Savings',
+  },
+  {
+    value: 'Loan',
+    parent: '',
+  },
+  {
+    value: 'Auto',
+    parent: 'Loan',
+  },
+  {
+    value: 'Student',
+    parent: 'Loan',
+  },
+  {
+    value: 'Personal',
+    parent: 'Loan',
+  },
+  {
+    value: 'Home Equity',
+    parent: 'Loan',
+  },
+  {
+    value: 'Credit Card',
+    parent: '',
+  },
+  {
+    value: 'Investment',
+    parent: '',
+  },
+  {
+    value: '401k',
+    parent: 'Investment',
+  },
+  {
+    value: 'Roth IRA',
+    parent: 'Investment',
+  },
+  {
+    value: 'Rollover IRA',
+    parent: 'Investment',
+  },
+  {
+    value: 'ESPP',
+    parent: 'Investment',
+  },
+  {
+    value: 'Trust',
+    parent: 'Investment',
+  },
+  {
+    value: 'Taxable',
+    parent: 'Investment',
+  },
+  {
+    value: 'Mortgage',
+    parent: '',
+  },
+  {
+    value: 'Cash',
+    parent: '',
+  },
+  {
+    value: 'Other',
+    parent: '',
+  },
 ];
-
-export type { Account, NewAccount };
-export { Type, SubType };

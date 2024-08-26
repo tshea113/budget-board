@@ -20,6 +20,8 @@ import { useToast } from '@/components/ui/use-toast';
 import { AxiosError } from 'axios';
 import { AuthContext } from '@/components/auth-provider';
 import React from 'react';
+import { transactionCategories } from '@/types/transaction';
+import { buildCategoriesTree } from '@/lib/category';
 
 const formSchema = z.object({
   category: z.string().min(1).max(50),
@@ -100,6 +102,7 @@ const AddBudget = ({ date }: AddBudgetProps): JSX.Element => {
                     <CategoryInput
                       initialValue={field.value}
                       onSelectChange={field.onChange}
+                      categoriesTree={buildCategoriesTree(transactionCategories)}
                     />
                   </FormControl>
                   <FormMessage />

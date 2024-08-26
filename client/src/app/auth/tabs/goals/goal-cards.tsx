@@ -12,7 +12,7 @@ const GoalCards = (): JSX.Element => {
   const goalsQuery = useQuery({
     queryKey: ['goals'],
     queryFn: async (): Promise<Goal[]> => {
-      const res: AxiosResponse = await await request({
+      const res: AxiosResponse = await request({
         url: '/api/goal',
         method: 'GET',
       });

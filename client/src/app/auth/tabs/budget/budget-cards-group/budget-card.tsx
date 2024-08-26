@@ -4,9 +4,10 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { getSignForBudget } from '@/lib/budgets';
-import { getCategoryLabel } from '@/lib/transactions';
+import { getFormattedCategoryValue } from '@/lib/category';
 import { cn, getProgress } from '@/lib/utils';
 import { type Budget } from '@/types/budget';
+import { transactionCategories } from '@/types/transaction';
 import { defaultGuid } from '@/types/user';
 import { CheckIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -80,7 +81,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
       <div className="grid h-10 grid-cols-2 items-center">
         <div className="flex flex-row items-center space-x-2">
           <div className="scroll-m-20 justify-self-start text-xl font-semibold tracking-tight">
-            {getCategoryLabel(props.budget.category) ?? ''}
+            {getFormattedCategoryValue(props.budget.category, transactionCategories)}
           </div>
           {isEdit && (
             <ResponsiveButton

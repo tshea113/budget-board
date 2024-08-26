@@ -5,38 +5,52 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Budget } from '@/types/budget';
-import { Transaction } from '@/types/transaction';
+import { Transaction, transactionCategories } from '@/types/transaction';
 import UnbudgetCard from './unbudget-card';
-import { getParentCategory } from '@/lib/transactions';
 import { Skeleton } from '@/components/ui/skeleton';
+import { getParentCategory } from '@/lib/category';
 
 interface Unbudget {
   category: string;
   amount: number;
 }
 
-const getUnbudgetedTransactions = (budgets: Budget[], transactions: Transaction[]): Unbudget[] => {
+const getUnbudgetedTransactions = (
+  budgets: Budget[],
+  transactions: Transaction[]
+): Unbudget[] => {
   if (budgets == null || transactions == null) return [];
 
   // This creates an object that maps category/subcategory => array of amounts
   const groupedTransactions: [string, number[]][] = Object.entries(
     transactions.reduce((result: any, item: Transaction) => {
-      (result[item['subcategory'] !== '' ? item['subcategory'] : item['category']] =
-        result[item['subcategory'] !== '' ? item['subcategory'] : item['category']] || []).push(
-        item.amount
-      );
+      (result[item.subcategory !== '' ? item.subcategory ?? '' : item.category ?? ''] =
+        result[item.subcategory !== '' ? item.subcategory ?? '' : item.category ?? ''] ||
+        []).push(item.amount);
       return result;
     }, {})
   );
 
   const filteredGroupedTransactions = groupedTransactions.filter((t) => {
     return !budgets.some(({ category }) => {
-      if (category === getParentCategory(category)) {
+      if (
+        category.localeCompare(
+          getParentCategory(category, transactionCategories),
+          undefined,
+          { sensitivity: 'base' }
+        ) === 0
+      ) {
         // The budget is for a parent category, so check if it is the transaction's parent category
-        return category === getParentCategory(t[0]);
+        return (
+          category.localeCompare(
+            getParentCategory(t[0], transactionCategories),
+            undefined,
+            { sensitivity: 'base' }
+          ) === 0
+        );
       } else {
         // The budget is a subcategory, so just check that it matches the transaction
-        return category === t[0];
+        return category.localeCompare(t[0], undefined, { sensitivity: 'base' }) === 0;
       }
     });
   });
@@ -77,7 +91,9 @@ const Unbudgets = (props: UnbudgetProps): JSX.Element => {
       <AccordionItem value="item-1">
         <AccordionTrigger>
           <div className="flex w-full flex-row pl-3">
-            <div className="w-1/2 text-left text-lg font-semibold tracking-tight">Other</div>
+            <div className="w-1/2 text-left text-lg font-semibold tracking-tight">
+              Other
+            </div>
             <div className="w-1/2">
               <div className="w-1/3 text-center text-lg font-semibold tracking-tight">
                 $

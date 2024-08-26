@@ -1,5 +1,6 @@
 import { type Budget } from '@/types/budget';
-import { getParentCategory } from './transactions';
+import { transactionCategories } from '@/types/transaction';
+import { getParentCategory } from './category';
 
 export enum BudgetGroup {
   Income,
@@ -20,9 +21,17 @@ export const getBudgetsForGroup = (
   if (budgetData == null) return [];
 
   if (budgetGroup === BudgetGroup.Income) {
-    return budgetData.filter((b) => getParentCategory(b.category) === 'income') ?? [];
+    return (
+      budgetData.filter(
+        (b) => getParentCategory(b.category, transactionCategories) === 'income'
+      ) ?? []
+    );
   } else if (budgetGroup === BudgetGroup.Spending) {
-    return budgetData.filter((b) => getParentCategory(b.category) !== 'income') ?? [];
+    return (
+      budgetData.filter(
+        (b) => getParentCategory(b.category, transactionCategories) !== 'income'
+      ) ?? []
+    );
   } else {
     return budgetData;
   }
@@ -37,7 +46,7 @@ export const getBudgetGroupForCategory = (category: string): BudgetGroup => {
 };
 
 export const getSignForBudget = (category: string): number => {
-  switch (getBudgetGroupForCategory(getParentCategory(category))) {
+  switch (getBudgetGroupForCategory(getParentCategory(category, transactionCategories))) {
     case BudgetGroup.Spending:
       return -1;
     case BudgetGroup.Income:

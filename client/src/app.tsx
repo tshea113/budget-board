@@ -29,7 +29,13 @@ const router = createBrowserRouter([
   },
 ]);
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 30000,
+    },
+  },
+});
 
 const App = (): JSX.Element => {
   return (

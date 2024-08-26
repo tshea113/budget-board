@@ -1,8 +1,8 @@
 import { type Budget } from '@/types/budget';
-import { type Transaction } from '@/types/transaction';
-import { getIsCategory } from '@/lib/transactions';
+import { transactionCategories, type Transaction } from '@/types/transaction';
 import { Skeleton } from '@/components/ui/skeleton';
 import BudgetCard from './budget-card';
+import { getIsParentCategory } from '@/lib/category';
 
 interface BudgetCardsProps {
   budgetData: Budget[] | null;
@@ -16,7 +16,11 @@ const BudgetCards = (props: BudgetCardsProps): JSX.Element => {
     category: string
   ): number => {
     const data = transactionData.filter((t: Transaction) => {
-      return (getIsCategory(category) ? t.category : t.subcategory) === category;
+      return (
+        (getIsParentCategory(category, transactionCategories)
+          ? t.category
+          : t.subcategory) === category
+      );
     });
 
     return data.reduce((n, { amount }) => n + amount, 0);

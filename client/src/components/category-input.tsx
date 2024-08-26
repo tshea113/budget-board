@@ -8,15 +8,15 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { getCategoriesAsTree } from '@/lib/transactions';
 import { cn } from '@/lib/utils';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import React from 'react';
 import CommandSubcategory from './command-subcategory';
-import { Category, categories } from '@/types/category';
+import { ICategoryNode } from '@/types/category';
 
 interface CategoryInputProps {
   initialValue: string;
+  categoriesTree: ICategoryNode[];
   onSelectChange: (category: string) => void;
 }
 
@@ -24,10 +24,8 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(props.initialValue);
 
-  const categoriesTree = React.useMemo(getCategoriesAsTree, []);
-
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={setOpen} modal>
       <PopoverTrigger asChild>
         <Button
           variant="dropdown"
@@ -38,9 +36,7 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
             e.stopPropagation();
           }}
         >
-          {value.length > 0
-            ? categories.find((category) => category.value === value)?.label
-            : 'Select category...'}
+          {value.length > 0 ? value : 'Select category...'}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -54,7 +50,7 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
           />
           <CommandList>
             <CommandEmpty>No categories found.</CommandEmpty>
-            {categoriesTree.map((category: Category) => (
+            {props.categoriesTree.map((category: ICategoryNode) => (
               <CommandGroup
                 key={category.value}
                 onClick={(e) => {
@@ -76,7 +72,7 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
                       value === category.value ? 'opacity-100' : 'opacity-0'
                     )}
                   />
-                  {category.label}
+                  {category.value}
                 </CommandItem>
                 <CommandSubcategory
                   category={category}
