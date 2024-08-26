@@ -18,7 +18,7 @@ const Budgets = (): JSX.Element => {
   const { request } = React.useContext<any>(AuthContext);
 
   const budgetsQuery = useQuery({
-    queryKey: ['budgets', { date }],
+    queryKey: ['budgets', date],
     queryFn: async (): Promise<Budget[]> => {
       const res: AxiosResponse = await request({
         url: '/api/budget',

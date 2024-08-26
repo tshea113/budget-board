@@ -5,7 +5,15 @@ export const cn = (...inputs: ClassValue[]): string => twMerge(clsx(inputs));
 
 export const initMonth = (): Date => {
   const date = new Date();
+
+  // We only really care about the month and year here, so we need to set
+  // a consistent time for the rest.
   date.setDate(1);
+  date.setHours(12);
+  date.setMinutes(0);
+  date.setSeconds(0);
+  date.setMilliseconds(0);
+
   return date;
 };
 
