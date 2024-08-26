@@ -2,7 +2,7 @@ import { AuthContext } from '@/components/auth-provider';
 import CategoryInput from '@/components/category-input';
 import { Card } from '@/components/ui/card';
 import { toast } from '@/components/ui/use-toast';
-import { getIsParentCategory } from '@/lib/category';
+import { buildCategoriesTree, getIsParentCategory } from '@/lib/category';
 import { translateAxiosError } from '@/lib/requests';
 import { formatDate } from '@/lib/transactions';
 import { Transaction, transactionCategories } from '@/types/transaction';
@@ -84,7 +84,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
           <CategoryInput
             initialValue={props.transaction.category ?? ''}
             onSelectChange={onCategoryPick}
-            categories={transactionCategories}
+            categoriesTree={buildCategoriesTree(transactionCategories)}
           />
           {doEditTransaction.isPending && (
             <div className="mx-4">

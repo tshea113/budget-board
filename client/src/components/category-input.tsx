@@ -12,12 +12,11 @@ import { cn } from '@/lib/utils';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import React from 'react';
 import CommandSubcategory from './command-subcategory';
-import { ICategory, ICategoryNode } from '@/types/category';
-import { buildCategoriesTree } from '@/lib/category';
+import { ICategoryNode } from '@/types/category';
 
 interface CategoryInputProps {
   initialValue: string;
-  categories: ICategory[];
+  categoriesTree: ICategoryNode[];
   onSelectChange: (category: string) => void;
 }
 
@@ -25,13 +24,8 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(props.initialValue);
 
-  const categoriesTree = React.useMemo(
-    () => buildCategoriesTree(props.categories),
-    [props.categories]
-  );
-
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={setOpen} modal>
       <PopoverTrigger asChild>
         <Button
           variant="dropdown"
@@ -42,14 +36,7 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
             e.stopPropagation();
           }}
         >
-          {value.length > 0
-            ? props.categories.find(
-                (category) =>
-                  category.value.localeCompare(value, undefined, {
-                    sensitivity: 'base',
-                  }) === 0
-              )?.value
-            : 'Select category...'}
+          {value.length > 0 ? value : 'Select category...'}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -63,7 +50,7 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
           />
           <CommandList>
             <CommandEmpty>No categories found.</CommandEmpty>
-            {categoriesTree.map((category: ICategoryNode) => (
+            {props.categoriesTree.map((category: ICategoryNode) => (
               <CommandGroup
                 key={category.value}
                 onClick={(e) => {
