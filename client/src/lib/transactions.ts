@@ -1,4 +1,6 @@
-import { type Transaction } from '@/types/transaction';
+import { transactionCategories, type Transaction } from '@/types/transaction';
+import { getIsParentCategory } from './category';
+import { areStringsEqual } from './utils';
 
 export const filterVisibleTransactions = (transactions: Transaction[]): Transaction[] =>
   transactions.filter((t: Transaction) => t.deleted === null);
@@ -34,4 +36,27 @@ export const formatDate = (date: Date): string => {
     day: 'numeric',
   };
   return new Date(date).toLocaleDateString([], options);
+};
+
+/**
+ * Sums the provided transactions for the given transaction category
+ * @param transactionData The array of transactions to sum
+ * @param category The category of transactions to sum
+ * @returns The sum of all transactions for the given category
+ */
+export const sumTransactionAmountsByCategory = (
+  transactionData: Transaction[],
+  categoryToSum: string
+): number => {
+  const transactionsForCategory = transactionData.filter((t: Transaction) => {
+    // We need to figure out whether the category we are comparing on is a category or subcategory
+    // to know which field to look at on the transaction.
+    const transactionCategory = getIsParentCategory(categoryToSum, transactionCategories)
+      ? t.category ?? ''
+      : t.subcategory ?? '';
+
+    return areStringsEqual(transactionCategory, categoryToSum);
+  });
+
+  return transactionsForCategory.reduce((n, { amount }) => n + amount, 0);
 };

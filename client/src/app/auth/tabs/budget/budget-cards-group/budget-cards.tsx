@@ -1,8 +1,8 @@
 import { type Budget } from '@/types/budget';
-import { transactionCategories, type Transaction } from '@/types/transaction';
+import { type Transaction } from '@/types/transaction';
 import { Skeleton } from '@/components/ui/skeleton';
 import BudgetCard from './budget-card';
-import { getIsParentCategory } from '@/lib/category';
+import { sumTransactionAmountsByCategory } from '@/lib/transactions';
 
 interface BudgetCardsProps {
   budgetData: Budget[] | null;
@@ -11,21 +11,6 @@ interface BudgetCardsProps {
 }
 
 const BudgetCards = (props: BudgetCardsProps): JSX.Element => {
-  const sumTransactionAmountsByCategory = (
-    transactionData: Transaction[],
-    category: string
-  ): number => {
-    const data = transactionData.filter((t: Transaction) => {
-      return (
-        (getIsParentCategory(category, transactionCategories)
-          ? t.category
-          : t.subcategory) === category
-      );
-    });
-
-    return data.reduce((n, { amount }) => n + amount, 0);
-  };
-
   if (props.isPending) {
     return (
       <div className="flex items-center justify-center">
