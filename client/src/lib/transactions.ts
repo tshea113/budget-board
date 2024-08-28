@@ -12,11 +12,8 @@ export const filterTransactionsByCategory = (
   transactions: Transaction[],
   categoryValue: string
 ) =>
-  transactions.filter(
-    (t: Transaction) =>
-      (t.category ?? '').localeCompare(categoryValue, undefined, {
-        sensitivity: 'base',
-      }) === 0
+  transactions.filter((t: Transaction) =>
+    areStringsEqual(t.category ?? '', categoryValue)
   );
 
 export const getTransactionsForMonth = (
