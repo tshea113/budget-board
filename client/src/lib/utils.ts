@@ -39,7 +39,7 @@ export const getMonthsUntilDate = (date: Date): number => {
   );
 };
 
-export const ConvertNumberToCurrency = (number: number) => {
+export const convertNumberToCurrency = (number: number) => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -47,3 +47,12 @@ export const ConvertNumberToCurrency = (number: number) => {
     minimumFractionDigits: 0,
   }).format(number);
 };
+
+/**
+ * Checks if two strings are equal ignoring case
+ * @param string1 One string you wish to compare
+ * @param string2 Another string you wish to compare
+ * @returns true if the strings are equal, ignoring case,  false otherwise.
+ */
+export const areStringsEqual = (string1: string, string2: string): boolean =>
+  string1.localeCompare(string2, undefined, { sensitivity: 'base' }) === 0;

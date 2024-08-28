@@ -1,4 +1,5 @@
 import { ICategory, CategoryNode } from '@/types/category';
+import { areStringsEqual } from './utils';
 
 /**
  * Builds a tree of category nodes and their children
@@ -19,9 +20,8 @@ export const buildCategoriesTree = (categories: ICategory[]): CategoryNode[] => 
   categories
     .filter((c) => c.parent.length !== 0)
     .forEach((category) => {
-      const parent: CategoryNode | undefined = roots.find(
-        (c) =>
-          c.value.localeCompare(category.parent, undefined, { sensitivity: 'base' }) === 0
+      const parent: CategoryNode | undefined = roots.find((c) =>
+        areStringsEqual(c.value, category.parent)
       );
 
       if (parent) {
@@ -42,9 +42,7 @@ export const getFormattedCategoryValue = (
   categoryString: string,
   categories: ICategory[]
 ): string => {
-  const foundCategory = categories.find(
-    (c) => c.value.localeCompare(categoryString, undefined, { sensitivity: 'base' }) === 0
-  );
+  const foundCategory = categories.find((c) => areStringsEqual(c.value, categoryString));
 
   return foundCategory?.value ?? '';
 };
@@ -59,9 +57,7 @@ export const getParentCategory = (
   categoryValue: string,
   categories: ICategory[]
 ): string => {
-  const category = categories.find(
-    (c) => c.value.localeCompare(categoryValue, undefined, { sensitivity: 'base' }) === 0
-  );
+  const category = categories.find((c) => areStringsEqual(c.value, categoryValue));
 
   if (category == null) return '';
 
@@ -78,9 +74,6 @@ export const getIsParentCategory = (
   categories: ICategory[]
 ): boolean => {
   return (
-    categories.find(
-      (c) =>
-        c.value.localeCompare(categoryValue, undefined, { sensitivity: 'base' }) === 0
-    )?.parent.length === 0
+    categories.find((c) => areStringsEqual(c.value, categoryValue))?.parent.length === 0
   );
 };

@@ -4,6 +4,7 @@ import BudgetTotal from './budget-total';
 import { type Budget } from '@/types/budget';
 import { BudgetGroup, getBudgetsForGroup } from '@/lib/budgets';
 import { type Transaction } from '@/types/transaction';
+import { areStringsEqual } from '@/lib/utils';
 
 interface BudgetTotalCardProps {
   budgetData: Budget[];
@@ -27,7 +28,9 @@ const BudgetTotalCard = (props: BudgetTotalCardProps): JSX.Element => {
         label={'Income'}
         amount={Math.abs(
           getTransactionTotal(
-            props.transactionData.filter((t) => t.category === 'income')
+            props.transactionData.filter((t) =>
+              areStringsEqual(t.category ?? '', 'Income')
+            )
           )
         )}
         total={getBudgetTotal(getBudgetsForGroup(props.budgetData, BudgetGroup.Income))}
@@ -36,7 +39,9 @@ const BudgetTotalCard = (props: BudgetTotalCardProps): JSX.Element => {
         label={'Spending'}
         amount={Math.abs(
           getTransactionTotal(
-            props.transactionData.filter((t) => t.category !== 'income')
+            props.transactionData.filter(
+              (t) => !areStringsEqual(t.category ?? '', 'Income')
+            )
           )
         )}
         total={getBudgetTotal(getBudgetsForGroup(props.budgetData, BudgetGroup.Spending))}

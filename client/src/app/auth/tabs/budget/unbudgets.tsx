@@ -9,6 +9,7 @@ import { Transaction, transactionCategories } from '@/types/transaction';
 import UnbudgetCard from './unbudget-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getParentCategory } from '@/lib/category';
+import { areStringsEqual } from '@/lib/utils';
 
 interface Unbudget {
   category: string;
@@ -33,24 +34,12 @@ const getUnbudgetedTransactions = (
 
   const filteredGroupedTransactions = groupedTransactions.filter((t) => {
     return !budgets.some(({ category }) => {
-      if (
-        category.localeCompare(
-          getParentCategory(category, transactionCategories),
-          undefined,
-          { sensitivity: 'base' }
-        ) === 0
-      ) {
+      if (areStringsEqual(category, getParentCategory(category, transactionCategories))) {
         // The budget is for a parent category, so check if it is the transaction's parent category
-        return (
-          category.localeCompare(
-            getParentCategory(t[0], transactionCategories),
-            undefined,
-            { sensitivity: 'base' }
-          ) === 0
-        );
+        return areStringsEqual(category, getParentCategory(t[0], transactionCategories));
       } else {
         // The budget is a subcategory, so just check that it matches the transaction
-        return category.localeCompare(t[0], undefined, { sensitivity: 'base' }) === 0;
+        return areStringsEqual(category, t[0]);
       }
     });
   });
