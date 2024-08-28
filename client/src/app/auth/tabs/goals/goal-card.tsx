@@ -8,7 +8,7 @@ import {
   getMonthlyContributionTotal,
   sumTransactionsForGoalForMonth,
 } from '@/lib/goals';
-import { ConvertNumberToCurrency, cn, getProgress } from '@/lib/utils';
+import { convertNumberToCurrency, cn, getProgress } from '@/lib/utils';
 import { Goal } from '@/types/goal';
 import { TrashIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -57,13 +57,13 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
           </span>
           <div className="justify-self-end text-lg">
             <span className="font-semibold">
-              {ConvertNumberToCurrency(
+              {convertNumberToCurrency(
                 sumAccountsTotalBalance(props.goal.accounts) - props.goal.initialAmount
               )}
             </span>
             <span> of </span>
             <span className="font-semibold">
-              {ConvertNumberToCurrency(
+              {convertNumberToCurrency(
                 getGoalTargetAmount(props.goal.amount, props.goal.initialAmount)
               )}
             </span>
@@ -88,11 +88,11 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
           </div>
           <div className="justify-self-end text-base">
             <span className="font-semibold">
-              {ConvertNumberToCurrency(sumTransactionsForGoalForMonth(props.goal))}
+              {convertNumberToCurrency(sumTransactionsForGoalForMonth(props.goal))}
             </span>
             <span> of </span>
             <span className="font-semibold">
-              {ConvertNumberToCurrency(getMonthlyContributionTotal(props.goal))}
+              {convertNumberToCurrency(getMonthlyContributionTotal(props.goal))}
             </span>
             <span> this month</span>
           </div>

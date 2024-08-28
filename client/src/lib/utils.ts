@@ -39,7 +39,7 @@ export const getMonthsUntilDate = (date: Date): number => {
   );
 };
 
-export const ConvertNumberToCurrency = (number: number) => {
+export const convertNumberToCurrency = (number: number) => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
