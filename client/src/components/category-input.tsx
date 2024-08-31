@@ -8,11 +8,13 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
+import { areStringsEqual, cn } from '@/lib/utils';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import React from 'react';
 import CommandSubcategory from './command-subcategory';
 import { ICategoryNode } from '@/types/category';
+import { getFormattedCategoryValue } from '@/lib/category';
+import { transactionCategories } from '@/types/transaction';
 
 interface CategoryInputProps {
   initialValue: string;
@@ -36,7 +38,9 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
             e.stopPropagation();
           }}
         >
-          {value.length > 0 ? value : 'Select category...'}
+          {value.length > 0
+            ? getFormattedCategoryValue(value, transactionCategories)
+            : 'Select category...'}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -69,7 +73,7 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
                   <Check
                     className={cn(
                       'mr-2 h-4 w-4',
-                      value === category.value ? 'opacity-100' : 'opacity-0'
+                      areStringsEqual(value, category.value) ? 'opacity-100' : 'opacity-0'
                     )}
                   />
                   {category.value}

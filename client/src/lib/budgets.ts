@@ -1,6 +1,7 @@
 import { type Budget } from '@/types/budget';
 import { transactionCategories } from '@/types/transaction';
 import { getParentCategory } from './category';
+import { areStringsEqual } from './utils';
 
 export enum BudgetGroup {
   Income,
@@ -38,7 +39,7 @@ export const getBudgetsForGroup = (
 };
 
 export const getBudgetGroupForCategory = (category: string): BudgetGroup => {
-  if (category === 'income') {
+  if (areStringsEqual(category, 'Income')) {
     return BudgetGroup.Income;
   } else {
     return BudgetGroup.Spending;

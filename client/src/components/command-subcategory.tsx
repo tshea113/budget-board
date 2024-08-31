@@ -1,5 +1,5 @@
 import { CommandItem } from '@/components/ui/command';
-import { cn } from '@/lib/utils';
+import { areStringsEqual, cn } from '@/lib/utils';
 import { ICategoryNode } from '@/types/category';
 import { Check } from 'lucide-react';
 import React from 'react';
@@ -33,7 +33,7 @@ const CommandSubcategory = ({
           <Check
             className={cn(
               'mr-8 h-4 w-4',
-              value === subCategory.value ? 'opacity-100' : 'opacity-0'
+              areStringsEqual(value, subCategory.value) ? 'opacity-100' : 'opacity-0'
             )}
           />
           {subCategory.value}
