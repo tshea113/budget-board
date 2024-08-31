@@ -1,38 +1,103 @@
-import { AuthContext } from '@/components/auth-provider';
-import { getTransactionsForMonth } from '@/lib/transactions';
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@/components/ui/chart';
+import {
+  getRollingTotalTransactionsForMonth,
+  getTransactionsForMonth,
+} from '@/lib/transactions';
 import { Transaction } from '@/types/transaction';
-import { useQuery } from '@tanstack/react-query';
-import { AxiosResponse } from 'axios';
-import React from 'react';
+import { Area, AreaChart, XAxis } from 'recharts';
 
-interface SpendingChartData {
-  date: string;
-  amount: number;
+const chartConfig = {
+  amount1: {
+    label: 'This Month',
+    color: 'hsl(var(--chart-1))',
+  },
+  amount2: {
+    label: 'Last Month',
+    color: 'hsl(var(--chart-2))',
+  },
+} satisfies ChartConfig;
+
+interface SpendingTrendsChartProps {
+  transactions: Transaction[];
+  months: Date[];
 }
 
-const SpendingTrendsChart = (): JSX.Element => {
-  const { request } = React.useContext<any>(AuthContext);
-  const transactionsQuery = useQuery({
-    queryKey: ['transactions'],
-    queryFn: async (): Promise<Transaction[]> => {
-      const res: AxiosResponse = await request({
-        url: '/api/transaction',
-        method: 'GET',
+interface SpendingTrendsChartData {
+  day: number;
+  amount1?: number;
+  amount2?: number;
+}
+
+const SpendingTrendsChart = (props: SpendingTrendsChartProps): JSX.Element => {
+  const getChartData = () => {
+    let spendingTrendsChartData: SpendingTrendsChartData[] = [];
+    props.months.forEach((month, index) => {
+      const transactionsForMonth = getTransactionsForMonth(props.transactions, month);
+
+      const rollingTotalTransactionsForMonth =
+        getRollingTotalTransactionsForMonth(transactionsForMonth);
+
+      rollingTotalTransactionsForMonth.forEach((rollingTotalTransaction) => {
+        const chartDay = spendingTrendsChartData.find(
+          (data) => data.day === rollingTotalTransaction.day
+        );
+
+        if (chartDay == null) {
+          const newChartDay: SpendingTrendsChartData = {
+            day: rollingTotalTransaction.day,
+          };
+          if (index == 0) {
+            newChartDay.amount1 = rollingTotalTransaction.amount;
+          } else {
+            newChartDay.amount2 = rollingTotalTransaction.amount;
+          }
+          spendingTrendsChartData.push(newChartDay);
+        } else {
+          if (index == 0) {
+            chartDay.amount1 = rollingTotalTransaction.amount;
+          } else {
+            chartDay.amount2 = rollingTotalTransaction.amount;
+          }
+        }
       });
+    });
+    return spendingTrendsChartData;
+  };
 
-      if (res.status == 200) {
-        return res.data;
-      }
-
-      return [];
-    },
-  });
-
-  const transactionsForMonth = React.useMemo(() => {
-    return getTransactionsForMonth(transactionsQuery.data ?? [], new Date());
-  }, [transactionsQuery]);
-
-  return <div></div>;
+  return (
+    <div>
+      <ChartContainer config={chartConfig}>
+        <AreaChart data={getChartData()}>
+          <XAxis dataKey="day" tickLine={false} axisLine={false} />
+          <ChartTooltip content={<ChartTooltipContent />} />
+          <ChartLegend content={<ChartLegendContent />} />
+          {props.months.length === 2 && (
+            <Area
+              dataKey="amount2"
+              type={'monotone'}
+              fill="var(--color-amount2)"
+              fillOpacity={0.1}
+              stroke="var(--color-amount2)"
+            />
+          )}
+          <Area
+            dataKey="amount1"
+            type={'monotone'}
+            fill="var(--color-amount1)"
+            fillOpacity={0.6}
+            stroke="var(--color-amount1)"
+          />
+        </AreaChart>
+      </ChartContainer>
+    </div>
+  );
 };
 
 export default SpendingTrendsChart;
