@@ -3,7 +3,7 @@ import { twMerge } from 'tailwind-merge';
 
 export const cn = (...inputs: ClassValue[]): string => twMerge(clsx(inputs));
 
-export const initMonth = (): Date => {
+export const initCurrentMonth = (): Date => {
   const date = new Date();
 
   // We only really care about the month and year here, so we need to set

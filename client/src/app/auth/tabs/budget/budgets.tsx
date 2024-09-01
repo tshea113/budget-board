@@ -3,7 +3,7 @@ import { BudgetGroup, getBudgetsForMonth, getBudgetsForGroup } from '@/lib/budge
 import { getTransactionsForMonth } from '@/lib/transactions';
 import { type Budget } from '@/types/budget';
 import BudgetTotalCard from './budget-total-card';
-import { initMonth } from '@/lib/utils';
+import { initCurrentMonth } from '@/lib/utils';
 import { type Transaction } from '@/types/transaction';
 import Unbudgets from './unbudgets';
 import BudgetsToolbar from './budgets-toolbar';
@@ -13,7 +13,7 @@ import BudgetCardsGroup from './budget-cards-group/budget-cards-group';
 import { AxiosResponse } from 'axios';
 
 const Budgets = (): JSX.Element => {
-  const [date, setDate] = React.useState<Date>(initMonth());
+  const [date, setDate] = React.useState<Date>(initCurrentMonth());
 
   const { request } = React.useContext<any>(AuthContext);
 
