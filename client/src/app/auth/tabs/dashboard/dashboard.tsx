@@ -4,7 +4,6 @@ import WelcomeCard from './welcome-card';
 import EmailVerified from '../../../../components/email-verified';
 import UncategorizedTransactionsCard from './uncategorized-transactions/uncategorized-transactions-card';
 import NetWorthCard from './net-worth/net-worth-card';
-import SpendingTrendsCard from './spending-trends/spending-trends-card';
 
 const Dashboard = (): JSX.Element => {
   return (
@@ -18,7 +17,6 @@ const Dashboard = (): JSX.Element => {
         <div className="col-span-7 space-y-2 2xl:col-span-8">
           <WelcomeCard />
           <UncategorizedTransactionsCard />
-          <SpendingTrendsCard />
         </div>
       </div>
     </div>

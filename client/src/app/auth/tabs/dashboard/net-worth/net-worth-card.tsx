@@ -1,12 +1,12 @@
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import SkeletonAccountCard from '../accounts/skeleton-account-card';
 import { AxiosResponse } from 'axios';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { AuthContext } from '@/components/auth-provider';
 import { Account } from '@/types/account';
 import NetWorthItem from './net-worth-item';
-import { Skeleton } from '@/components/ui/skeleton';
 
 const NetWorthCard = (): JSX.Element => {
   const { request } = React.useContext<any>(AuthContext);
@@ -31,14 +31,7 @@ const NetWorthCard = (): JSX.Element => {
   }, [accountsQuery]);
 
   if (accountsQuery.isPending) {
-    return (
-      <Card>
-        <div className="m-3 flex flex-col space-y-3">
-          <Skeleton className="h-10 max-w-[125px]" />
-          <Skeleton className="h-[250px] rounded-xl" />
-        </div>
-      </Card>
-    );
+    return <SkeletonAccountCard />;
   }
 
   return (
