@@ -26,7 +26,9 @@ const NetWorthItem = (props: NetWorthItemProps): JSX.Element => {
         <span className="text-base tracking-tight">{props.title}</span>
       </div>
       <div className="col-span-4 text-right">
-        <span>{convertNumberToCurrency(sumAccountsTotalBalance(filteredAccounts))}</span>
+        <span>
+          {convertNumberToCurrency(sumAccountsTotalBalance(filteredAccounts), true)}
+        </span>
       </div>
     </div>
   );

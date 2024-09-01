@@ -13,7 +13,7 @@ const AccountItem = (props: AccountItemProps): JSX.Element => {
           <span className="text-base tracking-tight">{props.account.name}</span>
         </div>
         <span className="col-span-4 text-right">
-          {convertNumberToCurrency(props.account.currentBalance)}
+          {convertNumberToCurrency(props.account.currentBalance, true)}
         </span>
       </div>
       <span className="row-span-1 text-left text-sm text-muted-foreground">

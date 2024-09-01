@@ -39,12 +39,12 @@ export const getMonthsUntilDate = (date: Date): number => {
   );
 };
 
-export const convertNumberToCurrency = (number: number) => {
+export const convertNumberToCurrency = (number: number, includeCents?: boolean) => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-    maximumFractionDigits: 0,
-    minimumFractionDigits: 0,
+    maximumFractionDigits: includeCents ? 2 : 0,
+    minimumFractionDigits: includeCents ? 2 : 0,
   }).format(number);
 };
 

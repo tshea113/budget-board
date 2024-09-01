@@ -94,7 +94,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
           )}
         </span>
         <span className="sm:col-span-2 md:col-span-1">
-          {convertNumberToCurrency(props.transaction.amount)}
+          {convertNumberToCurrency(props.transaction.amount, true)}
         </span>
       </div>
     </Card>

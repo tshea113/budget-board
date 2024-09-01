@@ -55,7 +55,7 @@ const EditableCurrencyCell = (props: EditableCurrencyCellProps): JSX.Element => 
           type="text"
         />
       ) : (
-        <span>{convertNumberToCurrency(parseFloat(currencyValue))}</span>
+        <span>{convertNumberToCurrency(parseFloat(currencyValue), true)}</span>
       )}
     </div>
   );
