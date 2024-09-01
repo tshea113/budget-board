@@ -3,20 +3,6 @@ import { twMerge } from 'tailwind-merge';
 
 export const cn = (...inputs: ClassValue[]): string => twMerge(clsx(inputs));
 
-export const initCurrentMonth = (): Date => {
-  const date = new Date();
-
-  // We only really care about the month and year here, so we need to set
-  // a consistent time for the rest.
-  date.setDate(1);
-  date.setHours(12);
-  date.setMinutes(0);
-  date.setSeconds(0);
-  date.setMilliseconds(0);
-
-  return date;
-};
-
 export const getProgress = (amount: number, total: number): number => {
   const percentage = (amount / total) * 100;
   if (percentage > 100) return 100;
@@ -49,9 +35,27 @@ export const convertNumberToCurrency = (number: number, includeCents?: boolean) 
 };
 
 /**
- * Checks if two strings are equal ignoring case
- * @param string1 One string you wish to compare
- * @param string2 Another string you wish to compare
+ * Creates a Date object for the current month.
+ * @returns A date object set to noon of the first day of the current month.
+ */
+export const initCurrentMonth = (): Date => {
+  const date = new Date();
+
+  // We only really care about the month and year here, so we need to set
+  // a consistent time for the rest.
+  date.setDate(1);
+  date.setHours(12);
+  date.setMinutes(0);
+  date.setSeconds(0);
+  date.setMilliseconds(0);
+
+  return date;
+};
+
+/**
+ * Checks if two strings are equal ignoring case.
+ * @param string1 One string you wish to compare.
+ * @param string2 Another string you wish to compare.
  * @returns true if the strings are equal, ignoring case,  false otherwise.
  */
 export const areStringsEqual = (string1: string, string2: string): boolean =>
