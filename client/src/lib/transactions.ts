@@ -58,7 +58,7 @@ export const sumTransactionAmountsByCategory = (
   return transactionsForCategory.reduce((n, { amount }) => n + amount, 0);
 };
 
-export interface RollingTotalTransactionsPerDay {
+export interface RollingTotalSpendingPerDay {
   day: number;
   amount: number;
 }
@@ -68,10 +68,10 @@ export interface RollingTotalTransactionsPerDay {
  * @param transactionsForMonth The transactions for a given month
  * @returns An array of dates with the corresponding cumulative total spending up to that date
  */
-export const getRollingTotalTransactionsForMonth = (
+export const getRollingTotalSpendingForMonth = (
   transactionsForMonth: Transaction[]
-): RollingTotalTransactionsPerDay[] => {
-  let rollingTotalTransactionsPerDay: RollingTotalTransactionsPerDay[] = [];
+): RollingTotalSpendingPerDay[] => {
+  let rollingTotalSpendingPerDay: RollingTotalSpendingPerDay[] = [];
 
   // This chart only needs to display transactions that aren't income
   const sortedSpending = transactionsForMonth
@@ -80,13 +80,15 @@ export const getRollingTotalTransactionsForMonth = (
 
   let total = 0;
   const summedTransactionsPerMonth = sortedSpending.reduce(
-    (result: RollingTotalTransactionsPerDay[], transaction: Transaction) => {
+    (result: RollingTotalSpendingPerDay[], transaction: Transaction) => {
       const foundDay = result.find((t) => t.day === new Date(transaction.date).getDate());
 
+      // Transactions are negative and we want spending to be positive,
+      // so instead of multiplying by a negative, just subtract from total.
       total -= transaction.amount;
 
       if (foundDay == null) {
-        const newDay: RollingTotalTransactionsPerDay = {
+        const newDay: RollingTotalSpendingPerDay = {
           day: new Date(transaction.date).getDate(),
           amount: total,
         };
@@ -102,20 +104,19 @@ export const getRollingTotalTransactionsForMonth = (
   for (let index = 0; index < 31; index++) {
     const amount = summedTransactionsPerMonth.find((t) => t.day === index);
 
-    let dayAmount: RollingTotalTransactionsPerDay = {
+    let dayAmount: RollingTotalSpendingPerDay = {
       day: index,
       amount: 0,
     };
 
     if (amount == null) {
-      if (index !== 0)
-        dayAmount.amount = rollingTotalTransactionsPerDay[index - 1].amount;
+      if (index !== 0) dayAmount.amount = rollingTotalSpendingPerDay[index - 1].amount;
 
-      rollingTotalTransactionsPerDay.push(dayAmount);
+      rollingTotalSpendingPerDay.push(dayAmount);
     } else {
-      rollingTotalTransactionsPerDay.push(amount);
+      rollingTotalSpendingPerDay.push(amount);
     }
   }
 
-  return rollingTotalTransactionsPerDay;
+  return rollingTotalSpendingPerDay;
 };

@@ -7,7 +7,7 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart';
 import {
-  getRollingTotalTransactionsForMonth,
+  getRollingTotalSpendingForMonth,
   getTransactionsForMonth,
 } from '@/lib/transactions';
 import { Transaction } from '@/types/transaction';
@@ -42,7 +42,7 @@ const SpendingTrendsChart = (props: SpendingTrendsChartProps): JSX.Element => {
       const transactionsForMonth = getTransactionsForMonth(props.transactions, month);
 
       const rollingTotalTransactionsForMonth =
-        getRollingTotalTransactionsForMonth(transactionsForMonth);
+        getRollingTotalSpendingForMonth(transactionsForMonth);
 
       rollingTotalTransactionsForMonth.forEach((rollingTotalTransaction) => {
         const chartDay = spendingTrendsChartData.find(
