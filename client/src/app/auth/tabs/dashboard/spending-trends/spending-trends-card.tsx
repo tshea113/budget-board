@@ -11,6 +11,7 @@ import {
   getRollingTotalSpendingForMonth,
   getTransactionsForMonth,
 } from '@/lib/transactions';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const SpendingTrendsCard = (): JSX.Element => {
   const { request } = React.useContext<any>(AuthContext);
@@ -29,10 +30,6 @@ const SpendingTrendsCard = (): JSX.Element => {
       return [];
     },
   });
-
-  if (transactionsQuery.isPending) {
-    return <span>Loading...</span>;
-  }
 
   const getSpendingComparison = (): number => {
     const thisMonthTransactions = getTransactionsForMonth(
@@ -71,6 +68,20 @@ const SpendingTrendsCard = (): JSX.Element => {
 
     return 'the same as';
   };
+
+  if (transactionsQuery.isPending) {
+    return (
+      <Card>
+        <div className="m-3 flex flex-col space-y-3">
+          <div className="grid w-full grid-cols-2 items-center">
+            <Skeleton className="h-10 w-1/2 max-w-[125px] justify-self-start" />
+            <Skeleton className="h-6 w-1/2 max-w-[250px] justify-self-end" />
+          </div>
+          <Skeleton className="h-[250px] rounded-xl" />
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <Card className="w-full p-6">
