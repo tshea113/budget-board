@@ -1,5 +1,4 @@
 import { Input } from '@/components/ui/input';
-import { convertNumberToCurrency } from '@/lib/utils';
 import { type Transaction } from '@/types/transaction';
 import React from 'react';
 
@@ -12,9 +11,7 @@ interface EditableCurrencyCellProps {
 }
 
 const EditableCurrencyCell = (props: EditableCurrencyCellProps): JSX.Element => {
-  const [currencyValue, setCurrencyValue] = React.useState<string>(
-    props.currency.toFixed(2)
-  );
+  const [currencyValue, setCurrencyValue] = React.useState<string>(props.currency.toFixed(2));
 
   React.useEffect(() => {
     if (props.isError) {
@@ -55,7 +52,12 @@ const EditableCurrencyCell = (props: EditableCurrencyCellProps): JSX.Element => 
           type="text"
         />
       ) : (
-        <span>{convertNumberToCurrency(parseFloat(currencyValue), true)}</span>
+        <span>
+          {new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+          }).format(parseFloat(currencyValue))}
+        </span>
       )}
     </div>
   );

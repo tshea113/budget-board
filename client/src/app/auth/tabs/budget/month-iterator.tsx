@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-import { getMonthAndYearDateString } from '@/lib/utils';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import React from 'react';
 
@@ -9,9 +8,11 @@ interface MonthIteratorProps {
 }
 
 const MonthIterator = ({ date, setDate }: MonthIteratorProps): JSX.Element => {
-  const [displayDate, setDisplayDate] = React.useState<string>(
-    getMonthAndYearDateString(date)
-  );
+  const translateDate = (date: Date): string => {
+    return date.toLocaleString('default', { month: 'long', year: 'numeric' });
+  };
+
+  const [displayDate, setDisplayDate] = React.useState<string>(translateDate(date));
 
   const iterateDate = (iterate: number): void => {
     const newDate = new Date(date);
@@ -20,7 +21,7 @@ const MonthIterator = ({ date, setDate }: MonthIteratorProps): JSX.Element => {
   };
 
   React.useEffect(() => {
-    setDisplayDate(getMonthAndYearDateString(date));
+    setDisplayDate(translateDate(date));
   }, [date]);
 
   return (
