@@ -64,7 +64,6 @@ export const sumTransactionAmountsByCategory = (
   return transactionsForCategory.reduce((n, { amount }) => n + amount, 0);
 };
 
-// TODO: Can prob get rid of day
 export interface RollingTotalSpendingPerDay {
   day: number;
   amount: number;
