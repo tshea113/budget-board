@@ -1,3 +1,4 @@
+import { convertNumberToCurrency } from '@/lib/utils';
 import { type Account } from '@/types/account';
 
 interface AccountItemProps {
@@ -12,10 +13,7 @@ const AccountItem = (props: AccountItemProps): JSX.Element => {
           <span className="text-base tracking-tight">{props.account.name}</span>
         </div>
         <span className="col-span-4 text-right">
-          {new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-          }).format(props.account.currentBalance)}
+          {convertNumberToCurrency(props.account.currentBalance, true)}
         </span>
       </div>
       <span className="row-span-1 text-left text-sm text-muted-foreground">
