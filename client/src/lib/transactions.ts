@@ -16,16 +16,6 @@ export const filterTransactionsByCategory = (
     areStringsEqual(t.category ?? '', categoryValue)
   );
 
-export const getTransactionsForMonth = (
-  transactionData: Transaction[],
-  date: Date
-): Transaction[] =>
-  transactionData.filter(
-    (t: Transaction) =>
-      new Date(t.date).getMonth() === new Date(date).getMonth() &&
-      new Date(t.date).getUTCFullYear() === new Date(date).getUTCFullYear()
-  ) ?? [];
-
 export const formatDate = (date: Date): string => {
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
@@ -34,6 +24,22 @@ export const formatDate = (date: Date): string => {
   };
   return new Date(date).toLocaleDateString([], options);
 };
+
+/**
+ * Returns all transactions within a given month and year.
+ * @param transactionData An array of transactions.
+ * @param date The date containing the month and year that we will filter all transactions.
+ * @returns An array of transactions filtered to the given month and year.
+ */
+export const getTransactionsForMonth = (
+  transactionData: Transaction[],
+  date: Date
+): Transaction[] =>
+  transactionData.filter(
+    (t: Transaction) =>
+      new Date(t.date).getMonth() === new Date(date).getMonth() &&
+      new Date(t.date).getUTCFullYear() === new Date(date).getUTCFullYear()
+  );
 
 /**
  * Sums the provided transactions for the given transaction category
@@ -58,6 +64,7 @@ export const sumTransactionAmountsByCategory = (
   return transactionsForCategory.reduce((n, { amount }) => n + amount, 0);
 };
 
+// TODO: Can prob get rid of day
 export interface RollingTotalSpendingPerDay {
   day: number;
   amount: number;
@@ -101,17 +108,19 @@ export const getRollingTotalSpendingForMonth = (
     []
   );
 
-  for (let index = 0; index < 31; index++) {
-    const amount = summedTransactionsPerMonth.find((t) => t.day === index);
+  for (let dayItr = 1; dayItr < 31; dayItr++) {
+    const amount = summedTransactionsPerMonth.find((t) => t.day === dayItr);
 
     let dayAmount: RollingTotalSpendingPerDay = {
-      day: index,
+      day: dayItr,
       amount: 0,
     };
 
-    if (amount == null) {
-      if (index !== 0) dayAmount.amount = rollingTotalSpendingPerDay[index - 1].amount;
-
+    if (!amount) {
+      if (dayItr > 1) {
+        // If there are no transactions for a day, we should just roll over the previous day.
+        dayAmount.amount = rollingTotalSpendingPerDay[dayItr - 2].amount;
+      }
       rollingTotalSpendingPerDay.push(dayAmount);
     } else {
       rollingTotalSpendingPerDay.push(amount);

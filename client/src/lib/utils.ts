@@ -56,3 +56,16 @@ export const convertNumberToCurrency = (number: number, includeCents?: boolean) 
  */
 export const areStringsEqual = (string1: string, string2: string): boolean =>
   string1.localeCompare(string2, undefined, { sensitivity: 'base' }) === 0;
+
+/**
+ * Returns a Date object from a specified number of months ago.
+ * @param numberOfMonthsAgo The number of months ago.
+ * @returns A Date object containing the calculated month and year.
+ */
+export const getDateFromMonthsAgo = (numberOfMonthsAgo: number): Date => {
+  const lastMonth = new Date();
+  // Date is going to be ignored anyways, so set it to something consistent
+  lastMonth.setDate(1);
+  lastMonth.setMonth(lastMonth.getMonth() - numberOfMonthsAgo);
+  return lastMonth;
+};
