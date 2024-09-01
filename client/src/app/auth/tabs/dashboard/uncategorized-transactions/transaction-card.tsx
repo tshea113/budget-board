@@ -5,6 +5,7 @@ import { toast } from '@/components/ui/use-toast';
 import { buildCategoriesTree, getIsParentCategory } from '@/lib/category';
 import { translateAxiosError } from '@/lib/requests';
 import { formatDate } from '@/lib/transactions';
+import { convertNumberToCurrency } from '@/lib/utils';
 import { Transaction, transactionCategories } from '@/types/transaction';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
@@ -93,10 +94,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
           )}
         </span>
         <span className="sm:col-span-2 md:col-span-1">
-          {new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-          }).format(props.transaction.amount)}
+          {convertNumberToCurrency(props.transaction.amount)}
         </span>
       </div>
     </Card>

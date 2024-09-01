@@ -1,4 +1,5 @@
 import { sumAccountsTotalBalance } from '@/lib/accounts';
+import { convertNumberToCurrency } from '@/lib/utils';
 import { Account } from '@/types/account';
 import React from 'react';
 
@@ -25,12 +26,7 @@ const NetWorthItem = (props: NetWorthItemProps): JSX.Element => {
         <span className="text-base tracking-tight">{props.title}</span>
       </div>
       <div className="col-span-4 text-right">
-        <span>
-          {new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-          }).format(sumAccountsTotalBalance(filteredAccounts))}
-        </span>
+        <span>{convertNumberToCurrency(sumAccountsTotalBalance(filteredAccounts))}</span>
       </div>
     </div>
   );
