@@ -59,6 +59,15 @@ export const initCurrentMonth = (): Date => {
 };
 
 /**
+ * Creates a date string containing the month and year
+ * @param date The date for the date string
+ * @returns A string containing the month and year of the provided date.
+ */
+export const getMonthAndYearDateString = (date: Date): string => {
+  return date.toLocaleString('default', { month: 'long', year: 'numeric' });
+};
+
+/**
  * Checks if two strings are equal ignoring case.
  * @param string1 One string you wish to compare.
  * @param string2 Another string you wish to compare.

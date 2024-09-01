@@ -10,19 +10,9 @@ import {
   getRollingTotalSpendingForMonth,
   getTransactionsForMonth,
 } from '@/lib/transactions';
+import { getMonthAndYearDateString } from '@/lib/utils';
 import { Transaction } from '@/types/transaction';
 import { Area, AreaChart, XAxis } from 'recharts';
-
-const chartConfig = {
-  amount1: {
-    label: 'This Month',
-    color: 'hsl(var(--chart-1))',
-  },
-  amount2: {
-    label: 'Last Month',
-    color: 'hsl(var(--chart-2))',
-  },
-} satisfies ChartConfig;
 
 interface SpendingTrendsChartProps {
   transactions: Transaction[];
@@ -36,6 +26,17 @@ interface SpendingTrendsChartData {
 }
 
 const SpendingTrendsChart = (props: SpendingTrendsChartProps): JSX.Element => {
+  const chartConfig = {
+    amount1: {
+      label: getMonthAndYearDateString(props.months.at(0) ?? new Date()),
+      color: 'hsl(var(--chart-1))',
+    },
+    amount2: {
+      label: getMonthAndYearDateString(props.months.at(1) ?? new Date()),
+      color: 'hsl(var(--chart-2))',
+    },
+  } satisfies ChartConfig;
+
   const getChartData = () => {
     let spendingTrendsChartData: SpendingTrendsChartData[] = [];
     props.months.forEach((month, index) => {
