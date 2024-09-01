@@ -25,12 +25,18 @@ export const getMonthsUntilDate = (date: Date): number => {
   );
 };
 
-export const convertNumberToCurrency = (number: number, includeCents?: boolean) => {
+/**
+ * Converts a number to a formatted currency string
+ * @param number Number to be converted to a currency string
+ * @param shouldIncludeCents Boolean to specify whether cents should be included in the currency string
+ * @returns A formatted currency string
+ */
+export const convertNumberToCurrency = (number: number, shouldIncludeCents?: boolean) => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-    maximumFractionDigits: includeCents ? 2 : 0,
-    minimumFractionDigits: includeCents ? 2 : 0,
+    maximumFractionDigits: shouldIncludeCents ? 2 : 0,
+    minimumFractionDigits: shouldIncludeCents ? 2 : 0,
   }).format(number);
 };
 
