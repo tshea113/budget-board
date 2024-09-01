@@ -2,12 +2,12 @@ import { Card } from '@/components/ui/card';
 import AccountsConfiguration from './accounts-configuration/accounts-configuration';
 import AccountItems from './account-items';
 import { Separator } from '@/components/ui/separator';
-import SkeletonAccountCard from './skeleton-account-card';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import { Account } from '@/types/account';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const AccountCard = (): JSX.Element => {
   const { request } = React.useContext<any>(AuthContext);
@@ -28,7 +28,14 @@ const AccountCard = (): JSX.Element => {
   });
 
   if (accountsQuery.isPending) {
-    return <SkeletonAccountCard />;
+    return (
+      <Card>
+        <div className="m-3 flex flex-col space-y-3">
+          <Skeleton className="h-10 max-w-[125px]" />
+          <Skeleton className="h-[250px] rounded-xl" />
+        </div>
+      </Card>
+    );
   }
 
   return (
