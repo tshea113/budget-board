@@ -7,20 +7,42 @@ import { useQuery } from '@tanstack/react-query';
 import { Transaction } from '@/types/transaction';
 import { AxiosResponse } from 'axios';
 import { convertNumberToCurrency, getDateFromMonthsAgo } from '@/lib/utils';
-import {
-  getRollingTotalSpendingForMonth,
-  getTransactionsForMonth,
-} from '@/lib/transactions';
+import { getRollingTotalSpendingForMonth } from '@/lib/transactions';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const SpendingTrendsCard = (): JSX.Element => {
   const { request } = React.useContext<any>(AuthContext);
-  const transactionsQuery = useQuery({
-    queryKey: ['transactions'],
+  const thisMonthDate = getDateFromMonthsAgo(0);
+  const thisMonthTransactionsQuery = useQuery({
+    queryKey: [
+      'transactions',
+      { month: thisMonthDate.getMonth(), year: thisMonthDate.getUTCFullYear() },
+    ],
     queryFn: async (): Promise<Transaction[]> => {
       const res: AxiosResponse = await request({
         url: '/api/transaction',
         method: 'GET',
+        params: { date: thisMonthDate },
+      });
+
+      if (res.status == 200) {
+        return res.data;
+      }
+
+      return [];
+    },
+  });
+  const lastMonthDate = getDateFromMonthsAgo(1);
+  const lastMonthTransactionsQuery = useQuery({
+    queryKey: [
+      'transactions',
+      { month: lastMonthDate.getMonth(), year: lastMonthDate.getUTCFullYear() },
+    ],
+    queryFn: async (): Promise<Transaction[]> => {
+      const res: AxiosResponse = await request({
+        url: '/api/transaction',
+        method: 'GET',
+        params: { date: lastMonthDate },
       });
 
       if (res.status == 200) {
@@ -32,17 +54,12 @@ const SpendingTrendsCard = (): JSX.Element => {
   });
 
   const getSpendingComparison = (): number => {
-    const thisMonthTransactions = getTransactionsForMonth(
-      transactionsQuery.data ?? [],
-      getDateFromMonthsAgo(0)
+    const thisMonthRollingTotal = getRollingTotalSpendingForMonth(
+      thisMonthTransactionsQuery.data ?? []
     );
-    const lastMonthTransactions = getTransactionsForMonth(
-      transactionsQuery.data ?? [],
-      getDateFromMonthsAgo(1)
+    const lastMonthRollingTotal = getRollingTotalSpendingForMonth(
+      lastMonthTransactionsQuery.data ?? []
     );
-
-    const thisMonthRollingTotal = getRollingTotalSpendingForMonth(thisMonthTransactions);
-    const lastMonthRollingTotal = getRollingTotalSpendingForMonth(lastMonthTransactions);
 
     const today = new Date().getDate();
 
@@ -69,7 +86,7 @@ const SpendingTrendsCard = (): JSX.Element => {
     return 'the same as';
   };
 
-  if (transactionsQuery.isPending) {
+  if (thisMonthTransactionsQuery.isPending || lastMonthTransactionsQuery.isPending) {
     return (
       <Card>
         <div className="m-3 flex flex-col space-y-3">
@@ -97,7 +114,9 @@ const SpendingTrendsCard = (): JSX.Element => {
       <div>
         <SpendingTrendsChart
           months={[getDateFromMonthsAgo(0), getDateFromMonthsAgo(1)]}
-          transactions={transactionsQuery.data ?? []}
+          transactions={(thisMonthTransactionsQuery.data ?? []).concat(
+            lastMonthTransactionsQuery.data ?? []
+          )}
         />
       </div>
     </Card>
