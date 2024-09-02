@@ -64,7 +64,8 @@ const SpendingTrendsCard = (): JSX.Element => {
     const today = new Date().getDate();
 
     return (
-      thisMonthRollingTotal[today - 1].amount - lastMonthRollingTotal[today - 1].amount
+      (thisMonthRollingTotal.at(today - 1)?.amount ?? 0) -
+      (lastMonthRollingTotal.at(today - 1)?.amount ?? 0)
     );
   };
 
