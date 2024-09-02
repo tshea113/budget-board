@@ -86,14 +86,26 @@ const SpendingTrendsChart = (props: SpendingTrendsChartProps): JSX.Element => {
               fill="var(--color-amount2)"
               fillOpacity={0.1}
               stroke="var(--color-amount2)"
+              dot={{
+                fill: 'var(--color-amount2)',
+              }}
+              activeDot={{
+                r: 5,
+              }}
             />
           )}
           <Area
             dataKey="amount1"
             type={'monotone'}
             fill="var(--color-amount1)"
-            fillOpacity={0.6}
+            fillOpacity={0.5}
             stroke="var(--color-amount1)"
+            dot={{
+              fill: 'var(--color-amount1)',
+            }}
+            activeDot={{
+              r: 5,
+            }}
           />
         </AreaChart>
       </ChartContainer>
