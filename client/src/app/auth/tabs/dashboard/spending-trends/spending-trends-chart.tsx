@@ -74,7 +74,7 @@ const SpendingTrendsChart = (props: SpendingTrendsChartProps): JSX.Element => {
 
   return (
     <div>
-      <ChartContainer config={chartConfig}>
+      <ChartContainer config={chartConfig} className="max-h-[400px] w-full">
         <AreaChart data={getChartData()}>
           <XAxis dataKey="day" tickLine={false} axisLine={false} />
           <ChartTooltip content={<ChartTooltipContent />} />
