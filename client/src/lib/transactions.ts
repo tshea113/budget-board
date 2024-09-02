@@ -107,7 +107,12 @@ export const getRollingTotalSpendingForMonth = (
     []
   );
 
-  for (let dayItr = 1; dayItr < 31; dayItr++) {
+  for (
+    let dayItr = 1;
+    dayItr <=
+    (summedTransactionsPerMonth.at(summedTransactionsPerMonth.length - 1)?.day ?? 0);
+    dayItr++
+  ) {
     const amount = summedTransactionsPerMonth.find((t) => t.day === dayItr);
 
     let dayAmount: RollingTotalSpendingPerDay = {
