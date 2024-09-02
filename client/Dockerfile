@@ -4,6 +4,7 @@ ARG VITE_API_URL
 ARG VITE_API_URL ${VITE_API_URL}
 
 ENV NODE_ENV=development
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 WORKDIR /app
 
 COPY client/.yarnrc.yml .
