@@ -1,5 +1,6 @@
 ﻿using BudgetBoard.Database.Data;
 using BudgetBoard.Database.Models;
+using BudgetBoard.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,10 +29,10 @@ namespace BudgetBoard.Controllers
                 return NotFound();
             }
 
-            var budget = user.Budgets
+            var budgets = user.Budgets
                 .Where(b => b.Date.Month == date.Month && b.Date.Year == date.Year);
 
-            return Ok(budget);
+            return Ok(budgets.Select(b => new BudgetResponse(b)));
         }
 
         [HttpPost]

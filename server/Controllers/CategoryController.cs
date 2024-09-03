@@ -1,5 +1,6 @@
 ﻿using BudgetBoard.Database.Data;
 using BudgetBoard.Database.Models;
+using BudgetBoard.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +29,7 @@ public class CategoryController : ControllerBase
             return NotFound();
         }
 
-        return Ok(user.Categories);
+        return Ok(user.Categories.Select(c => new CategoryResponse(c)));
     }
 
     [HttpPost]

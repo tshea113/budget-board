@@ -1,5 +1,6 @@
 ﻿using BudgetBoard.Database.Data;
 using BudgetBoard.Database.Models;
+using BudgetBoard.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +29,7 @@ public class GoalController : ControllerBase
             return NotFound();
         }
 
-        return Ok(user.Goals);
+        return Ok(user.Goals.Select(g => new GoalResponse(g)));
     }
 
     [HttpPost]
