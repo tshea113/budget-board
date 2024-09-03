@@ -1,5 +1,6 @@
 ﻿using BudgetBoard.Database.Data;
 using BudgetBoard.Database.Models;
+using BudgetBoard.Models;
 using BudgetBoard.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,19 +25,6 @@ public class UserController : ControllerBase
         _simpleFinHandler = new SimpleFinHandler(_userDataContext, clientFactory);
     }
 
-    /*    private IActionResult CreateUser(string uid)
-        {
-            var newUser = new ApplicationUser
-            {
-                Uid = uid,
-            };
-
-            _userDataContext.Users.Add(newUser);
-            _userDataContext.SaveChanges();
-
-            return Ok();
-        }*/
-
     [HttpGet]
     [Authorize]
     public IActionResult GetUser()
@@ -44,28 +32,10 @@ public class UserController : ControllerBase
         var id = User.Claims.Single(c => c.Type == UserConstants.UserType).Value;
         var user = GetCurrentUser(id);
 
-        if (user == null)
-        {
-            // Push the new user to the db
-            /*CreateUser(uid);*/
+        if (user == null) return BadRequest();
 
-            // We need to throw an error if the user isn't pushed to the db correctly
-            try
-            {
-                user = _userDataContext.Users.Single(x => x.Id == new Guid(id));
-                ResponseUser response = new ResponseUser(user);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-        else
-        {
-            ResponseUser response = new ResponseUser(user);
-            return Ok(response);
-        }
+
+        return Ok(new UserResponse(user));
     }
 
     [HttpPut]

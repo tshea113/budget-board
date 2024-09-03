@@ -1,5 +1,6 @@
 ﻿using BudgetBoard.Database.Data;
 using BudgetBoard.Database.Models;
+using BudgetBoard.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -38,7 +39,7 @@ public class TransactionController : ControllerBase
             transactions = transactions.Where(t => t.Date.Month == date?.Month && t.Date.Year == date?.Year);
         }
 
-        return Ok(transactions);
+        return Ok(transactions.Select(t => new TransactionResponse(t)));
 
     }
 
@@ -59,7 +60,7 @@ public class TransactionController : ControllerBase
                 .SelectMany(a => a.Transactions)
                 .Single(t => t.ID == guid);
 
-            return Ok(transaction);
+            return Ok(new TransactionResponse(transaction));
         }
         catch (InvalidOperationException ex)
         {

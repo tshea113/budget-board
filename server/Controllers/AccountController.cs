@@ -1,5 +1,6 @@
 ﻿using BudgetBoard.Database.Data;
 using BudgetBoard.Database.Models;
+using BudgetBoard.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +32,7 @@ public class AccountController : ControllerBase
             return NotFound();
         }
 
-        return Ok(user.Accounts);
+        return Ok(user.Accounts.Select(a => new AccountResponse(a)));
     }
 
     [HttpGet("{guid}")]
@@ -47,7 +48,7 @@ public class AccountController : ControllerBase
 
         var account = user.Accounts.First(a => a.ID == guid);
 
-        return Ok(account);
+        return Ok(new AccountResponse(account));
     }
 
     [HttpPost]
