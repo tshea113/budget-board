@@ -25,12 +25,21 @@ const getUnbudgetedTransactions = (
   // This creates an object that maps category/subcategory => array of amounts
   const groupedTransactions: [string, number[]][] = Object.entries(
     transactions.reduce((result: any, item: Transaction) => {
-      (result[item.subcategory !== '' ? item.subcategory ?? '' : item.category ?? ''] =
-        result[item.subcategory !== '' ? item.subcategory ?? '' : item.category ?? ''] ||
-        []).push(item.amount);
+      (result[
+        item.subcategory?.length !== 0
+          ? item.subcategory?.toLocaleLowerCase() ?? ''
+          : item.category?.toLocaleLowerCase() ?? ''
+      ] =
+        result[
+          item.subcategory?.length !== 0
+            ? item.subcategory?.toLocaleLowerCase() ?? ''
+            : item.category?.toLocaleLowerCase() ?? ''
+        ] || []).push(item.amount);
       return result;
     }, {})
   );
+
+  console.log(groupedTransactions);
 
   const filteredGroupedTransactions = groupedTransactions.filter((t) => {
     return !budgets.some(({ category }) => {

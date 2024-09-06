@@ -68,6 +68,15 @@ export const getMonthAndYearDateString = (date: Date): string => {
 };
 
 /**
+ * Gets the number of days in the provided month and year.
+ * @param month Number month of the year
+ * @param year Full year
+ * @returns The number of days in the month.
+ */
+export const getDaysInMonth = (month: number, year: number): number =>
+  new Date(year, month, 0).getDate();
+
+/**
  * Checks if two strings are equal ignoring case.
  * @param string1 One string you wish to compare.
  * @param string2 Another string you wish to compare.

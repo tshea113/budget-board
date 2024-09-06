@@ -33,10 +33,10 @@ const EditableCategoryCell = (props: EditableCategoryCellProps): JSX.Element => 
       let categoryValue = '';
       let subcategoryValue = '';
       if (getIsParentCategory(category.value, transactionCategories)) {
-        categoryValue = category.value.toLowerCase();
+        categoryValue = category.value.toLocaleLowerCase();
       } else {
-        categoryValue = category.parent.toLowerCase();
-        subcategoryValue = category.value.toLowerCase();
+        categoryValue = category.parent.toLocaleLowerCase();
+        subcategoryValue = category.value.toLocaleLowerCase();
       }
 
       const newTransaction: Transaction = {

@@ -10,7 +10,7 @@ import {
   getRollingTotalSpendingForMonth,
   getTransactionsForMonth,
 } from '@/lib/transactions';
-import { getMonthAndYearDateString } from '@/lib/utils';
+import { getDaysInMonth, getMonthAndYearDateString } from '@/lib/utils';
 import { Transaction } from '@/types/transaction';
 import { Area, AreaChart, XAxis } from 'recharts';
 
@@ -42,8 +42,17 @@ const SpendingTrendsChart = (props: SpendingTrendsChartProps): JSX.Element => {
     props.months.forEach((month, index) => {
       const transactionsForMonth = getTransactionsForMonth(props.transactions, month);
 
-      const rollingTotalTransactionsForMonth =
-        getRollingTotalSpendingForMonth(transactionsForMonth);
+      const today = new Date();
+      const isThisMonth =
+        month.getMonth() === today.getMonth() &&
+        month.getFullYear() === today.getFullYear();
+
+      const rollingTotalTransactionsForMonth = getRollingTotalSpendingForMonth(
+        transactionsForMonth,
+        isThisMonth
+          ? today.getDate()
+          : getDaysInMonth(month.getMonth(), month.getFullYear())
+      );
 
       rollingTotalTransactionsForMonth.forEach((rollingTotalTransaction) => {
         const chartDay = spendingTrendsChartData.find(

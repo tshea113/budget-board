@@ -6,7 +6,11 @@ import { AuthContext } from '@/components/auth-provider';
 import { useQuery } from '@tanstack/react-query';
 import { Transaction } from '@/types/transaction';
 import { AxiosResponse } from 'axios';
-import { convertNumberToCurrency, getDateFromMonthsAgo } from '@/lib/utils';
+import {
+  convertNumberToCurrency,
+  getDateFromMonthsAgo,
+  getDaysInMonth,
+} from '@/lib/utils';
 import { getRollingTotalSpendingForMonth } from '@/lib/transactions';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -55,10 +59,12 @@ const SpendingTrendsCard = (): JSX.Element => {
 
   const getSpendingComparison = (): number => {
     const thisMonthRollingTotal = getRollingTotalSpendingForMonth(
-      thisMonthTransactionsQuery.data ?? []
+      thisMonthTransactionsQuery.data ?? [],
+      new Date().getDate()
     );
     const lastMonthRollingTotal = getRollingTotalSpendingForMonth(
-      lastMonthTransactionsQuery.data ?? []
+      lastMonthTransactionsQuery.data ?? [],
+      getDaysInMonth(lastMonthDate.getMonth(), lastMonthDate.getFullYear())
     );
 
     const today = new Date().getDate();
