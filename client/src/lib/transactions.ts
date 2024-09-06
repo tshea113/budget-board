@@ -75,7 +75,8 @@ export interface RollingTotalSpendingPerDay {
  * @returns An array of dates with the corresponding cumulative total spending up to that date
  */
 export const getRollingTotalSpendingForMonth = (
-  transactionsForMonth: Transaction[]
+  transactionsForMonth: Transaction[],
+  endDate: number
 ): RollingTotalSpendingPerDay[] => {
   let rollingTotalSpendingPerDay: RollingTotalSpendingPerDay[] = [];
 
@@ -107,12 +108,8 @@ export const getRollingTotalSpendingForMonth = (
     []
   );
 
-  for (
-    let dayItr = 1;
-    dayItr <=
-    (summedTransactionsPerMonth.at(summedTransactionsPerMonth.length - 1)?.day ?? 0);
-    dayItr++
-  ) {
+  // If it is the current month, we need to continue the rolling total
+  for (let dayItr = 1; dayItr <= endDate; dayItr++) {
     const amount = summedTransactionsPerMonth.find((t) => t.day === dayItr);
 
     let dayAmount: RollingTotalSpendingPerDay = {
