@@ -67,8 +67,8 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
         subcategoryValue = category.value;
       }
 
-      props.transaction.category = categoryValue;
-      props.transaction.subcategory = subcategoryValue;
+      props.transaction.category = categoryValue.toLocaleLowerCase();
+      props.transaction.subcategory = subcategoryValue.toLocaleLowerCase();
 
       doEditTransaction.mutate(props.transaction);
     }
