@@ -1,5 +1,4 @@
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { TabsContent } from '@radix-ui/react-tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Dashboard from './dashboard/dashboard';
 import Budgets from './budget/budgets';
 import Transactions from './transactions/transactions';
