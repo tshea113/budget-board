@@ -39,8 +39,6 @@ const getUnbudgetedTransactions = (
     }, {})
   );
 
-  console.log(groupedTransactions);
-
   const filteredGroupedTransactions = groupedTransactions.filter((t) => {
     return !budgets.some(({ category }) => {
       if (areStringsEqual(category, getParentCategory(category, transactionCategories))) {
