@@ -16,11 +16,10 @@ const columns: Array<ColumnDef<Transaction>> = [
     },
     cell: (props) => (
       <EditableDateCell
-        date={new Date(props.getValue() as Date)}
         isSelected={props.row.getIsSelected()}
         isError={props.table.options.meta?.isError ?? false}
-        rowTransaction={props.row.original}
-        editCell={props.table.options.meta?.updateTransaction}
+        transaction={props.row.original}
+        editCell={props.table.options.meta?.updateTransaction ?? (() => {})}
       />
     ),
   },
@@ -31,11 +30,10 @@ const columns: Array<ColumnDef<Transaction>> = [
     },
     cell: (props) => (
       <EditableMerchantCell
-        merchant={props.getValue() as string}
         isSelected={props.row.getIsSelected()}
         isError={props.table.options.meta?.isError ?? false}
-        editCell={props.table.options.meta?.updateTransaction}
-        rowTransaction={props.row.original}
+        editCell={props.table.options.meta?.updateTransaction ?? (() => {})}
+        transaction={props.row.original}
       />
     ),
   },
@@ -55,11 +53,10 @@ const columns: Array<ColumnDef<Transaction>> = [
     },
     cell: (props) => (
       <EditableCategoryCell
-        category={props.getValue() as string}
         isSelected={props.row.getIsSelected()}
         isError={props.table.options.meta?.isError ?? false}
-        editCell={props.table.options.meta?.updateTransaction}
-        rowTransaction={props.row.original}
+        editCell={props.table.options.meta?.updateTransaction ?? (() => {})}
+        transaction={props.row.original}
       />
     ),
   },
@@ -70,11 +67,10 @@ const columns: Array<ColumnDef<Transaction>> = [
     },
     cell: (props) => (
       <EditableCurrencyCell
-        currency={props.getValue() as number}
         isSelected={props.row.getIsSelected()}
         isError={props.table.options.meta?.isError ?? false}
-        editCell={props.table.options.meta?.updateTransaction}
-        rowTransaction={props.row.original}
+        editCell={props.table.options.meta?.updateTransaction ?? (() => {})}
+        transaction={props.row.original}
       />
     ),
   },
