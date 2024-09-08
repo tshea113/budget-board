@@ -8,19 +8,29 @@ import {
 } from '@/lib/category';
 
 interface EditableCategoryCellProps {
-  category: string;
+  transaction: Transaction;
   isSelected: boolean;
   isError: boolean;
-  editCell: ((newTransaction: Transaction) => void) | undefined;
-  rowTransaction: Transaction;
+  editCell: (newTransaction: Transaction) => void;
 }
 
 const EditableCategoryCell = (props: EditableCategoryCellProps): JSX.Element => {
-  const [categoryValue, setCategoryValue] = React.useState(props.category);
+  // The displayed category should be the most specific value we have set.
+  const transactionCategory = React.useMemo(
+    () =>
+      props.transaction.subcategory && props.transaction.subcategory.length > 0
+        ? props.transaction.subcategory
+        : props.transaction.category ?? '',
+    [props.transaction]
+  );
+
+  const [categoryDisplayValue, setCategoryDisplayValue] =
+    React.useState<string>(transactionCategory);
 
   React.useEffect(() => {
     if (props.isError) {
-      setCategoryValue(props.category);
+      // When there is an error, we need to reset the data.
+      setCategoryDisplayValue(transactionCategory);
     }
   }, [props.isError]);
 
@@ -28,21 +38,21 @@ const EditableCategoryCell = (props: EditableCategoryCellProps): JSX.Element => 
     const category = transactionCategories.find((c) => c.value === newValue);
 
     if (category != null) {
-      setCategoryValue(category.value);
+      setCategoryDisplayValue(category.value);
 
-      let categoryValue = '';
-      let subcategoryValue = '';
+      let newCategory = '';
+      let newSubcategory = '';
       if (getIsParentCategory(category.value, transactionCategories)) {
-        categoryValue = category.value.toLocaleLowerCase();
+        newCategory = category.value.toLocaleLowerCase();
       } else {
-        categoryValue = category.parent.toLocaleLowerCase();
-        subcategoryValue = category.value.toLocaleLowerCase();
+        newCategory = category.parent.toLocaleLowerCase();
+        newSubcategory = category.value.toLocaleLowerCase();
       }
 
       const newTransaction: Transaction = {
-        ...props.rowTransaction,
-        category: categoryValue,
-        subcategory: subcategoryValue,
+        ...props.transaction,
+        category: newCategory,
+        subcategory: newSubcategory,
       };
 
       if (props.editCell != null) {
@@ -55,12 +65,14 @@ const EditableCategoryCell = (props: EditableCategoryCellProps): JSX.Element => 
     <div className="w-[200px]">
       {props.isSelected ? (
         <CategoryInput
-          initialValue={categoryValue}
+          initialValue={categoryDisplayValue}
           onSelectChange={onCategoryPick}
           categoriesTree={buildCategoriesTree(transactionCategories)}
         />
       ) : (
-        <span>{getFormattedCategoryValue(props.category, transactionCategories)}</span>
+        <span>
+          {getFormattedCategoryValue(categoryDisplayValue, transactionCategories)}
+        </span>
       )}
     </div>
   );
