@@ -2,7 +2,11 @@ import { AuthContext } from '@/components/auth-provider';
 import CategoryInput from '@/components/category-input';
 import { Card } from '@/components/ui/card';
 import { toast } from '@/components/ui/use-toast';
-import { buildCategoriesTree, getIsParentCategory } from '@/lib/category';
+import {
+  buildCategoriesTree,
+  getFormattedCategoryValue,
+  getIsParentCategory,
+} from '@/lib/category';
 import { translateAxiosError } from '@/lib/requests';
 import { formatDate } from '@/lib/transactions';
 import { convertNumberToCurrency } from '@/lib/utils';
@@ -12,8 +16,15 @@ import { AxiosError } from 'axios';
 import React from 'react';
 import { TailSpin } from 'react-loader-spinner';
 
+export enum TransactionCardType {
+  Normal,
+  Edit,
+  Uncategorized,
+}
+
 interface TransactionCardProps {
   transaction: Transaction;
+  type: TransactionCardType;
 }
 
 const TransactionCard = (props: TransactionCardProps): JSX.Element => {
@@ -76,24 +87,35 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
 
   return (
     <Card className="my-2">
-      <div className="my-1 flex flex-col space-y-2 px-2 sm:grid sm:grid-cols-10 sm:grid-rows-1 sm:items-center sm:space-y-0">
-        <span className="pr-3 sm:col-span-1">{formatDate(props.transaction.date)}</span>
-        <span className="sm:col-span-3 md:col-span-5 lg:col-span-4 xl:col-span-5">
+      <div className="my-1 flex flex-col space-y-2 px-2 md:grid md:grid-cols-11 md:grid-rows-1 md:items-center md:space-y-0">
+        <span className="md:col-span-2 xl:col-span-1">
+          {formatDate(props.transaction.date)}
+        </span>
+        <span className="md:col-span-4 md:text-center xl:col-span-6">
           {props.transaction.merchantName}
         </span>
-        <span className="flex flex-row items-center sm:col-span-4 md:col-span-3 lg:col-span-4 xl:col-span-3">
-          <CategoryInput
-            initialValue={props.transaction.category ?? ''}
-            onSelectChange={onCategoryPick}
-            categoriesTree={buildCategoriesTree(transactionCategories)}
-          />
+        <span className="flex flex-row md:col-span-3 md:justify-center xl:col-span-2">
+          {props.type == TransactionCardType.Edit ||
+          props.type == TransactionCardType.Uncategorized ? (
+            <CategoryInput
+              initialValue={props.transaction.category ?? ''}
+              onSelectChange={onCategoryPick}
+              categoriesTree={buildCategoriesTree(transactionCategories)}
+            />
+          ) : (
+            getFormattedCategoryValue(
+              props.transaction.category ?? '',
+              transactionCategories
+            )
+          )}
+
           {doEditTransaction.isPending && (
             <div className="mx-4">
               <TailSpin height="25" width="25" color="gray" />
             </div>
           )}
         </span>
-        <span className="sm:col-span-2 md:col-span-1">
+        <span className="md:col-span-2 md:text-center">
           {convertNumberToCurrency(props.transaction.amount, true)}
         </span>
       </div>
