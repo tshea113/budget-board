@@ -43,7 +43,7 @@ const EditableCurrencyCell = (props: EditableCurrencyCellProps): JSX.Element => 
     <div>
       {props.isSelected ? (
         <Input
-          className="w-full text-center"
+          className="text-center"
           value={currencyDisplayValue}
           onChange={(e) => {
             onCurrencyChange(e.target.value);
