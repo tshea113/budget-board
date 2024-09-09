@@ -13,11 +13,7 @@ import DeleteAccount from './delete-account';
 import { AuthContext } from '@/components/auth-provider';
 import { Label } from '@/components/ui/label';
 import CategoryInput from '@/components/category-input';
-import {
-  buildCategoriesTree,
-  getIsParentCategory,
-  getParentCategory,
-} from '@/lib/category';
+import { getIsParentCategory, getParentCategory } from '@/lib/category';
 
 interface AccountsConfigurationCardProps {
   account: Account;
@@ -105,7 +101,7 @@ const AccountsConfigurationCard = (
               : setAccountSubTypeValue(type);
             setValueDirty(true);
           }}
-          categoriesTree={buildCategoriesTree(accountCategories)}
+          categories={accountCategories}
         />
       </div>
       <div className="col-span-2 flex flex-row space-x-2 md:col-span-1">

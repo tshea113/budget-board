@@ -1,11 +1,7 @@
 import { transactionCategories, type Transaction } from '@/types/transaction';
 import React from 'react';
 import CategoryInput from '@/components/category-input';
-import {
-  buildCategoriesTree,
-  getFormattedCategoryValue,
-  getIsParentCategory,
-} from '@/lib/category';
+import { getFormattedCategoryValue, getIsParentCategory } from '@/lib/category';
 
 interface EditableCategoryCellProps {
   transaction: Transaction;
@@ -67,7 +63,7 @@ const EditableCategoryCell = (props: EditableCategoryCellProps): JSX.Element => 
         <CategoryInput
           initialValue={categoryDisplayValue}
           onSelectChange={onCategoryPick}
-          categoriesTree={buildCategoriesTree(transactionCategories)}
+          categories={transactionCategories}
         />
       ) : (
         <span>
