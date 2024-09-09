@@ -23,7 +23,7 @@ interface CategoryInputProps {
 
 const CategoryInput = (props: CategoryInputProps): JSX.Element => {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(props.initialValue);
+  const [value, setValue] = React.useState(props.initialValue ?? '');
 
   return (
     <Popover open={open} onOpenChange={setOpen} modal>
