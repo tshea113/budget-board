@@ -16,7 +16,7 @@ import { ICategory, ICategoryNode } from '@/types/category';
 import { buildCategoriesTree, getFormattedCategoryValue } from '@/lib/category';
 
 interface CategoryInputProps {
-  className: string;
+  className?: string;
   initialValue: string;
   categories: ICategory[];
   onSelectChange: (category: string) => void;
@@ -27,7 +27,7 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
   const [value, setValue] = React.useState(props.initialValue);
 
   return (
-    <div className={props.className}>
+    <div className={props.className ?? ''}>
       <Popover open={open} onOpenChange={setOpen} modal>
         <PopoverTrigger asChild>
           <Button
