@@ -1,5 +1,5 @@
 import { Input } from '@/components/ui/input';
-import { convertNumberToCurrency } from '@/lib/utils';
+import { cn, convertNumberToCurrency } from '@/lib/utils';
 import { type Transaction } from '@/types/transaction';
 import React from 'react';
 
@@ -55,7 +55,12 @@ const EditableCurrencyCell = (props: EditableCurrencyCellProps): JSX.Element => 
           type="text"
         />
       ) : (
-        <span className="font-semibold">
+        <span
+          className={cn(
+            'font-semibold',
+            props.transaction.amount < 0 ? 'text-accent-negative' : 'text-accent-positive'
+          )}
+        >
           {convertNumberToCurrency(parseFloat(currencyDisplayValue), true)}
         </span>
       )}
