@@ -72,14 +72,14 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
   return (
     <Card
       className={cn(
-        '@container my-2 flex flex-row',
+        '@container my-2 flex flex-row p-2',
         props.type === TransactionCardType.Normal ? 'hover:bg-card-select' : '',
         isEdit ? 'bg-card-select' : 'bg-card'
       )}
       onClick={toggleIsEdit}
     >
-      <div className="@xl:grid @xl:grid-cols-6 @xl:grid-rows-2 @xl:items-center @xl:gap-2 @xl:space-y-0 @4xl:grid-cols-12 @4xl:grid-rows-1 my-1 flex grow flex-col space-y-2 px-2">
-        <span className="@xl:col-span-2">
+      <div className="@xl:flex-row my-1 flex w-full flex-col flex-wrap gap-2">
+        <span className="@xl:w-[200px]">
           <EditableDateCell
             transaction={props.transaction}
             isSelected={isEdit}
@@ -87,7 +87,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
             editCell={doEditTransaction.mutate}
           />
         </span>
-        <span className="@xl:col-span-4 @xl:self-start @4xl:col-span-5">
+        <span className="w-[300px] shrink grow">
           <EditableMerchantCell
             transaction={props.transaction}
             isSelected={isEdit}
@@ -95,7 +95,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
             editCell={doEditTransaction.mutate}
           />
         </span>
-        <span className="@xl:col-span-2 @4xl:col-span-3">
+        <span className="@xl:w-[190px]">
           <EditableCategoryCell
             transaction={props.transaction}
             isSelected={isEdit || props.type === TransactionCardType.Uncategorized}
@@ -103,7 +103,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
             editCell={doEditTransaction.mutate}
           />
         </span>
-        <span className="@xl:col-span-2 @4xl:col-span-2">
+        <span className="@xl:w-[125px]">
           <EditableCurrencyCell
             transaction={props.transaction}
             isSelected={isEdit}

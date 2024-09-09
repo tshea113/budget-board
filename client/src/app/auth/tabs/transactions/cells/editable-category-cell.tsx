@@ -58,9 +58,10 @@ const EditableCategoryCell = (props: EditableCategoryCellProps): JSX.Element => 
   };
 
   return (
-    <div className="w-[200px]">
+    <>
       {props.isSelected ? (
         <CategoryInput
+          className="w-[190px]"
           initialValue={categoryDisplayValue}
           onSelectChange={onCategoryPick}
           categories={transactionCategories}
@@ -70,7 +71,7 @@ const EditableCategoryCell = (props: EditableCategoryCellProps): JSX.Element => 
           {getFormattedCategoryValue(categoryDisplayValue, transactionCategories)}
         </span>
       )}
-    </div>
+    </>
   );
 };
 
