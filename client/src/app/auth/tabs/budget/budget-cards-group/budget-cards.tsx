@@ -1,8 +1,9 @@
 import { type Budget } from '@/types/budget';
-import { type Transaction } from '@/types/transaction';
+import { transactionCategories, type Transaction } from '@/types/transaction';
 import { Skeleton } from '@/components/ui/skeleton';
 import BudgetCard from './budget-card';
 import { sumTransactionAmountsByCategory } from '@/lib/transactions';
+import { getParentCategory } from '@/lib/category';
 
 interface BudgetCardsProps {
   budgetData: Budget[] | null;
@@ -39,6 +40,9 @@ const BudgetCards = (props: BudgetCardsProps): JSX.Element => {
                 props.transactionsData ?? [],
                 budget.category
               )}
+              isIncome={
+                getParentCategory(budget.category, transactionCategories) === 'income'
+              }
             />
           ))}
       </div>
