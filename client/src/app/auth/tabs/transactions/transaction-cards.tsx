@@ -1,14 +1,25 @@
 import { Transaction } from '@/types/transaction';
 import TransactionCard, { TransactionCardType } from './transaction-card';
 import React from 'react';
+import PageSizeSelect from '@/components/page-size-select';
+import PageSelect from '@/components/page-select';
 
 interface TransactionCardsProps {
   transactions: Transaction[];
 }
 
 const TransactionCards = (props: TransactionCardsProps): JSX.Element => {
-  const [page, _setPage] = React.useState(1);
-  const [itemsPerPage, _setItemsPerPage] = React.useState(25);
+  const [page, setPage] = React.useState(1);
+  const [itemsPerPage, setItemsPerPage] = React.useState(25);
+
+  React.useEffect(() => {
+    setPage(1);
+  }, [itemsPerPage]);
+
+  const totalPages = React.useMemo(
+    () => Math.ceil(props.transactions.length / itemsPerPage),
+    [props.transactions, itemsPerPage]
+  );
 
   return (
     <div>
@@ -22,6 +33,14 @@ const TransactionCards = (props: TransactionCardsProps): JSX.Element => {
             type={TransactionCardType.Normal}
           />
         ))}
+      <div className="flex flex-row flex-wrap justify-center gap-2">
+        <PageSizeSelect
+          pageSize={itemsPerPage}
+          setPageSize={setItemsPerPage}
+          pageSizeOptions={[25, 50, 100]}
+        />
+        <PageSelect pageNumber={page} setPageNumber={setPage} totalPages={totalPages} />
+      </div>
     </div>
   );
 };

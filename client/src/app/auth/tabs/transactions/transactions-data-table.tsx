@@ -18,7 +18,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import DataTablePagination from '@/components/data-table-pagination';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type Transaction } from '@/types/transaction';
 import { translateAxiosError } from '@/lib/requests';
@@ -214,7 +213,6 @@ const TransactionsDataTable = (props: DataTableProps): JSX.Element => {
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
     </div>
   );
 };
