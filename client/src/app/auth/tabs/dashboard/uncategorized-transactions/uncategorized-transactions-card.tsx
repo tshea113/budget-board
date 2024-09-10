@@ -1,5 +1,7 @@
 import { Card } from '@/components/ui/card';
-import TransactionCard, { TransactionCardType } from './transaction-card';
+import TransactionCard, {
+  TransactionCardType,
+} from '../../transactions/transaction-card';
 import { useQuery } from '@tanstack/react-query';
 import { Transaction } from '@/types/transaction';
 import { AxiosResponse } from 'axios';

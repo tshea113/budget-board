@@ -1,7 +1,5 @@
 import { Transaction } from '@/types/transaction';
-import TransactionCard, {
-  TransactionCardType,
-} from '../dashboard/uncategorized-transactions/transaction-card';
+import TransactionCard, { TransactionCardType } from './transaction-card';
 import React from 'react';
 
 interface TransactionCardsProps {
