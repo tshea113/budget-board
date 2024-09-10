@@ -8,10 +8,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import React from 'react';
 import { TailSpin } from 'react-loader-spinner';
-import EditableCategoryCell from '../../transactions/cells/editable-category-cell';
-import EditableCurrencyCell from '../../transactions/cells/editable-currency-cell';
-import EditableMerchantCell from '../../transactions/cells/editable-text-cell';
-import EditableDateCell from '../../transactions/cells/editable-date-cell';
+import EditableCategoryCell from './cells/editable-category-cell';
+import EditableCurrencyCell from './cells/editable-currency-cell';
+import EditableMerchantCell from './cells/editable-text-cell';
+import EditableDateCell from './cells/editable-date-cell';
 
 export enum TransactionCardType {
   Normal,
@@ -72,13 +72,13 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
   return (
     <Card
       className={cn(
-        '@container my-2 flex flex-row p-2',
+        'my-2 flex flex-row p-2 @container',
         props.type === TransactionCardType.Normal ? 'hover:bg-card-select' : '',
         isEdit ? 'bg-card-select' : 'bg-card'
       )}
       onClick={toggleIsEdit}
     >
-      <div className="@xl:flex-row my-1 flex w-full flex-col flex-wrap gap-2">
+      <div className="my-1 flex w-full flex-col flex-wrap gap-2 @xl:flex-row @xl:items-center">
         <span className="@xl:w-[200px]">
           <EditableDateCell
             transaction={props.transaction}
@@ -87,7 +87,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
             editCell={doEditTransaction.mutate}
           />
         </span>
-        <span className="w-[300px] shrink grow">
+        <span className="w-[200px] shrink grow">
           <EditableMerchantCell
             transaction={props.transaction}
             isSelected={isEdit}
@@ -103,7 +103,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
             editCell={doEditTransaction.mutate}
           />
         </span>
-        <span className="@xl:w-[125px]">
+        <span className="@xl:w-[100px]">
           <EditableCurrencyCell
             transaction={props.transaction}
             isSelected={isEdit}
