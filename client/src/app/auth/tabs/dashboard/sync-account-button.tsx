@@ -3,7 +3,7 @@ import ResponsiveButton from '@/components/responsive-button';
 import { useToast } from '@/components/ui/use-toast';
 import { translateAxiosError } from '@/lib/requests';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { type AxiosError } from 'axios';
+import { AxiosResponse, type AxiosError } from 'axios';
 import React from 'react';
 
 const SyncAccountButton = (): JSX.Element => {
@@ -13,9 +13,22 @@ const SyncAccountButton = (): JSX.Element => {
   const queryClient = useQueryClient();
   const doSyncMutation = useMutation({
     mutationFn: async () => await request({ url: '/api/simplefin/sync', method: 'GET' }),
-    onSuccess: async () => {
+    onSuccess: async (data: AxiosResponse) => {
       await queryClient.invalidateQueries({ queryKey: ['transactions'] });
       await queryClient.invalidateQueries({ queryKey: ['accounts'] });
+      if ((data.data?.length ?? 0) > 0) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: (
+            <ul className="list-disc">
+              {data.data.map((error: string) => (
+                <li key={error}>{error}</li>
+              ))}
+            </ul>
+          ),
+        });
+      }
     },
     onError: (error: AxiosError) => {
       toast({

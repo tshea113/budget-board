@@ -59,7 +59,7 @@ public class SimpleFinController : Controller
 
         UserHandler.UpdateLastSync(user, _userDataContext);
 
-        return Ok();
+        return Ok(simpleFinData.Errors);
     }
 
     [HttpPost]
