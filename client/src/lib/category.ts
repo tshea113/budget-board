@@ -44,7 +44,7 @@ export const getFormattedCategoryValue = (
 ): string => {
   const foundCategory = categories.find((c) => areStringsEqual(c.value, categoryString));
 
-  return foundCategory?.value ?? '';
+  return foundCategory?.value ?? 'Uncategorized';
 };
 
 /**
