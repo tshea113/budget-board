@@ -16,6 +16,7 @@ import React from 'react';
 interface BudgetCardProps {
   budget: Budget;
   amount: number;
+  isIncome: boolean;
 }
 
 const BudgetCard = (props: BudgetCardProps): JSX.Element => {
@@ -126,7 +127,18 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
               </div>
             )}
           </div>
-          <div>{getAmountLeft(props.budget.limit, Math.abs(props.amount))}</div>
+          <span
+            className={cn(
+              'font-semibold',
+              // Income behaves opposite of spending, since being above the limit is a good thing :)
+              (props.budget.limit - Math.abs(props.amount)) * (props.isIncome ? -1 : 1) <
+                0
+                ? 'text-accent-bad'
+                : 'text-accent-good'
+            )}
+          >
+            {getAmountLeft(props.budget.limit, Math.abs(props.amount))}
+          </span>
         </div>
       </div>
       <Progress

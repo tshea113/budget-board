@@ -1,4 +1,4 @@
-import { convertNumberToCurrency } from '@/lib/utils';
+import { cn, convertNumberToCurrency } from '@/lib/utils';
 import { type Account } from '@/types/account';
 
 interface AccountItemProps {
@@ -12,7 +12,12 @@ const AccountItem = (props: AccountItemProps): JSX.Element => {
         <div className="col-span-6 text-left">
           <span className="text-base tracking-tight">{props.account.name}</span>
         </div>
-        <span className="col-span-4 text-right">
+        <span
+          className={cn(
+            'col-span-4 text-right font-semibold',
+            props.account.currentBalance < 0 ? 'text-accent-bad' : 'text-accent-good'
+          )}
+        >
           {convertNumberToCurrency(props.account.currentBalance, true)}
         </span>
       </div>

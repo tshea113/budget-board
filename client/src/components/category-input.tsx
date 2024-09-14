@@ -12,19 +12,18 @@ import { areStringsEqual, cn } from '@/lib/utils';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import React from 'react';
 import CommandSubcategory from './command-subcategory';
-import { ICategoryNode } from '@/types/category';
-import { getFormattedCategoryValue } from '@/lib/category';
-import { transactionCategories } from '@/types/transaction';
+import { ICategory, ICategoryNode } from '@/types/category';
+import { buildCategoriesTree, getFormattedCategoryValue } from '@/lib/category';
 
 interface CategoryInputProps {
   initialValue: string;
-  categoriesTree: ICategoryNode[];
+  categories: ICategory[];
   onSelectChange: (category: string) => void;
 }
 
 const CategoryInput = (props: CategoryInputProps): JSX.Element => {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(props.initialValue);
+  const [value, setValue] = React.useState(props.initialValue ?? '');
 
   return (
     <Popover open={open} onOpenChange={setOpen} modal>
@@ -39,7 +38,7 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
           }}
         >
           {value.length > 0
-            ? getFormattedCategoryValue(value, transactionCategories)
+            ? getFormattedCategoryValue(value, props.categories)
             : 'Select category...'}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -54,7 +53,7 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
           />
           <CommandList>
             <CommandEmpty>No categories found.</CommandEmpty>
-            {props.categoriesTree.map((category: ICategoryNode) => (
+            {buildCategoriesTree(props.categories).map((category: ICategoryNode) => (
               <CommandGroup
                 key={category.value}
                 onClick={(e) => {

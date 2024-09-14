@@ -1,5 +1,5 @@
 import { sumAccountsTotalBalance } from '@/lib/accounts';
-import { convertNumberToCurrency } from '@/lib/utils';
+import { cn, convertNumberToCurrency } from '@/lib/utils';
 import { Account } from '@/types/account';
 import React from 'react';
 
@@ -20,14 +20,24 @@ const NetWorthItem = (props: NetWorthItemProps): JSX.Element => {
     }
   }, [props.accounts, props.types]);
 
+  const summedAccountsTotalBalance = React.useMemo(
+    () => sumAccountsTotalBalance(filteredAccounts),
+    [filteredAccounts]
+  );
+
   return (
     <div className="grid grid-cols-10 px-1">
       <div className="col-span-6 text-left">
         <span className="text-base tracking-tight">{props.title}</span>
       </div>
       <div className="col-span-4 text-right">
-        <span>
-          {convertNumberToCurrency(sumAccountsTotalBalance(filteredAccounts), true)}
+        <span
+          className={cn(
+            'font-semibold',
+            summedAccountsTotalBalance < 0 ? 'text-accent-bad' : 'text-accent-good'
+          )}
+        >
+          {convertNumberToCurrency(summedAccountsTotalBalance, true)}
         </span>
       </div>
     </div>
