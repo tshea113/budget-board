@@ -1,5 +1,4 @@
 import { Card } from '@/components/ui/card';
-import { Separator } from '@radix-ui/react-separator';
 import SpendingTrendsChart from './spending-trends-chart';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
@@ -117,7 +116,6 @@ const SpendingTrendsCard = (): JSX.Element => {
           You have spent {getSpendingComparisonString()} last month so far.
         </span>
       </div>
-      <Separator />
       <div>
         <SpendingTrendsChart
           months={[getDateFromMonthsAgo(0), getDateFromMonthsAgo(1)]}

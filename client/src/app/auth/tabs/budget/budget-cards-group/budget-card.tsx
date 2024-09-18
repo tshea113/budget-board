@@ -137,7 +137,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
                 : 'text-accent-good'
             )}
           >
-            {getAmountLeft(props.budget.limit, Math.abs(props.amount))}
+            {getAmountLeft(props.budget.limit, props.amount * (props.isIncome ? 1 : -1))}
           </span>
         </div>
       </div>
