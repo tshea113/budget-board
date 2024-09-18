@@ -4,26 +4,25 @@ import { type Transaction } from '@/types/transaction';
 import React from 'react';
 
 interface EditableDateCellProps {
-  date: Date;
+  transaction: Transaction;
   isSelected: boolean;
   isError: boolean;
   editCell: ((newTransaction: Transaction) => void) | undefined;
-  rowTransaction: Transaction;
 }
 
 const EditableDateCell = (props: EditableDateCellProps): JSX.Element => {
-  const [dateValue, setDateValue] = React.useState(props.date);
+  const [dateDisplayValue, setDateDisplayValue] = React.useState(props.transaction.date);
 
   React.useEffect(() => {
     if (props.isError) {
-      setDateValue(props.date);
+      setDateDisplayValue(props.transaction.date);
     }
   }, [props.isError]);
 
   const onDatePick = (day: Date): void => {
-    setDateValue(day);
+    setDateDisplayValue(day);
     const newTransaction: Transaction = {
-      ...props.rowTransaction,
+      ...props.transaction,
       date: day,
     };
     if (props.editCell != null) {
@@ -32,11 +31,11 @@ const EditableDateCell = (props: EditableDateCellProps): JSX.Element => {
   };
 
   return (
-    <div className="w-[200px]">
+    <div>
       {props.isSelected ? (
-        <DatePicker value={dateValue} onDayClick={onDatePick} />
+        <DatePicker value={dateDisplayValue} onDayClick={onDatePick} />
       ) : (
-        <div className="w-full">{formatDate(props.date)}</div>
+        <div className="w-full">{formatDate(dateDisplayValue)}</div>
       )}
     </div>
   );

@@ -3,26 +3,27 @@ import { type Transaction } from '@/types/transaction';
 import React from 'react';
 
 interface EditableTextCellProps {
-  merchant: string;
+  transaction: Transaction;
   isSelected: boolean;
   isError: boolean;
   editCell: ((newTransaction: Transaction) => void) | undefined;
-  rowTransaction: Transaction;
 }
 
 const EditableMerchantCell = (props: EditableTextCellProps): JSX.Element => {
-  const [merchantValue, setMerchantValue] = React.useState(props.merchant);
+  const [merchantDisplayValue, setMerchantDisplayValue] = React.useState(
+    props.transaction.merchantName
+  );
 
   React.useEffect(() => {
     if (props.isError) {
-      setMerchantValue(props.merchant);
+      setMerchantDisplayValue(props.transaction.merchantName);
     }
   }, [props.isError]);
 
   const onTextChange = (): void => {
     const newTransaction: Transaction = {
-      ...props.rowTransaction,
-      merchantName: merchantValue,
+      ...props.transaction,
+      merchantName: merchantDisplayValue,
     };
     if (props.editCell != null) {
       props.editCell(newTransaction);
@@ -30,12 +31,12 @@ const EditableMerchantCell = (props: EditableTextCellProps): JSX.Element => {
   };
 
   return (
-    <div className="max-w-[400px]">
+    <div>
       {props.isSelected ? (
         <Input
-          value={merchantValue}
+          value={merchantDisplayValue}
           onChange={(e) => {
-            setMerchantValue(e.target.value);
+            setMerchantDisplayValue(e.target.value);
           }}
           onBlur={onTextChange}
           onClick={(e) => {
@@ -44,7 +45,7 @@ const EditableMerchantCell = (props: EditableTextCellProps): JSX.Element => {
           type="text"
         />
       ) : (
-        <div className="text-wrap">{merchantValue}</div>
+        <div className="text-wrap text-left">{merchantDisplayValue}</div>
       )}
     </div>
   );

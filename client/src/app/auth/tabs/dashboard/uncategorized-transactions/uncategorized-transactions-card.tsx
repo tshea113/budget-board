@@ -1,5 +1,7 @@
 import { Card } from '@/components/ui/card';
-import TransactionCard from './transaction-card';
+import TransactionCard, {
+  TransactionCardType,
+} from '../../transactions/transaction-card';
 import { useQuery } from '@tanstack/react-query';
 import { Transaction } from '@/types/transaction';
 import { AxiosResponse } from 'axios';
@@ -51,12 +53,16 @@ const UncategorizedTransactionsCard = (): JSX.Element => {
           />
         </div>
 
-        <ScrollArea className="flex h-full max-h-[300px] flex-col py-2 pr-3">
+        <ScrollArea className="flex h-full max-h-[300px] flex-col py-2">
           {filteredTransactions
             .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
             .slice((page - 1) * itemsPerPage, (page - 1) * itemsPerPage + itemsPerPage)
             .map((transaction: Transaction) => (
-              <TransactionCard key={transaction.id} transaction={transaction} />
+              <TransactionCard
+                key={transaction.id}
+                transaction={transaction}
+                type={TransactionCardType.Uncategorized}
+              />
             ))}
         </ScrollArea>
       </Card>

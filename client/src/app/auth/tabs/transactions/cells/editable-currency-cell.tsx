@@ -1,50 +1,50 @@
 import { Input } from '@/components/ui/input';
-import { convertNumberToCurrency } from '@/lib/utils';
+import { cn, convertNumberToCurrency } from '@/lib/utils';
 import { type Transaction } from '@/types/transaction';
 import React from 'react';
 
 interface EditableCurrencyCellProps {
-  currency: number;
+  transaction: Transaction;
   isSelected: boolean;
   isError: boolean;
-  editCell: ((newTransaction: Transaction) => void) | undefined;
-  rowTransaction: Transaction;
+  editCell: (newTransaction: Transaction) => void;
 }
 
 const EditableCurrencyCell = (props: EditableCurrencyCellProps): JSX.Element => {
-  const [currencyValue, setCurrencyValue] = React.useState<string>(
-    props.currency.toFixed(2)
+  const [currencyDisplayValue, setCurrencyDisplayValue] = React.useState<string>(
+    props.transaction.amount.toFixed(2)
   );
 
   React.useEffect(() => {
     if (props.isError) {
-      setCurrencyValue(props.currency.toFixed(2));
+      setCurrencyDisplayValue(props.transaction.amount.toFixed(2));
     }
   }, [props.isError]);
 
   const onCurrencyBlur = (): void => {
-    if (!isNaN(parseFloat(currencyValue))) {
+    if (!isNaN(parseFloat(currencyDisplayValue))) {
       const newTransaction: Transaction = {
-        ...props.rowTransaction,
-        amount: parseFloat(currencyValue),
+        ...props.transaction,
+        amount: parseFloat(currencyDisplayValue),
       };
       if (props.editCell != null) {
         props.editCell(newTransaction);
       }
     } else {
-      setCurrencyValue(props.currency.toFixed(2));
+      setCurrencyDisplayValue(props.transaction.amount.toFixed(2));
     }
   };
 
   const onCurrencyChange = (newCurrency: string): void => {
-    setCurrencyValue(newCurrency);
+    setCurrencyDisplayValue(newCurrency);
   };
 
   return (
-    <div className="w-[120px]">
+    <div>
       {props.isSelected ? (
         <Input
-          value={currencyValue}
+          className="text-center"
+          value={currencyDisplayValue}
           onChange={(e) => {
             onCurrencyChange(e.target.value);
           }}
@@ -55,7 +55,14 @@ const EditableCurrencyCell = (props: EditableCurrencyCellProps): JSX.Element => 
           type="text"
         />
       ) : (
-        <span>{convertNumberToCurrency(parseFloat(currencyValue), true)}</span>
+        <span
+          className={cn(
+            'font-semibold',
+            props.transaction.amount < 0 ? 'text-accent-bad' : 'text-accent-good'
+          )}
+        >
+          {convertNumberToCurrency(parseFloat(currencyDisplayValue), true)}
+        </span>
       )}
     </div>
   );
