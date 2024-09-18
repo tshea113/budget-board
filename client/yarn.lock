@@ -1843,25 +1843,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-table@npm:^8.17.0":
-  version: 8.17.0
-  resolution: "@tanstack/react-table@npm:8.17.0"
-  dependencies:
-    "@tanstack/table-core": "npm:8.16.0"
-  peerDependencies:
-    react: ">=16.8"
-    react-dom: ">=16.8"
-  checksum: 10c0/8661f8ff27ce60ea5b701d916a1f116265a9c9b69cfbbf3d8aa1cab25b6f47c5eca94789faaea49fe2b4e49156fc07b813d829a15c1d533c0483b09002c8b469
-  languageName: node
-  linkType: hard
-
-"@tanstack/table-core@npm:8.16.0":
-  version: 8.16.0
-  resolution: "@tanstack/table-core@npm:8.16.0"
-  checksum: 10c0/fda4d47d40f61d1c226ecb47051afdcd49faa0b2c6ea2bd5ce138822794b8e0c4ca118aa03a15e1e2bc3882c57c901d5e90067a0c49e3e42a61267b004527434
-  languageName: node
-  linkType: hard
-
 "@trivago/prettier-plugin-sort-imports@npm:^4.3.0":
   version: 4.3.0
   resolution: "@trivago/prettier-plugin-sort-imports@npm:4.3.0"
@@ -2871,7 +2852,6 @@ __metadata:
     "@tanstack/eslint-plugin-query": "npm:^5.35.6"
     "@tanstack/react-query": "npm:^5.36.0"
     "@tanstack/react-query-devtools": "npm:^5.36.0"
-    "@tanstack/react-table": "npm:^8.17.0"
     "@trivago/prettier-plugin-sort-imports": "npm:^4.3.0"
     "@types/node": "npm:^20.12.11"
     "@types/react": "npm:^18.3.2"
