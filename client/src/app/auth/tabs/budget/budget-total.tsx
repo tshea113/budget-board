@@ -20,12 +20,15 @@ const BudgetTotal = (props: BudgetTotalProps): JSX.Element => {
     <>
       <div className="grid grid-cols-2">
         <div className="text-lg font-medium">{props.label}</div>
-        <div className="text-md justify-self-end font-medium">
+        <div className="justify-self-end text-base font-medium">
           {getBudgetTotalString(props.amount, props.total)}
         </div>
       </div>
       {props.total != null && (
-        <Progress className="h-2" value={getProgress(Math.abs(props.amount), props.total)} />
+        <Progress
+          className="h-2"
+          value={getProgress(Math.abs(props.amount), props.total)}
+        />
       )}
     </>
   );
