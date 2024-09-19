@@ -79,9 +79,9 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
         setLimit(props.budget.limit);
       }}
     >
-      <div className="grid h-10 grid-cols-2 items-center">
+      <div className="grid h-10 grid-cols-2 items-center @container">
         <div className="flex flex-row items-center space-x-2">
-          <div className="scroll-m-20 justify-self-start text-xl font-semibold tracking-tight">
+          <div className="scroll-m-20 justify-self-start text-lg font-semibold tracking-tight @sm:text-xl">
             {getFormattedCategoryValue(props.budget.category, transactionCategories)}
           </div>
           {isEdit && (
@@ -97,7 +97,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
             </ResponsiveButton>
           )}
         </div>
-        <div className="grid h-8 grid-cols-3 justify-items-center text-lg font-semibold">
+        <div className="text-md grid h-8 grid-cols-3 justify-items-center font-semibold @sm:text-lg">
           <div>${(props.amount * getSignForBudget(props.budget.category)).toFixed()}</div>
           <div>
             {!isEdit ? (

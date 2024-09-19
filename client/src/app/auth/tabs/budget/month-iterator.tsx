@@ -34,7 +34,7 @@ const MonthIterator = ({ date, setDate }: MonthIteratorProps): JSX.Element => {
       >
         <ChevronLeftIcon />
       </Button>
-      <div className="text-lg font-semibold">{displayDate}</div>
+      <div className="text-center text-lg font-semibold">{displayDate}</div>
       <Button
         className="p-2"
         variant="ghost"

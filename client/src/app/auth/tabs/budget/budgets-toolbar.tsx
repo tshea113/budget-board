@@ -78,12 +78,12 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
   };
 
   return (
-    <div className="grid w-full grid-cols-3">
-      <div />
-      <div className="justify-self-center">
+    <div className="grid w-full grid-cols-6">
+      <div className="col-span-1" />
+      <div className="col-span-4 justify-self-center">
         <MonthIterator date={props.date} setDate={props.setDate} />
       </div>
-      <div className="flex flex-row space-x-2 justify-self-end">
+      <div className="col-span-1 flex flex-row space-x-2 justify-self-end">
         {((props.budgets as Budget[]) ?? null)?.length === 0 && !props.isPending && (
           <ResponsiveButton
             variant="default"
