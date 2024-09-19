@@ -79,8 +79,8 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
         setLimit(props.budget.limit);
       }}
     >
-      <div className="grid h-10 grid-cols-2 items-center @container">
-        <div className="flex flex-row items-center space-x-2">
+      <div className="flex min-h-10 flex-row items-center @container">
+        <div className="flex w-1/2 flex-row flex-wrap items-center space-x-2">
           <div className="scroll-m-20 justify-self-start text-lg font-semibold tracking-tight @sm:text-xl">
             {getFormattedCategoryValue(props.budget.category, transactionCategories)}
           </div>
@@ -97,15 +97,17 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
             </ResponsiveButton>
           )}
         </div>
-        <div className="text-md grid h-8 grid-cols-3 justify-items-center font-semibold @sm:text-lg">
-          <div>${(props.amount * getSignForBudget(props.budget.category)).toFixed()}</div>
-          <div>
+        <div className="flex w-1/2 flex-row justify-items-center text-base font-semibold @sm:text-lg">
+          <div className="w-1/3 text-center">
+            ${(props.amount * getSignForBudget(props.budget.category)).toFixed()}
+          </div>
+          <div className="w-1/3 grow text-center">
             {!isEdit ? (
               <div>${limit}</div>
             ) : (
-              <div className="flex flex-row items-baseline space-x-1">
+              <div className="flex flex-row flex-wrap items-center justify-center gap-1">
                 <Input
-                  className="text-md h-8 w-20 px-2"
+                  className="h-6 max-w-[80px] px-1 text-base @sm:h-8"
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
@@ -115,7 +117,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
                   }}
                 />
                 <ResponsiveButton
-                  className="h-9 w-9 p-0"
+                  className="h-7 w-7 p-0"
                   loading={doEditBudget.isPending}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -129,7 +131,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
           </div>
           <span
             className={cn(
-              'font-semibold',
+              'w-1/3 text-center font-semibold',
               // Income behaves opposite of spending, since being above the limit is a good thing :)
               (props.budget.limit - Math.abs(props.amount)) * (props.isIncome ? -1 : 1) <
                 0
