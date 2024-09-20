@@ -1,7 +1,7 @@
 import { Goal } from '@/types/goal';
-import { getTransactionsForMonth } from './transactions';
 import { getMonthsUntilDate } from './utils';
 import { sumAccountsTotalBalance } from './accounts';
+import { Transaction } from '@/types/transaction';
 
 export const getGoalTargetAmount = (amount: number, initialAmount: number): number => {
   if (initialAmount < 0) {
@@ -14,11 +14,13 @@ export const getGoalTargetAmount = (amount: number, initialAmount: number): numb
   }
 };
 
-export const sumTransactionsForGoalForMonth = (goal: Goal): number =>
-  getTransactionsForMonth(
-    goal.accounts.flatMap((a) => a.transactions ?? []),
-    new Date()
-  ).reduce((n, { amount }) => n + amount, 0);
+export const sumTransactionsForGoalForMonth = (
+  goal: Goal,
+  transactionsForMonth: Transaction[]
+): number =>
+  transactionsForMonth
+    .filter((t) => goal.accounts.some((a) => a.id === t.accountID))
+    .reduce((n, { amount }) => n + amount, 0);
 
 export const getMonthlyContributionTotal = (goal: Goal): number => {
   if (goal.monthlyContribution == null && goal.completeDate !== null) {

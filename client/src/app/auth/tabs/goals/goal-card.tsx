@@ -11,10 +11,12 @@ import {
 import { convertNumberToCurrency, cn, getProgress } from '@/lib/utils';
 import { Goal } from '@/types/goal';
 import { TrashIcon } from '@radix-ui/react-icons';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import GoalDetails from './goal-details';
 import { AuthContext } from '@/components/auth-provider';
+import { Transaction } from '@/types/transaction';
+import { AxiosResponse } from 'axios';
 
 interface GoalCardProps {
   goal: Goal;
@@ -26,6 +28,26 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
   const ToggleIsSelected = (): void => {
     setIsSelected(!isSelected);
   };
+
+  const transactionsForMonthQuery = useQuery({
+    queryKey: [
+      'transactions',
+      { month: new Date().getMonth(), year: new Date().getUTCFullYear() },
+    ],
+    queryFn: async (): Promise<Transaction[]> => {
+      const res: AxiosResponse = await request({
+        url: '/api/transaction',
+        method: 'GET',
+        params: { date: new Date() },
+      });
+
+      if (res.status == 200) {
+        return res.data;
+      }
+
+      return [];
+    },
+  });
 
   const { request } = React.useContext<any>(AuthContext);
 
@@ -88,7 +110,12 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
           </div>
           <div className="justify-self-end text-base">
             <span className="font-semibold">
-              {convertNumberToCurrency(sumTransactionsForGoalForMonth(props.goal))}
+              {convertNumberToCurrency(
+                sumTransactionsForGoalForMonth(
+                  props.goal,
+                  transactionsForMonthQuery.data ?? []
+                )
+              )}
             </span>
             <span> of </span>
             <span className="font-semibold">
