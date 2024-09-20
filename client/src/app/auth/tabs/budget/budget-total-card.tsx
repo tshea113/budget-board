@@ -2,10 +2,11 @@ import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import BudgetTotal from './budget-total';
 import { type Budget } from '@/types/budget';
-import { BudgetGroup, getBudgetsForGroup } from '@/lib/budgets';
+import { BudgetGroup, getBudgetsForGroup, sumBudgetAmounts } from '@/lib/budgets';
 import { type Transaction } from '@/types/transaction';
 import { areStringsEqual } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
+import { sumTransactionAmounts } from '@/lib/transactions';
 
 interface BudgetTotalCardProps {
   budgetData: Budget[];
@@ -14,14 +15,6 @@ interface BudgetTotalCardProps {
 }
 
 const BudgetTotalCard = (props: BudgetTotalCardProps): JSX.Element => {
-  const getBudgetTotal = (budgetData: Budget[]): number => {
-    return budgetData.reduce((n, { limit }) => n + limit, 0);
-  };
-
-  const getTransactionTotal = (transactionData: Transaction[]): number => {
-    return transactionData.reduce((n, { amount }) => n + amount, 0);
-  };
-
   if (props.isPending) {
     return (
       <Card>
@@ -39,30 +32,31 @@ const BudgetTotalCard = (props: BudgetTotalCardProps): JSX.Element => {
       <Separator className="my-2" />
       <BudgetTotal
         label={'Income'}
-        amount={Math.abs(
-          getTransactionTotal(
-            props.transactionData.filter((t) =>
-              areStringsEqual(t.category ?? '', 'Income')
-            )
-          )
+        amount={sumTransactionAmounts(
+          props.transactionData.filter((t) => areStringsEqual(t.category ?? '', 'Income'))
         )}
-        total={getBudgetTotal(getBudgetsForGroup(props.budgetData, BudgetGroup.Income))}
+        total={sumBudgetAmounts(getBudgetsForGroup(props.budgetData, BudgetGroup.Income))}
+        isIncome={true}
       />
       <BudgetTotal
         label={'Spending'}
-        amount={Math.abs(
-          getTransactionTotal(
+        amount={
+          sumTransactionAmounts(
             props.transactionData.filter(
               (t) => !areStringsEqual(t.category ?? '', 'Income')
             )
-          )
+          ) * -1
+        }
+        total={sumBudgetAmounts(
+          getBudgetsForGroup(props.budgetData, BudgetGroup.Spending)
         )}
-        total={getBudgetTotal(getBudgetsForGroup(props.budgetData, BudgetGroup.Spending))}
+        isIncome={false}
       />
       <Separator className="my-2" />
       <BudgetTotal
         label={'Remaining'}
-        amount={getTransactionTotal(props.transactionData)}
+        amount={sumTransactionAmounts(props.transactionData)}
+        isIncome={true}
       />
     </Card>
   );

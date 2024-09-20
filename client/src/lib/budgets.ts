@@ -8,6 +8,15 @@ export enum BudgetGroup {
   Spending,
 }
 
+/**
+ * Sums the total amount budgeted for all of the provided budgets
+ * @param budgetData Array of budgets
+ * @returns Summed total of budget amounts
+ */
+export const sumBudgetAmounts = (budgetData: Budget[]): number => {
+  return budgetData.reduce((n, { limit }) => n + limit, 0);
+};
+
 export const getBudgetsForMonth = (budgetData: Budget[], date: Date): Budget[] =>
   budgetData.filter(
     (b: Budget) =>

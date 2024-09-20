@@ -1,27 +1,31 @@
 import { Progress } from '@/components/ui/progress';
-import { getProgress } from '@/lib/utils';
+import { cn, getProgress } from '@/lib/utils';
 
 interface BudgetTotalProps {
   label: string;
   amount: number;
   total?: number;
+  isIncome: boolean;
 }
 
 const BudgetTotal = (props: BudgetTotalProps): JSX.Element => {
-  const getBudgetTotalString = (amount: number, total: number | undefined): string => {
-    if (total != null) {
-      return '$' + amount.toFixed() + ' of $' + total.toFixed();
-    } else {
-      return '$' + amount.toFixed();
-    }
-  };
-
   return (
     <>
       <div className="grid grid-cols-2">
         <div className="text-lg font-medium">{props.label}</div>
         <div className="justify-self-end text-base font-medium">
-          {getBudgetTotalString(props.amount, props.total)}
+          <span
+            className={cn(
+              'font-semibold',
+              // Income behaves opposite of spending, since being above the limit is a good thing :)
+              (props.total ?? 0) - props.amount * (props.isIncome ? -1 : 1) > 0
+                ? 'text-accent-good'
+                : 'text-accent-bad'
+            )}
+          >
+            {'$' + props.amount.toFixed()}
+          </span>
+          <span>{props.total != null && ' of $' + props.total.toFixed()}</span>
         </div>
       </div>
       {props.total != null && (
