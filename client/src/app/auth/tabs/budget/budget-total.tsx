@@ -18,12 +18,14 @@ const BudgetTotal = (props: BudgetTotalProps): JSX.Element => {
             className={cn(
               'font-semibold',
               // Income behaves opposite of spending, since being above the limit is a good thing :)
-              (props.total ?? 0) - props.amount * (props.isIncome ? -1 : 1) > 0
+              ((props.total ?? 0) - props.amount * (props.isIncome ? 1 : -1)) *
+                (props.isIncome ? 1 : -1) <
+                0
                 ? 'text-accent-good'
                 : 'text-accent-bad'
             )}
           >
-            {'$' + props.amount.toFixed()}
+            {'$' + (props.amount * (props.isIncome ? 1 : -1)).toFixed()}
           </span>
           <span>{props.total != null && ' of $' + props.total.toFixed()}</span>
         </div>
@@ -31,7 +33,7 @@ const BudgetTotal = (props: BudgetTotalProps): JSX.Element => {
       {props.total != null && (
         <Progress
           className="h-2"
-          value={getProgress(Math.abs(props.amount), props.total)}
+          value={getProgress(props.amount * (props.isIncome ? 1 : -1), props.total)}
         />
       )}
     </>
