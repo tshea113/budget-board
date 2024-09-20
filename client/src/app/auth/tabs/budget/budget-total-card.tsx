@@ -40,13 +40,11 @@ const BudgetTotalCard = (props: BudgetTotalCardProps): JSX.Element => {
       />
       <BudgetTotal
         label={'Spending'}
-        amount={
-          sumTransactionAmounts(
-            props.transactionData.filter(
-              (t) => !areStringsEqual(t.category ?? '', 'Income')
-            )
-          ) * -1
-        }
+        amount={sumTransactionAmounts(
+          props.transactionData.filter(
+            (t) => !areStringsEqual(t.category ?? '', 'Income')
+          )
+        )}
         total={sumBudgetAmounts(
           getBudgetsForGroup(props.budgetData, BudgetGroup.Spending)
         )}
