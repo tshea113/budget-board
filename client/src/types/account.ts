@@ -1,5 +1,4 @@
 import { ICategory } from './category';
-import { Transaction } from './transaction';
 
 export interface Account {
   id: string;
@@ -13,7 +12,6 @@ export interface Account {
   hideTransactions: boolean;
   hideAccount: boolean;
   deleted: Date;
-  transactions?: Transaction[];
   userID: string;
 }
 

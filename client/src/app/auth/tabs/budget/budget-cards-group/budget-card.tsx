@@ -133,10 +133,11 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
             className={cn(
               'w-1/3 text-center font-semibold',
               // Income behaves opposite of spending, since being above the limit is a good thing :)
-              (props.budget.limit - Math.abs(props.amount)) * (props.isIncome ? -1 : 1) <
+              (props.budget.limit - props.amount * (props.isIncome ? 1 : -1)) *
+                (props.isIncome ? -1 : 1) >
                 0
-                ? 'text-accent-bad'
-                : 'text-accent-good'
+                ? 'text-accent-good'
+                : 'text-accent-bad'
             )}
           >
             {getAmountLeft(props.budget.limit, props.amount * (props.isIncome ? 1 : -1))}

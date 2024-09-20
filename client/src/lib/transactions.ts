@@ -130,3 +130,12 @@ export const getRollingTotalSpendingForMonth = (
 
   return rollingTotalSpendingPerDay;
 };
+
+/**
+ * Sums the amounts of all transactions in the provided array
+ * @param transactionData Array of transactions
+ * @returns The sum of all transaction amounts
+ */
+export const sumTransactionAmounts = (transactionData: Transaction[]): number => {
+  return transactionData.reduce((n, { amount }) => n + amount, 0);
+};
