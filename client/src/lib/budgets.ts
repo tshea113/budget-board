@@ -23,14 +23,15 @@ export const getBudgetsForGroup = (
 
   if (budgetGroup === BudgetGroup.Income) {
     return (
-      budgetData.filter(
-        (b) => getParentCategory(b.category, transactionCategories) === 'income'
+      budgetData.filter((b) =>
+        areStringsEqual(getParentCategory(b.category, transactionCategories), 'income')
       ) ?? []
     );
   } else if (budgetGroup === BudgetGroup.Spending) {
     return (
       budgetData.filter(
-        (b) => getParentCategory(b.category, transactionCategories) !== 'income'
+        (b) =>
+          !areStringsEqual(getParentCategory(b.category, transactionCategories), 'income')
       ) ?? []
     );
   } else {

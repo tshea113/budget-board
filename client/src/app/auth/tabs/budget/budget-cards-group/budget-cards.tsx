@@ -4,6 +4,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import BudgetCard from './budget-card';
 import { sumTransactionAmountsByCategory } from '@/lib/transactions';
 import { getParentCategory } from '@/lib/category';
+import { areStringsEqual } from '@/lib/utils';
 
 interface BudgetCardsProps {
   budgetData: Budget[] | null;
@@ -40,9 +41,10 @@ const BudgetCards = (props: BudgetCardsProps): JSX.Element => {
                 props.transactionsData ?? [],
                 budget.category
               )}
-              isIncome={
-                getParentCategory(budget.category, transactionCategories) === 'income'
-              }
+              isIncome={areStringsEqual(
+                getParentCategory(budget.category, transactionCategories),
+                'income'
+              )}
             />
           ))}
       </div>
