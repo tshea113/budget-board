@@ -68,6 +68,13 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
     },
   });
 
+  const goalMonthlyContributionAmount = sumTransactionsForGoalForMonth(
+    props.goal,
+    transactionsForMonthQuery.data ?? []
+  );
+
+  const goalMonthlyTargetAmount = getMonthlyContributionTotal(props.goal);
+
   return (
     <Card
       className={cn(
@@ -113,18 +120,18 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
             <GoalDetails goal={props.goal} />
           </div>
           <div className="justify-self-end text-base">
-            <span className="font-semibold">
-              {convertNumberToCurrency(
-                sumTransactionsForGoalForMonth(
-                  props.goal,
-                  transactionsForMonthQuery.data ?? []
-                )
+            <span
+              className={cn(
+                'font-semibold',
+                goalMonthlyTargetAmount - goalMonthlyContributionAmount > 0
+                  ? 'text-accent-bad'
+                  : 'text-accent-good'
               )}
+            >
+              {convertNumberToCurrency(goalMonthlyContributionAmount)}
             </span>
             <span> of </span>
-            <span className="font-semibold">
-              {convertNumberToCurrency(getMonthlyContributionTotal(props.goal))}
-            </span>
+            <span className="font-semibold">{goalMonthlyTargetAmount}</span>
             <span> this month</span>
           </div>
         </div>
