@@ -131,7 +131,9 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
               {convertNumberToCurrency(goalMonthlyContributionAmount)}
             </span>
             <span> of </span>
-            <span className="font-semibold">{goalMonthlyTargetAmount}</span>
+            <span className="font-semibold">
+              {convertNumberToCurrency(goalMonthlyTargetAmount)}
+            </span>
             <span> this month</span>
           </div>
         </div>
