@@ -32,13 +32,17 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
   const transactionsForMonthQuery = useQuery({
     queryKey: [
       'transactions',
-      { month: new Date().getMonth(), year: new Date().getUTCFullYear() },
+      {
+        month: new Date().getMonth(),
+        year: new Date().getUTCFullYear(),
+        includeHidden: true,
+      },
     ],
     queryFn: async (): Promise<Transaction[]> => {
       const res: AxiosResponse = await request({
         url: '/api/transaction',
         method: 'GET',
-        params: { date: new Date() },
+        params: { getHidden: true, date: new Date() },
       });
 
       if (res.status == 200) {
