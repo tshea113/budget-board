@@ -32,13 +32,17 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
   const transactionsForMonthQuery = useQuery({
     queryKey: [
       'transactions',
-      { month: new Date().getMonth(), year: new Date().getUTCFullYear() },
+      {
+        month: new Date().getMonth(),
+        year: new Date().getUTCFullYear(),
+        includeHidden: true,
+      },
     ],
     queryFn: async (): Promise<Transaction[]> => {
       const res: AxiosResponse = await request({
         url: '/api/transaction',
         method: 'GET',
-        params: { date: new Date() },
+        params: { getHidden: true, date: new Date() },
       });
 
       if (res.status == 200) {
@@ -63,6 +67,13 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
       await queryClient.invalidateQueries({ queryKey: ['goals'] });
     },
   });
+
+  const goalMonthlyContributionAmount = sumTransactionsForGoalForMonth(
+    props.goal,
+    transactionsForMonthQuery.data ?? []
+  );
+
+  const goalMonthlyTargetAmount = getMonthlyContributionTotal(props.goal);
 
   return (
     <Card
@@ -109,17 +120,19 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
             <GoalDetails goal={props.goal} />
           </div>
           <div className="justify-self-end text-base">
-            <span className="font-semibold">
-              {convertNumberToCurrency(
-                sumTransactionsForGoalForMonth(
-                  props.goal,
-                  transactionsForMonthQuery.data ?? []
-                )
+            <span
+              className={cn(
+                'font-semibold',
+                goalMonthlyTargetAmount - goalMonthlyContributionAmount > 0
+                  ? 'text-accent-bad'
+                  : 'text-accent-good'
               )}
+            >
+              {convertNumberToCurrency(goalMonthlyContributionAmount)}
             </span>
             <span> of </span>
             <span className="font-semibold">
-              {convertNumberToCurrency(getMonthlyContributionTotal(props.goal))}
+              {convertNumberToCurrency(goalMonthlyTargetAmount)}
             </span>
             <span> this month</span>
           </div>
