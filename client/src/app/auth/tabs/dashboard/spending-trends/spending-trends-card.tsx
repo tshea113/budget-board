@@ -10,7 +10,10 @@ import {
   getDateFromMonthsAgo,
   getDaysInMonth,
 } from '@/lib/utils';
-import { getRollingTotalSpendingForMonth } from '@/lib/transactions';
+import {
+  filterHiddenTransactions,
+  getRollingTotalSpendingForMonth,
+} from '@/lib/transactions';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const SpendingTrendsCard = (): JSX.Element => {
@@ -58,11 +61,11 @@ const SpendingTrendsCard = (): JSX.Element => {
 
   const getSpendingComparison = (): number => {
     const thisMonthRollingTotal = getRollingTotalSpendingForMonth(
-      thisMonthTransactionsQuery.data ?? [],
+      filterHiddenTransactions(thisMonthTransactionsQuery.data ?? []),
       new Date().getDate()
     );
     const lastMonthRollingTotal = getRollingTotalSpendingForMonth(
-      lastMonthTransactionsQuery.data ?? [],
+      filterHiddenTransactions(lastMonthTransactionsQuery.data ?? []),
       getDaysInMonth(lastMonthDate.getMonth(), lastMonthDate.getFullYear())
     );
 
@@ -119,9 +122,9 @@ const SpendingTrendsCard = (): JSX.Element => {
       <div>
         <SpendingTrendsChart
           months={[getDateFromMonthsAgo(0), getDateFromMonthsAgo(1)]}
-          transactions={(thisMonthTransactionsQuery.data ?? []).concat(
-            lastMonthTransactionsQuery.data ?? []
-          )}
+          transactions={filterHiddenTransactions(
+            thisMonthTransactionsQuery.data ?? []
+          ).concat(filterHiddenTransactions(lastMonthTransactionsQuery.data ?? []))}
         />
       </div>
     </Card>

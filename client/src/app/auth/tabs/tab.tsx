@@ -8,16 +8,16 @@ const Tab = (): JSX.Element => {
   return (
     <Tabs defaultValue="dashboard">
       <TabsList className="mx-1 mb-2 flex w-auto">
-        <TabsTrigger className="flex-grow" value="dashboard">
+        <TabsTrigger className="grow" value="dashboard">
           Dashboard
         </TabsTrigger>
-        <TabsTrigger className="flex-grow" value="transactions">
+        <TabsTrigger className="grow" value="transactions">
           Transactions
         </TabsTrigger>
-        <TabsTrigger className="flex-grow" value="budget">
+        <TabsTrigger className="grow" value="budget">
           Budget
         </TabsTrigger>
-        <TabsTrigger className="flex-grow" value="goals">
+        <TabsTrigger className="grow" value="goals">
           Goals
         </TabsTrigger>
       </TabsList>

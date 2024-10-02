@@ -78,24 +78,27 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
   };
 
   return (
-    <div className="grid w-full grid-cols-6">
-      <div className="col-span-1" />
-      <div className="col-span-4 justify-self-center">
-        <MonthIterator date={props.date} setDate={props.setDate} />
-      </div>
-      <div className="col-span-1 flex flex-row space-x-2 justify-self-end">
-        {((props.budgets as Budget[]) ?? null)?.length === 0 && !props.isPending && (
-          <ResponsiveButton
-            variant="default"
-            loading={doCopyBudget.isPending}
-            onClick={onCopyBudgets}
-          >
-            Copy last month
-          </ResponsiveButton>
-        )}
-        <AddButtonPopover>
-          <AddBudget date={props.date} />
-        </AddButtonPopover>
+    <div className="@container">
+      <div className="grid w-full grid-cols-6 grid-rows-2 items-center @xl:grid-rows-1">
+        <div className="hidden @xl:col-span-1 @xl:block" />
+        <div className="col-span-6 justify-self-center @xl:col-span-4">
+          <MonthIterator date={props.date} setDate={props.setDate} />
+        </div>
+        <div className="col-span-6 flex flex-row space-x-2 justify-self-end @xl:col-span-1">
+          {((props.budgets as Budget[]) ?? null)?.length === 0 && !props.isPending && (
+            <ResponsiveButton
+              className="p-2"
+              variant="default"
+              loading={doCopyBudget.isPending}
+              onClick={onCopyBudgets}
+            >
+              Copy last month
+            </ResponsiveButton>
+          )}
+          <AddButtonPopover>
+            <AddBudget date={props.date} />
+          </AddButtonPopover>
+        </div>
       </div>
     </div>
   );

@@ -87,7 +87,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
             editCell={doEditTransaction.mutate}
           />
         </span>
-        <span className="shrink grow @xl:w-[200px]">
+        <span className="flex-auto @xl:w-[200px]">
           <EditableMerchantCell
             transaction={props.transaction}
             isSelected={isEdit}

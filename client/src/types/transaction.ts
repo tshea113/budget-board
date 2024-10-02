@@ -15,6 +15,8 @@ export interface Transaction {
 
 export interface NewTransaction extends Partial<Transaction> {}
 
+export const hiddenTransactionCategory = 'Hide from Budgets';
+
 export const transactionCategories: ICategory[] = [
   {
     value: 'Auto & Transport',
@@ -223,6 +225,12 @@ export const transactionCategories: ICategory[] = [
   {
     value: 'Sports',
     parent: 'health & fitness',
+  },
+  {
+    // This one is a bit of a special case,
+    // since we need to filter this one from certain views
+    value: hiddenTransactionCategory,
+    parent: '',
   },
   {
     value: 'Home',
