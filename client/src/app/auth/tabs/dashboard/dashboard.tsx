@@ -10,7 +10,7 @@ const Dashboard = (): JSX.Element => {
   return (
     <div>
       <EmailVerified />
-      <div className="flex flex-col gap-2 lg:grid lg:grid-flow-col lg:grid-cols-10 lg:grid-rows-5">
+      <div className="flex flex-col gap-2 lg:grid lg:grid-flow-col lg:grid-cols-10">
         <div className="col-span-3 row-span-full space-y-2 2xl:col-span-2">
           <AccountCard />
           <NetWorthCard />
