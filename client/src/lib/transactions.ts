@@ -1,4 +1,8 @@
-import { transactionCategories, type Transaction } from '@/types/transaction';
+import {
+  hiddenTransactionCategory,
+  transactionCategories,
+  type Transaction,
+} from '@/types/transaction';
 import { getIsParentCategory } from './category';
 import { areStringsEqual } from './utils';
 
@@ -14,6 +18,16 @@ export const filterTransactionsByCategory = (
 ) =>
   transactions.filter((t: Transaction) =>
     areStringsEqual(t.category ?? '', categoryValue)
+  );
+
+/**
+ * Filters out the transactions with the hidden transaction category
+ * @param transactions Transactions to filter
+ * @returns Filtered list of transactions
+ */
+export const filterHiddenTransactions = (transactions: Transaction[]) =>
+  transactions.filter(
+    (t) => !areStringsEqual(t.category ?? '', hiddenTransactionCategory)
   );
 
 export const formatDate = (date: Date): string => {

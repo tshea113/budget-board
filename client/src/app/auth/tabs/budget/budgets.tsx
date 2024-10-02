@@ -10,6 +10,7 @@ import { AuthContext } from '@/components/auth-provider';
 import { useQuery } from '@tanstack/react-query';
 import BudgetCardsGroup from './budget-cards-group/budget-cards-group';
 import { AxiosResponse } from 'axios';
+import { filterHiddenTransactions } from '@/lib/transactions';
 
 const Budgets = (): JSX.Element => {
   const [date, setDate] = React.useState<Date>(initCurrentMonth());
@@ -63,18 +64,22 @@ const Budgets = (): JSX.Element => {
           <BudgetCardsGroup
             header={'Income'}
             budgetData={getBudgetsForGroup(budgetsQuery.data, BudgetGroup.Income)}
-            transactionsData={transactionsForMonthQuery.data ?? []}
+            transactionsData={filterHiddenTransactions(
+              transactionsForMonthQuery.data ?? []
+            )}
             isPending={budgetsQuery.isPending || transactionsForMonthQuery.isPending}
           />
           <BudgetCardsGroup
             header={'Spending'}
             budgetData={getBudgetsForGroup(budgetsQuery.data, BudgetGroup.Spending)}
-            transactionsData={transactionsForMonthQuery.data ?? []}
+            transactionsData={filterHiddenTransactions(
+              transactionsForMonthQuery.data ?? []
+            )}
             isPending={budgetsQuery.isPending || transactionsForMonthQuery.isPending}
           />
         </div>
         <Unbudgets
-          transactions={transactionsForMonthQuery.data ?? []}
+          transactions={filterHiddenTransactions(transactionsForMonthQuery.data ?? [])}
           budgets={budgetsQuery.data ?? []}
           isPending={budgetsQuery.isPending || transactionsForMonthQuery.isPending}
         />
@@ -82,7 +87,7 @@ const Budgets = (): JSX.Element => {
       <div className="h-96 lg:col-span-3">
         <BudgetTotalCard
           budgetData={getBudgetsForMonth(budgetsQuery.data ?? [], date)}
-          transactionData={transactionsForMonthQuery.data ?? []}
+          transactionData={filterHiddenTransactions(transactionsForMonthQuery.data ?? [])}
           isPending={budgetsQuery.isPending || transactionsForMonthQuery.isPending}
         />
       </div>
