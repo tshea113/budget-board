@@ -26,7 +26,7 @@ const MonthIterator = ({ date, setDate }: MonthIteratorProps): JSX.Element => {
   return (
     <div className="flex flex-row items-center justify-center space-x-2">
       <Button
-        className="p-2"
+        className="h-8 w-8 p-1"
         variant="ghost"
         onClick={() => {
           iterateDate(-1);
@@ -34,11 +34,11 @@ const MonthIterator = ({ date, setDate }: MonthIteratorProps): JSX.Element => {
       >
         <ChevronLeftIcon />
       </Button>
-      <div className="w-[140px] text-nowrap text-center text-lg font-semibold">
+      <div className="w-[130px] text-nowrap text-center text-lg font-semibold">
         {displayDate}
       </div>
       <Button
-        className="p-2"
+        className="h-8 w-8 p-1"
         variant="ghost"
         onClick={() => {
           iterateDate(1);
