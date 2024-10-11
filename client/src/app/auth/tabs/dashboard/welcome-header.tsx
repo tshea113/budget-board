@@ -1,12 +1,12 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import SyncAccountButton from './sync-account-button';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import { InfoResponse } from '@/types/user';
+import { Skeleton } from '@/components/ui/skeleton';
 
-const WelcomeCard = (): JSX.Element => {
+const WelcomeHeader = (): JSX.Element => {
   const { request } = React.useContext<any>(AuthContext);
 
   const userInfoQuery = useQuery({
@@ -25,16 +25,24 @@ const WelcomeCard = (): JSX.Element => {
     },
   });
 
+  if (userInfoQuery.isPending) {
+    return (
+      <div className="flex flex-row">
+        <Skeleton className="h-10 w-[30%]" />
+        <div className="grow" />
+        <Skeleton className="h-10 w-[100px]" />
+      </div>
+    );
+  }
+
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Hello, {userInfoQuery.data?.email ?? 'not available'}.</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <SyncAccountButton />
-      </CardContent>
-    </Card>
+    <div className="flex w-full flex-row p-2">
+      <span className="grow self-center text-2xl font-semibold tracking-tight">
+        Hello, {userInfoQuery.data?.email ?? 'not available'}.
+      </span>
+      <SyncAccountButton />
+    </div>
   );
 };
 
-export default WelcomeCard;
+export default WelcomeHeader;

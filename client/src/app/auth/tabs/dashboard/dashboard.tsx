@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import AccountCard from './accounts/account-card';
-import WelcomeCard from './welcome-card';
+import WelcomeHeader from './welcome-header';
 import EmailVerified from '../../../../components/email-verified';
 import UncategorizedTransactionsCard from './uncategorized-transactions/uncategorized-transactions-card';
 import NetWorthCard from './net-worth/net-worth-card';
@@ -8,15 +8,15 @@ import SpendingTrendsCard from './spending-trends/spending-trends-card';
 
 const Dashboard = (): JSX.Element => {
   return (
-    <div>
+    <div className="flex w-full flex-col items-center">
       <EmailVerified />
-      <div className="flex flex-col gap-2 lg:grid lg:grid-flow-col lg:grid-cols-10">
-        <div className="col-span-3 row-span-full space-y-2 2xl:col-span-2">
+      <div className="flex w-full flex-col gap-2 lg:flex-row 2xl:max-w-screen-2xl">
+        <div className="space-y-2 lg:w-2/5 lg:max-w-[425px]">
           <AccountCard />
           <NetWorthCard />
         </div>
-        <div className="col-span-7 space-y-2 2xl:col-span-8">
-          <WelcomeCard />
+        <div className="w-full space-y-2">
+          <WelcomeHeader />
           <UncategorizedTransactionsCard />
           <SpendingTrendsCard />
         </div>

@@ -21,7 +21,7 @@ const Tab = (): JSX.Element => {
           Goals
         </TabsTrigger>
       </TabsList>
-      <TabsContent className="m-1" value="dashboard">
+      <TabsContent className="m-1 flex flex-row justify-center" value="dashboard">
         <Dashboard />
       </TabsContent>
       <TabsContent className="m-1 flex flex-row justify-center" value="transactions">
