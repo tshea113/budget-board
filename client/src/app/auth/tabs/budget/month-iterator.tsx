@@ -8,20 +8,17 @@ interface MonthIteratorProps {
   setDate: (date: Date) => void;
 }
 
-const MonthIterator = ({ date, setDate }: MonthIteratorProps): JSX.Element => {
-  const [displayDate, setDisplayDate] = React.useState<string>(
-    getMonthAndYearDateString(date)
+const MonthIterator = (props: MonthIteratorProps): JSX.Element => {
+  const displayDate = React.useMemo(
+    () => getMonthAndYearDateString(props.date),
+    [props.date]
   );
 
   const iterateDate = (iterate: number): void => {
-    const newDate = new Date(date);
+    const newDate = new Date(props.date);
     newDate.setMonth(newDate.getMonth() + iterate);
-    setDate(newDate);
+    props.setDate(newDate);
   };
-
-  React.useEffect(() => {
-    setDisplayDate(getMonthAndYearDateString(date));
-  }, [date]);
 
   return (
     <div className="flex flex-row items-center justify-center space-x-2">
