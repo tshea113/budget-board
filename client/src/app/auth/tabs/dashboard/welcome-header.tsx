@@ -4,6 +4,7 @@ import { AuthContext } from '@/components/auth-provider';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import { InfoResponse } from '@/types/user';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const WelcomeHeader = (): JSX.Element => {
   const { request } = React.useContext<any>(AuthContext);
@@ -24,14 +25,22 @@ const WelcomeHeader = (): JSX.Element => {
     },
   });
 
+  if (userInfoQuery.isPending) {
+    return (
+      <div className="flex flex-row">
+        <Skeleton className="h-10 w-[30%]" />
+        <div className="grow" />
+        <Skeleton className="h-10 w-[100px]" />
+      </div>
+    );
+  }
+
   return (
     <div className="flex w-full flex-row p-2">
-      <span className="w-1/2 self-center text-2xl font-semibold tracking-tight">
+      <span className="grow self-center text-2xl font-semibold tracking-tight">
         Hello, {userInfoQuery.data?.email ?? 'not available'}.
       </span>
-      <div className="flex w-1/2 flex-row-reverse">
-        <SyncAccountButton />
-      </div>
+      <SyncAccountButton />
     </div>
   );
 };
