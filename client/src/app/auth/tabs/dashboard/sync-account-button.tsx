@@ -1,7 +1,9 @@
 import { AuthContext } from '@/components/auth-provider';
-import ResponsiveButton from '@/components/responsive-button';
+import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { translateAxiosError } from '@/lib/requests';
+import { cn } from '@/lib/utils';
+import { UpdateIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosResponse, type AxiosError } from 'axios';
 import React from 'react';
@@ -40,9 +42,17 @@ const SyncAccountButton = (): JSX.Element => {
   });
 
   return (
-    <ResponsiveButton onClick={doSyncMutation.mutate} loading={doSyncMutation.isPending}>
-      Sync Accounts
-    </ResponsiveButton>
+    <Button
+      onClick={(e) => {
+        e.preventDefault();
+        doSyncMutation.mutate();
+      }}
+    >
+      <div className="flex flex-row items-center gap-1">
+        <span>Sync</span>
+        <UpdateIcon className={cn(doSyncMutation.isPending ? 'animate-spin' : '')} />
+      </div>
+    </Button>
   );
 };
 
