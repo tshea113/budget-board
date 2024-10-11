@@ -116,7 +116,7 @@ const SpendingTrendsCard = (): JSX.Element => {
           Spending Trends
         </span>
         <span className="w-1/2 text-right tracking-tight">
-          You have spent {getSpendingComparisonString()} last month so far.
+          You have spent {getSpendingComparisonString()} last month.
         </span>
       </div>
       <div>
