@@ -90,6 +90,33 @@ public class GoalController : ControllerBase
         }
     }
 
+    [HttpPut]
+    [Authorize]
+    public async Task<IActionResult> Edit([FromBody] Goal newGoal)
+    {
+        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
+
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        Goal? goal = await _userDataContext.Goals.FindAsync(newGoal.ID);
+        if (goal == null)
+        {
+            return NotFound();
+        }
+
+        goal.Name = newGoal.Name;
+        goal.Amount = newGoal.Amount;
+        goal.CompleteDate = newGoal.CompleteDate;
+        goal.MonthlyContribution = newGoal.MonthlyContribution;
+
+        await _userDataContext.SaveChangesAsync();
+
+        return Ok();
+    }
+
     [HttpDelete]
     [Authorize]
     public async Task<IActionResult> Delete(Guid guid)
