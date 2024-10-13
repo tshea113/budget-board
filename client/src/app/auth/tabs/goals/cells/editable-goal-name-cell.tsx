@@ -10,7 +10,7 @@ interface EditableGoalNameCellProps {
 }
 
 const EditableGoalNameCell = (props: EditableGoalNameCellProps): JSX.Element => {
-  const [goalNameValue, setGoalNameValue] = React.useState(props.goal.name);
+  const [goalNameValue, setGoalNameValue] = React.useState<string>(props.goal.name);
 
   React.useEffect(() => {
     if (props.isError) {
