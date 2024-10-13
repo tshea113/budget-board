@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 
 interface DatePickerProps {
+  className?: string;
   value: Date;
   fromYear?: number;
   toYear?: number;
@@ -20,6 +21,7 @@ const DatePicker = (props: DatePickerProps): JSX.Element => {
         <Button
           variant={'outline'}
           className={cn(
+            props.className,
             'min-w-[50px] max-w-full justify-start text-left font-normal',
             props.value == null && 'text-muted-foreground'
           )}
