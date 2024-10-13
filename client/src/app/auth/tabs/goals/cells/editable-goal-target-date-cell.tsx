@@ -6,7 +6,6 @@ import React from 'react';
 interface EditableGoalTargetDateCellProps {
   goal: Goal;
   isSelected: boolean;
-  isError: boolean;
   editCell: (newGoal: Goal) => void;
 }
 
@@ -16,12 +15,6 @@ const EditableGoalTargetDateCell = (
   const [goalTargetDateValue, setGoalTargetDateValue] = React.useState<Date | null>(
     props.goal.completeDate
   );
-
-  React.useEffect(() => {
-    if (props.isError) {
-      setGoalTargetDateValue(props.goal.completeDate);
-    }
-  }, [props.isError]);
 
   const onDatePick = (date: Date): void => {
     setGoalTargetDateValue(date);

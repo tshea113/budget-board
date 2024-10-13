@@ -7,7 +7,6 @@ import React from 'react';
 interface EditableGoalTargetAmountCellProps {
   goal: Goal;
   isSelected: boolean;
-  isError: boolean;
   editCell: (newGoal: Goal) => void;
 }
 
@@ -17,12 +16,6 @@ const EditableGoalTargetAmountCell = (
   const [goalAmountValue, setGoalAmountValue] = React.useState<string>(
     props.goal.amount.toFixed(0)
   );
-
-  React.useEffect(() => {
-    if (props.isError) {
-      setGoalAmountValue(props.goal.amount.toFixed(0));
-    }
-  }, [props.isError]);
 
   const onInputBlur = (): void => {
     if (!isNaN(parseFloat(goalAmountValue))) {

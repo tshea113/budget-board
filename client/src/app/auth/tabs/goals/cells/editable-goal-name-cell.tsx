@@ -5,18 +5,11 @@ import React from 'react';
 interface EditableGoalNameCellProps {
   goal: Goal;
   isSelected: boolean;
-  isError: boolean;
   editCell: (newGoal: Goal) => void;
 }
 
 const EditableGoalNameCell = (props: EditableGoalNameCellProps): JSX.Element => {
   const [goalNameValue, setGoalNameValue] = React.useState<string>(props.goal.name);
-
-  React.useEffect(() => {
-    if (props.isError) {
-      setGoalNameValue(props.goal.name);
-    }
-  }, [props.isError]);
 
   const onGoalNameBlur = (): void => {
     if (goalNameValue && goalNameValue.length > 0) {

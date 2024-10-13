@@ -128,7 +128,6 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
             <EditableGoalNameCell
               goal={props.goal}
               isSelected={isSelected}
-              isError={false}
               editCell={doEditGoal.mutate}
             />
             {(doEditGoal.isPending || doDeleteGoal.isPending) && <LoadingIcon />}
@@ -143,7 +142,6 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
             <EditableGoalTargetAmountCell
               goal={props.goal}
               isSelected={isSelected}
-              isError={false}
               editCell={doEditGoal.mutate}
             />
           </div>
@@ -163,7 +161,6 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
             <EditableGoalTargetDateCell
               goal={props.goal}
               isSelected={isSelected}
-              isError={false}
               editCell={doEditGoal.mutate}
             />
           </div>
@@ -187,7 +184,6 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
             <EditableGoalMonthlyAmountCell
               goal={props.goal}
               isSelected={isSelected}
-              isError={false}
               editCell={doEditGoal.mutate}
             />
             <span> this month</span>
