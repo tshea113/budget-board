@@ -27,6 +27,7 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
 
   const ToggleIsSelected = (): void => {
     setIsSelected(!isSelected);
+    setSelectEffect(true);
   };
 
   const transactionsForMonthQuery = useQuery({
@@ -79,9 +80,11 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
     <Card
       className={cn(
         'flex flex-row hover:bg-card-select',
-        isSelected ? 'bg-card-select' : 'bg-card'
+        isSelected ? 'bg-card-select' : 'bg-card',
+        selectEffect && 'animate-pop'
       )}
       onClick={ToggleIsSelected}
+      onAnimationEnd={() => setSelectEffect(false)}
     >
       <div className="flex w-full flex-col px-3 py-2">
         <div className="grid grid-cols-1 grid-rows-2 sm:grid-cols-2 sm:grid-rows-1">
