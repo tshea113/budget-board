@@ -41,8 +41,8 @@ const DatePicker = (props: DatePickerProps): JSX.Element => {
           onDayClick={props.onDayClick}
           onDayBlur={props.onDayBlur}
           initialFocus
-          fromYear={props.fromYear ?? new Date().getFullYear()}
-          toYear={props.toYear ?? new Date().getFullYear() + 10}
+          fromYear={props.fromYear ?? new Date(props.value).getFullYear() - 50}
+          toYear={props.toYear ?? new Date(props.value).getFullYear() + 50}
         />
       </PopoverContent>
     </Popover>
