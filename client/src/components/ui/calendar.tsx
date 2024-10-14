@@ -5,6 +5,7 @@ import { DayPicker } from 'react-day-picker';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
+import { ScrollArea } from './scroll-area';
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
@@ -88,15 +89,17 @@ function Calendar({
               <SelectValue placeholder={props?.caption}>{props?.caption}</SelectValue>
             </SelectTrigger>
             <SelectContent className="scrolling-auto max-h-[var(--radix-popper-available-height);] min-w-[var(--radix-popper-anchor-width)] overflow-y-auto">
-              {props.children &&
-                React.Children.map(props.children, (child) => (
-                  <SelectItem
-                    value={(child as React.ReactElement<any>)?.props?.value}
-                    className="min-w-[var(--radix-popper-anchor-width)]"
-                  >
-                    {(child as React.ReactElement<any>)?.props?.children}
-                  </SelectItem>
-                ))}
+              <ScrollArea className="h-[200px] w-[100px] pr-3">
+                {props.children &&
+                  React.Children.map(props.children, (child) => (
+                    <SelectItem
+                      value={(child as React.ReactElement<any>)?.props?.value}
+                      className="min-w-[var(--radix-popper-anchor-width)]"
+                    >
+                      {(child as React.ReactElement<any>)?.props?.children}
+                    </SelectItem>
+                  ))}
+              </ScrollArea>
             </SelectContent>
           </Select>
         ),
