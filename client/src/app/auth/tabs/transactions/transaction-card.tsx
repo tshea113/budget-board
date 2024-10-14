@@ -25,7 +25,9 @@ interface TransactionCardProps {
 }
 
 const TransactionCard = (props: TransactionCardProps): JSX.Element => {
-  const [isEdit, setIsEdit] = React.useState(false);
+  const [isSelected, setIsSelected] = React.useState(false);
+  const [selectEffect, setSelectEffect] = React.useState(false);
+
   const { request } = React.useContext<any>(AuthContext);
 
   const queryClient = useQueryClient();
@@ -63,9 +65,10 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
     },
   });
 
-  const toggleIsEdit = (): void => {
+  const toggleIsSelected = (): void => {
     if (props.type === TransactionCardType.Normal) {
-      setIsEdit(!isEdit);
+      setIsSelected(!isSelected);
+      setSelectEffect(true);
     }
   };
 
@@ -74,36 +77,38 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
       className={cn(
         'my-2 flex flex-row p-2 @container',
         props.type === TransactionCardType.Normal ? 'hover:bg-card-select' : '',
-        isEdit ? 'bg-card-select' : 'bg-card'
+        isSelected ? 'bg-card-select' : 'bg-card',
+        selectEffect && 'animate-pop'
       )}
-      onClick={toggleIsEdit}
+      onClick={toggleIsSelected}
+      onAnimationEnd={() => setSelectEffect(false)}
     >
       <div className="my-1 flex w-full flex-col flex-wrap gap-2 @xl:flex-row @xl:items-center">
         <span className="@xl:w-[200px]">
           <EditableDateCell
             transaction={props.transaction}
-            isSelected={isEdit}
+            isSelected={isSelected}
             editCell={doEditTransaction.mutate}
           />
         </span>
         <span className="flex-auto @xl:w-[200px]">
           <EditableMerchantCell
             transaction={props.transaction}
-            isSelected={isEdit}
+            isSelected={isSelected}
             editCell={doEditTransaction.mutate}
           />
         </span>
         <span className="@xl:w-[190px]">
           <EditableCategoryCell
             transaction={props.transaction}
-            isSelected={isEdit || props.type === TransactionCardType.Uncategorized}
+            isSelected={isSelected || props.type === TransactionCardType.Uncategorized}
             editCell={doEditTransaction.mutate}
           />
         </span>
         <span className="w-[100px]">
           <EditableCurrencyCell
             transaction={props.transaction}
-            isSelected={isEdit}
+            isSelected={isSelected}
             editCell={doEditTransaction.mutate}
           />
         </span>
