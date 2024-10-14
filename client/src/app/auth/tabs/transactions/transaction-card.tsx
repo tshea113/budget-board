@@ -10,7 +10,7 @@ import React from 'react';
 import { TailSpin } from 'react-loader-spinner';
 import EditableCategoryCell from './cells/editable-category-cell';
 import EditableCurrencyCell from './cells/editable-currency-cell';
-import EditableMerchantCell from './cells/editable-text-cell';
+import EditableMerchantCell from './cells/editable-merchant-cell';
 import EditableDateCell from './cells/editable-date-cell';
 
 export enum TransactionCardType {
@@ -83,7 +83,6 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
           <EditableDateCell
             transaction={props.transaction}
             isSelected={isEdit}
-            isError={false}
             editCell={doEditTransaction.mutate}
           />
         </span>
@@ -91,7 +90,6 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
           <EditableMerchantCell
             transaction={props.transaction}
             isSelected={isEdit}
-            isError={false}
             editCell={doEditTransaction.mutate}
           />
         </span>
@@ -99,7 +97,6 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
           <EditableCategoryCell
             transaction={props.transaction}
             isSelected={isEdit || props.type === TransactionCardType.Uncategorized}
-            isError={false}
             editCell={doEditTransaction.mutate}
           />
         </span>
@@ -107,7 +104,6 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
           <EditableCurrencyCell
             transaction={props.transaction}
             isSelected={isEdit}
-            isError={false}
             editCell={doEditTransaction.mutate}
           />
         </span>
