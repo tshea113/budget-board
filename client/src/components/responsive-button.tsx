@@ -1,5 +1,5 @@
-import { Loader2 } from 'lucide-react';
 import { Button } from './ui/button';
+import LoadingIcon from './loading-icon';
 
 interface ResponsiveButtonProps {
   children: JSX.Element | string;
@@ -27,7 +27,7 @@ const ResponsiveButton = ({
   if (loading) {
     return (
       <Button {...props} disabled>
-        <Loader2 className="h-5 w-5 animate-spin" />
+        <LoadingIcon className="h-5 w-5" />
       </Button>
     );
   } else {
