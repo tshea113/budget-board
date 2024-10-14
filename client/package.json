@@ -47,7 +47,6 @@
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.51.4",
-    "react-loader-spinner": "^6.1.6",
     "react-router-dom": "^6.23.1",
     "recharts": "^2.12.7",
     "tailwind-merge": "^2.3.0",
