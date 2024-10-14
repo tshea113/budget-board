@@ -14,7 +14,7 @@ interface DatePickerProps {
   onDayBlur?: (day: Date) => void;
 }
 
-export const DatePicker = (props: DatePickerProps): JSX.Element => {
+const DatePicker = (props: DatePickerProps): JSX.Element => {
   return (
     <Popover>
       <PopoverTrigger asChild>
