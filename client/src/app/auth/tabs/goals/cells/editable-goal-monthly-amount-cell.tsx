@@ -46,7 +46,7 @@ const EditableGoalMonthlyAmountCell = (
           value={goalAmountValue}
         />
       ) : (
-        <span className="font-semibold">
+        <span className="select-none font-semibold">
           {convertNumberToCurrency(getMonthlyContributionTotal(props.goal))}
         </span>
       )}

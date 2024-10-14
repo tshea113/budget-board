@@ -44,7 +44,7 @@ const EditableGoalTargetAmountCell = (
           value={goalAmountValue}
         />
       ) : (
-        <span className="font-semibold">
+        <span className="select-none font-semibold">
           {convertNumberToCurrency(
             getGoalTargetAmount(props.goal.amount, props.goal.initialAmount)
           )}

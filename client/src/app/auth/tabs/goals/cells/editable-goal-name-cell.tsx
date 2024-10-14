@@ -38,7 +38,9 @@ const EditableGoalNameCell = (props: EditableGoalNameCellProps): JSX.Element => 
           value={goalNameValue}
         />
       ) : (
-        <span className="select-none">{props.goal.name}</span>
+        <span className="select-none text-xl font-semibold tracking-tight">
+          {props.goal.name}
+        </span>
       )}
     </>
   );

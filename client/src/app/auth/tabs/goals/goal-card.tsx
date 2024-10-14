@@ -124,7 +124,7 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
     >
       <div className="flex w-full flex-col px-3 py-2">
         <div className="flex w-full flex-row flex-wrap">
-          <span className="flex grow flex-row items-center justify-start gap-2 text-xl font-semibold tracking-tight">
+          <span className="flex grow flex-row items-center justify-start gap-2">
             <EditableGoalNameCell
               goal={props.goal}
               isSelected={isSelected}
@@ -132,7 +132,7 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
             />
             {(doEditGoal.isPending || doDeleteGoal.isPending) && <LoadingIcon />}
           </span>
-          <div className="flex grow flex-row items-center justify-end gap-1 text-lg">
+          <div className="flex grow select-none flex-row items-center justify-end gap-1 text-lg">
             <span className="font-semibold">
               {convertNumberToCurrency(
                 sumAccountsTotalBalance(props.goal.accounts) - props.goal.initialAmount
