@@ -43,14 +43,14 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
           startMonth={
             props.startMonth ??
             new Date(
-              new Date(props.value).getFullYear() - 50,
+              new Date(props.value).getFullYear() - 100,
               new Date(props.value).getMonth()
             )
           }
           endMonth={
             props.endMonth ??
             new Date(
-              new Date(props.value).getFullYear() + 50,
+              new Date(props.value).getFullYear() + 100,
               new Date(props.value).getMonth()
             )
           }
