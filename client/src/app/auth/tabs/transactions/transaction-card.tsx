@@ -7,11 +7,11 @@ import { Transaction } from '@/types/transaction';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import React from 'react';
-import { TailSpin } from 'react-loader-spinner';
 import EditableCategoryCell from './cells/editable-category-cell';
 import EditableCurrencyCell from './cells/editable-currency-cell';
 import EditableMerchantCell from './cells/editable-merchant-cell';
 import EditableDateCell from './cells/editable-date-cell';
+import LoadingIcon from '@/components/loading-icon';
 
 export enum TransactionCardType {
   Normal,
@@ -109,11 +109,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
         </span>
       </div>
       <div className="content-center">
-        {doEditTransaction.isPending && (
-          <div className="mx-4">
-            <TailSpin height="25" width="25" color="gray" />
-          </div>
-        )}
+        {doEditTransaction.isPending && <LoadingIcon className="mx-4 h-5 w-5" />}
       </div>
     </Card>
   );
