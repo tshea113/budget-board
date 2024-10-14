@@ -3,6 +3,33 @@ import { getMonthsUntilDate } from './utils';
 import { sumAccountsTotalBalance } from './accounts';
 import { Transaction } from '@/types/transaction';
 
+/**
+ * Retrieves the expected monthly contribution amount for a given loan
+ * @param goal The goal for which you want to know the monthly contribution amount
+ * @returns The expected monthly contribution amount for the provided goal
+ */
+export const getMonthlyContributionTotal = (goal: Goal): number => {
+  if (goal.completeDate) {
+    const monthsUntilComplete = getMonthsUntilDate(goal.completeDate);
+    if (goal.initialAmount < 0) {
+      // The monthly payment for a loan is just that amount of the loan over X
+      // number of months.
+      return Math.abs(sumAccountsTotalBalance(goal.accounts)) / monthsUntilComplete;
+    } else {
+      // Initial amount is used as an offset when the user doesn't want to include
+      // an existing account balance when setting up a goal.
+      return (
+        (goal.amount - (sumAccountsTotalBalance(goal.accounts) - goal.initialAmount)) /
+        monthsUntilComplete
+      );
+    }
+  } else if (goal.monthlyContribution) {
+    return goal.monthlyContribution;
+  } else {
+    return 0;
+  }
+};
+
 export const getGoalTargetAmount = (amount: number, initialAmount: number): number => {
   if (initialAmount < 0) {
     // An initial amount less than 0 indicates this is a debt. Since the goal of a debt
@@ -21,26 +48,6 @@ export const sumTransactionsForGoalForMonth = (
   transactionsForMonth
     .filter((t) => goal.accounts.some((a) => a.id === t.accountID))
     .reduce((n, { amount }) => n + amount, 0);
-
-export const getMonthlyContributionTotal = (goal: Goal): number => {
-  if (goal.monthlyContribution == null && goal.completeDate !== null) {
-    const monthsUntilComplete = getMonthsUntilDate(goal.completeDate);
-    if (goal.initialAmount < 0) {
-      // The monthly payment for a loan is just that amount of the loan over X
-      // number of months.
-      return Math.abs(sumAccountsTotalBalance(goal.accounts)) / monthsUntilComplete;
-    } else {
-      // Initial amount is used as an offset when the user doesn't want to include
-      // an existing account balance when setting up a goal.
-      return (
-        (goal.amount - (sumAccountsTotalBalance(goal.accounts) - goal.initialAmount)) /
-        monthsUntilComplete
-      );
-    }
-  } else {
-    return goal.monthlyContribution ?? 0;
-  }
-};
 
 export const calculateCompleteDate = (goal: Goal): string => {
   let dateString = '';

@@ -1,12 +1,10 @@
-import { TailSpin } from 'react-loader-spinner';
+import LoadingIcon from './loading-icon';
 
 const PageLoading = (): JSX.Element => {
   // TODO: This probably should be themed
   return (
     <div className="flex h-screen items-center justify-center">
-      <div className="m-auto">
-        <TailSpin height="100" width="100" color="gray" />
-      </div>
+      <LoadingIcon className="m-auto h-[100px] w-[100px]" />
     </div>
   );
 };

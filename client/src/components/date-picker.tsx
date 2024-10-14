@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 
 interface DatePickerProps {
+  className?: string;
   value: Date;
   fromYear?: number;
   toYear?: number;
@@ -20,6 +21,7 @@ const DatePicker = (props: DatePickerProps): JSX.Element => {
         <Button
           variant={'outline'}
           className={cn(
+            props.className,
             'min-w-[50px] max-w-full justify-start text-left font-normal',
             props.value == null && 'text-muted-foreground'
           )}
@@ -39,8 +41,8 @@ const DatePicker = (props: DatePickerProps): JSX.Element => {
           onDayClick={props.onDayClick}
           onDayBlur={props.onDayBlur}
           initialFocus
-          fromYear={props.fromYear ?? new Date().getFullYear()}
-          toYear={props.toYear ?? new Date().getFullYear() + 10}
+          fromYear={props.fromYear ?? new Date(props.value).getFullYear() - 50}
+          toYear={props.toYear ?? new Date(props.value).getFullYear() + 50}
         />
       </PopoverContent>
     </Popover>

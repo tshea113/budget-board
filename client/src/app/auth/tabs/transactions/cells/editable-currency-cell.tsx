@@ -6,7 +6,6 @@ import React from 'react';
 interface EditableCurrencyCellProps {
   transaction: Transaction;
   isSelected: boolean;
-  isError: boolean;
   editCell: (newTransaction: Transaction) => void;
 }
 
@@ -14,12 +13,6 @@ const EditableCurrencyCell = (props: EditableCurrencyCellProps): JSX.Element => 
   const [currencyDisplayValue, setCurrencyDisplayValue] = React.useState<string>(
     props.transaction.amount.toFixed(2)
   );
-
-  React.useEffect(() => {
-    if (props.isError) {
-      setCurrencyDisplayValue(props.transaction.amount.toFixed(2));
-    }
-  }, [props.isError]);
 
   const onCurrencyBlur = (): void => {
     if (!isNaN(parseFloat(currencyDisplayValue))) {

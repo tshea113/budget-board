@@ -49,7 +49,7 @@ const SyncAccountButton = (): JSX.Element => {
       }}
     >
       <div className="flex flex-row items-center gap-1">
-        <span>Sync</span>
+        <span>{doSyncMutation.isPending ? 'Syncing' : 'Sync'}</span>
         <UpdateIcon className={cn(doSyncMutation.isPending ? 'animate-spin' : '')} />
       </div>
     </Button>

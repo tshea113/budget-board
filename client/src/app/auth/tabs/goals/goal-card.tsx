@@ -3,7 +3,6 @@ import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { sumAccountsTotalBalance } from '@/lib/accounts';
 import {
-  calculateCompleteDate,
   getGoalTargetAmount,
   getMonthlyContributionTotal,
   sumTransactionsForGoalForMonth,
@@ -16,7 +15,14 @@ import React from 'react';
 import GoalDetails from './goal-details';
 import { AuthContext } from '@/components/auth-provider';
 import { Transaction } from '@/types/transaction';
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
+import { toast } from '@/components/ui/use-toast';
+import { translateAxiosError } from '@/lib/requests';
+import EditableGoalNameCell from './cells/editable-goal-name-cell';
+import EditableGoalTargetAmountCell from './cells/editable-goal-target-amount-cell';
+import EditableGoalTargetDateCell from './cells/editable-goal-target-date-cell';
+import EditableGoalMonthlyAmountCell from './cells/editable-goal-monthly-amount-cell';
+import LoadingIcon from '@/components/loading-icon';
 
 interface GoalCardProps {
   goal: Goal;
@@ -24,9 +30,11 @@ interface GoalCardProps {
 
 const GoalCard = (props: GoalCardProps): JSX.Element => {
   const [isSelected, setIsSelected] = React.useState(false);
+  const [selectEffect, setSelectEffect] = React.useState(false);
 
   const ToggleIsSelected = (): void => {
     setIsSelected(!isSelected);
+    setSelectEffect(true);
   };
 
   const transactionsForMonthQuery = useQuery({
@@ -68,38 +76,74 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
     },
   });
 
+  const doEditGoal = useMutation({
+    mutationFn: async (newGoal: Goal) =>
+      await request({
+        url: '/api/goal',
+        method: 'PUT',
+        data: newGoal,
+      }),
+    onMutate: async (variables: Goal) => {
+      await queryClient.cancelQueries({ queryKey: ['goals'] });
+
+      const previousGoals: Goal[] = queryClient.getQueryData(['goals']) ?? [];
+
+      queryClient.setQueryData(['goals'], (oldGoals: Goal[]) =>
+        oldGoals.map((oldGoal) => (oldGoal.id === variables.id ? variables : oldGoal))
+      );
+
+      return { previousGoals };
+    },
+    onError: (error: AxiosError, _variables: Goal, context) => {
+      queryClient.setQueryData(['goals'], context?.previousGoals ?? []);
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: translateAxiosError(error),
+      });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['goals'] });
+    },
+  });
+
   const goalMonthlyContributionAmount = sumTransactionsForGoalForMonth(
     props.goal,
     transactionsForMonthQuery.data ?? []
   );
 
-  const goalMonthlyTargetAmount = getMonthlyContributionTotal(props.goal);
-
   return (
     <Card
       className={cn(
         'flex flex-row hover:bg-card-select',
-        isSelected ? 'bg-card-select' : 'bg-card'
+        isSelected ? 'bg-card-select' : 'bg-card',
+        selectEffect && 'animate-pop'
       )}
       onClick={ToggleIsSelected}
+      onAnimationEnd={() => setSelectEffect(false)}
     >
       <div className="flex w-full flex-col px-3 py-2">
-        <div className="grid grid-cols-1 grid-rows-2 sm:grid-cols-2 sm:grid-rows-1">
-          <span className="justify-self-start text-xl font-semibold tracking-tight">
-            {props.goal.name}
+        <div className="flex w-full flex-row flex-wrap">
+          <span className="flex grow flex-row items-center justify-start gap-2">
+            <EditableGoalNameCell
+              goal={props.goal}
+              isSelected={isSelected}
+              editCell={doEditGoal.mutate}
+            />
+            {(doEditGoal.isPending || doDeleteGoal.isPending) && <LoadingIcon />}
           </span>
-          <div className="justify-self-end text-lg">
+          <div className="flex grow select-none flex-row items-center justify-end gap-1 text-lg">
             <span className="font-semibold">
               {convertNumberToCurrency(
                 sumAccountsTotalBalance(props.goal.accounts) - props.goal.initialAmount
               )}
             </span>
-            <span> of </span>
-            <span className="font-semibold">
-              {convertNumberToCurrency(
-                getGoalTargetAmount(props.goal.amount, props.goal.initialAmount)
-              )}
-            </span>
+            <span>of</span>
+            <EditableGoalTargetAmountCell
+              goal={props.goal}
+              isSelected={isSelected}
+              editCell={doEditGoal.mutate}
+            />
           </div>
         </div>
         <div>
@@ -111,29 +155,37 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
             className="mt-3"
           />
         </div>
-        <div className="grid grid-cols-1 grid-rows-2 pt-1 sm:grid-cols-2 sm:grid-rows-1">
-          <div className="col-span-2 flex flex-row space-x-2 sm:col-span-1">
-            <div className="text-base">
-              <span>{'Projected: '}</span>
-              <span className="font-semibold">{calculateCompleteDate(props.goal)}</span>
-            </div>
+        <div className="flex w-full flex-row flex-wrap gap-2">
+          <div className="flex flex-row gap-1 text-base">
+            <span>Projected:</span>
+            <EditableGoalTargetDateCell
+              goal={props.goal}
+              isSelected={isSelected}
+              editCell={doEditGoal.mutate}
+            />
+          </div>
+          <div className="grow justify-start">
             <GoalDetails goal={props.goal} />
           </div>
-          <div className="justify-self-end text-base">
+
+          <div className="flex grow flex-row items-center justify-end gap-1 text-base">
             <span
               className={cn(
                 'font-semibold',
-                goalMonthlyTargetAmount - goalMonthlyContributionAmount > 0
+                getMonthlyContributionTotal(props.goal) - goalMonthlyContributionAmount >
+                  0
                   ? 'text-accent-bad'
                   : 'text-accent-good'
               )}
             >
               {convertNumberToCurrency(goalMonthlyContributionAmount)}
             </span>
-            <span> of </span>
-            <span className="font-semibold">
-              {convertNumberToCurrency(goalMonthlyTargetAmount)}
-            </span>
+            <span>of</span>
+            <EditableGoalMonthlyAmountCell
+              goal={props.goal}
+              isSelected={isSelected}
+              editCell={doEditGoal.mutate}
+            />
             <span> this month</span>
           </div>
         </div>

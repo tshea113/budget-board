@@ -6,7 +6,6 @@ import { getFormattedCategoryValue, getIsParentCategory } from '@/lib/category';
 interface EditableCategoryCellProps {
   transaction: Transaction;
   isSelected: boolean;
-  isError: boolean;
   editCell: (newTransaction: Transaction) => void;
 }
 
@@ -22,13 +21,6 @@ const EditableCategoryCell = (props: EditableCategoryCellProps): JSX.Element => 
 
   const [categoryDisplayValue, setCategoryDisplayValue] =
     React.useState<string>(transactionCategory);
-
-  React.useEffect(() => {
-    if (props.isError) {
-      // When there is an error, we need to reset the data.
-      setCategoryDisplayValue(transactionCategory);
-    }
-  }, [props.isError]);
 
   const onCategoryPick = (newValue: string): void => {
     const category = transactionCategories.find((c) => c.value === newValue);
