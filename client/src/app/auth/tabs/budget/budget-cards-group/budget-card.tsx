@@ -20,7 +20,8 @@ interface BudgetCardProps {
 }
 
 const BudgetCard = (props: BudgetCardProps): JSX.Element => {
-  const [isEdit, setIsEdit] = React.useState(false);
+  const [isSelected, setIsSelected] = React.useState(false);
+  const [selectEffect, setSelectEffect] = React.useState(false);
   const [limit, setLimit] = React.useState(props.budget.limit);
 
   const { request } = React.useContext<any>(AuthContext);
@@ -43,7 +44,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['budgets'] });
-      setIsEdit(false);
+      setIsSelected(false);
     },
   });
 
@@ -56,7 +57,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
       }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['budgets'] });
-      setIsEdit(false);
+      setIsSelected(false);
     },
   });
 
@@ -64,27 +65,30 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
     return '$' + (total - amount).toFixed();
   };
 
-  const toggleIsEdit = (): void => {
-    setIsEdit(!isEdit);
+  const toggleIsSelected = (): void => {
+    setIsSelected(!isSelected);
+    setSelectEffect(true);
   };
 
   return (
     <Card
       className={cn(
         'space-y-1 px-3 py-1 shadow-md hover:bg-card-select',
-        isEdit ? 'bg-card-select' : 'bg-card'
+        isSelected ? 'bg-card-select' : 'bg-card',
+        selectEffect && 'animate-pop'
       )}
       onClick={() => {
-        toggleIsEdit();
+        toggleIsSelected();
         setLimit(props.budget.limit);
       }}
+      onAnimationEnd={() => setSelectEffect(false)}
     >
       <div className="flex min-h-10 flex-row items-center @container">
         <div className="flex w-1/2 flex-row flex-wrap items-center space-x-2">
           <div className="scroll-m-20 justify-self-start text-lg font-semibold tracking-tight @sm:text-xl">
             {getFormattedCategoryValue(props.budget.category, transactionCategories)}
           </div>
-          {isEdit && (
+          {isSelected && (
             <ResponsiveButton
               variant="destructive"
               className="h-7"
@@ -102,7 +106,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
             ${(props.amount * getSignForBudget(props.budget.category)).toFixed()}
           </div>
           <div className="w-1/3 grow text-center">
-            {!isEdit ? (
+            {!isSelected ? (
               <div>${limit}</div>
             ) : (
               <div className="flex flex-row flex-wrap items-center justify-center gap-1">
