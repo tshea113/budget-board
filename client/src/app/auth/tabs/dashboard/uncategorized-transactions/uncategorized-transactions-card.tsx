@@ -40,7 +40,7 @@ const UncategorizedTransactionsCard = (): JSX.Element => {
 
   if (filteredTransactions.length !== 0 && transactionsQuery.isSuccess) {
     return (
-      <Card className="w-full bg-background p-2">
+      <Card className="w-full bg-card p-2 text-card-foreground">
         <div className="flex flex-col items-center sm:grid sm:grid-cols-2">
           <span className="text-2xl font-semibold tracking-tight">
             Uncategorized Transactions

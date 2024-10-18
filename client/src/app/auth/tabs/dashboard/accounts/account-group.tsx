@@ -10,7 +10,7 @@ interface AccountGroupProps {
 const AccountGroup = (props: AccountGroupProps): JSX.Element => {
   return (
     <div className="space-y-2">
-      <Card className="bg-card-select px-1">
+      <Card className="bg-primary px-1 text-primary-foreground">
         <span className="text-lg font-semibold tracking-tight">{props.institution}</span>
       </Card>
       <div className="space-y-1">

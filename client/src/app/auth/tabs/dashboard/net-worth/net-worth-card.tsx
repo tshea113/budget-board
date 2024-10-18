@@ -42,7 +42,7 @@ const NetWorthCard = (): JSX.Element => {
   }
 
   return (
-    <Card>
+    <Card className="bg-card text-card-foreground">
       <div className="p-2">
         <span className="w-1/2 text-2xl font-semibold tracking-tight">Net Worth</span>
       </div>
