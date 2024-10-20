@@ -14,14 +14,13 @@
     --primary-foreground: 0 0% 100%; /* #FFFFFF */
     --secondary: 37 100% 16%;
     --secondary-foreground: 0 0% 100%; /* #FFFFFF */
-    --muted: 209 49% 90%;
+    --muted: 209 49% 90%; /* #D9E6F2 */
     --muted-foreground: 218 4% 45%; /* #6e7277 */
     --accent: 214 4% 90%; /* #E4E5E7 */
     --accent-foreground: 222 84% 5%; /* #020817 */
     --accent-good: 118 49% 48%; /* #42B63E */
-    --accent-bad: 352 100% 49%; /* #E8112E */
     --accent-warning: 35 100% 51%;
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%; /* #EF4343 */
     --destructive-foreground: 210 40% 98%;
     --success: 120 61% 33%;
     --success-foreground: 210 40% 98%;

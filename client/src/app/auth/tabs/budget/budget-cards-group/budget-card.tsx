@@ -141,7 +141,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
                 (props.isIncome ? -1 : 1) >
                 0
                 ? 'text-accent-good'
-                : 'text-accent-bad'
+                : 'text-destructive'
             )}
           >
             {getAmountLeft(props.budget.limit, props.amount * (props.isIncome ? 1 : -1))}

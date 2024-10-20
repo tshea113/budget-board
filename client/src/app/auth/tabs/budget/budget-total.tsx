@@ -22,7 +22,7 @@ const BudgetTotal = (props: BudgetTotalProps): JSX.Element => {
                 (props.isIncome ? 1 : -1) <
                 0
                 ? 'text-accent-good'
-                : 'text-accent-bad'
+                : 'text-destructive'
             )}
           >
             {'$' + (props.amount * (props.isIncome ? 1 : -1)).toFixed()}

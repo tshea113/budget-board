@@ -15,7 +15,7 @@ const AccountItem = (props: AccountItemProps): JSX.Element => {
         <span
           className={cn(
             'col-span-4 text-right font-semibold',
-            props.account.currentBalance < 0 ? 'text-accent-bad' : 'text-accent-good'
+            props.account.currentBalance < 0 ? 'text-destructive' : 'text-accent-good'
           )}
         >
           {convertNumberToCurrency(props.account.currentBalance, true)}

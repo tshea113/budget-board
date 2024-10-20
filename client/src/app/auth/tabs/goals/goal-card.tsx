@@ -174,7 +174,7 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
                 'font-semibold',
                 getMonthlyContributionTotal(props.goal) - goalMonthlyContributionAmount >
                   0
-                  ? 'text-accent-bad'
+                  ? 'text-destructive'
                   : 'text-accent-good'
               )}
             >
