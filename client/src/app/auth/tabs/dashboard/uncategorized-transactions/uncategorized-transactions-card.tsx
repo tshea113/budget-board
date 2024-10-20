@@ -53,7 +53,7 @@ const UncategorizedTransactionsCard = (): JSX.Element => {
           />
         </div>
 
-        <ScrollArea className="flex h-full max-h-[300px] flex-col py-2">
+        <ScrollArea className="flex h-full max-h-[300px] flex-col py-2 pr-4">
           {filteredTransactions
             .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
             .slice((page - 1) * itemsPerPage, (page - 1) * itemsPerPage + itemsPerPage)

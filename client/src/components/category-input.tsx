@@ -34,7 +34,7 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
             variant="dropdown"
             role="combobox"
             aria-expanded={open}
-            className="w-full min-w-[50px] max-w-full justify-between bg-card hover:bg-secondary hover:text-secondary-foreground"
+            className="w-full min-w-[50px] max-w-full justify-between bg-card hover:bg-accent hover:text-accent-foreground"
             onClick={(e) => {
               e.stopPropagation();
             }}
