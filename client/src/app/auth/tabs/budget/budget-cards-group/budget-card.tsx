@@ -73,8 +73,8 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
   return (
     <Card
       className={cn(
-        'space-y-1 px-3 py-1 shadow-md hover:bg-card-select',
-        isSelected ? 'bg-card-select' : 'bg-card',
+        'space-y-1 px-3 py-1 shadow-md hover:bg-muted',
+        isSelected ? 'bg-muted' : 'bg-card',
         selectEffect && 'animate-pop'
       )}
       onClick={() => {

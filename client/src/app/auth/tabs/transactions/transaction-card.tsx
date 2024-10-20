@@ -76,8 +76,8 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
     <Card
       className={cn(
         'my-2 flex flex-row p-2 @container',
-        props.type === TransactionCardType.Normal ? 'hover:bg-card-select' : '',
-        isSelected ? 'bg-card-select' : 'bg-card',
+        props.type === TransactionCardType.Normal ? 'hover:bg-muted' : '',
+        isSelected ? 'bg-muted' : 'bg-card',
         selectEffect && 'animate-pop'
       )}
       onClick={toggleIsSelected}

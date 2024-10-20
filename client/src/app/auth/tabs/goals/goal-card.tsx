@@ -115,8 +115,8 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
   return (
     <Card
       className={cn(
-        'flex flex-row hover:bg-card-select',
-        isSelected ? 'bg-card-select' : 'bg-card',
+        'flex flex-row hover:bg-muted',
+        isSelected ? 'bg-muted' : 'bg-card',
         selectEffect && 'animate-pop'
       )}
       onClick={ToggleIsSelected}
