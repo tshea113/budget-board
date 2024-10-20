@@ -175,7 +175,7 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
                 getMonthlyContributionTotal(props.goal) - goalMonthlyContributionAmount >
                   0
                   ? 'text-destructive'
-                  : 'text-accent-good'
+                  : 'text-success'
               )}
             >
               {convertNumberToCurrency(goalMonthlyContributionAmount)}

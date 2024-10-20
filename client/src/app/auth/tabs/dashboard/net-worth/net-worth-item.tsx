@@ -34,7 +34,7 @@ const NetWorthItem = (props: NetWorthItemProps): JSX.Element => {
         <span
           className={cn(
             'font-semibold',
-            summedAccountsTotalBalance < 0 ? 'text-destructive' : 'text-accent-good'
+            summedAccountsTotalBalance < 0 ? 'text-destructive' : 'text-success'
           )}
         >
           {convertNumberToCurrency(summedAccountsTotalBalance, true)}

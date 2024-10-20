@@ -21,7 +21,7 @@ const BudgetTotal = (props: BudgetTotalProps): JSX.Element => {
               ((props.total ?? 0) - props.amount * (props.isIncome ? 1 : -1)) *
                 (props.isIncome ? 1 : -1) <
                 0
-                ? 'text-accent-good'
+                ? 'text-success'
                 : 'text-destructive'
             )}
           >

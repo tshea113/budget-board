@@ -51,7 +51,7 @@ const EditableCurrencyCell = (props: EditableCurrencyCellProps): JSX.Element => 
         <span
           className={cn(
             'font-semibold',
-            props.transaction.amount < 0 ? 'text-destructive' : 'text-accent-good'
+            props.transaction.amount < 0 ? 'text-destructive' : 'text-success'
           )}
         >
           {convertNumberToCurrency(parseFloat(currencyDisplayValue), true)}

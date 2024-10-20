@@ -140,7 +140,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
               (props.budget.limit - props.amount * (props.isIncome ? 1 : -1)) *
                 (props.isIncome ? -1 : 1) >
                 0
-                ? 'text-accent-good'
+                ? 'text-success'
                 : 'text-destructive'
             )}
           >
