@@ -4,7 +4,7 @@ interface BudgetHeaderProps {
 
 const BudgetHeader = (props: BudgetHeaderProps): JSX.Element => {
   return (
-    <div className="my-2 space-y-1 px-3 py-1 shadow-md">
+    <div className="my-2 space-y-1 px-3 py-1">
       <div className="grid grid-cols-2 @container">
         <div>
           <h3 className="scroll-m-20 justify-self-start text-lg font-semibold tracking-tight @sm:text-xl">

@@ -110,7 +110,7 @@ const SpendingTrendsCard = (): JSX.Element => {
   }
 
   return (
-    <Card className="w-full p-6">
+    <Card className="w-full bg-card p-6 text-card-foreground">
       <div className="flex flex-row items-center">
         <span className="w-1/2 text-2xl font-semibold tracking-tight">
           Spending Trends

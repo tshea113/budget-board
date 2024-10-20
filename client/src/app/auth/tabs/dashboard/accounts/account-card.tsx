@@ -39,7 +39,7 @@ const AccountCard = (): JSX.Element => {
   }
 
   return (
-    <Card className="w-full">
+    <Card className="w-full bg-card text-foreground">
       <div className="flex flex-row items-center p-2">
         <span className="w-1/2 text-2xl font-semibold tracking-tight">Accounts</span>
         <div className="flex w-1/2 flex-row justify-end">

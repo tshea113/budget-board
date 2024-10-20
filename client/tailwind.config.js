@@ -39,6 +39,10 @@ module.exports = {
           DEFAULT: 'hsl(var(--success))',
           foreground: 'hsl(var(--success-foreground))',
         },
+        warning: {
+          DEFAULT: 'hsl(var(--warning))',
+          foreground: 'hsl(var(--warning-foreground))',
+        },
         muted: {
           DEFAULT: 'hsl(var(--muted))',
           foreground: 'hsl(var(--muted-foreground))',
@@ -46,9 +50,6 @@ module.exports = {
         accent: {
           DEFAULT: 'hsl(var(--accent))',
           foreground: 'hsl(var(--accent-foreground))',
-          good: 'hsl(var(--accent-good))',
-          bad: 'hsl(var(--accent-bad))',
-          warning: 'hsl(var(--accent-warning))',
         },
         popover: {
           DEFAULT: 'hsl(var(--popover))',
@@ -57,7 +58,10 @@ module.exports = {
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
-          select: 'hsl(var(--card-select))',
+          accent: {
+            DEFAULT: 'hsl(var(--card-accent))',
+            foreground: 'hsl(var(--card-accent-foreground))',
+          },
         },
       },
       borderRadius: {
