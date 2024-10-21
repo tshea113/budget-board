@@ -53,7 +53,7 @@ const Budgets = (): JSX.Element => {
 
   return (
     <div className="flex w-full flex-col justify-center gap-2 lg:flex-row">
-      <div className="w-full">
+      <div className="flex w-full flex-col gap-2">
         <BudgetsToolbar
           budgets={budgetsQuery.data ?? []}
           date={date}

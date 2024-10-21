@@ -27,13 +27,13 @@ const getUnbudgetedTransactions = (
     transactions.reduce((result: any, item: Transaction) => {
       (result[
         item.subcategory?.length !== 0
-          ? item.subcategory?.toLocaleLowerCase() ?? ''
-          : item.category?.toLocaleLowerCase() ?? ''
+          ? (item.subcategory?.toLocaleLowerCase() ?? '')
+          : (item.category?.toLocaleLowerCase() ?? '')
       ] =
         result[
           item.subcategory?.length !== 0
-            ? item.subcategory?.toLocaleLowerCase() ?? ''
-            : item.category?.toLocaleLowerCase() ?? ''
+            ? (item.subcategory?.toLocaleLowerCase() ?? '')
+            : (item.category?.toLocaleLowerCase() ?? '')
         ] || []).push(item.amount);
       return result;
     }, {})
