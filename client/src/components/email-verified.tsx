@@ -33,7 +33,7 @@ const EmailVerified = (): JSX.Element | null => {
 
   if (!(userInfoQuery.data?.isEmailConfirmed ?? true) && !userInfoQuery.isPending) {
     return (
-      <Alert variant="destructive" className="mb-2 p-1">
+      <Alert variant="destructive" className="p-1">
         <AlertDescription className="flex items-center">
           <AlertCircle className="mr-1 h-4 w-4" />
           Before you can get started, you will need to check your email for a validation

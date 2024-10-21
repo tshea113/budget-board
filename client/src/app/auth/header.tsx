@@ -59,31 +59,25 @@ const Header = (): JSX.Element => {
   });
 
   return (
-    <div className="grid grid-cols-10">
-      <h2 className="col-span-8 justify-self-start p-2 text-3xl font-semibold tracking-tight first:mt-0">
-        Budget Board
-      </h2>
-      <div className="col-span-2 justify-self-end p-2">
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Avatar>
-              <AvatarFallback>
-                {userInfoQuery.data?.email.charAt(0) ?? 'A'}
-              </AvatarFallback>
-            </Avatar>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>
-              {userInfoQuery.data?.email ?? 'not available'}
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <SheetItem triggerChildren={<p>Account</p>} side="right">
-              <AccountSettings />
-            </SheetItem>
-            <DropdownMenuItem onClick={Logout}>Logout</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+    <div className="flex w-full flex-row">
+      <h2 className="grow text-3xl font-semibold tracking-tight">Budget Board</h2>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Avatar>
+            <AvatarFallback>{userInfoQuery.data?.email.charAt(0) ?? 'A'}</AvatarFallback>
+          </Avatar>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>
+            {userInfoQuery.data?.email ?? 'not available'}
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <SheetItem triggerChildren={<p>Account</p>} side="right">
+            <AccountSettings />
+          </SheetItem>
+          <DropdownMenuItem onClick={Logout}>Logout</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 };

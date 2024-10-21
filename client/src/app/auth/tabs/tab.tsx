@@ -7,7 +7,7 @@ import Goals from './goals/goals';
 const Tab = (): JSX.Element => {
   return (
     <Tabs defaultValue="dashboard">
-      <TabsList className="mx-1 mb-2 flex w-auto">
+      <TabsList className="mb-2 w-full">
         <TabsTrigger className="grow" value="dashboard">
           Dashboard
         </TabsTrigger>
@@ -21,16 +21,16 @@ const Tab = (): JSX.Element => {
           Goals
         </TabsTrigger>
       </TabsList>
-      <TabsContent className="m-1 flex flex-row justify-center" value="dashboard">
+      <TabsContent value="dashboard">
         <Dashboard />
       </TabsContent>
-      <TabsContent className="m-1 flex flex-row justify-center" value="transactions">
+      <TabsContent value="transactions">
         <Transactions />
       </TabsContent>
-      <TabsContent className="m-1 flex flex-row justify-center" value="budget">
+      <TabsContent value="budget">
         <Budgets />
       </TabsContent>
-      <TabsContent className="m-1 flex flex-row justify-center" value="goals">
+      <TabsContent value="goals">
         <Goals />
       </TabsContent>
     </Tabs>

@@ -56,27 +56,27 @@ const TransactionCards = (props: TransactionCardsProps): JSX.Element => {
         return sortDirection === SortDirection.Decending
           ? transactions.sort((a, b) =>
               (b.subcategory === null || b.subcategory === ''
-                ? b.category ?? 'Uncategorized'
-                : b.subcategory ?? 'Uncategorized'
+                ? (b.category ?? 'Uncategorized')
+                : (b.subcategory ?? 'Uncategorized')
               )
                 .toLocaleLowerCase()
                 .localeCompare(
                   (a.subcategory === null || a.subcategory === ''
-                    ? a.category ?? 'Uncategorized'
-                    : a.subcategory ?? 'Uncategorized'
+                    ? (a.category ?? 'Uncategorized')
+                    : (a.subcategory ?? 'Uncategorized')
                   ).toLocaleLowerCase()
                 )
             )
           : transactions.sort((a, b) =>
               (a.subcategory === null || a.subcategory === ''
-                ? a.category ?? 'Uncategorized'
-                : a.subcategory ?? 'Uncategorized'
+                ? (a.category ?? 'Uncategorized')
+                : (a.subcategory ?? 'Uncategorized')
               )
                 .toLocaleLowerCase()
                 .localeCompare(
                   (b.subcategory === null || b.subcategory === ''
-                    ? b.category ?? 'Uncategorized'
-                    : b.subcategory ?? 'Uncategorized'
+                    ? (b.category ?? 'Uncategorized')
+                    : (b.subcategory ?? 'Uncategorized')
                   ).toLocaleLowerCase()
                 )
             );
@@ -90,7 +90,7 @@ const TransactionCards = (props: TransactionCardsProps): JSX.Element => {
   };
 
   return (
-    <div>
+    <div className="flex w-full flex-col gap-2">
       <div className="flex flex-row items-end">
         <SortByMenu
           currentSort={sort}
@@ -103,17 +103,15 @@ const TransactionCards = (props: TransactionCardsProps): JSX.Element => {
           transactions={filterInvisibleTransactions(props.transactions)}
         />
       </div>
-      <div>
-        {sortTransactions(props.transactions, sort)
-          .slice((page - 1) * itemsPerPage, (page - 1) * itemsPerPage + itemsPerPage)
-          .map((transaction: Transaction) => (
-            <TransactionCard
-              key={transaction.id}
-              transaction={transaction}
-              type={TransactionCardType.Normal}
-            />
-          ))}
-      </div>
+      {sortTransactions(props.transactions, sort)
+        .slice((page - 1) * itemsPerPage, (page - 1) * itemsPerPage + itemsPerPage)
+        .map((transaction: Transaction) => (
+          <TransactionCard
+            key={transaction.id}
+            transaction={transaction}
+            type={TransactionCardType.Normal}
+          />
+        ))}
       <div className="flex flex-row flex-wrap justify-center gap-2">
         <PageSizeSelect
           pageSize={itemsPerPage}

@@ -27,15 +27,13 @@ const Transactions = (): JSX.Element => {
   });
 
   if (transactionsQuery.isPending) {
-    return <Skeleton className="h-[550px] w-screen rounded-xl" />;
+    return <Skeleton className="h-[550px] w-full rounded-xl" />;
   }
 
   return (
-    <div className="flex w-screen flex-col items-center">
+    <div className="flex w-full flex-col items-center gap-2">
       <EmailVerified />
-      <div className="max-w-screen w-full px-4 2xl:max-w-screen-2xl">
-        <TransactionCards transactions={transactionsQuery.data ?? []} />
-      </div>
+      <TransactionCards transactions={transactionsQuery.data ?? []} />
     </div>
   );
 };

@@ -4,14 +4,12 @@ import GoalCards from './goal-cards';
 
 const Goals = (): JSX.Element => {
   return (
-    <div className="flex w-full max-w-screen-2xl flex-col space-y-2">
-      <div className="grid grid-cols-2">
-        <span className="justify-self-start text-xl font-semibold tracking-tight">Goals</span>
-        <div className="justify-self-end">
-          <AddButtonSheet>
-            <AddGoal />
-          </AddButtonSheet>
-        </div>
+    <div className="flex w-full flex-col gap-2">
+      <div className="flex flex-row">
+        <span className="grow text-xl font-semibold tracking-tight">Goals</span>
+        <AddButtonSheet>
+          <AddGoal />
+        </AddButtonSheet>
       </div>
       <GoalCards />
     </div>
