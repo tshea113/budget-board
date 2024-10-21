@@ -8,9 +8,9 @@ import SpendingTrendsCard from './spending-trends/spending-trends-card';
 
 const Dashboard = (): JSX.Element => {
   return (
-    <div className="flex w-full flex-col items-center">
+    <div className="flex w-full flex-col items-center gap-2">
       <EmailVerified />
-      <div className="flex w-full flex-col gap-2 lg:flex-row 2xl:max-w-screen-2xl">
+      <div className="flex w-full flex-col gap-2 lg:flex-row">
         <div className="space-y-2 lg:w-2/5 lg:max-w-[425px]">
           <AccountCard />
           <NetWorthCard />

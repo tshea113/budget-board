@@ -52,8 +52,8 @@ const Budgets = (): JSX.Element => {
   });
 
   return (
-    <div className="flex w-full max-w-screen-2xl flex-col justify-center gap-2 lg:grid lg:grid-flow-col lg:grid-cols-12">
-      <div className="space-y-2 lg:col-span-9">
+    <div className="flex w-full flex-col justify-center gap-2 lg:flex-row">
+      <div className="flex w-full flex-col gap-2">
         <BudgetsToolbar
           budgets={budgetsQuery.data ?? []}
           date={date}
@@ -84,7 +84,7 @@ const Budgets = (): JSX.Element => {
           isPending={budgetsQuery.isPending || transactionsForMonthQuery.isPending}
         />
       </div>
-      <div className="h-96 lg:col-span-3">
+      <div className="w-full lg:w-2/5 lg:max-w-[325px]">
         <BudgetTotalCard
           budgetData={getBudgetsForMonth(budgetsQuery.data ?? [], date)}
           transactionData={filterHiddenTransactions(transactionsForMonthQuery.data ?? [])}
