@@ -84,7 +84,7 @@ const Budgets = (): JSX.Element => {
           isPending={budgetsQuery.isPending || transactionsForMonthQuery.isPending}
         />
       </div>
-      <div className="w-2/5 max-w-[325px]">
+      <div className="w-full lg:w-2/5 lg:max-w-[325px]">
         <BudgetTotalCard
           budgetData={getBudgetsForMonth(budgetsQuery.data ?? [], date)}
           transactionData={filterHiddenTransactions(transactionsForMonthQuery.data ?? [])}
