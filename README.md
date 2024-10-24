@@ -93,10 +93,9 @@ If you do want to use a gmail account there are many articles online about how t
 
 ### Nginx
 
-There are two example nginx.conf files depending on how you would like to deploy.
-
-- The http example is ready to deploy as is (just need to remove the .example extension). This will deploy the app at `http://localhost`.
-- The https example has placeholders for your domain name and for your ssl cert and key names (assuming they are stored at the given location). You will need to fill those in and remove the .example extension.
+There are two example nginx.conf files depending on how you would like to deploy. Rename one of the following files to `nginx.conf`:
+- The http example is ready to deploy as is. This will deploy the app at `http://localhost`.
+- The https example has placeholders for your domain name and for your ssl cert and key names (assuming they are stored at the given location). You will need to fill those in.
 
 ## Deploy
 
