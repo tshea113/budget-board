@@ -1,24 +1,23 @@
 services:
-  backend:
-    image: budget-board-server
-    container_name: backend
-    hostname: backend
+  server:
+    container_name: budget-board-server
     restart: unless-stopped
-    build:
-      context: .
-      dockerfile: ./server/Dockerfile
+    build: ./server
     environment:
       - Logging__LogLevel__Default=Information
   client:
-    image: budget-board-client
     container_name: client
-    hostname: client
     restart: unless-stopped
-    build:
-      context: .
-      dockerfile: ./client/Dockerfile
-    volumes:
-      - ./client/certs/budgetboard.net.crt:/etc/ssl/certs/budgetboard.net.crt:ro
-      - ./client/certs/budgetboard.net.key:/etc/ssl/private/budgetboard.net.key:ro
+    build: ./client
     depends_on:
-      - backend
+      - server
+  db:
+    container_name: postgres-db
+    image: postgres:16
+    restart: unlesss-stopped
+    ports:
+      - "5432:5432"
+    profiles:
+      - "include-db"
+    depends_on:
+      - server
