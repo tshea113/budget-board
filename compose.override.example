@@ -1,7 +1,7 @@
 services:
-  backend:
+  budget-board-server:
     environment:
-      - POSTGRES_HOST: db
+      - POSTGRES_HOST: budget-board-db
       - POSTGRES_DATABASE: budgetboard
       - POSTGRES_USER: postgres
       - POSTGRES_PASSWORD: superSecretPassword
@@ -12,7 +12,7 @@ services:
       - EMAIL_SMTP_HOST: smtp.gmail.com,
     ports:
       - 8080:8080
-  client:
+  budget-board-client:
     build:
       args:
         - VITE_API_URL: https://example.com
@@ -22,7 +22,7 @@ services:
     volumes:
     - ./client/certs/budgetboard.crt:/etc/ssl/certs/budgetboard.crt:ro
     - ./client/certs/budgetboard.key:/etc/ssl/private/budgetboard.key:ro
-  db:
+  budget-board-db:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: superSecretPassword
