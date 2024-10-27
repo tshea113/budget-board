@@ -1,4 +1,4 @@
-FROM node:lts-alpine as build-stage
+FROM node:lts-alpine AS build-stage
 
 ARG VITE_API_URL
 ARG VITE_API_URL ${VITE_API_URL}
@@ -18,7 +18,7 @@ COPY . .
 RUN yarn run build
 
 # production stage
-FROM nginx:stable-alpine as production-stage
+FROM nginx:stable-alpine AS production-stage
 
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY --from=build-stage /app/nginx.conf /etc/nginx/conf.d/default.conf
