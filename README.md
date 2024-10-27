@@ -1,13 +1,20 @@
 # Budget Board
 
-This project is in development! Expect breaking changes!
+[![Docker Image CI](https://github.com/tshea113/budget-board/actions/workflows/docker-image.yml/badge.svg?branch=main)](https://github.com/tshea113/budget-board/actions/workflows/docker-image.yml)
+
+A simple and focused app for monthly budgeting and tracking financial goals 
+
+> [!WARNING]
+> This project is in development!
+> Expect breaking changes!
 
 ## About The Project
 
-I created this app with the goal of a simple and focused app for monthly budgeting and tracking financial goals.
+I created this app as a replacement for the now shut down app Mint.
 
-It's mostly for my personal use, but I'm working towards making this something I can share with others. Still, this is a side project,
-so development will probably be sporadic.
+It's mostly for my personal use, and such I've ported over most of the features I found most useful.
+I'm working towards making this something others can use too, so give it a try!
+Still, this is a side project, so development will probably be sporadic.
 
 Feel free to open an issue if you notice any bugs or have any feature requests!
 
