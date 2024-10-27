@@ -33,15 +33,13 @@ Here are some of the configuration options for the different containers:
 
 This container runs the back-end API of the app.
 
-<!-- TODO: Verify CLIENT_URL, -->
-
 | Option                | Details                                                                                                                                                                                  |
 | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | POSTGRES_HOST         | The host for the PostgreSQL database. If you are using the budget-board-db container, you do not need to configure this variable.                                                        |
 | POSTGRES_DATABASE     | The postgresql database name. If you are using the budget-board-db container, this should match `POSTGRES_DB`.                                                                           |
 | POSTGRES_USER         | The postgresql database user that budget board will use to connect to and interact with the database. If you are using the budget-board-db container, this should match `POSTGRES_USER`. |
 | POSTGRES_PASSWORD     | The user password. If you are using the budget-board-db container, this should match `POSTGRES_PASSWORD`.                                                                                |
-| CLIENT_URL            | This is the URL you will use to access your deployed project. If hosting locally this will be `http://localhost`.                                                                        |
+| CLIENT_URL            | This is the URL you will use to access your deployed project. See Configuring the Client URL under Additional Details for more information.                                              |
 | AUTO_UPDATE_DB        | Setting this to true will automatically update the database when the schema changes. Otherwise, you will need to update it manually.                                                     |
 | EMAIL_SENDER          | The email address that will send emails for verification, password resets, etc. See Additional Details for more information about setting this up.                                       |
 | EMAIL_SENDER_PASSWORD | The password of the email that will send emails for verification, password resets, etc.                                                                                                  |
@@ -70,22 +68,40 @@ This container hosts a PostgreSQL database used for storing app data. If you hav
 
 The budget-board-client container requires a configuration file for nginx.
 There are two example nginx.conf files depending on how you would like to deploy.
-You will need to update some fields in the file and rename one of the following files to `nginx.conf`:
+You will need to update some fields in the file and rename one of the following files to `nginx.conf`.
 
-<!-- TODO: Confirm this -->
-
-- The http example is ready to deploy as is. This will deploy the app at `http://localhost`.
-- The https example has placeholders for your domain name and for your ssl cert and key names (assuming they are stored at the given location). You will need to fill those in.
+The files are largely the same, except the https config file will redirect all traffic to port 443 and require that the site be connect to through https.
+You will need to enter the names for your certs.
+This should match the values you configured for `volumes` in `compose.override.yml`.
 
 ### Deploy
 
 Build & deploy the app by running the following command:
 
 ```
+docker compose --profile include-db up --build
+```
+
+If you don't want to run the postgres container, you can run:
+
+```
 docker compose up --build
 ```
 
+You can now access the app at the specified `CLIENT_URL`.
+
 ## Additional Details
+
+### Configuring the Client URL
+
+There are a couple places where you need to specify the domain that points to this app.
+This is dependent upon how you expect to access this app and where you are hosting it.
+Here are a couple of examples and their use cases:
+
+- `localhost` - If you only intend to access the app on the same system which you are hosting it (i.e. testing some changes for development).
+- The local IP or hostname - If you are only exposing this app to your local network, you can configure the `CLIENT_URL` and related options to the local IP or hostname of the system hosting the app (i.e. `192.168.1.23` or `budget-board.lan`).
+- The public IP or public domain - If you are exposing this app to the internet, then you would configure this to be the public IP or domain name that points to the app (i.e. `70.2.4.53` or `budget-board.com`).
+  - Note: This will require some extra network configuration beyond what is covered here.
 
 ### SimpleFIN Bridge
 
