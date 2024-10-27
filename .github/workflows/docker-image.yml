@@ -25,4 +25,4 @@ jobs:
         run: rm -f "client/nginx(http).conf.example"
 
       - name: Build the Docker image
-        run: docker build . --file ${{ matrix.dockerfile }} --tag ${{ matrix.image }}:$(date +%s)
+        run: docker build ${{ matrix.dockerfile }} --tag ${{ matrix.image }}:$(date +%s)
