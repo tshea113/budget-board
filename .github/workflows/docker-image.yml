@@ -2,6 +2,9 @@ name: Docker Image CI
 
 on:
   pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
@@ -10,10 +13,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - dockerfile: ./client/Dockerfile
-            image: money-minderclient
-          - dockerfile: ./server/Dockerfile
-            image: money-minder-server
+          - dockerfile: ./client
+            image: budget-board-client
+          - dockerfile: ./server
+            image: budget-board-server
 
     steps:
       - uses: actions/checkout@v3
@@ -25,4 +28,4 @@ jobs:
         run: rm -f "client/nginx(http).conf.example"
 
       - name: Build the Docker image
-        run: docker build . --file ${{ matrix.dockerfile }} --tag ${{ matrix.image }}:$(date +%s)
+        run: docker build ${{ matrix.dockerfile }} --tag ${{ matrix.image }}:$(date +%s)

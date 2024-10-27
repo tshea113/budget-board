@@ -1,0 +1,23 @@
+services:
+  budget-board-server:
+    container_name: budget-board-server
+    restart: unless-stopped
+    build: ./server
+    environment:
+      - Logging__LogLevel__Default=Information
+  budget-board-client:
+    container_name: budget-board-client
+    restart: unless-stopped
+    build: ./client
+    depends_on:
+      - budget-board-server
+  budget-board-db:
+    container_name: postgres-db
+    image: postgres:16
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    profiles:
+      - "include-db"
+    depends_on:
+      - budget-board-server
