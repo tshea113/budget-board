@@ -10,10 +10,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - dockerfile: ./client/Dockerfile
-            image: money-minderclient
-          - dockerfile: ./server/Dockerfile
-            image: money-minder-server
+          - dockerfile: ./client
+            image: budget-board-client
+          - dockerfile: ./server
+            image: budget-board-server
 
     steps:
       - uses: actions/checkout@v3
