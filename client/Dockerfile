@@ -7,14 +7,14 @@ ENV NODE_ENV=development
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 WORKDIR /app
 
-COPY client/.yarnrc.yml .
-COPY client/.yarn ./.yarn
+COPY .yarnrc.yml .
+COPY .yarn ./.yarn
 RUN yarn set version stable
 
-COPY ["./client/package.json", "./client/yarn.lock", "./"]
+COPY ["./package.json", "./yarn.lock", "./"]
 RUN yarn install
 
-COPY ./client/ .
+COPY . .
 RUN yarn run build
 
 # production stage

@@ -6,7 +6,7 @@ services:
     environment:
       - Logging__LogLevel__Default=Information
   budget-board-client:
-    container_name: client
+    container_name: budget-board-client
     restart: unless-stopped
     build: ./client
     depends_on:
@@ -14,7 +14,7 @@ services:
   budget-board-db:
     container_name: postgres-db
     image: postgres:16
-    restart: unlesss-stopped
+    restart: unless-stopped
     ports:
       - "5432:5432"
     profiles:
