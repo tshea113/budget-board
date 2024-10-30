@@ -72,6 +72,7 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
         .then((res) => {
           localStorage.setItem('refresh-token', res.data.refreshToken);
           setAccessToken(res.data.accessToken);
+          setAccessTokenExpirationDate(getDateXSecondsFromNow(res.data.expiresIn));
         })
         .catch((error: AxiosError) => {
           if (error.response?.status === 401) {
