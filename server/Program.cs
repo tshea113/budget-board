@@ -79,8 +79,8 @@ builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 builder.Services.AddOptions<BearerTokenOptions>(IdentityConstants.BearerScheme).Configure(options =>
 {
-    // TODO: Remove as this is only for testing
-    options.BearerTokenExpiration = TimeSpan.FromSeconds(10);
+    options.BearerTokenExpiration = TimeSpan.FromHours(1);
+    options.RefreshTokenExpiration = TimeSpan.FromDays(14);
 });
 
 builder.Services.AddControllers()
