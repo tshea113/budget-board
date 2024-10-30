@@ -13,7 +13,17 @@ export interface AuthContextValue {
 
 const AuthProvider = ({ children }: { children: any }): JSX.Element => {
   const [accessToken, setAccessToken] = useState<string>('');
+  const [accessTokenExpirationDate, setAccessTokenExpirationDate] = useState(new Date(0));
   const [loading, setLoading] = useState<boolean>(false);
+
+  // The access token will refresh when there are less than this amount of seconds left before it expires.
+  const accessTokenRefreshTime = 30;
+
+  const getDateXSecondsFromNow = (seconds: number): Date => {
+    const now = new Date();
+    now.setSeconds(now.getSeconds() + seconds);
+    return now;
+  };
 
   // base url is sourced from environment variables
   const client = axios.create({
@@ -27,17 +37,25 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
       throw error;
     };
 
-    const refreshToken = localStorage.getItem('refresh-token');
-    if (refreshToken) {
-      const res: AxiosResponse = await client({
-        url: '/api/refresh',
-        method: 'POST',
-        data: { refreshToken },
-      });
-      localStorage.setItem('refresh-token', res.data.refreshToken);
-      setAccessToken(res.data.accessToken);
-      client.defaults.headers.common.Authorization = 'Bearer ' + res.data.accessToken;
+    // If the access token is expiring soon, refresh before the request
+    if (
+      (accessTokenExpirationDate.getTime() - new Date().getTime()) / 1000 <
+      accessTokenRefreshTime
+    ) {
+      const refreshToken = localStorage.getItem('refresh-token');
+      if (refreshToken) {
+        const res: AxiosResponse = await client({
+          url: '/api/refresh',
+          method: 'POST',
+          data: { refreshToken },
+        });
+        localStorage.setItem('refresh-token', res.data.refreshToken);
+        setAccessToken(res.data.accessToken);
+        setAccessTokenExpirationDate(getDateXSecondsFromNow(res.data.expiresIn));
+      }
     }
+
+    client.defaults.headers.common.Authorization = 'Bearer ' + accessToken;
 
     return await client(options).then(onSuccess).catch(onError);
   };
