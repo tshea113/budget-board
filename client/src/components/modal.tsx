@@ -1,5 +1,10 @@
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { useState } from 'react';
 import ModalProvider from './modal-provider';
 
@@ -12,7 +17,8 @@ const Modal = ({ button, children }: { button: string; children: any }): JSX.Ele
         <DialogTrigger asChild>
           <Button>{button}</Button>
         </DialogTrigger>
-        <DialogContent>{children}</DialogContent>
+        <DialogTitle hidden />
+        <DialogContent aria-describedby="">{children}</DialogContent>
       </Dialog>
     </ModalProvider>
   );
