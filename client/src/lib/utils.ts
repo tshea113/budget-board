@@ -92,8 +92,13 @@ export const areStringsEqual = (string1: string, string2: string): boolean =>
  */
 export const getDateFromMonthsAgo = (numberOfMonthsAgo: number): Date => {
   const lastMonth = new Date();
-  // Date is going to be ignored anyways, so set it to something consistent
-  lastMonth.setDate(1);
   lastMonth.setMonth(lastMonth.getMonth() - numberOfMonthsAgo);
+
+  // Need to init the rest of the values to something constant.
+  lastMonth.setDate(1);
+  lastMonth.setHours(12);
+  lastMonth.setMinutes(0);
+  lastMonth.setSeconds(0);
+  lastMonth.setMilliseconds(0);
   return lastMonth;
 };
