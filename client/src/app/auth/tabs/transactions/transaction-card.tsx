@@ -20,6 +20,7 @@ export enum TransactionCardType {
 }
 
 interface TransactionCardProps {
+  className?: string;
   transaction: Transaction;
   type: TransactionCardType;
 }
@@ -78,7 +79,8 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
         'flex flex-row p-2 @container',
         props.type === TransactionCardType.Normal ? 'hover:bg-muted' : '',
         isSelected ? 'bg-muted' : 'bg-card',
-        selectEffect && 'animate-pop'
+        selectEffect && 'animate-pop',
+        props.className
       )}
       onClick={toggleIsSelected}
       onAnimationEnd={() => setSelectEffect(false)}

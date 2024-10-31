@@ -7,7 +7,12 @@ export enum Sorts {
   Amount,
 }
 
-const sortOptions = [
+interface SortOption {
+  value: Sorts;
+  label: string;
+}
+
+const sortOptions: SortOption[] = [
   {
     value: Sorts.Date,
     label: 'Date',
@@ -48,8 +53,9 @@ const SortByMenu = (props: SortByMenuProps): JSX.Element => {
   return (
     <div className="flex flex-row flex-wrap items-center gap-2">
       <label>Sort By</label>
-      {sortOptions.map((sortOption) => (
+      {sortOptions.map((sortOption: SortOption) => (
         <SortButton
+          key={sortOption.value}
           label={sortOption.label}
           sortDirection={
             sortOption.value === props.currentSort

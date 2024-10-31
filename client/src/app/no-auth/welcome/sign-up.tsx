@@ -28,8 +28,8 @@ const Signup = (): JSX.Element => {
         .string()
         .min(1, { message: 'This field must be filled.' })
         .email('This is not a valid email'),
-      password: z.string().min(7, { message: 'Password must be at least 7 characters' }),
-      confirm: z.string().min(7, { message: 'Password must be at least 7 characters' }),
+      password: z.string().min(8, { message: 'Password must be at least 8 characters' }),
+      confirm: z.string().min(8, { message: 'Password must be at least 8 characters' }),
     })
     .superRefine(({ confirm, password }, ctx) => {
       if (confirm !== password) {
@@ -46,10 +46,18 @@ const Signup = (): JSX.Element => {
     defaultValues: {
       email: '',
       password: '',
+      confirm: '',
     },
   });
 
   const { request } = React.useContext<any>(AuthContext);
+
+  interface ValidationError {
+    title: string;
+    type: string;
+    status: number;
+    errors: object;
+  }
 
   const submitUserSignup = async (
     values: z.infer<typeof formSchema>,
@@ -71,17 +79,31 @@ const Signup = (): JSX.Element => {
     })
       .then(() => {
         toast({
-          variant: 'default',
+          variant: 'success',
           title: 'Success!',
           description: 'Account created! Check your email for confirmation.',
         });
       })
       .catch((error: AxiosError) => {
-        toast({
-          variant: 'destructive',
-          title: 'Error',
-          description: translateAxiosError(error),
-        });
+        if (error?.response?.data) {
+          const errorData = error.response.data as ValidationError;
+          if (
+            error.status === 400 &&
+            errorData.title === 'One or more validation errors occurred.'
+          ) {
+            toast({
+              variant: 'destructive',
+              title: errorData.title,
+              description: Object.values(errorData.errors).join('\n'),
+            });
+          }
+        } else {
+          toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: translateAxiosError(error),
+          });
+        }
       })
       .finally(() => {
         setLoading(false);

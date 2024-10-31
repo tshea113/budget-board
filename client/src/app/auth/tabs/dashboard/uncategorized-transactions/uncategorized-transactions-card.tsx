@@ -59,6 +59,7 @@ const UncategorizedTransactionsCard = (): JSX.Element => {
             .slice((page - 1) * itemsPerPage, (page - 1) * itemsPerPage + itemsPerPage)
             .map((transaction: Transaction) => (
               <TransactionCard
+                className="my-1"
                 key={transaction.id}
                 transaction={transaction}
                 type={TransactionCardType.Uncategorized}
