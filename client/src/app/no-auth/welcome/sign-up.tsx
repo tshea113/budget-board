@@ -28,8 +28,8 @@ const Signup = (): JSX.Element => {
         .string()
         .min(1, { message: 'This field must be filled.' })
         .email('This is not a valid email'),
-      password: z.string().min(7, { message: 'Password must be at least 7 characters' }),
-      confirm: z.string().min(7, { message: 'Password must be at least 7 characters' }),
+      password: z.string().min(8, { message: 'Password must be at least 8 characters' }),
+      confirm: z.string().min(8, { message: 'Password must be at least 8 characters' }),
     })
     .superRefine(({ confirm, password }, ctx) => {
       if (confirm !== password) {
