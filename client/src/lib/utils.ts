@@ -91,14 +91,9 @@ export const areStringsEqual = (string1: string, string2: string): boolean =>
  * @returns A Date object containing the calculated month and year.
  */
 export const getDateFromMonthsAgo = (numberOfMonthsAgo: number): Date => {
-  const lastMonth = new Date();
+  const lastMonth = initCurrentMonth();
+
   lastMonth.setMonth(lastMonth.getMonth() - numberOfMonthsAgo);
 
-  // Need to init the rest of the values to something constant.
-  lastMonth.setDate(1);
-  lastMonth.setHours(12);
-  lastMonth.setMinutes(0);
-  lastMonth.setSeconds(0);
-  lastMonth.setMilliseconds(0);
   return lastMonth;
 };
