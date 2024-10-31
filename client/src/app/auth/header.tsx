@@ -64,7 +64,9 @@ const Header = (): JSX.Element => {
       <DropdownMenu>
         <DropdownMenuTrigger>
           <Avatar>
-            <AvatarFallback>{userInfoQuery.data?.email.charAt(0) ?? 'A'}</AvatarFallback>
+            <AvatarFallback>
+              {userInfoQuery.data?.email.charAt(0).toLocaleUpperCase() ?? 'A'}
+            </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
