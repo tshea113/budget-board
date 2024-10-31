@@ -137,7 +137,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
         <div className="place-items-center">
           <ResponsiveButton
             variant="destructive"
-            className="h-full"
+            className="h-full w-9 p-1"
             onClick={() => {
               doDeleteBudget.mutate(props.budget.id);
             }}
