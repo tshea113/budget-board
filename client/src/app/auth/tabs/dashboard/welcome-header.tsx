@@ -36,7 +36,7 @@ const WelcomeHeader = (): JSX.Element => {
   }
 
   return (
-    <div className="flex w-full flex-row p-2">
+    <div className="flex w-full flex-row flex-wrap gap-2 p-2">
       <span className="grow self-center text-2xl font-semibold tracking-tight">
         Hello, {userInfoQuery.data?.email ?? 'not available'}.
       </span>
