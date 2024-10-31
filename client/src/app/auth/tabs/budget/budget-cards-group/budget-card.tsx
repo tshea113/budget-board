@@ -1,4 +1,5 @@
 import { AuthContext } from '@/components/auth-provider';
+import LoadingIcon from '@/components/loading-icon';
 import ResponsiveButton from '@/components/responsive-button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -9,7 +10,7 @@ import { cn, getProgress } from '@/lib/utils';
 import { type Budget } from '@/types/budget';
 import { transactionCategories } from '@/types/transaction';
 import { defaultGuid } from '@/types/user';
-import { CheckIcon } from '@radix-ui/react-icons';
+import { TrashIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 
@@ -42,10 +43,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
         data: newBudget,
       });
     },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['budgets'] });
-      setIsSelected(false);
-    },
+    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['budgets'] }),
   });
 
   const doDeleteBudget = useMutation({
@@ -55,10 +53,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
         method: 'DELETE',
         params: { id },
       }),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['budgets'] });
-      setIsSelected(false);
-    },
+    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['budgets'] }),
   });
 
   const getAmountLeft = (total: number, amount: number): string => {
@@ -73,7 +68,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
   return (
     <Card
       className={cn(
-        'space-y-1 px-3 py-1 shadow-md hover:bg-muted',
+        'flex flex-row shadow-md hover:bg-muted',
         isSelected ? 'bg-muted' : 'bg-card',
         selectEffect && 'animate-pop'
       )}
@@ -83,79 +78,75 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
       }}
       onAnimationEnd={() => setSelectEffect(false)}
     >
-      <div className="flex min-h-10 flex-row items-center @container">
-        <div className="flex w-1/2 flex-row flex-wrap items-center space-x-2">
-          <div className="scroll-m-20 justify-self-start text-lg font-semibold tracking-tight @sm:text-xl">
-            {getFormattedCategoryValue(props.budget.category, transactionCategories)}
+      <div className="flex w-full flex-col px-3 py-1">
+        <div className="flex min-h-10 flex-row items-center @container">
+          <div className="flex w-1/2 grow flex-row items-center justify-start gap-2">
+            <span className="select-none text-lg font-semibold tracking-tight @sm:text-xl">
+              {getFormattedCategoryValue(props.budget.category, transactionCategories)}
+            </span>
+            {(doEditBudget.isPending || doDeleteBudget.isPending) && <LoadingIcon />}
           </div>
-          {isSelected && (
-            <ResponsiveButton
-              variant="destructive"
-              className="h-7"
-              onClick={() => {
-                doDeleteBudget.mutate(props.budget.id);
-              }}
-              loading={doDeleteBudget.isPending}
-            >
-              Delete
-            </ResponsiveButton>
-          )}
-        </div>
-        <div className="flex w-1/2 flex-row justify-items-center text-base font-semibold @sm:text-lg">
-          <div className="w-1/3 text-center">
-            ${(props.amount * getSignForBudget(props.budget.category)).toFixed()}
-          </div>
-          <div className="w-1/3 grow text-center">
+          <div className="flex w-1/2 flex-row justify-items-center text-base font-semibold @sm:text-lg">
+            <span className="w-1/3 select-none text-center">
+              ${(props.amount * getSignForBudget(props.budget.category)).toFixed()}
+            </span>
             {!isSelected ? (
-              <div>${limit}</div>
+              <span className="w-1/3 select-none text-center">${limit}</span>
             ) : (
-              <div className="flex flex-row flex-wrap items-center justify-center gap-1">
-                <Input
-                  className="h-6 max-w-[80px] px-1 text-base @sm:h-8"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                  value={limit}
-                  onChange={(e) => {
-                    setLimit(parseInt(e.target.value === '' ? '0' : e.target.value));
-                  }}
-                />
-                <ResponsiveButton
-                  className="h-7 w-7 p-0"
-                  loading={doEditBudget.isPending}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    doEditBudget.mutate(limit);
-                  }}
-                >
-                  <CheckIcon />
-                </ResponsiveButton>
-              </div>
+              <Input
+                className="h-6 w-1/3 px-1 text-center text-base @sm:h-8"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+                value={limit}
+                onChange={(e) => {
+                  setLimit(parseInt(e.target.value === '' ? '0' : e.target.value));
+                }}
+                onBlur={() => doEditBudget.mutate(limit)}
+              />
             )}
+            <span
+              className={cn(
+                'w-1/3 select-none text-center font-semibold',
+                // Income behaves opposite of spending, since being above the limit is a good thing :)
+                (props.budget.limit - props.amount * (props.isIncome ? 1 : -1)) *
+                  (props.isIncome ? -1 : 1) >
+                  0
+                  ? 'text-success'
+                  : 'text-destructive'
+              )}
+            >
+              {getAmountLeft(
+                props.budget.limit,
+                props.amount * (props.isIncome ? 1 : -1)
+              )}
+            </span>
           </div>
-          <span
-            className={cn(
-              'w-1/3 text-center font-semibold',
-              // Income behaves opposite of spending, since being above the limit is a good thing :)
-              (props.budget.limit - props.amount * (props.isIncome ? 1 : -1)) *
-                (props.isIncome ? -1 : 1) >
-                0
-                ? 'text-success'
-                : 'text-destructive'
-            )}
-          >
-            {getAmountLeft(props.budget.limit, props.amount * (props.isIncome ? 1 : -1))}
-          </span>
         </div>
+        <Progress
+          className="h-2 w-full"
+          value={getProgress(
+            props.amount * getSignForBudget(props.budget.category),
+            props.budget.limit
+          )}
+          max={100}
+        />
       </div>
-      <Progress
-        className="h-2 w-full"
-        value={getProgress(
-          props.amount * getSignForBudget(props.budget.category),
-          props.budget.limit
-        )}
-        max={100}
-      />
+
+      {isSelected && (
+        <div className="place-items-center">
+          <ResponsiveButton
+            variant="destructive"
+            className="h-full"
+            onClick={() => {
+              doDeleteBudget.mutate(props.budget.id);
+            }}
+            loading={doDeleteBudget.isPending}
+          >
+            <TrashIcon />
+          </ResponsiveButton>
+        </div>
+      )}
     </Card>
   );
 };
