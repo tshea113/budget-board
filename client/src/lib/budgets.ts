@@ -17,6 +17,18 @@ export const sumBudgetAmounts = (budgetData: Budget[]): number => {
   return budgetData.reduce((n, { limit }) => n + limit, 0);
 };
 
+/**
+ * Builds a map of the budget categories to the corresponding budgets
+ * @param budgets Budgets to be grouped
+ * @returns A map of categories to budgets
+ */
+export const groupBudgetsByCategory = (budgets: Budget[]): Map<string, Budget[]> =>
+  budgets.reduce(
+    (budgetMap: any, item: Budget) =>
+      budgetMap.set(item.category, [...(budgetMap.get(item.category) || []), item]),
+    new Map()
+  );
+
 export const getBudgetsForMonth = (budgetData: Budget[], date: Date): Budget[] =>
   budgetData.filter(
     (b: Budget) =>
