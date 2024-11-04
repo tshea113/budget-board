@@ -68,7 +68,7 @@ const AccountsConfigurationCard = (
       setValueDirty(false);
     },
     onError: (error: AxiosError) => {
-      toast(translateAxiosError(error));
+      toast.error(translateAxiosError(error));
     },
   });
 

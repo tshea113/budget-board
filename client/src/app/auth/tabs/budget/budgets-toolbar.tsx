@@ -31,7 +31,7 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
       await queryClient.invalidateQueries({ queryKey: ['budgets', props.date] });
     },
     onError: (error: AxiosError) => {
-      toast(translateAxiosError(error));
+      toast.error(translateAxiosError(error));
     },
   });
 

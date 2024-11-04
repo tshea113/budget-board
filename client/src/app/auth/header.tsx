@@ -33,9 +33,7 @@ const Header = (): JSX.Element => {
         localStorage.removeItem('refresh-token');
       })
       .catch((error: AxiosError) => {
-        toast('Uh oh! Something went wrong.', {
-          description: translateAxiosError(error),
-        });
+        toast.error(translateAxiosError(error));
       });
   };
 

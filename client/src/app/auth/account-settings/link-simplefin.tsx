@@ -42,9 +42,7 @@ const LinkSimpleFin = (): JSX.Element => {
         params: { newToken },
       }),
     onError: (error: AxiosError) => {
-      toast('Uh oh! Something went wrong.', {
-        description: translateAxiosError(error),
-      });
+      toast.error(translateAxiosError(error));
     },
   });
 
@@ -64,9 +62,7 @@ const LinkSimpleFin = (): JSX.Element => {
 
   React.useEffect(() => {
     if (userQuery.error) {
-      toast.error('Uh oh! Something went wrong.', {
-        description: translateAxiosError(userQuery.error as AxiosError),
-      });
+      toast.error(translateAxiosError(userQuery.error as AxiosError));
     }
   }, [userQuery.error]);
 

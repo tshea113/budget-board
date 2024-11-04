@@ -31,9 +31,7 @@ const AccountCard = (): JSX.Element => {
 
   React.useEffect(() => {
     if (accountsQuery.error) {
-      toast.error('Uh oh! Something went wrong.', {
-        description: translateAxiosError(accountsQuery.error as AxiosError),
-      });
+      toast.error(translateAxiosError(accountsQuery.error as AxiosError));
     }
   }, [accountsQuery.error]);
 

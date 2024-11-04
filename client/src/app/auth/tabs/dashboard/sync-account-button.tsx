@@ -28,7 +28,7 @@ const SyncAccountButton = (): JSX.Element => {
       }
     },
     onError: (error: AxiosError) => {
-      toast(translateAxiosError(error));
+      toast.error(translateAxiosError(error));
     },
   });
 

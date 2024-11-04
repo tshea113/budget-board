@@ -55,7 +55,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
     },
     onError: (error: AxiosError, _variables: Transaction, context) => {
       queryClient.setQueryData(['transactions'], context?.previousTransactions ?? []);
-      toast(translateAxiosError(error));
+      toast.error(translateAxiosError(error));
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['transactions'] });
