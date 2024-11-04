@@ -26,7 +26,7 @@ const LinkSimpleFin = (): JSX.Element => {
         method: 'GET',
       });
 
-      if (res.status == 200) {
+      if (res.status === 200) {
         return res.data;
       }
 
@@ -64,6 +64,16 @@ const LinkSimpleFin = (): JSX.Element => {
   interface FormValues {
     accessToken: string;
   }
+
+  React.useEffect(() => {
+    if (userQuery.error) {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: translateAxiosError(userQuery.error as AxiosError),
+      });
+    }
+  }, [userQuery.error]);
 
   return (
     <Card className="mt-5">
