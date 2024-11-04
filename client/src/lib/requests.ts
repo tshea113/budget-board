@@ -14,6 +14,6 @@ export const translateAxiosError = (error: AxiosError): string => {
   } else if (error.code === 'ERR_NETWORK') {
     return getErrorString(error.response);
   } else {
-    return 'Internal server error';
+    return 'An unspecified error occurred.';
   }
 };
