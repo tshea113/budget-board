@@ -75,5 +75,9 @@
   "resolutions": {
     "socks": "^2.8.3"
   },
-  "packageManager": "yarn@4.4.1"
+  "packageManager": "yarn@4.4.1",
+  "dependencies": {
+    "next-themes": "^0.3.0",
+    "sonner": "^1.7.0"
+  }
 }
