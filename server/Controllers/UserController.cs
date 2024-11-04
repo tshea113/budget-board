@@ -29,11 +29,9 @@ public class UserController : ControllerBase
     [Authorize]
     public IActionResult GetUser()
     {
-        var id = User.Claims.Single(c => c.Type == UserConstants.UserType).Value;
-        var user = GetCurrentUser(id);
+        var user = GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
-        if (user == null) return BadRequest();
-
+        if (user == null) return Unauthorized("You are not authorized to access this content.");
 
         return Ok(new UserResponse(user));
     }
@@ -44,10 +42,7 @@ public class UserController : ControllerBase
     {
         var user = GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
 
-        if (user == null)
-        {
-            return NotFound();
-        }
+        if (user == null) return Unauthorized("You are not authorized to access this content.");
 
         var response = default(HttpResponseMessage);
         try
@@ -64,10 +59,18 @@ public class UserController : ControllerBase
         }
         catch
         {
-            return BadRequest("There was an error accessing SimpleFin.");
+            return BadRequest("There was an error connecting to SimpleFin.");
         }
 
-        await _userDataContext.SaveChangesAsync();
+        try
+        {
+            await _userDataContext.SaveChangesAsync();
+        }
+        catch
+        {
+            return BadRequest("There was an error connecting to the database.");
+        }
+
 
         return Ok();
 
