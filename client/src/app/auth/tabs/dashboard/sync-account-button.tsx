@@ -1,17 +1,16 @@
 import { AuthContext } from '@/components/auth-provider';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/components/ui/use-toast';
 import { translateAxiosError } from '@/lib/requests';
 import { cn } from '@/lib/utils';
 import { UpdateIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosResponse, type AxiosError } from 'axios';
 import React from 'react';
+import { toast } from 'sonner';
 
 const SyncAccountButton = (): JSX.Element => {
   const { request } = React.useContext<any>(AuthContext);
 
-  const { toast } = useToast();
   const queryClient = useQueryClient();
   const doSyncMutation = useMutation({
     mutationFn: async () => await request({ url: '/api/simplefin/sync', method: 'GET' }),
@@ -19,25 +18,17 @@ const SyncAccountButton = (): JSX.Element => {
       await queryClient.invalidateQueries({ queryKey: ['transactions'] });
       await queryClient.invalidateQueries({ queryKey: ['accounts'] });
       if ((data.data?.length ?? 0) > 0) {
-        toast({
-          variant: 'destructive',
-          title: 'Error',
-          description: (
-            <ul className="list-disc">
-              {data.data.map((error: string) => (
-                <li key={error}>{error}</li>
-              ))}
-            </ul>
-          ),
-        });
+        toast.error(
+          <ul className="list-disc">
+            {data.data.map((error: string) => (
+              <li key={error}>{error}</li>
+            ))}
+          </ul>
+        );
       }
     },
     onError: (error: AxiosError) => {
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: translateAxiosError(error),
-      });
+      toast(translateAxiosError(error));
     },
   });
 

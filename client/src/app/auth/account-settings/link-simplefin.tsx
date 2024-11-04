@@ -5,13 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/components/ui/use-toast';
 import { translateAxiosError } from '@/lib/requests';
 import { User } from '@/types/user';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosResponse, type AxiosError } from 'axios';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 const LinkSimpleFin = (): JSX.Element => {
   const [formVisible, setFormVisible] = React.useState<boolean>(false);
@@ -34,7 +34,6 @@ const LinkSimpleFin = (): JSX.Element => {
     },
   });
 
-  const { toast } = useToast();
   const doSetAccessToken = useMutation({
     mutationFn: async (newToken: string) =>
       await request({
@@ -43,9 +42,7 @@ const LinkSimpleFin = (): JSX.Element => {
         params: { newToken },
       }),
     onError: (error: AxiosError) => {
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
+      toast('Uh oh! Something went wrong.', {
         description: translateAxiosError(error),
       });
     },
@@ -67,9 +64,7 @@ const LinkSimpleFin = (): JSX.Element => {
 
   React.useEffect(() => {
     if (userQuery.error) {
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
+      toast.error('Uh oh! Something went wrong.', {
         description: translateAxiosError(userQuery.error as AxiosError),
       });
     }

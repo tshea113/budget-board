@@ -1,6 +1,5 @@
 import { AuthContext } from '@/components/auth-provider';
 import { Card } from '@/components/ui/card';
-import { toast } from '@/components/ui/use-toast';
 import { translateAxiosError } from '@/lib/requests';
 import { cn } from '@/lib/utils';
 import { Transaction } from '@/types/transaction';
@@ -12,6 +11,7 @@ import EditableCurrencyCell from './cells/editable-currency-cell';
 import EditableMerchantCell from './cells/editable-merchant-cell';
 import EditableDateCell from './cells/editable-date-cell';
 import LoadingIcon from '@/components/loading-icon';
+import { toast } from 'sonner';
 
 export enum TransactionCardType {
   Normal,
@@ -55,11 +55,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
     },
     onError: (error: AxiosError, _variables: Transaction, context) => {
       queryClient.setQueryData(['transactions'], context?.previousTransactions ?? []);
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: translateAxiosError(error),
-      });
+      toast(translateAxiosError(error));
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['transactions'] });

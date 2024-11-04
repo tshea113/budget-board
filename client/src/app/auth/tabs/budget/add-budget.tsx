@@ -16,11 +16,11 @@ import { translateAxiosError } from '@/lib/requests';
 import { type NewBudget } from '@/types/budget';
 import CategoryInput from '@/components/category-input';
 import { defaultGuid } from '@/types/user';
-import { useToast } from '@/components/ui/use-toast';
 import { AxiosError } from 'axios';
 import { AuthContext } from '@/components/auth-provider';
 import React from 'react';
 import { transactionCategories } from '@/types/transaction';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
   category: z.string().min(1).max(50),
@@ -42,7 +42,6 @@ const AddBudget = ({ date }: AddBudgetProps): JSX.Element => {
 
   const { request } = React.useContext<any>(AuthContext);
 
-  const { toast } = useToast();
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: async (newBudget: NewBudget) =>
@@ -55,11 +54,7 @@ const AddBudget = ({ date }: AddBudgetProps): JSX.Element => {
       await queryClient.invalidateQueries({ queryKey: ['budgets'] });
     },
     onError: (error: AxiosError) => {
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: translateAxiosError(error),
-      });
+      toast.error(translateAxiosError(error));
     },
   });
 

@@ -3,12 +3,12 @@ import ResponsiveButton from '@/components/responsive-button';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { useToast } from '@/components/ui/use-toast';
 import { translateAxiosError } from '@/lib/requests';
 import { TrashIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
 import React from 'react';
+import { toast } from 'sonner';
 
 interface DeleteAccountProps {
   accountId: string;
@@ -19,7 +19,6 @@ const DeleteAccount = (props: DeleteAccountProps): JSX.Element => {
 
   const { request } = React.useContext<any>(AuthContext);
 
-  const { toast } = useToast();
   const queryClient = useQueryClient();
   const doDeleteAccount = useMutation({
     mutationFn: async (deleteTransactions: boolean) =>
@@ -32,11 +31,7 @@ const DeleteAccount = (props: DeleteAccountProps): JSX.Element => {
       await queryClient.invalidateQueries({ queryKey: ['accounts'] });
     },
     onError: (error: AxiosError) => {
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: translateAxiosError(error),
-      });
+      toast.error(translateAxiosError(error));
     },
   });
 

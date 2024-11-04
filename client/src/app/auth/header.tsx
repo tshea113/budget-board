@@ -10,18 +10,17 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import AccountSettings from './account-settings/account-settings';
-import { useToast } from '@/components/ui/use-toast';
 import { AxiosResponse, type AxiosError } from 'axios';
 import { translateAxiosError } from '@/lib/requests';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import { InfoResponse } from '@/types/user';
+import { toast } from 'sonner';
 
 const Header = (): JSX.Element => {
   const { request, setAccessToken } = React.useContext<any>(AuthContext);
 
   const queryClient = useQueryClient();
-  const { toast } = useToast();
   const Logout = (): void => {
     request({
       url: '/api/logout',
@@ -34,9 +33,7 @@ const Header = (): JSX.Element => {
         localStorage.removeItem('refresh-token');
       })
       .catch((error: AxiosError) => {
-        toast({
-          variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
+        toast('Uh oh! Something went wrong.', {
           description: translateAxiosError(error),
         });
       });

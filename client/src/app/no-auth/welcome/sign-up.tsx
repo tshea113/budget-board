@@ -9,18 +9,17 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/components/ui/use-toast';
 import { translateAxiosError } from '@/lib/requests';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
 import React from 'react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import * as z from 'zod';
 
 const Signup = (): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { toast } = useToast();
 
   const formSchema = z
     .object({
@@ -78,11 +77,7 @@ const Signup = (): JSX.Element => {
       },
     })
       .then(() => {
-        toast({
-          variant: 'success',
-          title: 'Success!',
-          description: 'Account created! Check your email for confirmation.',
-        });
+        toast.success('Account created! Check your email for confirmation.');
       })
       .catch((error: AxiosError) => {
         if (error?.response?.data) {
@@ -91,18 +86,10 @@ const Signup = (): JSX.Element => {
             error.status === 400 &&
             errorData.title === 'One or more validation errors occurred.'
           ) {
-            toast({
-              variant: 'destructive',
-              title: errorData.title,
-              description: Object.values(errorData.errors).join('\n'),
-            });
+            toast.error(Object.values(errorData.errors).join('\n'));
           }
         } else {
-          toast({
-            variant: 'destructive',
-            title: 'Error',
-            description: translateAxiosError(error),
-          });
+          toast.error(translateAxiosError(error));
         }
       })
       .finally(() => {
