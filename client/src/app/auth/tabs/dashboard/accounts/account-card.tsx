@@ -5,9 +5,11 @@ import { Separator } from '@/components/ui/separator';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import { useQuery } from '@tanstack/react-query';
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { Account } from '@/types/account';
 import { Skeleton } from '@/components/ui/skeleton';
+import { translateAxiosError } from '@/lib/requests';
+import { toast } from 'sonner';
 
 const AccountCard = (): JSX.Element => {
   const { request } = React.useContext<any>(AuthContext);
@@ -26,6 +28,14 @@ const AccountCard = (): JSX.Element => {
       return [];
     },
   });
+
+  React.useEffect(() => {
+    if (accountsQuery.error) {
+      toast.error('Uh oh! Something went wrong.', {
+        description: translateAxiosError(accountsQuery.error as AxiosError),
+      });
+    }
+  }, [accountsQuery.error]);
 
   if (accountsQuery.isPending) {
     return (
