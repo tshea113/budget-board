@@ -7,7 +7,7 @@ import AuthRoute from './components/auth-route';
 import NoAuthRoute from './components/no-auth-route';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from './components/theme-provider';
-import { Toaster } from './components/ui/toaster';
+import { Toaster } from './components/ui/sonner';
 
 const router = createBrowserRouter([
   {

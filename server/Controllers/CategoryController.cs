@@ -1,6 +1,7 @@
 ﻿using BudgetBoard.Database.Data;
 using BudgetBoard.Database.Models;
 using BudgetBoard.Models;
+using BudgetBoard.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,25 +12,31 @@ namespace BudgetBoard.Controllers;
 [ApiController]
 public class CategoryController : ControllerBase
 {
+    private readonly ILogger<CategoryController> _logger;
+
     private readonly UserDataContext _userDataContext;
 
-    public CategoryController(UserDataContext context)
+    public CategoryController(UserDataContext context, ILogger<CategoryController> logger)
     {
         _userDataContext = context;
+        _logger = logger;
     }
 
     [HttpGet]
     [Authorize]
     public async Task<IActionResult> Get()
     {
-        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-        if (user == null)
+        try
         {
-            return NotFound();
-        }
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-        return Ok(user.Categories.Select(c => new CategoryResponse(c)));
+            return Ok(user.Categories.Select(c => new CategoryResponse(c)));
+        }
+        catch (Exception ex)
+        {
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
+        }
     }
 
     [HttpPost]
@@ -39,20 +46,16 @@ public class CategoryController : ControllerBase
         try
         {
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
 
             user.Categories.Add(category);
-            _userDataContext.SaveChanges();
+            await _userDataContext.SaveChangesAsync();
 
             return Ok();
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
         }
     }
 
@@ -63,14 +66,9 @@ public class CategoryController : ControllerBase
         try
         {
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
 
             var category = user.Categories.Single(a => a.ID == guid);
-
             if (category == null) return NotFound();
 
             _userDataContext.Entry(category).State = EntityState.Deleted;
@@ -80,7 +78,7 @@ public class CategoryController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
         }
     }
 
@@ -95,8 +93,9 @@ public class CategoryController : ControllerBase
 
             return user;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            _logger.LogError(ex.Message);
             return null;
         }
     }

@@ -1,5 +1,12 @@
 import { type AxiosError, type AxiosResponse } from 'axios';
 
+export interface ValidationError {
+  title: string;
+  type: string;
+  status: number;
+  errors: object;
+}
+
 const getErrorString = (error: AxiosResponse | undefined): string => {
   if (typeof error?.data === 'string') {
     return error.data;
@@ -13,7 +20,9 @@ export const translateAxiosError = (error: AxiosError): string => {
     return getErrorString(error.response);
   } else if (error.code === 'ERR_NETWORK') {
     return getErrorString(error.response);
+  } else if (error.code === 'ERR_BAD_RESPONSE') {
+    return getErrorString(error.response);
   } else {
-    return 'Internal server error';
+    return 'An unspecified error occurred.';
   }
 };

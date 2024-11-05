@@ -2,7 +2,6 @@ import ResponsiveButton from '@/components/responsive-button';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/components/ui/use-toast';
 import { translateAxiosError } from '@/lib/requests';
 import { accountCategories, type Account } from '@/types/account';
 import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
@@ -14,6 +13,7 @@ import { AuthContext } from '@/components/auth-provider';
 import { Label } from '@/components/ui/label';
 import CategoryInput from '@/components/category-input';
 import { getIsParentCategory, getParentCategory } from '@/lib/category';
+import { toast } from 'sonner';
 
 interface AccountsConfigurationCardProps {
   account: Account;
@@ -38,7 +38,6 @@ const AccountsConfigurationCard = (
   const { request } = React.useContext<any>(AuthContext);
 
   const queryClient = useQueryClient();
-  const { toast } = useToast();
 
   const doUpdateAccount = useMutation({
     mutationFn: async () => {
@@ -69,11 +68,7 @@ const AccountsConfigurationCard = (
       setValueDirty(false);
     },
     onError: (error: AxiosError) => {
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: translateAxiosError(error),
-      });
+      toast.error(translateAxiosError(error));
     },
   });
 
@@ -91,8 +86,8 @@ const AccountsConfigurationCard = (
         <CategoryInput
           initialValue={
             props.account.subtype && props.account.subtype.length > 0
-              ? props.account.subtype ?? ''
-              : props.account.type ?? ''
+              ? (props.account.subtype ?? '')
+              : (props.account.type ?? '')
           }
           onSelectChange={function (type: string): void {
             setAccountTypeValue(getParentCategory(type, accountCategories));

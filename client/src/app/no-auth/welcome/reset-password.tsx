@@ -10,7 +10,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/components/ui/use-toast';
 import { translateAxiosError } from '@/lib/requests';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
@@ -18,6 +17,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { LoginCardState } from './welcome';
+import { toast } from 'sonner';
 
 interface ResetPasswordProps {
   setLoginCardState: (loginCardState: LoginCardState) => void;
@@ -26,7 +26,6 @@ interface ResetPasswordProps {
 
 const ResetPassword = (props: ResetPasswordProps): JSX.Element => {
   const [loading, setLoading] = React.useState<boolean>(false);
-  const { toast } = useToast();
 
   const formSchema = z
     .object({
@@ -74,18 +73,10 @@ const ResetPassword = (props: ResetPasswordProps): JSX.Element => {
     })
       .then(() => {
         props.setLoginCardState(LoginCardState.Login);
-        toast({
-          variant: 'default',
-          title: 'Success!',
-          description: 'Password successfully updated. Please log in.',
-        });
+        toast.success('Password successfully updated. Please log in.');
       })
       .catch((error: AxiosError) => {
-        toast({
-          variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
-          description: translateAxiosError(error),
-        });
+        toast.error(translateAxiosError(error));
       })
       .finally(() => {
         setLoading(false);

@@ -4,12 +4,12 @@ import ResponsiveButton from '@/components/responsive-button';
 import { AxiosError, AxiosResponse } from 'axios';
 import { translateAxiosError } from '@/lib/requests';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useToast } from '@/components/ui/use-toast';
 import { defaultGuid } from '@/types/user';
 import AddBudget from './add-budget';
 import AddButtonPopover from '@/components/add-button-popover';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
+import { toast } from 'sonner';
 
 interface BudgetsToolbarProps {
   budgets: Budget[];
@@ -20,7 +20,6 @@ interface BudgetsToolbarProps {
 
 const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
   const queryClient = useQueryClient();
-  const { toast } = useToast();
   const doCopyBudget = useMutation({
     mutationFn: async (newBudgets: Budget[]) =>
       await request({
@@ -32,11 +31,7 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
       await queryClient.invalidateQueries({ queryKey: ['budgets', props.date] });
     },
     onError: (error: AxiosError) => {
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: translateAxiosError(error),
-      });
+      toast.error(translateAxiosError(error));
     },
   });
 
@@ -61,19 +56,11 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
           });
           doCopyBudget.mutate(res.data as Budget[]);
         } else {
-          toast({
-            variant: 'destructive',
-            title: 'Error',
-            description: 'Last month has no budget!',
-          });
+          toast.error('Last month has no budget!');
         }
       })
       .catch(() => {
-        toast({
-          variant: 'destructive',
-          title: 'Error',
-          description: "There was an error copying last month's budget.",
-        });
+        toast.error("There was an error copying last month's budget.");
       });
   };
 

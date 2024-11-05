@@ -48,7 +48,7 @@ public class SimpleFinHandler
         // return the access URL for getting bank data.
 
         byte[] data = Convert.FromBase64String(setupToken);
-        string decodedString = System.Text.Encoding.UTF8.GetString(data);
+        string decodedString = Encoding.UTF8.GetString(data);
 
         var request = new HttpRequestMessage(
             HttpMethod.Post,
@@ -59,7 +59,7 @@ public class SimpleFinHandler
         return response;
     }
 
-    public void SyncAccounts(ApplicationUser user, List<Models.SimpleFinDetails.Account> accountsData)
+    public async Task SyncAccountsAsync(ApplicationUser user, List<Models.SimpleFinDetails.Account> accountsData)
     {
         foreach (var accountData in accountsData)
         {
@@ -83,12 +83,12 @@ public class SimpleFinHandler
                     UserID = user.Id
                 };
 
-                AccountHandler.AddAccount(user, _userDataContext, newAccount);
+                await AccountHandler.AddAccountAsync(user, _userDataContext, newAccount);
             }
         }
     }
 
-    public void SyncTransactions(ApplicationUser user, List<Models.SimpleFinDetails.Account> accounts)
+    public async Task SyncTransactionsAsync(ApplicationUser user, List<Models.SimpleFinDetails.Account> accounts)
     {
         var userTransactions = TransactionHandler.GetTransactions(user);
         foreach (var account in accounts)
@@ -100,7 +100,8 @@ public class SimpleFinHandler
                 {
                     if (userTransactions.Any(t => t.SyncID == transaction.Id))
                     {
-                        Console.WriteLine("Transaction already exists!");
+                        // Transaction already exists.
+                        continue;
                     }
                     else
                     {
@@ -115,7 +116,7 @@ public class SimpleFinHandler
                             AccountID = userAccount.ID,
                         };
 
-                        TransactionHandler.AddTransaction(user, _userDataContext, newTransaction);
+                        await TransactionHandler.AddTransactionAsync(user, _userDataContext, newTransaction);
                     }
                 }
             }
