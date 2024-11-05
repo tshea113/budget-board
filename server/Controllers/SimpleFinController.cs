@@ -74,15 +74,25 @@ public class SimpleFinController : Controller
             var user = GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
             if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-            var response = await _simpleFinHandler.GetAccessToken(newToken);
-            if (response.IsSuccessStatusCode)
+            try
             {
-                user.AccessToken = await response.Content.ReadAsStringAsync();
-                await _userDataContext.SaveChangesAsync();
-                return Ok();
+                var response = await _simpleFinHandler.GetAccessToken(newToken);
+                if (response.IsSuccessStatusCode)
+                {
+                    user.AccessToken = await response.Content.ReadAsStringAsync();
+                    await _userDataContext.SaveChangesAsync();
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest("There was an error validating the setup token.");
+                }
             }
-
-            return BadRequest("There was an error validating the setup token.");
+            catch (FormatException fe)
+            {
+                _logger.LogError(fe.Message);
+                return BadRequest("Not a valid SimpleFin Token.");
+            }
         }
         catch (Exception ex)
         {

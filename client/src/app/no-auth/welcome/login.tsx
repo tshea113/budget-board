@@ -70,7 +70,17 @@ const Login = (props: LoginProps): JSX.Element => {
         localStorage.setItem('refresh-token', res.data.refreshToken);
       })
       .catch((error: AxiosError) => {
-        toast.error(translateAxiosError(error));
+        // These error response values are specific to ASP.NET Identity,
+        // so will do the error translation here.
+        if ((error.response?.data as any)?.detail === 'NotAllowed') {
+          toast.error(
+            'Please check your email for a validation email before logging in.'
+          );
+        } else if ((error.response?.data as any)?.detail === 'Failed') {
+          toast.error('Login failed, check your credentials and try again.');
+        } else {
+          toast.error(translateAxiosError(error));
+        }
       })
       .finally(() => {
         setLoading(false);

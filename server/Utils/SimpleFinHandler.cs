@@ -48,7 +48,7 @@ public class SimpleFinHandler
         // return the access URL for getting bank data.
 
         byte[] data = Convert.FromBase64String(setupToken);
-        string decodedString = System.Text.Encoding.UTF8.GetString(data);
+        string decodedString = Encoding.UTF8.GetString(data);
 
         var request = new HttpRequestMessage(
             HttpMethod.Post,
