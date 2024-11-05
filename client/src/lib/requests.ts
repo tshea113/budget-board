@@ -13,6 +13,8 @@ export const translateAxiosError = (error: AxiosError): string => {
     return getErrorString(error.response);
   } else if (error.code === 'ERR_NETWORK') {
     return getErrorString(error.response);
+  } else if (error.code === 'ERR_BAD_RESPONSE') {
+    return getErrorString(error.response);
   } else {
     return 'An unspecified error occurred.';
   }
