@@ -12,43 +12,52 @@ namespace BudgetBoard.Controllers;
 [ApiController]
 public class AccountController : ControllerBase
 {
+    private readonly ILogger<AccountController> _logger;
+
     private readonly UserDataContext _userDataContext;
     private UserManager<ApplicationUser> _userManager;
 
-    public AccountController(UserDataContext context, UserManager<ApplicationUser> userManager)
+    public AccountController(UserDataContext context, UserManager<ApplicationUser> userManager, ILogger<AccountController> logger)
     {
         _userDataContext = context;
         _userManager = userManager;
+        _logger = logger;
     }
 
     [HttpGet]
     [Authorize]
     public async Task<IActionResult> Get()
     {
-        var user = await GetCurrentUser(_userManager.GetUserId(User) ?? string.Empty);
-
-        if (user == null)
+        try
         {
-            return NotFound();
-        }
+            var user = await GetCurrentUser(_userManager.GetUserId(User) ?? string.Empty);
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-        return Ok(user.Accounts.Select(a => new AccountResponse(a)));
+            return Ok(user.Accounts.Select(a => new AccountResponse(a)));
+        }
+        catch (Exception ex)
+        {
+            return BuildErrorResponse(ex.Message);
+        }
     }
 
     [HttpGet("{guid}")]
     [Authorize]
     public async Task<IActionResult> Get(Guid guid)
     {
-        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-        if (user == null)
+        try
         {
-            return NotFound();
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
+
+            var account = user.Accounts.First(a => a.ID == guid);
+
+            return Ok(new AccountResponse(account));
         }
-
-        var account = user.Accounts.First(a => a.ID == guid);
-
-        return Ok(new AccountResponse(account));
+        catch (Exception ex)
+        {
+            return BuildErrorResponse(ex.Message);
+        }
     }
 
     [HttpPost]
@@ -58,11 +67,7 @@ public class AccountController : ControllerBase
         try
         {
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
 
             user.Accounts.Add(account);
             _userDataContext.SaveChanges();
@@ -71,7 +76,7 @@ public class AccountController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return BuildErrorResponse(ex.Message);
         }
     }
 
@@ -82,15 +87,10 @@ public class AccountController : ControllerBase
         try
         {
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
 
             var account = user.Accounts.Single(a => a.ID == guid);
-
-            if (account == null) return NotFound();
+            if (account == null) return Unauthorized("You are not authorized to access this content.");
 
             account.Deleted = DateTime.Now.ToUniversalTime();
 
@@ -108,7 +108,7 @@ public class AccountController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return BuildErrorResponse(ex.Message);
         }
     }
 
@@ -120,15 +120,10 @@ public class AccountController : ControllerBase
         try
         {
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
 
             var account = user.Accounts.Single(a => a.ID == guid);
-
-            if (account == null) return NotFound();
+            if (account == null) return Unauthorized("You are not authorized to access this content.");
 
             account.Deleted = null;
 
@@ -138,7 +133,7 @@ public class AccountController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return BuildErrorResponse(ex.Message);
         }
     }
 
@@ -149,17 +144,10 @@ public class AccountController : ControllerBase
         try
         {
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
 
             Account? account = user.Accounts.Single(a => a.ID == newAccount.ID);
-            if (account == null)
-            {
-                return NotFound();
-            }
+            if (account == null) return Unauthorized("You are not authorized to access this content.");
 
             account.Name = newAccount.Name;
             account.Institution = newAccount.Institution;
@@ -174,7 +162,7 @@ public class AccountController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return BuildErrorResponse(ex.Message);
         }
     }
 
@@ -195,5 +183,15 @@ public class AccountController : ControllerBase
         {
             return null;
         }
+    }
+
+    private IActionResult BuildErrorResponse(string message)
+    {
+        _logger.LogError(message);
+
+        var errorObjectResult = new ObjectResult("There was an internal server error.");
+        errorObjectResult.StatusCode = StatusCodes.Status500InternalServerError;
+
+        return errorObjectResult;
     }
 }
