@@ -35,6 +35,11 @@ public class SimpleFinController : Controller
             var user = GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
             if (user == null) return Unauthorized("You are not authorized to access this content.");
 
+            if (user.AccessToken == string.Empty)
+            {
+                return BadRequest("Access token has not been configured.");
+            }
+
             long startDate;
             if (user.LastSync == DateTime.MinValue)
             {
