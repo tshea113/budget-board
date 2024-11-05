@@ -101,7 +101,7 @@ const Login = (props: LoginProps): JSX.Element => {
         toast.success('An email has been set with a reset code.');
       });
     } else {
-      toast.success('Please enter your email to reset your password.');
+      toast.error('Please enter your email to reset your password.');
     }
   };
 
