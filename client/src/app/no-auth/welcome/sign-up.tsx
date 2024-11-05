@@ -9,7 +9,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { translateAxiosError } from '@/lib/requests';
+import { translateAxiosError, ValidationError } from '@/lib/requests';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
 import React from 'react';
@@ -50,13 +50,6 @@ const Signup = (): JSX.Element => {
   });
 
   const { request } = React.useContext<any>(AuthContext);
-
-  interface ValidationError {
-    title: string;
-    type: string;
-    status: number;
-    errors: object;
-  }
 
   const submitUserSignup = async (
     values: z.infer<typeof formSchema>,

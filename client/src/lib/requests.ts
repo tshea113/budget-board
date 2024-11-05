@@ -1,5 +1,12 @@
 import { type AxiosError, type AxiosResponse } from 'axios';
 
+export interface ValidationError {
+  title: string;
+  type: string;
+  status: number;
+  errors: object;
+}
+
 const getErrorString = (error: AxiosResponse | undefined): string => {
   if (typeof error?.data === 'string') {
     return error.data;

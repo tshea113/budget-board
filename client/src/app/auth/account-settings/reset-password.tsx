@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { translateAxiosError } from '@/lib/requests';
+import { translateAxiosError, ValidationError } from '@/lib/requests';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
 import React from 'react';
@@ -71,7 +71,17 @@ const ResetPassword = (): JSX.Element => {
         toast.success('Password successfully updated.');
       })
       .catch((error: AxiosError) => {
-        toast.error(translateAxiosError(error));
+        if (error?.response?.data) {
+          const errorData = error.response.data as ValidationError;
+          if (
+            error.status === 400 &&
+            errorData.title === 'One or more validation errors occurred.'
+          ) {
+            toast.error(Object.values(errorData.errors).join('\n'));
+          }
+        } else {
+          toast.error(translateAxiosError(error));
+        }
       })
       .finally(() => {
         setLoading(false);
