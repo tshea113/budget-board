@@ -1,6 +1,7 @@
 ﻿using BudgetBoard.Database.Data;
 using BudgetBoard.Database.Models;
 using BudgetBoard.Models;
+using BudgetBoard.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,30 +10,36 @@ namespace BudgetBoard.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BudgetController : Controller
+    public class BudgetController : ControllerBase
     {
+        private readonly ILogger<BudgetController> _logger;
+
         private readonly UserDataContext _userDataContext;
 
-        public BudgetController(UserDataContext context)
+        public BudgetController(UserDataContext context, ILogger<BudgetController> logger)
         {
             _userDataContext = context;
+            _logger = logger;
         }
 
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> Get(DateTime date)
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-            if (user == null)
+            try
             {
-                return NotFound();
+                var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
+                if (user == null) return Unauthorized("You are not authorized to access this content.");
+
+                var budgets = user.Budgets
+                    .Where(b => b.Date.Month == date.Month && b.Date.Year == date.Year);
+
+                return Ok(budgets.Select(b => new BudgetResponse(b)));
             }
-
-            var budgets = user.Budgets
-                .Where(b => b.Date.Month == date.Month && b.Date.Year == date.Year);
-
-            return Ok(budgets.Select(b => new BudgetResponse(b)));
+            catch (Exception ex)
+            {
+                return Helpers.BuildErrorResponse(_logger, ex.Message);
+            }
         }
 
         [HttpPost]
@@ -42,11 +49,7 @@ namespace BudgetBoard.Controllers
             try
             {
                 var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-                if (user == null)
-                {
-                    return NotFound();
-                }
+                if (user == null) return Unauthorized("You are not authorized to access this content.");
 
                 // Do not allow duplicate categories in a given month
                 if (user.Budgets.Any((b) =>
@@ -60,13 +63,13 @@ namespace BudgetBoard.Controllers
                 budget.UserID = user.Id;
 
                 user.Budgets.Add(budget);
-                _userDataContext.SaveChanges();
+                await _userDataContext.SaveChangesAsync();
 
                 return Ok();
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return Helpers.BuildErrorResponse(_logger, ex.Message);
             }
         }
 
@@ -79,11 +82,7 @@ namespace BudgetBoard.Controllers
             try
             {
                 var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-                if (user == null)
-                {
-                    return NotFound();
-                }
+                if (user == null) return Unauthorized("You are not authorized to access this content.");
 
                 foreach (Budget budget in budgets)
                 {
@@ -93,13 +92,13 @@ namespace BudgetBoard.Controllers
                     user.Budgets.Add(budget);
                 }
 
-                _userDataContext.SaveChanges();
+                await _userDataContext.SaveChangesAsync();
 
                 return Ok();
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return Helpers.BuildErrorResponse(_logger, ex.Message);
             }
         }
 
@@ -107,47 +106,47 @@ namespace BudgetBoard.Controllers
         [Authorize]
         public async Task<IActionResult> Edit([FromBody] Budget editBudget)
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-            if (user == null)
+            try
             {
-                return NotFound();
-            }
+                var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
+                if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-            Budget? budget = await _userDataContext.Budgets.FindAsync(editBudget.ID);
-            if (budget == null)
+                Budget? budget = await _userDataContext.Budgets.FindAsync(editBudget.ID);
+                if (budget == null) return NotFound();
+
+                budget.Limit = editBudget.Limit;
+
+                await _userDataContext.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return Helpers.BuildErrorResponse(_logger, ex.Message);
             }
-
-            budget.Limit = editBudget.Limit;
-
-            await _userDataContext.SaveChangesAsync();
-
-            return Ok();
         }
 
         [HttpDelete]
         [Authorize]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-            if (user == null)
+            try
             {
-                return NotFound();
-            }
+                var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
+                if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-            Budget? budget = await _userDataContext.Budgets.FindAsync(id);
-            if (budget == null)
+                Budget? budget = await _userDataContext.Budgets.FindAsync(id);
+                if (budget == null) return NotFound();
+
+                _userDataContext.Entry(budget).State = EntityState.Deleted;
+                await _userDataContext.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return Helpers.BuildErrorResponse(_logger, ex.Message);
             }
-
-            _userDataContext.Entry(budget).State = EntityState.Deleted;
-            await _userDataContext.SaveChangesAsync();
-
-            return Ok();
         }
 
         private async Task<ApplicationUser?> GetCurrentUser(string id)
@@ -161,8 +160,9 @@ namespace BudgetBoard.Controllers
 
                 return user;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return null;
             }
         }

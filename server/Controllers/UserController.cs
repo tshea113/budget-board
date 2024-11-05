@@ -16,71 +16,68 @@ public class UserConstants
 [ApiController]
 public class UserController : ControllerBase
 {
+    private readonly ILogger<UserController> _logger;
+
     private readonly UserDataContext _userDataContext;
     private SimpleFinHandler _simpleFinHandler;
 
-    public UserController(UserDataContext context, IHttpClientFactory clientFactory)
+    public UserController(UserDataContext context, IHttpClientFactory clientFactory, ILogger<UserController> logger)
     {
         _userDataContext = context;
         _simpleFinHandler = new SimpleFinHandler(_userDataContext, clientFactory);
+        _logger = logger;
     }
 
     [HttpGet]
     [Authorize]
     public IActionResult GetUser()
     {
-        var user = GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
+        try
+        {
+            var user = GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-        if (user == null) return Unauthorized("You are not authorized to access this content.");
-
-        return Ok(new UserResponse(user));
+            return Ok(new UserResponse(user));
+        }
+        catch (Exception ex)
+        {
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
+        }
     }
 
     [HttpPut]
     [Authorize]
     public async Task<IActionResult> EditUser([FromBody] ApplicationUser newUser)
     {
-        var user = GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-        if (user == null) return Unauthorized("You are not authorized to access this content.");
-
-        var response = default(HttpResponseMessage);
         try
         {
-            response = await _simpleFinHandler.GetAccessToken(newUser.AccessToken);
+            var user = GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
+
+            var response = await _simpleFinHandler.GetAccessToken(newUser.AccessToken);
             if (response.IsSuccessStatusCode)
             {
                 user.AccessToken = await response.Content.ReadAsStringAsync();
+                await _userDataContext.SaveChangesAsync();
             }
             else
             {
                 return BadRequest("There was an error validating the setup token.");
             }
+
+            return Ok();
         }
-        catch
+        catch (Exception ex)
         {
-            return BadRequest("There was an error connecting to SimpleFin.");
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
         }
-
-        try
-        {
-            await _userDataContext.SaveChangesAsync();
-        }
-        catch
-        {
-            return BadRequest("There was an error connecting to the database.");
-        }
-
-
-        return Ok();
-
     }
 
     [HttpGet]
     [Route("[action]")]
     public IActionResult IsSignedIn()
     {
-        if (HttpContext.User.Identity?.IsAuthenticated ?? false)
+        if (HttpContext.User?.Identity?.IsAuthenticated ?? false)
         {
             return Ok(true);
         }
@@ -98,8 +95,9 @@ public class UserController : ControllerBase
 
             return user;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            _logger.LogError(ex.Message);
             return null;
         }
     }

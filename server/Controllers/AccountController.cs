@@ -1,6 +1,7 @@
 ﻿using BudgetBoard.Database.Data;
 using BudgetBoard.Database.Models;
 using BudgetBoard.Models;
+using BudgetBoard.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +38,7 @@ public class AccountController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BuildErrorResponse(ex.Message);
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
         }
     }
 
@@ -51,12 +52,13 @@ public class AccountController : ControllerBase
             if (user == null) return Unauthorized("You are not authorized to access this content.");
 
             var account = user.Accounts.First(a => a.ID == guid);
+            if (account == null) return NotFound();
 
             return Ok(new AccountResponse(account));
         }
         catch (Exception ex)
         {
-            return BuildErrorResponse(ex.Message);
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
         }
     }
 
@@ -70,13 +72,13 @@ public class AccountController : ControllerBase
             if (user == null) return Unauthorized("You are not authorized to access this content.");
 
             user.Accounts.Add(account);
-            _userDataContext.SaveChanges();
+            await _userDataContext.SaveChangesAsync();
 
             return Ok();
         }
         catch (Exception ex)
         {
-            return BuildErrorResponse(ex.Message);
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
         }
     }
 
@@ -108,7 +110,7 @@ public class AccountController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BuildErrorResponse(ex.Message);
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
         }
     }
 
@@ -133,7 +135,7 @@ public class AccountController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BuildErrorResponse(ex.Message);
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
         }
     }
 
@@ -162,7 +164,7 @@ public class AccountController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BuildErrorResponse(ex.Message);
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
         }
     }
 
@@ -179,19 +181,10 @@ public class AccountController : ControllerBase
 
             return user;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            _logger.LogError(ex.Message);
             return null;
         }
-    }
-
-    private IActionResult BuildErrorResponse(string message)
-    {
-        _logger.LogError(message);
-
-        var errorObjectResult = new ObjectResult("There was an internal server error.");
-        errorObjectResult.StatusCode = StatusCodes.Status500InternalServerError;
-
-        return errorObjectResult;
     }
 }

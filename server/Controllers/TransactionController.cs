@@ -1,6 +1,7 @@
 ﻿using BudgetBoard.Database.Data;
 using BudgetBoard.Database.Models;
 using BudgetBoard.Models;
+using BudgetBoard.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,11 +12,14 @@ namespace BudgetBoard.Controllers;
 [ApiController]
 public class TransactionController : ControllerBase
 {
+    private readonly ILogger<TransactionController> _logger;
+
     private readonly UserDataContext _userDataContext;
 
-    public TransactionController(UserDataContext context)
+    public TransactionController(UserDataContext context, ILogger<TransactionController> logger)
     {
         _userDataContext = context;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -23,24 +27,26 @@ public class TransactionController : ControllerBase
     public async Task<IActionResult> Get(bool getHidden = false, DateTime? date = null)
     {
 
-        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-        if (user == null)
+        try
         {
-            return NotFound();
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
+
+            var transactions = user.Accounts
+                .SelectMany(t => t.Transactions)
+                .Where(t => getHidden || !(t.Account?.HideTransactions ?? false));
+
+            if (date != null)
+            {
+                transactions = transactions.Where(t => t.Date.Month == date?.Month && t.Date.Year == date?.Year);
+            }
+
+            return Ok(transactions.Select(t => new TransactionResponse(t)));
         }
-
-        var transactions = user.Accounts
-            .SelectMany(t => t.Transactions)
-            .Where(t => getHidden || !(t.Account?.HideTransactions ?? false));
-
-        if (date != null)
+        catch (Exception ex)
         {
-            transactions = transactions.Where(t => t.Date.Month == date?.Month && t.Date.Year == date?.Year);
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
         }
-
-        return Ok(transactions.Select(t => new TransactionResponse(t)));
-
     }
 
     [HttpGet("{guid}")]
@@ -50,25 +56,18 @@ public class TransactionController : ControllerBase
         try
         {
             ApplicationUser? user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
 
             Transaction transaction = user.Accounts
                 .SelectMany(a => a.Transactions)
-                .Single(t => t.ID == guid);
+                .First(t => t.ID == guid);
+            if (transaction == null) return NotFound();
 
             return Ok(new TransactionResponse(transaction));
         }
-        catch (InvalidOperationException ex)
-        {
-            return NotFound(ex.Message);
-        }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
         }
     }
 
@@ -79,26 +78,19 @@ public class TransactionController : ControllerBase
         try
         {
             ApplicationUser? user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
 
             Account? account = await _userDataContext.Accounts.FindAsync(transaction.AccountID);
-            if (account == null)
-            {
-                return NotFound();
-            }
+            if (account == null) return NotFound();
 
             account.Transactions.Add(transaction);
-            _userDataContext.SaveChanges();
+            await _userDataContext.SaveChangesAsync();
 
             return Ok();
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
         }
     }
 
@@ -109,16 +101,11 @@ public class TransactionController : ControllerBase
         try
         {
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
 
             var transaction = user.Accounts
             .SelectMany(t => t.Transactions)
-            .Single(t => t.ID == guid);
-
+            .First(t => t.ID == guid);
             if (transaction == null) return NotFound();
 
             transaction.Deleted = DateTime.Now.ToUniversalTime();
@@ -129,7 +116,7 @@ public class TransactionController : ControllerBase
 
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
         }
     }
 
@@ -141,16 +128,11 @@ public class TransactionController : ControllerBase
         try
         {
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
 
             var transaction = user.Accounts
             .SelectMany(t => t.Transactions)
-            .Single(t => t.ID == guid);
-
+            .First(t => t.ID == guid);
             if (transaction == null) return NotFound();
 
             transaction.Deleted = null;
@@ -161,7 +143,7 @@ public class TransactionController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
         }
     }
 
@@ -169,35 +151,32 @@ public class TransactionController : ControllerBase
     [Authorize]
     public async Task<IActionResult> Edit([FromBody] Transaction newTransaction)
     {
-        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-        if (user == null)
+        try
         {
-            return NotFound();
-        }
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-        Transaction? transaction = await _userDataContext.Transactions.FindAsync(newTransaction.ID);
-        if (transaction == null)
+            Transaction? transaction = await _userDataContext.Transactions.FindAsync(newTransaction.ID);
+            if (transaction == null) return NotFound();
+
+            if (user.Accounts.Single(a => a.ID == transaction.AccountID) == null) return BadRequest();
+
+            transaction.Amount = newTransaction.Amount;
+            transaction.Date = newTransaction.Date;
+            transaction.Category = newTransaction.Category;
+            transaction.Subcategory = newTransaction.Subcategory;
+            transaction.MerchantName = newTransaction.MerchantName;
+            transaction.Pending = newTransaction.Pending;
+            transaction.Source = newTransaction.Source;
+
+            await _userDataContext.SaveChangesAsync();
+
+            return Ok();
+        }
+        catch (Exception ex)
         {
-            return NotFound();
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
         }
-
-        if (user.Accounts.Single(a => a.ID == transaction.AccountID) == null)
-        {
-            return BadRequest();
-        }
-
-        transaction.Amount = newTransaction.Amount;
-        transaction.Date = newTransaction.Date;
-        transaction.Category = newTransaction.Category;
-        transaction.Subcategory = newTransaction.Subcategory;
-        transaction.MerchantName = newTransaction.MerchantName;
-        transaction.Pending = newTransaction.Pending;
-        transaction.Source = newTransaction.Source;
-
-        await _userDataContext.SaveChangesAsync();
-
-        return Ok();
     }
 
     private async Task<ApplicationUser?> GetCurrentUser(string id)
@@ -213,8 +192,9 @@ public class TransactionController : ControllerBase
 
             return user;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            _logger.LogError(ex.Message);
             return null;
         }
     }

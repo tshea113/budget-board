@@ -3,30 +3,21 @@ using BudgetBoard.Database.Models;
 
 namespace BudgetBoard.Utils;
 
-public class AccountHandler
+public static class AccountHandler
 {
-    public AccountHandler() { }
+    public static Account? GetAccount(ApplicationUser userData, string simpleFinId) =>
+        userData.Accounts.FirstOrDefault(a => a.SyncID == simpleFinId);
 
-    public static Account? GetAccount(ApplicationUser userData, string simpleFinId)
-    {
-        Account? account = userData.Accounts.FirstOrDefault(a => a.SyncID == simpleFinId);
-
-        return account;
-    }
-
-    public static void AddAccount(ApplicationUser userData, UserDataContext userDataContext, Account account)
+    public static async Task AddAccountAsync(ApplicationUser userData, UserDataContext userDataContext, Account account)
     {
         userData.Accounts.Add(account);
-        userDataContext.SaveChanges();
+        await userDataContext.SaveChangesAsync();
     }
 
-    public static bool UpdateAccount(ApplicationUser userData, UserDataContext userDataContext, Account newAccount)
+    public static async Task<bool> UpdateAccountAsync(ApplicationUser userData, UserDataContext userDataContext, Account newAccount)
     {
         Account? account = userData.Accounts.Single(a => a.ID == newAccount.ID);
-        if (account == null)
-        {
-            return false;
-        }
+        if (account == null) return false;
 
         account.Name = newAccount.Name;
         account.Institution = newAccount.Institution;
@@ -35,7 +26,7 @@ public class AccountHandler
         account.CurrentBalance = newAccount.CurrentBalance;
         account.BalanceDate = newAccount.BalanceDate;
 
-        userDataContext.SaveChanges();
+        await userDataContext.SaveChangesAsync();
         return true;
     }
 }
