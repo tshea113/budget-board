@@ -1,6 +1,7 @@
 ﻿using BudgetBoard.Database.Data;
 using BudgetBoard.Database.Models;
 using BudgetBoard.Models;
+using BudgetBoard.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,25 +12,31 @@ namespace BudgetBoard.Controllers;
 [ApiController]
 public class GoalController : ControllerBase
 {
+    private readonly ILogger<CategoryController> _logger;
+
     private readonly UserDataContext _userDataContext;
 
-    public GoalController(UserDataContext context)
+    public GoalController(UserDataContext context, ILogger<CategoryController> logger)
     {
         _userDataContext = context;
+        _logger = logger;
     }
 
     [HttpGet]
     [Authorize]
     public async Task<IActionResult> Get()
     {
-        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-        if (user == null)
+        try
         {
-            return NotFound();
-        }
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-        return Ok(user.Goals.Select(g => new GoalResponse(g)));
+            return Ok(user.Goals.Select(g => new GoalResponse(g)));
+        }
+        catch (Exception ex)
+        {
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
+        }
     }
 
     [HttpPost]
@@ -39,11 +46,7 @@ public class GoalController : ControllerBase
         try
         {
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
 
             float runningBalance = 0.0f;
             var accounts = new List<Account>();
@@ -80,13 +83,13 @@ public class GoalController : ControllerBase
             }
 
             user.Goals.Add(goal);
-            _userDataContext.SaveChanges();
+            await _userDataContext.SaveChangesAsync();
 
             return Ok();
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
         }
     }
 
@@ -94,27 +97,27 @@ public class GoalController : ControllerBase
     [Authorize]
     public async Task<IActionResult> Edit([FromBody] Goal newGoal)
     {
-        var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-        if (user == null)
+        try
         {
-            return NotFound();
-        }
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-        Goal? goal = await _userDataContext.Goals.FindAsync(newGoal.ID);
-        if (goal == null)
+            Goal? goal = await _userDataContext.Goals.FindAsync(newGoal.ID);
+            if (goal == null) return NotFound();
+
+            goal.Name = newGoal.Name;
+            goal.Amount = newGoal.Amount;
+            goal.CompleteDate = newGoal.CompleteDate;
+            goal.MonthlyContribution = newGoal.MonthlyContribution;
+
+            await _userDataContext.SaveChangesAsync();
+
+            return Ok();
+        }
+        catch (Exception ex)
         {
-            return NotFound();
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
         }
-
-        goal.Name = newGoal.Name;
-        goal.Amount = newGoal.Amount;
-        goal.CompleteDate = newGoal.CompleteDate;
-        goal.MonthlyContribution = newGoal.MonthlyContribution;
-
-        await _userDataContext.SaveChangesAsync();
-
-        return Ok();
     }
 
     [HttpDelete]
@@ -124,14 +127,9 @@ public class GoalController : ControllerBase
         try
         {
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
 
             var goal = user.Goals.Single(g => g.ID == guid);
-
             if (goal == null) return NotFound();
 
             _userDataContext.Entry(goal).State = EntityState.Deleted;
@@ -141,7 +139,7 @@ public class GoalController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
         }
     }
 
@@ -160,8 +158,9 @@ public class GoalController : ControllerBase
 
             return user;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            _logger.LogError(ex.Message);
             return null;
         }
     }

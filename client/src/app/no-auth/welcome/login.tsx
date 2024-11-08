@@ -14,12 +14,12 @@ import * as z from 'zod';
 import { useState } from 'react';
 import ResponsiveButton from '@/components/responsive-button';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/components/ui/use-toast';
 import { AxiosError, AxiosResponse } from 'axios';
 import { translateAxiosError } from '@/lib/requests';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import { LoginCardState } from './welcome';
+import { toast } from 'sonner';
 
 interface LoginProps {
   setLoginCardState: (loginCardState: LoginCardState) => void;
@@ -28,7 +28,6 @@ interface LoginProps {
 
 const Login = (props: LoginProps): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { toast } = useToast();
 
   const { request, setAccessToken } = React.useContext<any>(AuthContext);
 
@@ -71,11 +70,17 @@ const Login = (props: LoginProps): JSX.Element => {
         localStorage.setItem('refresh-token', res.data.refreshToken);
       })
       .catch((error: AxiosError) => {
-        toast({
-          variant: 'destructive',
-          title: 'Error',
-          description: translateAxiosError(error),
-        });
+        // These error response values are specific to ASP.NET Identity,
+        // so will do the error translation here.
+        if ((error.response?.data as any)?.detail === 'NotAllowed') {
+          toast.error(
+            'Please check your email for a validation email before logging in.'
+          );
+        } else if ((error.response?.data as any)?.detail === 'Failed') {
+          toast.error('Login failed, check your credentials and try again.');
+        } else {
+          toast.error(translateAxiosError(error));
+        }
       })
       .finally(() => {
         setLoading(false);
@@ -93,18 +98,10 @@ const Login = (props: LoginProps): JSX.Element => {
       }).then(() => {
         props.setLoginCardState(LoginCardState.ResetPassword);
         props.setEmail(email);
-        toast({
-          variant: 'default',
-          title: 'Success!',
-          description: 'An email has been set with a reset code.',
-        });
+        toast.success('An email has been set with a reset code.');
       });
     } else {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Please enter your email to reset your password.',
-      });
+      toast.error('Please enter your email to reset your password.');
     }
   };
 

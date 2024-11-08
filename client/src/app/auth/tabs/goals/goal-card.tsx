@@ -16,13 +16,13 @@ import GoalDetails from './goal-details';
 import { AuthContext } from '@/components/auth-provider';
 import { Transaction } from '@/types/transaction';
 import { AxiosError, AxiosResponse } from 'axios';
-import { toast } from '@/components/ui/use-toast';
 import { translateAxiosError } from '@/lib/requests';
 import EditableGoalNameCell from './cells/editable-goal-name-cell';
 import EditableGoalTargetAmountCell from './cells/editable-goal-target-amount-cell';
 import EditableGoalTargetDateCell from './cells/editable-goal-target-date-cell';
 import EditableGoalMonthlyAmountCell from './cells/editable-goal-monthly-amount-cell';
 import LoadingIcon from '@/components/loading-icon';
+import { toast } from 'sonner';
 
 interface GoalCardProps {
   goal: Goal;
@@ -96,11 +96,7 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
     },
     onError: (error: AxiosError, _variables: Goal, context) => {
       queryClient.setQueryData(['goals'], context?.previousGoals ?? []);
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: translateAxiosError(error),
-      });
+      toast.error(translateAxiosError(error));
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['goals'] });
