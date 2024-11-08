@@ -5,15 +5,16 @@ import BudgetTotalCard from './budget-total-card';
 import { initCurrentMonth } from '@/lib/utils';
 import { type Transaction } from '@/types/transaction';
 import Unbudgets from './unbudgets';
-import BudgetsToolbar from './budgets-toolbar';
 import { AuthContext } from '@/components/auth-provider';
 import { useQuery } from '@tanstack/react-query';
 import BudgetCardsGroup from './budget-cards-group/budget-cards-group';
 import { AxiosResponse } from 'axios';
 import { filterHiddenTransactions } from '@/lib/transactions';
+import BudgetsToolbar from './budgets-toolbar/budgets-toolbar';
 
 const Budgets = (): JSX.Element => {
-  const [date, setDate] = React.useState<Date>(initCurrentMonth());
+  const [date, setDate] = React.useState<Date[]>(initCurrentMonth());
+  const [dates, setDates] = React.useState<Date[]>([initCurrentMonth()]);
 
   const { request } = React.useContext<any>(AuthContext);
 
@@ -55,8 +56,7 @@ const Budgets = (): JSX.Element => {
     <div className="flex w-full flex-col justify-center gap-2 lg:flex-row">
       <div className="flex w-full flex-col gap-2">
         <BudgetsToolbar
-          budgets={budgetsQuery.data ?? []}
-          date={date}
+          dates={dates}
           isPending={budgetsQuery.isPending}
           setDate={setDate}
         />

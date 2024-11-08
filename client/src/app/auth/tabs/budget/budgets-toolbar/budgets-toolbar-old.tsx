@@ -1,11 +1,11 @@
 import { Budget } from '@/types/budget';
-import MonthIterator from './month-iterator';
+import MonthIterator from '../month-iterator';
 import ResponsiveButton from '@/components/responsive-button';
 import { AxiosError, AxiosResponse } from 'axios';
 import { translateAxiosError } from '@/lib/requests';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { defaultGuid } from '@/types/user';
-import AddBudget from './add-budget';
+import AddBudget from '../add-budget';
 import AddButtonPopover from '@/components/add-button-popover';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
@@ -18,7 +18,7 @@ interface BudgetsToolbarProps {
   setDate: (date: Date) => void;
 }
 
-const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
+const BudgetsToolbarOld = (props: BudgetsToolbarProps): JSX.Element => {
   const queryClient = useQueryClient();
   const doCopyBudget = useMutation({
     mutationFn: async (newBudgets: Budget[]) =>
@@ -91,4 +91,4 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
   );
 };
 
-export default BudgetsToolbar;
+export default BudgetsToolbarOld;

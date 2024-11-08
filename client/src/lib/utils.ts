@@ -88,10 +88,11 @@ export const areStringsEqual = (string1: string, string2: string): boolean =>
 /**
  * Returns a Date object from a specified number of months ago.
  * @param numberOfMonthsAgo The number of months ago.
+ * @param date The starting date (optional)
  * @returns A Date object containing the calculated month and year.
  */
-export const getDateFromMonthsAgo = (numberOfMonthsAgo: number): Date => {
-  const lastMonth = initCurrentMonth();
+export const getDateFromMonthsAgo = (numberOfMonthsAgo: number, date?: Date): Date => {
+  const lastMonth = date ? new Date(date) : initCurrentMonth();
 
   lastMonth.setMonth(lastMonth.getMonth() - numberOfMonthsAgo);
 
