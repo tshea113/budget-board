@@ -1,17 +1,27 @@
 import { Button } from '@/components/ui/button';
 import BudgetsToolcard from './budgets-toolcard';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
-import { getDateFromMonthsAgo } from '@/lib/utils';
+import { getDateFromMonthsAgo, isInArray } from '@/lib/utils';
 import React from 'react';
 
 interface BudgetsToolbarProps {
   selectedDates: Date[];
+  addSelectedDate: (date: Date) => void;
+  removeSelectedDate: (date: Date) => void;
 }
 
-const BudgetsToolbar = (_: BudgetsToolbarProps): JSX.Element => {
+const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
   const [index, setIndex] = React.useState(0);
 
   const dates = Array.from({ length: 11 }, (_, i) => getDateFromMonthsAgo(i + index));
+
+  const handleClick = (date: Date) => {
+    if (isInArray(date, props.selectedDates)) {
+      props.removeSelectedDate(date);
+    } else {
+      props.addSelectedDate(date);
+    }
+  };
 
   return (
     <div>
@@ -26,7 +36,13 @@ const BudgetsToolbar = (_: BudgetsToolbarProps): JSX.Element => {
           <ChevronRightIcon />
         </Button>
         {dates.map((date: Date, i: number) => (
-          <BudgetsToolcard key={i} date={date} underBudget={date.getMonth() % 2 === 0} />
+          <BudgetsToolcard
+            key={i}
+            date={date}
+            isSelected={isInArray(date, props.selectedDates)}
+            underBudget={date.getMonth() % 2 === 0}
+            handleClick={handleClick}
+          />
         ))}
         <Button
           className="m-1 h-8 w-6 p-1"
