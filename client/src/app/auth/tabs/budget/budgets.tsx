@@ -86,6 +86,7 @@ const Budgets = (): JSX.Element => {
           selectedDates={selectedDates}
           addSelectedDate={addSelectedDate}
           removeSelectedDate={removeSelectedDate}
+          showCopy={budgetsQuery.data.length === 0}
         />
         <div className="space-y-10">
           <BudgetCardsGroup

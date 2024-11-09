@@ -6,9 +6,10 @@ import React from 'react';
 interface BudgetsToolCardProps {
   date: Date;
   isSelected: boolean;
-  underBudget: boolean;
+  isNetCashflowPositive: boolean;
   handleClick: (date: Date) => void;
 }
+
 const BudgetsToolCard = (props: BudgetsToolCardProps): JSX.Element => {
   const [selectEffect, setSelectEffect] = React.useState(false);
 
@@ -20,7 +21,7 @@ const BudgetsToolCard = (props: BudgetsToolCardProps): JSX.Element => {
   return (
     <Card
       className={cn(
-        'flex w-[60px] flex-col p-0.5 hover:border-primary hover:bg-muted',
+        'flex w-[60px] flex-col p-0.5 hover:border-primary',
         props.isSelected ? 'bg-muted' : 'bg-card',
         selectEffect && 'animate-big-pop'
       )}
@@ -30,7 +31,7 @@ const BudgetsToolCard = (props: BudgetsToolCardProps): JSX.Element => {
       <Card
         className={cn(
           'h-[20px] w-full',
-          props.underBudget ? 'bg-success' : 'bg-destructive'
+          props.isNetCashflowPositive ? 'bg-success' : 'bg-destructive'
         )}
       />
       <span className="text-sm">{months.at(props.date.getMonth())?.substring(0, 3)}</span>
