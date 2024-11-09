@@ -13,7 +13,7 @@ interface BudgetsToolbarProps {
 const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
   const [index, setIndex] = React.useState(0);
 
-  const dates = Array.from({ length: 11 }, (_, i) => getDateFromMonthsAgo(i + index));
+  const dates = Array.from({ length: 14 }, (_, i) => getDateFromMonthsAgo(i + index));
 
   const handleClick = (date: Date) => {
     if (isInArray(date, props.selectedDates)) {

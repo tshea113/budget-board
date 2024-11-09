@@ -20,7 +20,7 @@ const BudgetsToolCard = (props: BudgetsToolCardProps): JSX.Element => {
   return (
     <Card
       className={cn(
-        'flex w-[70px] flex-col p-0.5 hover:border-primary hover:bg-muted',
+        'flex w-[60px] flex-col p-0.5 hover:border-primary hover:bg-muted',
         props.isSelected ? 'bg-muted' : 'bg-card',
         selectEffect && 'animate-big-pop'
       )}
@@ -33,7 +33,7 @@ const BudgetsToolCard = (props: BudgetsToolCardProps): JSX.Element => {
           props.underBudget ? 'bg-success' : 'bg-destructive'
         )}
       />
-      <span>{months.at(props.date.getMonth())?.substring(0, 3)}</span>
+      <span className="text-sm">{months.at(props.date.getMonth())?.substring(0, 3)}</span>
       {props.date.getMonth() === 0 || props.date.getMonth() === 11 ? (
         <span className="text-xs text-muted-foreground">{props.date.getFullYear()}</span>
       ) : (
