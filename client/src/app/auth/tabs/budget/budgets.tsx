@@ -67,6 +67,11 @@ const Budgets = (): JSX.Element => {
     },
   });
 
+  const transactionsWithoutHidden = React.useMemo(
+    () => filterHiddenTransactions(transactionsForMonthQuery.data ?? []),
+    [transactionsForMonthQuery]
+  );
+
   const addSelectedDate = (newDate: Date): void =>
     setSelectedDates([newDate, ...selectedDates]);
   const removeSelectedDate = (removeDate: Date): void =>
@@ -86,22 +91,18 @@ const Budgets = (): JSX.Element => {
           <BudgetCardsGroup
             header={'Income'}
             budgetData={getBudgetsForGroup(budgetsQuery.data, BudgetGroup.Income)}
-            transactionsData={filterHiddenTransactions(
-              transactionsForMonthQuery.data ?? []
-            )}
+            transactionsData={transactionsWithoutHidden}
             isPending={budgetsQuery.isPending || transactionsForMonthQuery.isPending}
           />
           <BudgetCardsGroup
             header={'Spending'}
             budgetData={getBudgetsForGroup(budgetsQuery.data, BudgetGroup.Spending)}
-            transactionsData={filterHiddenTransactions(
-              transactionsForMonthQuery.data ?? []
-            )}
+            transactionsData={transactionsWithoutHidden}
             isPending={budgetsQuery.isPending || transactionsForMonthQuery.isPending}
           />
         </div>
         <Unbudgets
-          transactions={filterHiddenTransactions(transactionsForMonthQuery.data ?? [])}
+          transactions={transactionsWithoutHidden}
           budgets={budgetsQuery.data ?? []}
           isPending={budgetsQuery.isPending || transactionsForMonthQuery.isPending}
         />
@@ -109,7 +110,7 @@ const Budgets = (): JSX.Element => {
       <div className="w-full lg:w-2/5 lg:max-w-[325px]">
         <BudgetTotalCard
           budgetData={budgetsQuery.data ?? []}
-          transactionData={filterHiddenTransactions(transactionsForMonthQuery.data ?? [])}
+          transactionData={transactionsWithoutHidden}
           isPending={budgetsQuery.isPending || transactionsForMonthQuery.isPending}
         />
       </div>
