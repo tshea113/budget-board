@@ -6,19 +6,35 @@ import { sumTransactionAmountsByCategory } from '@/lib/transactions';
 import { getParentCategory } from '@/lib/category';
 import { areStringsEqual } from '@/lib/utils';
 import React from 'react';
+import { Dictionary } from '@/types/misc';
 
 interface BudgetCardsProps {
-  budgetData: Budget[] | null;
-  transactionsData: Transaction[] | null;
+  budgetData: Budget[];
+  transactionsData: Transaction[];
   isPending: boolean;
 }
 
+const aggregateBudgets = (budgets: Budget[]): Dictionary<Budget[]> => {
+  if (budgets.length === 0) return {};
+
+  const sortedBudgets = budgets.sort((a: Budget, b: Budget) =>
+    a.category.toLowerCase().localeCompare(b.category.toLowerCase())
+  );
+  const groupedBudgets = sortedBudgets.reduce(
+    (result: Dictionary<Budget[]>, budget: Budget) => {
+      result[budget.category] = result[budget.category] || [];
+      result[budget.category].push(budget);
+      return result;
+    },
+    {}
+  );
+
+  return groupedBudgets;
+};
+
 const BudgetCards = (props: BudgetCardsProps): JSX.Element => {
-  const sortedBudgetData = React.useMemo(
-    () =>
-      (props.budgetData ?? []).sort((a: Budget, b: Budget) =>
-        a.category.toLowerCase().localeCompare(b.category.toLowerCase())
-      ),
+  const sortedGroupedBudgetData = React.useMemo(
+    () => aggregateBudgets(props.budgetData),
     [props.budgetData]
   );
   if (props.isPending) {
@@ -37,16 +53,16 @@ const BudgetCards = (props: BudgetCardsProps): JSX.Element => {
   } else {
     return (
       <div className="flex flex-col space-y-1">
-        {sortedBudgetData.map((budget: Budget) => (
+        {Object.entries(sortedGroupedBudgetData).map(([key, value]) => (
           <BudgetCard
-            key={budget.id}
-            budget={budget}
+            key={value[0].id}
+            budgets={value}
             amount={sumTransactionAmountsByCategory(
               props.transactionsData ?? [],
-              budget.category
+              value[0].category
             )}
             isIncome={areStringsEqual(
-              getParentCategory(budget.category, transactionCategories),
+              getParentCategory(key, transactionCategories),
               'income'
             )}
           />

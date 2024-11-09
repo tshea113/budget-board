@@ -1,29 +1,27 @@
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { months } from '@/types/misc';
 import React from 'react';
 
 interface BudgetsToolCardProps {
   date: Date;
+  isSelected: boolean;
   underBudget: boolean;
+  handleClick: (date: Date) => void;
 }
 const BudgetsToolCard = (props: BudgetsToolCardProps): JSX.Element => {
-  const [isSelected, setIsSelected] = React.useState(false);
   const [selectEffect, setSelectEffect] = React.useState(false);
 
-  const months = [...Array(12).keys()].map((key) =>
-    new Date(0, key).toLocaleString('en', { month: 'long' })
-  );
-
   const toggleIsSelected = (): void => {
-    setIsSelected(!isSelected);
     setSelectEffect(true);
+    props.handleClick(props.date);
   };
 
   return (
     <Card
       className={cn(
-        'flex w-[70px] flex-col p-0.5 hover:bg-muted',
-        isSelected ? 'bg-muted' : 'bg-card',
+        'flex w-[70px] flex-col p-0.5 hover:border-primary hover:bg-muted',
+        props.isSelected ? 'bg-muted' : 'bg-card',
         selectEffect && 'animate-big-pop'
       )}
       onClick={toggleIsSelected}
