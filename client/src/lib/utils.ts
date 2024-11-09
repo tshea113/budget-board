@@ -59,8 +59,22 @@ export const initCurrentMonth = (): Date => {
 };
 
 /**
- * Creates a date string containing the month and year
- * @param date The date for the date string
+ * Returns a Date object from a specified number of months ago.
+ * @param numberOfMonthsAgo The number of months ago.
+ * @param date The starting date (optional)
+ * @returns A Date object containing the calculated month and year.
+ */
+export const getDateFromMonthsAgo = (numberOfMonthsAgo: number, date?: Date): Date => {
+  const lastMonth = date ? new Date(date) : initCurrentMonth();
+
+  lastMonth.setMonth(lastMonth.getMonth() - numberOfMonthsAgo);
+
+  return lastMonth;
+};
+
+/**
+ * Creates a date string containing the month and year.
+ * @param date The date for the date string.
  * @returns A string containing the month and year of the provided date.
  */
 export const getMonthAndYearDateString = (date: Date): string => {
@@ -84,17 +98,3 @@ export const getDaysInMonth = (month: number, year: number): number =>
  */
 export const areStringsEqual = (string1: string, string2: string): boolean =>
   string1.localeCompare(string2, undefined, { sensitivity: 'base' }) === 0;
-
-/**
- * Returns a Date object from a specified number of months ago.
- * @param numberOfMonthsAgo The number of months ago.
- * @param date The starting date (optional)
- * @returns A Date object containing the calculated month and year.
- */
-export const getDateFromMonthsAgo = (numberOfMonthsAgo: number, date?: Date): Date => {
-  const lastMonth = date ? new Date(date) : initCurrentMonth();
-
-  lastMonth.setMonth(lastMonth.getMonth() - numberOfMonthsAgo);
-
-  return lastMonth;
-};
