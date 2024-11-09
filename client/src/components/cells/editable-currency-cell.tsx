@@ -1,30 +1,27 @@
 import { Input } from '@/components/ui/input';
 import { cn, convertNumberToCurrency } from '@/lib/utils';
-import { type Transaction } from '@/types/transaction';
 import React from 'react';
 
 interface EditableCurrencyCellProps {
-  transaction: Transaction;
+  className?: string;
+  inputClassName?: string;
+  textClassName?: string;
+  value: number;
   isSelected: boolean;
-  editCell: (newTransaction: Transaction) => void;
+  editCell: (newValue: number) => void;
+  invertColor?: boolean;
 }
 
 const EditableCurrencyCell = (props: EditableCurrencyCellProps): JSX.Element => {
   const [currencyDisplayValue, setCurrencyDisplayValue] = React.useState<string>(
-    props.transaction.amount.toFixed(2)
+    props.value.toFixed(2)
   );
 
   const onCurrencyBlur = (): void => {
     if (!isNaN(parseFloat(currencyDisplayValue))) {
-      const newTransaction: Transaction = {
-        ...props.transaction,
-        amount: parseFloat(currencyDisplayValue),
-      };
-      if (props.editCell != null) {
-        props.editCell(newTransaction);
-      }
+      props.editCell(parseFloat(currencyDisplayValue));
     } else {
-      setCurrencyDisplayValue(props.transaction.amount.toFixed(2));
+      setCurrencyDisplayValue(props.value.toFixed(2));
     }
   };
 
@@ -33,10 +30,10 @@ const EditableCurrencyCell = (props: EditableCurrencyCellProps): JSX.Element => 
   };
 
   return (
-    <div>
+    <div className={cn(props.className)}>
       {props.isSelected ? (
         <Input
-          className="text-center"
+          className={cn('text-center', props.inputClassName)}
           value={currencyDisplayValue}
           onChange={(e) => {
             onCurrencyChange(e.target.value);
@@ -51,7 +48,8 @@ const EditableCurrencyCell = (props: EditableCurrencyCellProps): JSX.Element => 
         <span
           className={cn(
             'font-semibold',
-            props.transaction.amount < 0 ? 'text-destructive' : 'text-success'
+            props.value < 0 ? 'text-destructive' : 'text-success',
+            props.textClassName
           )}
         >
           {convertNumberToCurrency(parseFloat(currencyDisplayValue), true)}
