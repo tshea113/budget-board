@@ -5,6 +5,7 @@ import BudgetCard from './budget-card';
 import { sumTransactionAmountsByCategory } from '@/lib/transactions';
 import { getParentCategory } from '@/lib/category';
 import { areStringsEqual } from '@/lib/utils';
+import React from 'react';
 
 interface BudgetCardsProps {
   budgetData: Budget[] | null;
@@ -13,6 +14,13 @@ interface BudgetCardsProps {
 }
 
 const BudgetCards = (props: BudgetCardsProps): JSX.Element => {
+  const sortedBudgetData = React.useMemo(
+    () =>
+      (props.budgetData ?? []).sort((a: Budget, b: Budget) =>
+        a.category.toLowerCase().localeCompare(b.category.toLowerCase())
+      ),
+    [props.budgetData]
+  );
   if (props.isPending) {
     return (
       <div className="flex items-center justify-center">
@@ -29,24 +37,20 @@ const BudgetCards = (props: BudgetCardsProps): JSX.Element => {
   } else {
     return (
       <div className="flex flex-col space-y-1">
-        {props.budgetData
-          .sort(function (a, b) {
-            return a.category.toLowerCase().localeCompare(b.category.toLowerCase());
-          })
-          .map((budget: Budget) => (
-            <BudgetCard
-              key={budget.id}
-              budget={budget}
-              amount={sumTransactionAmountsByCategory(
-                props.transactionsData ?? [],
-                budget.category
-              )}
-              isIncome={areStringsEqual(
-                getParentCategory(budget.category, transactionCategories),
-                'income'
-              )}
-            />
-          ))}
+        {sortedBudgetData.map((budget: Budget) => (
+          <BudgetCard
+            key={budget.id}
+            budget={budget}
+            amount={sumTransactionAmountsByCategory(
+              props.transactionsData ?? [],
+              budget.category
+            )}
+            isIncome={areStringsEqual(
+              getParentCategory(budget.category, transactionCategories),
+              'income'
+            )}
+          />
+        ))}
       </div>
     );
   }
