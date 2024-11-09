@@ -10,11 +10,12 @@ interface EditableCurrencyCellProps {
   isSelected: boolean;
   editCell: (newValue: number) => void;
   invertColor?: boolean;
+  hideCents?: boolean;
 }
 
 const EditableCurrencyCell = (props: EditableCurrencyCellProps): JSX.Element => {
   const [currencyDisplayValue, setCurrencyDisplayValue] = React.useState<string>(
-    props.value.toFixed(2)
+    props.value.toFixed(props.hideCents ? 0 : 2)
   );
 
   const onCurrencyBlur = (): void => {
@@ -52,7 +53,7 @@ const EditableCurrencyCell = (props: EditableCurrencyCellProps): JSX.Element => 
             props.textClassName
           )}
         >
-          {convertNumberToCurrency(parseFloat(currencyDisplayValue), true)}
+          {convertNumberToCurrency(parseFloat(currencyDisplayValue), !props.hideCents)}
         </span>
       )}
     </div>
