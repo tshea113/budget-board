@@ -91,6 +91,15 @@ export const getDaysInMonth = (month: number, year: number): number =>
   new Date(year, month, 0).getDate();
 
 /**
+ * Checks if the provided date is in the provided array.
+ * @param date Date you are checking whether is in the array.
+ * @param datesArray Array to search for the provided date.
+ * @returns true if the date exists in the array, false otherwise.
+ */
+export const isInArray = (date: Date, datesArray: Date[]): boolean =>
+  !!datesArray.find((item) => item.getTime() == date.getTime());
+
+/**
  * Checks if two strings are equal ignoring case.
  * @param string1 One string you wish to compare.
  * @param string2 Another string you wish to compare.
