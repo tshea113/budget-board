@@ -103,7 +103,7 @@ export const isInArray = (date: Date, datesArray: Date[]): boolean =>
  * Checks if two strings are equal ignoring case.
  * @param string1 One string you wish to compare.
  * @param string2 Another string you wish to compare.
- * @returns true if the strings are equal, ignoring case,  false otherwise.
+ * @returns true if the strings are equal, ignoring case, false otherwise.
  */
 export const areStringsEqual = (string1: string, string2: string): boolean =>
-  string1.localeCompare(string2, undefined, { sensitivity: 'base' }) === 0;
+  string1.toUpperCase() === string2.toUpperCase();
