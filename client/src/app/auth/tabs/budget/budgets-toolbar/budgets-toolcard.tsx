@@ -53,7 +53,9 @@ const BudgetsToolCard = (props: BudgetsToolCardProps): JSX.Element => {
       <span className="select-none text-sm">
         {months.at(props.date.getMonth())?.substring(0, 3)}
       </span>
-      <span className="text-xs text-muted-foreground">{props.date.getFullYear()}</span>
+      <span className="select-none text-xs text-muted-foreground">
+        {props.date.getFullYear()}
+      </span>
     </Card>
   );
 };

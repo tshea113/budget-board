@@ -144,7 +144,7 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
       <div className="flex flex-row items-center gap-2">
         <Button
           className="h-[62px] w-8 p-1"
-          variant="ghost"
+          variant="outline"
           onClick={() => {
             setIndex(index + 1);
           }}
@@ -165,9 +165,10 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
         </div>
         <Button
           className="h-[62px] w-8 p-1"
-          variant="ghost"
+          disabled={index === 0}
+          variant="outline"
           onClick={() => {
-            setIndex(index - 1);
+            if (index > 0) setIndex(index - 1);
           }}
         >
           <ChevronRightIcon />
