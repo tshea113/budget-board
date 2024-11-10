@@ -13,6 +13,7 @@ import { translateAxiosError } from '@/lib/requests';
 import { defaultGuid } from '@/types/user';
 import AddButtonPopover from '@/components/add-button-popover';
 import AddBudget from '../add-budget';
+import { useMeasure } from '@uidotdev/usehooks';
 
 interface BudgetsToolbarProps {
   selectedDates: Date[];
@@ -26,8 +27,12 @@ interface BudgetsToolbarProps {
 const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
   const [index, setIndex] = React.useState(0);
 
-  // TODO: This value should be responsive based upon element width.
-  const dates = Array.from({ length: 14 }, (_, i) => getDateFromMonthsAgo(i + index));
+  const [ref, { width }] = useMeasure();
+
+  // Padding of 25 on each side and each card is roughly 70 pixels.
+  const dates = Array.from({ length: Math.floor(((width ?? 0) - 50) / 70) }, (_, i) =>
+    getDateFromMonthsAgo(i + index)
+  );
 
   const { request } = React.useContext<any>(AuthContext);
 
@@ -84,7 +89,7 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
   // TODO: Style the toolbar correctly.
   // TODO: A button to increment and decrement the month would be nice.
   return (
-    <div className="flex flex-col gap-2">
+    <div ref={ref} className="flex flex-col gap-2">
       <div className="flex flex-row-reverse justify-center gap-1">
         <Button
           className="m-1 h-8 w-6 p-1"
