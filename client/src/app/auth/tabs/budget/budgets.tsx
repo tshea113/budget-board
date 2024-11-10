@@ -9,7 +9,11 @@ import { AuthContext } from '@/components/auth-provider';
 import { useQueries } from '@tanstack/react-query';
 import BudgetCardsGroup from './budget-cards-group/budget-cards-group';
 import { AxiosResponse } from 'axios';
-import { filterHiddenTransactions } from '@/lib/transactions';
+import {
+  filterHiddenTransactions,
+  getTransactionsForMonth,
+  sumTransactionAmounts,
+} from '@/lib/transactions';
 import BudgetsToolbar from './budgets-toolbar/budgets-toolbar';
 
 const Budgets = (): JSX.Element => {
@@ -42,7 +46,7 @@ const Budgets = (): JSX.Element => {
     },
   });
 
-  const transactionsForMonthQuery = useQueries({
+  const transactionsForMonthsQuery = useQueries({
     queries: selectedDates.map((date: Date) => ({
       queryKey: ['transactions', { month: date.getMonth(), year: date.getUTCFullYear() }],
       queryFn: async (): Promise<Transaction[]> => {
@@ -68,9 +72,22 @@ const Budgets = (): JSX.Element => {
   });
 
   const transactionsWithoutHidden = React.useMemo(
-    () => filterHiddenTransactions(transactionsForMonthQuery.data ?? []),
-    [transactionsForMonthQuery]
+    () => filterHiddenTransactions(transactionsForMonthsQuery.data ?? []),
+    [transactionsForMonthsQuery]
   );
+
+  const timeToMonthlyTotalsMap: Map<number, number> = React.useMemo(() => {
+    const map = new Map();
+    selectedDates.forEach((selectedDate: Date) => {
+      map.set(
+        selectedDate.getTime(),
+        sumTransactionAmounts(
+          getTransactionsForMonth(transactionsForMonthsQuery.data, selectedDate)
+        )
+      );
+    });
+    return map;
+  }, [transactionsWithoutHidden, transactionsForMonthsQuery]);
 
   const addSelectedDate = (newDate: Date): void =>
     setSelectedDates([newDate, ...selectedDates]);
@@ -86,34 +103,35 @@ const Budgets = (): JSX.Element => {
           selectedDates={selectedDates}
           addSelectedDate={addSelectedDate}
           removeSelectedDate={removeSelectedDate}
+          timeToMonthlyTotalsMap={timeToMonthlyTotalsMap}
           showCopy={budgetsQuery.data.length === 0}
-          isPending={budgetsQuery.isPending || transactionsForMonthQuery.isPending}
+          isPending={budgetsQuery.isPending || transactionsForMonthsQuery.isPending}
         />
         <div className="space-y-10">
           <BudgetCardsGroup
             header={'Income'}
             budgetData={getBudgetsForGroup(budgetsQuery.data, BudgetGroup.Income)}
             transactionsData={transactionsWithoutHidden}
-            isPending={budgetsQuery.isPending || transactionsForMonthQuery.isPending}
+            isPending={budgetsQuery.isPending || transactionsForMonthsQuery.isPending}
           />
           <BudgetCardsGroup
             header={'Spending'}
             budgetData={getBudgetsForGroup(budgetsQuery.data, BudgetGroup.Spending)}
             transactionsData={transactionsWithoutHidden}
-            isPending={budgetsQuery.isPending || transactionsForMonthQuery.isPending}
+            isPending={budgetsQuery.isPending || transactionsForMonthsQuery.isPending}
           />
         </div>
         <Unbudgets
           transactions={transactionsWithoutHidden}
           budgets={budgetsQuery.data ?? []}
-          isPending={budgetsQuery.isPending || transactionsForMonthQuery.isPending}
+          isPending={budgetsQuery.isPending || transactionsForMonthsQuery.isPending}
         />
       </div>
       <div className="w-full lg:w-2/5 lg:max-w-[325px]">
         <BudgetTotalCard
           budgetData={budgetsQuery.data ?? []}
           transactionData={transactionsWithoutHidden}
-          isPending={budgetsQuery.isPending || transactionsForMonthQuery.isPending}
+          isPending={budgetsQuery.isPending || transactionsForMonthsQuery.isPending}
         />
       </div>
     </div>

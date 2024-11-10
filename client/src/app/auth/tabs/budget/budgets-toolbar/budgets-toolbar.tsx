@@ -18,6 +18,7 @@ interface BudgetsToolbarProps {
   selectedDates: Date[];
   addSelectedDate: (date: Date) => void;
   removeSelectedDate: (date: Date) => void;
+  timeToMonthlyTotalsMap: Map<number, number>;
   showCopy: boolean;
   isPending: boolean;
 }
@@ -82,7 +83,6 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
 
   // TODO: Style the toolbar correctly.
   // TODO: A button to increment and decrement the month would be nice.
-  // TODO: Figure out what to do with underbudgets
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-row-reverse justify-center gap-1">
@@ -100,7 +100,9 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
             key={i}
             date={date}
             isSelected={isInArray(date, props.selectedDates)}
-            isNetCashflowPositive={date.getMonth() % 2 === 0}
+            isNetCashflowPositive={
+              (props.timeToMonthlyTotalsMap.get(date.getTime()) ?? -1) > 0
+            }
             handleClick={handleClick}
           />
         ))}

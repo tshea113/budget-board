@@ -18,7 +18,6 @@ const BudgetsToolCard = (props: BudgetsToolCardProps): JSX.Element => {
     props.handleClick(props.date);
   };
 
-  // TODO: Figure out color for unselected cashflow light
   return (
     <Card
       className={cn(
@@ -36,7 +35,7 @@ const BudgetsToolCard = (props: BudgetsToolCardProps): JSX.Element => {
             ? props.isNetCashflowPositive
               ? 'bg-success'
               : 'bg-destructive'
-            : 'bg-gray-300'
+            : 'bg-muted-foreground'
         )}
       />
       <span className="select-none text-sm">
