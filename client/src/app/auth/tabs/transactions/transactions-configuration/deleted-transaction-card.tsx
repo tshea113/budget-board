@@ -2,7 +2,7 @@ import { AuthContext } from '@/components/auth-provider';
 import ResponsiveButton from '@/components/responsive-button';
 import { Card } from '@/components/ui/card';
 import { translateAxiosError } from '@/lib/requests';
-import { getDaysSinceDeleted } from '@/lib/utils';
+import { getDaysSinceDate } from '@/lib/utils';
 import { type Transaction } from '@/types/transaction';
 import { ResetIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -43,7 +43,7 @@ const DeletedTransactionCard = (props: DeletedTransactionCardProps): JSX.Element
         {props.deletedTransaction.merchantName}
       </span>
       <span className="col-span-1">
-        {getDaysSinceDeleted(props.deletedTransaction.deleted) + ' days since deleted'}
+        {getDaysSinceDate(props.deletedTransaction.deleted) + ' days since deleted'}
       </span>
       <div className="col-span-1 justify-self-end md:place-self-center">
         <ResponsiveButton

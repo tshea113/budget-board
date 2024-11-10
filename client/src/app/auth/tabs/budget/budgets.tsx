@@ -71,6 +71,7 @@ const Budgets = (): JSX.Element => {
     },
   });
 
+  // We need to filter out the transactions labelled with 'Hide From Budgets'
   const transactionsWithoutHidden = React.useMemo(
     () => filterHiddenTransactions(transactionsForMonthsQuery.data ?? []),
     [transactionsForMonthsQuery]
