@@ -83,11 +83,17 @@ module.exports = {
           '40%': { transform: 'scale(1.01)' },
           to: { transform: 'scale(1)' },
         },
+        'big-pop': {
+          '0%': { transform: 'scale(0.96)' },
+          '40%': { transform: 'scale(1.04)' },
+          to: { transform: 'scale(1)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         pop: 'pop 200ms ease-out',
+        'big-pop': 'big-pop 200ms ease-out',
       },
     },
   },

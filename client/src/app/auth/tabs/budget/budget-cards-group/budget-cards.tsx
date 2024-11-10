@@ -5,14 +5,39 @@ import BudgetCard from './budget-card';
 import { sumTransactionAmountsByCategory } from '@/lib/transactions';
 import { getParentCategory } from '@/lib/category';
 import { areStringsEqual } from '@/lib/utils';
+import React from 'react';
+import { groupBudgetsByCategory } from '@/lib/budgets';
 
 interface BudgetCardsProps {
-  budgetData: Budget[] | null;
-  transactionsData: Transaction[] | null;
+  budgetData: Budget[];
+  transactionsData: Transaction[];
   isPending: boolean;
 }
 
 const BudgetCards = (props: BudgetCardsProps): JSX.Element => {
+  const categoryToBudgetsMap = React.useMemo(
+    () => groupBudgetsByCategory(props.budgetData),
+    [props.budgetData]
+  );
+
+  const getCardsForMap = (map: Map<string, Budget[]>): JSX.Element[] => {
+    const comps: JSX.Element[] = [];
+    map.forEach((value, key) =>
+      comps.push(
+        <BudgetCard
+          key={key}
+          budgets={value}
+          amount={sumTransactionAmountsByCategory(props.transactionsData ?? [], key)}
+          isIncome={areStringsEqual(
+            getParentCategory(key, transactionCategories),
+            'income'
+          )}
+        />
+      )
+    );
+    return comps;
+  };
+
   if (props.isPending) {
     return (
       <div className="flex items-center justify-center">
@@ -29,24 +54,7 @@ const BudgetCards = (props: BudgetCardsProps): JSX.Element => {
   } else {
     return (
       <div className="flex flex-col space-y-1">
-        {props.budgetData
-          .sort(function (a, b) {
-            return a.category.toLowerCase().localeCompare(b.category.toLowerCase());
-          })
-          .map((budget: Budget) => (
-            <BudgetCard
-              key={budget.id}
-              budget={budget}
-              amount={sumTransactionAmountsByCategory(
-                props.transactionsData ?? [],
-                budget.category
-              )}
-              isIncome={areStringsEqual(
-                getParentCategory(budget.category, transactionCategories),
-                'income'
-              )}
-            />
-          ))}
+        {getCardsForMap(categoryToBudgetsMap)}
       </div>
     );
   }

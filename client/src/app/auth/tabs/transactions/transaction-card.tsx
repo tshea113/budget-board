@@ -7,7 +7,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import React from 'react';
 import EditableCategoryCell from './cells/editable-category-cell';
-import EditableCurrencyCell from './cells/editable-currency-cell';
+import EditableCurrencyCell from '@/components/cells/editable-currency-cell';
 import EditableMerchantCell from './cells/editable-merchant-cell';
 import EditableDateCell from './cells/editable-date-cell';
 import LoadingIcon from '@/components/loading-icon';
@@ -105,9 +105,11 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
         </span>
         <span className="w-[100px]">
           <EditableCurrencyCell
-            transaction={props.transaction}
+            value={props.transaction.amount}
             isSelected={isSelected}
-            editCell={doEditTransaction.mutate}
+            editCell={(value: number) =>
+              doEditTransaction.mutate({ ...props.transaction, amount: value })
+            }
           />
         </span>
       </div>

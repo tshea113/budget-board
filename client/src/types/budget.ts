@@ -1,4 +1,4 @@
-interface Budget {
+export interface Budget {
   id: string;
   date: Date;
   category: string;
@@ -6,6 +6,10 @@ interface Budget {
   userId: string;
 }
 
-interface NewBudget extends Partial<Budget> {}
+export interface NewBudget extends Partial<Budget> {}
 
-export type { Budget, NewBudget };
+export enum CashFlowValue {
+  Positive,
+  Neutral,
+  Negative,
+}

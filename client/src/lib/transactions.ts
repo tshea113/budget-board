@@ -21,7 +21,7 @@ export const filterTransactionsByCategory = (
   );
 
 /**
- * Filters out the transactions with the hidden transaction category
+ * Filters out the transactions with the 'Hide From Budgets' transaction category
  * @param transactions Transactions to filter
  * @returns Filtered list of transactions
  */
@@ -69,8 +69,8 @@ export const sumTransactionAmountsByCategory = (
     // We need to figure out whether the category we are comparing on is a category or subcategory
     // to know which field to look at on the transaction.
     const transactionCategory = getIsParentCategory(categoryToSum, transactionCategories)
-      ? t.category ?? ''
-      : t.subcategory ?? '';
+      ? (t.category ?? '')
+      : (t.subcategory ?? '');
 
     return areStringsEqual(transactionCategory, categoryToSum);
   });

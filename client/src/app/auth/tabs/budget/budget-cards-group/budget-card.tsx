@@ -1,21 +1,23 @@
 import { AuthContext } from '@/components/auth-provider';
+import EditableCurrencyCell from '@/components/cells/editable-currency-cell';
 import LoadingIcon from '@/components/loading-icon';
 import ResponsiveButton from '@/components/responsive-button';
 import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { getSignForBudget } from '@/lib/budgets';
 import { getFormattedCategoryValue } from '@/lib/category';
-import { cn, getProgress } from '@/lib/utils';
+import { translateAxiosError } from '@/lib/requests';
+import { cn, convertNumberToCurrency, getProgress } from '@/lib/utils';
 import { type Budget } from '@/types/budget';
 import { transactionCategories } from '@/types/transaction';
-import { defaultGuid } from '@/types/user';
 import { TrashIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import React from 'react';
+import { toast } from 'sonner';
 
 interface BudgetCardProps {
-  budget: Budget;
+  budgets: Budget[];
   amount: number;
   isIncome: boolean;
 }
@@ -23,27 +25,40 @@ interface BudgetCardProps {
 const BudgetCard = (props: BudgetCardProps): JSX.Element => {
   const [isSelected, setIsSelected] = React.useState(false);
   const [selectEffect, setSelectEffect] = React.useState(false);
-  const [limit, setLimit] = React.useState(props.budget.limit);
+
+  const limit = React.useMemo(
+    () => props.budgets.reduce((n: number, b: Budget) => n + b.limit, 0),
+    [props.budgets]
+  );
 
   const { request } = React.useContext<any>(AuthContext);
 
   const queryClient = useQueryClient();
   const doEditBudget = useMutation({
-    mutationFn: async (newTotal: number) => {
-      const newBudget: Budget = {
-        id: props.budget.id,
-        date: props.budget.date,
-        category: props.budget.category,
-        limit: newTotal,
-        userId: defaultGuid,
-      };
-      return await request({
+    mutationFn: async (newBudget: Budget) =>
+      await request({
         url: '/api/budget',
         method: 'PUT',
         data: newBudget,
-      });
+      }),
+    onMutate: async (variables: Budget) => {
+      await queryClient.cancelQueries({ queryKey: ['budgets'] });
+
+      const previousBudgets: Budget[] = queryClient.getQueryData(['budgets']) ?? [];
+
+      queryClient.setQueryData(['budgets'], (oldBudgets: Budget[]) =>
+        oldBudgets.map((oldBudget) =>
+          oldBudget.id === variables.id ? variables : oldBudget
+        )
+      );
+
+      return { previousBudgets };
     },
-    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['budgets'] }),
+    onError: (error: AxiosError, _variables: Budget, context) => {
+      queryClient.setQueryData(['budgets'], context?.previousBudgets ?? []);
+      toast.error(translateAxiosError(error));
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ['budgets'] }),
   });
 
   const doDeleteBudget = useMutation({
@@ -56,14 +71,16 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
     onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['budgets'] }),
   });
 
-  const getAmountLeft = (total: number, amount: number): string => {
-    return '$' + (total - amount).toFixed();
+  const toggleIsSelected = (): void => {
+    if (props.budgets.length === 1) {
+      setIsSelected(!isSelected);
+      setSelectEffect(true);
+    }
   };
 
-  const toggleIsSelected = (): void => {
-    setIsSelected(!isSelected);
-    setSelectEffect(true);
-  };
+  React.useEffect(() => {
+    if (props.budgets.length > 1) setIsSelected(false);
+  }, [props.budgets]);
 
   return (
     <Card
@@ -72,53 +89,52 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
         isSelected ? 'bg-muted' : 'bg-card',
         selectEffect && 'animate-pop'
       )}
-      onClick={() => {
-        toggleIsSelected();
-        setLimit(props.budget.limit);
-      }}
+      onClick={toggleIsSelected}
       onAnimationEnd={() => setSelectEffect(false)}
     >
       <div className="flex w-full flex-col px-3 py-1">
         <div className="flex min-h-10 flex-row items-center @container">
           <div className="flex w-1/2 grow flex-row items-center justify-start gap-2">
             <span className="select-none text-lg font-semibold tracking-tight @sm:text-xl">
-              {getFormattedCategoryValue(props.budget.category, transactionCategories)}
+              {getFormattedCategoryValue(
+                props.budgets[0].category,
+                transactionCategories
+              )}
             </span>
             {(doEditBudget.isPending || doDeleteBudget.isPending) && <LoadingIcon />}
           </div>
           <div className="flex w-1/2 flex-row justify-items-center text-base font-semibold @sm:text-lg">
             <span className="w-1/3 select-none text-center">
-              ${(props.amount * getSignForBudget(props.budget.category)).toFixed()}
+              {convertNumberToCurrency(
+                props.amount * getSignForBudget(props.budgets[0].category),
+                false
+              )}
             </span>
-            {!isSelected ? (
-              <span className="w-1/3 select-none text-center">${limit}</span>
-            ) : (
-              <Input
-                className="h-6 w-1/3 px-1 text-center text-base @sm:h-8"
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-                value={limit}
-                onChange={(e) => {
-                  setLimit(parseInt(e.target.value === '' ? '0' : e.target.value));
-                }}
-                onBlur={() => doEditBudget.mutate(limit)}
-              />
-            )}
+            <EditableCurrencyCell
+              className="w-1/3 text-center"
+              inputClassName="h-6 px-1 @sm:h-8"
+              textClassName="select-none"
+              value={limit}
+              isSelected={isSelected}
+              editCell={(newValue: number) =>
+                doEditBudget.mutate({ ...props.budgets[0], limit: newValue })
+              }
+              hideCents={true}
+            />
             <span
               className={cn(
                 'w-1/3 select-none text-center font-semibold',
                 // Income behaves opposite of spending, since being above the limit is a good thing :)
-                (props.budget.limit - props.amount * (props.isIncome ? 1 : -1)) *
+                (limit - props.amount * (props.isIncome ? 1 : -1)) *
                   (props.isIncome ? -1 : 1) >
                   0
                   ? 'text-success'
                   : 'text-destructive'
               )}
             >
-              {getAmountLeft(
-                props.budget.limit,
-                props.amount * (props.isIncome ? 1 : -1)
+              {convertNumberToCurrency(
+                limit - props.amount * (props.isIncome ? 1 : -1),
+                false
               )}
             </span>
           </div>
@@ -126,8 +142,8 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
         <Progress
           className="h-2 w-full"
           value={getProgress(
-            props.amount * getSignForBudget(props.budget.category),
-            props.budget.limit
+            props.amount * getSignForBudget(props.budgets[0].category),
+            limit
           )}
           max={100}
         />
@@ -139,7 +155,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
             variant="destructive"
             className="h-full w-9 p-1"
             onClick={() => {
-              doDeleteBudget.mutate(props.budget.id);
+              doDeleteBudget.mutate(props.budgets[0].id);
             }}
             loading={doDeleteBudget.isPending}
           >

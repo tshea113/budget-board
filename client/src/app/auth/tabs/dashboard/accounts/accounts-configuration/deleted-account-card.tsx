@@ -2,7 +2,7 @@ import { AuthContext } from '@/components/auth-provider';
 import ResponsiveButton from '@/components/responsive-button';
 import { Card } from '@/components/ui/card';
 import { translateAxiosError } from '@/lib/requests';
-import { getDaysSinceDeleted } from '@/lib/utils';
+import { getDaysSinceDate } from '@/lib/utils';
 import { type Account } from '@/types/account';
 import { ResetIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -37,7 +37,7 @@ const DeletedAccountCard = (props: DeletedAccountCardProps): JSX.Element => {
     <Card key={props.deletedAccount.id} className="grid grid-cols-3 items-center p-2">
       <span>{props.deletedAccount.name}</span>
       <span className="justify-self-center">
-        {getDaysSinceDeleted(props.deletedAccount.deleted) + ' days since deleted'}
+        {getDaysSinceDate(props.deletedAccount.deleted) + ' days since deleted'}
       </span>
       <div className="justify-self-center">
         <ResponsiveButton
