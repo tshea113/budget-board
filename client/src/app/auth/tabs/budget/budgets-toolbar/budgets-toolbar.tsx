@@ -5,7 +5,7 @@ import { cn, getDateFromMonthsAgo, initCurrentMonth, isInArray } from '@/lib/uti
 import React from 'react';
 import ResponsiveButton from '@/components/responsive-button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Budget } from '@/types/budget';
+import { Budget, CashFlowValue } from '@/types/budget';
 import { AuthContext } from '@/components/auth-provider';
 import { AxiosError, AxiosResponse } from 'axios';
 import { toast } from 'sonner';
@@ -115,6 +115,16 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
     setSelectMultiple(!selectMultiple);
   };
 
+  const getCashFlowValue = (date: Date): CashFlowValue => {
+    const cashFlow = props.timeToMonthlyTotalsMap.get(date.getTime()) ?? 0;
+    if (cashFlow > 0) {
+      return CashFlowValue.Positive;
+    } else if (cashFlow < 0) {
+      return CashFlowValue.Negative;
+    }
+    return CashFlowValue.Neutral;
+  };
+
   return (
     <div ref={ref} className="flex flex-col gap-2">
       <div className="flex flex-row">
@@ -147,9 +157,7 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
               date={date}
               isSelected={isInArray(date, props.selectedDates)}
               isPending={props.isPending}
-              isNetCashflowPositive={
-                (props.timeToMonthlyTotalsMap.get(date.getTime()) ?? -1) > 0
-              }
+              cashFlowValue={getCashFlowValue(date)}
               handleClick={handleClick}
             />
           ))}

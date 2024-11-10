@@ -1,5 +1,6 @@
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { CashFlowValue } from '@/types/budget';
 import { months } from '@/types/misc';
 import React from 'react';
 
@@ -7,7 +8,7 @@ interface BudgetsToolCardProps {
   date: Date;
   isSelected: boolean;
   isPending: boolean;
-  isNetCashflowPositive: boolean;
+  cashFlowValue: CashFlowValue;
   handleClick: (date: Date) => void;
 }
 
@@ -17,6 +18,20 @@ const BudgetsToolCard = (props: BudgetsToolCardProps): JSX.Element => {
   const toggleIsSelected = (): void => {
     setSelectEffect(true);
     props.handleClick(props.date);
+  };
+
+  const getLightColor = (cashFlowValue: CashFlowValue, isSelected: boolean): string => {
+    if (isSelected) {
+      switch (cashFlowValue) {
+        case CashFlowValue.Positive:
+          return 'bg-success';
+        case CashFlowValue.Neutral:
+          return 'bg-muted-foreground';
+        case CashFlowValue.Negative:
+          return 'bg-destructive';
+      }
+    }
+    return 'bg-muted-foreground';
   };
 
   return (
@@ -32,11 +47,7 @@ const BudgetsToolCard = (props: BudgetsToolCardProps): JSX.Element => {
       <Card
         className={cn(
           'h-[20px] w-full',
-          props.isSelected && !props.isPending
-            ? props.isNetCashflowPositive
-              ? 'bg-success'
-              : 'bg-destructive'
-            : 'bg-muted-foreground'
+          getLightColor(props.cashFlowValue, props.isSelected)
         )}
       />
       <span className="select-none text-sm">
