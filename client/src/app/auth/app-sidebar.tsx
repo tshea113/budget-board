@@ -16,37 +16,43 @@ import {
   GoalIcon,
   LayoutDashboardIcon,
 } from 'lucide-react';
+import { Pages } from './tabs/page-content';
 
 // Menu items.
 const items = [
   {
     title: 'Dashboard',
-    url: '#',
+    page: Pages.Dashboard,
     icon: LayoutDashboardIcon,
   },
   {
     title: 'Transactions',
-    url: '#',
+    page: Pages.Transactions,
     icon: BanknoteIcon,
   },
   {
     title: 'Budgets',
-    url: '#',
+    page: Pages.Budgets,
     icon: CalculatorIcon,
   },
   {
     title: 'Goals',
-    url: '#',
+    page: Pages.Goals,
     icon: GoalIcon,
   },
   {
     title: 'Trends',
-    url: '#',
+    page: Pages.Trends,
     icon: ChartNoAxesColumnIncreasingIcon,
   },
 ];
 
-const AppSidebar = (): JSX.Element => {
+interface AppSidebarProps {
+  currentPage: Pages;
+  setCurrentPage: (currentPage: Pages) => void;
+}
+
+const AppSidebar = (props: AppSidebarProps): JSX.Element => {
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
@@ -56,11 +62,14 @@ const AppSidebar = (): JSX.Element => {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a>
+                  <SidebarMenuButton
+                    asChild
+                    onClick={() => props.setCurrentPage(item.page)}
+                  >
+                    <div>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </div>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
