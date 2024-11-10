@@ -6,7 +6,7 @@ import { sumTransactionAmountsByCategory } from '@/lib/transactions';
 import { getParentCategory } from '@/lib/category';
 import { areStringsEqual } from '@/lib/utils';
 import React from 'react';
-import { Dictionary } from '@/types/misc';
+import { groupBudgetsByCategory } from '@/lib/budgets';
 
 interface BudgetCardsProps {
   budgetData: Budget[];
@@ -14,29 +14,30 @@ interface BudgetCardsProps {
   isPending: boolean;
 }
 
-const aggregateBudgets = (budgets: Budget[]): Dictionary<Budget[]> => {
-  if (budgets.length === 0) return {};
-
-  const sortedBudgets = budgets.sort((a: Budget, b: Budget) =>
-    a.category.toLowerCase().localeCompare(b.category.toLowerCase())
-  );
-  const groupedBudgets = sortedBudgets.reduce(
-    (result: Dictionary<Budget[]>, budget: Budget) => {
-      result[budget.category] = result[budget.category] || [];
-      result[budget.category].push(budget);
-      return result;
-    },
-    {}
-  );
-
-  return groupedBudgets;
-};
-
 const BudgetCards = (props: BudgetCardsProps): JSX.Element => {
-  const sortedGroupedBudgetData = React.useMemo(
-    () => aggregateBudgets(props.budgetData),
+  const categoryToBudgetsMap = React.useMemo(
+    () => groupBudgetsByCategory(props.budgetData),
     [props.budgetData]
   );
+
+  const getCardsForMap = (map: Map<string, Budget[]>): JSX.Element[] => {
+    const comps: JSX.Element[] = [];
+    map.forEach((value, key) =>
+      comps.push(
+        <BudgetCard
+          key={key}
+          budgets={value}
+          amount={sumTransactionAmountsByCategory(props.transactionsData ?? [], key)}
+          isIncome={areStringsEqual(
+            getParentCategory(key, transactionCategories),
+            'income'
+          )}
+        />
+      )
+    );
+    return comps;
+  };
+
   if (props.isPending) {
     return (
       <div className="flex items-center justify-center">
@@ -53,20 +54,7 @@ const BudgetCards = (props: BudgetCardsProps): JSX.Element => {
   } else {
     return (
       <div className="flex flex-col space-y-1">
-        {Object.entries(sortedGroupedBudgetData).map(([key, value]) => (
-          <BudgetCard
-            key={value[0].id}
-            budgets={value}
-            amount={sumTransactionAmountsByCategory(
-              props.transactionsData ?? [],
-              value[0].category
-            )}
-            isIncome={areStringsEqual(
-              getParentCategory(key, transactionCategories),
-              'income'
-            )}
-          />
-        ))}
+        {getCardsForMap(categoryToBudgetsMap)}
       </div>
     );
   }

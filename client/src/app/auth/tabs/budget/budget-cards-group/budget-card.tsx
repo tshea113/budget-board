@@ -7,7 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { getSignForBudget } from '@/lib/budgets';
 import { getFormattedCategoryValue } from '@/lib/category';
 import { translateAxiosError } from '@/lib/requests';
-import { cn, getProgress } from '@/lib/utils';
+import { cn, convertNumberToCurrency, getProgress } from '@/lib/utils';
 import { type Budget } from '@/types/budget';
 import { transactionCategories } from '@/types/transaction';
 import { TrashIcon } from '@radix-ui/react-icons';
@@ -71,10 +71,6 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
     onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['budgets'] }),
   });
 
-  const getAmountLeft = (total: number, amount: number): string => {
-    return '$' + (total - amount).toFixed();
-  };
-
   const toggleIsSelected = (): void => {
     if (props.budgets.length === 1) {
       setIsSelected(!isSelected);
@@ -89,10 +85,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
         isSelected ? 'bg-muted' : 'bg-card',
         selectEffect && 'animate-pop'
       )}
-      onClick={() => {
-        toggleIsSelected();
-        // setLimit(props.budget.limit);
-      }}
+      onClick={toggleIsSelected}
       onAnimationEnd={() => setSelectEffect(false)}
     >
       <div className="flex w-full flex-col px-3 py-1">
@@ -108,7 +101,10 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
           </div>
           <div className="flex w-1/2 flex-row justify-items-center text-base font-semibold @sm:text-lg">
             <span className="w-1/3 select-none text-center">
-              ${(props.amount * getSignForBudget(props.budgets[0].category)).toFixed()}
+              {convertNumberToCurrency(
+                props.amount * getSignForBudget(props.budgets[0].category),
+                false
+              )}
             </span>
             <EditableCurrencyCell
               className="w-1/3 text-center"
@@ -132,7 +128,10 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
                   : 'text-destructive'
               )}
             >
-              {getAmountLeft(limit, props.amount * (props.isIncome ? 1 : -1))}
+              {convertNumberToCurrency(
+                limit - props.amount * (props.isIncome ? 1 : -1),
+                false
+              )}
             </span>
           </div>
         </div>

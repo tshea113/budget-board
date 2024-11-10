@@ -19,6 +19,7 @@ interface BudgetsToolbarProps {
   addSelectedDate: (date: Date) => void;
   removeSelectedDate: (date: Date) => void;
   showCopy: boolean;
+  isPending: boolean;
 }
 
 const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
@@ -81,7 +82,7 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
 
   // TODO: Style the toolbar correctly.
   // TODO: A button to increment and decrement the month would be nice.
-  // TODO: Pipe in the correct underBudget values
+  // TODO: Figure out what to do with underbudgets
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-row-reverse justify-center gap-1">
@@ -113,7 +114,12 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
           <ChevronLeftIcon />
         </Button>
       </div>
-      <div className={cn('flex flex-row', props.selectedDates.length !== 1 && 'hidden')}>
+      <div
+        className={cn(
+          'flex flex-row',
+          (props.selectedDates.length !== 1 || props.isPending) && 'hidden'
+        )}
+      >
         {props.showCopy && (
           <ResponsiveButton
             className="p-2"

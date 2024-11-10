@@ -18,6 +18,7 @@ const BudgetsToolCard = (props: BudgetsToolCardProps): JSX.Element => {
     props.handleClick(props.date);
   };
 
+  // TODO: Figure out color for unselected cashflow light
   return (
     <Card
       className={cn(
@@ -31,10 +32,16 @@ const BudgetsToolCard = (props: BudgetsToolCardProps): JSX.Element => {
       <Card
         className={cn(
           'h-[20px] w-full',
-          props.isNetCashflowPositive ? 'bg-success' : 'bg-destructive'
+          props.isSelected
+            ? props.isNetCashflowPositive
+              ? 'bg-success'
+              : 'bg-destructive'
+            : 'bg-gray-300'
         )}
       />
-      <span className="text-sm">{months.at(props.date.getMonth())?.substring(0, 3)}</span>
+      <span className="select-none text-sm">
+        {months.at(props.date.getMonth())?.substring(0, 3)}
+      </span>
       {props.date.getMonth() === 0 || props.date.getMonth() === 11 ? (
         <span className="text-xs text-muted-foreground">{props.date.getFullYear()}</span>
       ) : (

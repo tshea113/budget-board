@@ -87,6 +87,7 @@ const Budgets = (): JSX.Element => {
           addSelectedDate={addSelectedDate}
           removeSelectedDate={removeSelectedDate}
           showCopy={budgetsQuery.data.length === 0}
+          isPending={budgetsQuery.isPending || transactionsForMonthQuery.isPending}
         />
         <div className="space-y-10">
           <BudgetCardsGroup
