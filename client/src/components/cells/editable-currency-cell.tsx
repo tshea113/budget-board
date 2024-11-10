@@ -18,6 +18,10 @@ const EditableCurrencyCell = (props: EditableCurrencyCellProps): JSX.Element => 
     props.value.toFixed(props.hideCents ? 0 : 2)
   );
 
+  React.useEffect(() => {
+    setCurrencyDisplayValue(props.value.toFixed(props.hideCents ? 0 : 2));
+  }, [props.value]);
+
   const onCurrencyBlur = (): void => {
     if (!isNaN(parseFloat(currencyDisplayValue))) {
       props.editCell(parseFloat(currencyDisplayValue));

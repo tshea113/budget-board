@@ -35,7 +35,10 @@ export const groupBudgetsByCategory = (budgets: Budget[]): Map<string, Budget[]>
     })
     .reduce(
       (budgetMap: any, item: Budget) =>
-        budgetMap.set(item.category, [...(budgetMap.get(item.category) || []), item]),
+        budgetMap.set(item.category.toLowerCase(), [
+          ...(budgetMap.get(item.category.toLowerCase()) || []),
+          item,
+        ]),
       new Map()
     );
 

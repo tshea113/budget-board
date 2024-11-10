@@ -78,6 +78,10 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
     }
   };
 
+  React.useEffect(() => {
+    if (props.budgets.length > 1) setIsSelected(false);
+  }, [props.budgets]);
+
   return (
     <Card
       className={cn(
