@@ -104,6 +104,7 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
       if (props.selectedDates.length === 0) {
         // When nothing is selected, revert back to today.
         props.setSelectedDates([initCurrentMonth()]);
+        setIndex(0);
       } else {
         // Otherwise select the most recent selected date.
         props.setSelectedDates([
