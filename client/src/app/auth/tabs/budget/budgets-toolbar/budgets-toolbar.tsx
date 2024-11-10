@@ -108,8 +108,6 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
     setSelectMultiple(!selectMultiple);
   };
 
-  // TODO: Style the toolbar correctly.
-  // TODO: A button to increment and decrement the month would be nice.
   return (
     <div ref={ref} className="flex flex-col gap-2">
       <div className="flex flex-row">
@@ -125,9 +123,9 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
           Select Multiple
         </Button>
       </div>
-      <div className="flex flex-row justify-center gap-1">
+      <div className="flex flex-row items-center gap-2">
         <Button
-          className="m-1 h-8 w-6 p-1"
+          className="h-[62px] w-8 p-1"
           variant="ghost"
           onClick={() => {
             setIndex(index + 1);
@@ -150,7 +148,7 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
           ))}
         </div>
         <Button
-          className="m-1 h-8 w-6 p-1"
+          className="h-[62px] w-8 p-1"
           variant="ghost"
           onClick={() => {
             setIndex(index - 1);
