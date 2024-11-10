@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import BudgetsToolcard from './budgets-toolcard';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
-import { cn, getDateFromMonthsAgo, isInArray } from '@/lib/utils';
+import { cn, getDateFromMonthsAgo, initCurrentMonth, isInArray } from '@/lib/utils';
 import React from 'react';
 import ResponsiveButton from '@/components/responsive-button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -100,9 +100,16 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
 
   const toggleSelectMultiple = () => {
     if (selectMultiple) {
-      props.setSelectedDates([
-        new Date(Math.max(...props.selectedDates.map((d) => d.getTime()))),
-      ]);
+      // Need to pick the date used for our single date.
+      if (props.selectedDates.length === 0) {
+        // When nothing is selected, revert back to today.
+        props.setSelectedDates([initCurrentMonth()]);
+      } else {
+        // Otherwise select the most recent selected date.
+        props.setSelectedDates([
+          new Date(Math.max(...props.selectedDates.map((d) => d.getTime()))),
+        ]);
+      }
     }
 
     setSelectMultiple(!selectMultiple);
