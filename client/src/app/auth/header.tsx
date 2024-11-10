@@ -16,6 +16,7 @@ import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import { InfoResponse } from '@/types/user';
 import { toast } from 'sonner';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 
 const Header = (): JSX.Element => {
   const { request, setAccessToken } = React.useContext<any>(AuthContext);
@@ -54,7 +55,8 @@ const Header = (): JSX.Element => {
   });
 
   return (
-    <div className="flex w-full flex-row">
+    <div className="flex w-full flex-row items-center gap-2">
+      <SidebarTrigger />
       <h2 className="grow text-3xl font-semibold tracking-tight">Budget Board</h2>
       <DropdownMenu>
         <DropdownMenuTrigger>
