@@ -42,11 +42,7 @@ const BudgetsToolCard = (props: BudgetsToolCardProps): JSX.Element => {
       <span className="select-none text-sm">
         {months.at(props.date.getMonth())?.substring(0, 3)}
       </span>
-      {props.date.getMonth() === 0 || props.date.getMonth() === 11 ? (
-        <span className="text-xs text-muted-foreground">{props.date.getFullYear()}</span>
-      ) : (
-        <div className="h-[16px]" />
-      )}
+      <span className="text-xs text-muted-foreground">{props.date.getFullYear()}</span>
     </Card>
   );
 };
