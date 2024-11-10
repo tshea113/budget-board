@@ -175,10 +175,7 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
         </Button>
       </div>
       <div
-        className={cn(
-          'flex flex-row',
-          (props.selectedDates.length !== 1 || props.isPending) && 'hidden'
-        )}
+        className={cn('flex flex-row', (selectMultiple || props.isPending) && 'hidden')}
       >
         {props.showCopy && (
           <ResponsiveButton
