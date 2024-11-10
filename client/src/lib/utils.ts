@@ -32,12 +32,13 @@ export const getMonthsUntilDate = (date: Date): number => {
  * @returns A formatted currency string
  */
 export const convertNumberToCurrency = (number: number, shouldIncludeCents?: boolean) => {
+  // Adding 0 to avoid -0 for the output.
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     maximumFractionDigits: shouldIncludeCents ? 2 : 0,
     minimumFractionDigits: shouldIncludeCents ? 2 : 0,
-  }).format(number);
+  }).format(number + 0);
 };
 
 /**
