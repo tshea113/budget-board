@@ -89,20 +89,12 @@ const Budgets = (): JSX.Element => {
     return map;
   }, [transactionsWithoutHidden, transactionsForMonthsQuery]);
 
-  const addSelectedDate = (newDate: Date): void =>
-    setSelectedDates([newDate, ...selectedDates]);
-  const removeSelectedDate = (removeDate: Date): void =>
-    setSelectedDates(
-      selectedDates.filter((date: Date) => date.getTime() !== removeDate.getTime())
-    );
-
   return (
     <div className="flex w-full flex-col justify-center gap-2 lg:flex-row">
       <div className="flex w-full flex-col gap-2">
         <BudgetsToolbar
           selectedDates={selectedDates}
-          addSelectedDate={addSelectedDate}
-          removeSelectedDate={removeSelectedDate}
+          setSelectedDates={setSelectedDates}
           timeToMonthlyTotalsMap={timeToMonthlyTotalsMap}
           showCopy={budgetsQuery.data.length === 0}
           isPending={budgetsQuery.isPending || transactionsForMonthsQuery.isPending}

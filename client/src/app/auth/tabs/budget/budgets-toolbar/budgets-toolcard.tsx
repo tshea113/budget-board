@@ -6,6 +6,7 @@ import React from 'react';
 interface BudgetsToolCardProps {
   date: Date;
   isSelected: boolean;
+  isPending: boolean;
   isNetCashflowPositive: boolean;
   handleClick: (date: Date) => void;
 }
@@ -31,7 +32,7 @@ const BudgetsToolCard = (props: BudgetsToolCardProps): JSX.Element => {
       <Card
         className={cn(
           'h-[20px] w-full',
-          props.isSelected
+          props.isSelected && !props.isPending
             ? props.isNetCashflowPositive
               ? 'bg-success'
               : 'bg-destructive'

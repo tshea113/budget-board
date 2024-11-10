@@ -17,8 +17,7 @@ import { useMeasure } from '@uidotdev/usehooks';
 
 interface BudgetsToolbarProps {
   selectedDates: Date[];
-  addSelectedDate: (date: Date) => void;
-  removeSelectedDate: (date: Date) => void;
+  setSelectedDates: (newDates: Date[]) => void;
   timeToMonthlyTotalsMap: Map<number, number>;
   showCopy: boolean;
   isPending: boolean;
@@ -26,11 +25,12 @@ interface BudgetsToolbarProps {
 
 const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
   const [index, setIndex] = React.useState(0);
+  const [selectMultiple, setSelectMultiple] = React.useState(false);
 
   const [ref, { width }] = useMeasure();
 
   // Padding of 25 on each side and each card is roughly 70 pixels.
-  const dates = Array.from({ length: Math.floor(((width ?? 0) - 50) / 70) }, (_, i) =>
+  const dates = Array.from({ length: Math.floor(((width ?? 0) - 72) / 68) }, (_, i) =>
     getDateFromMonthsAgo(i + index)
   );
 
@@ -79,38 +79,53 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
   };
 
   const handleClick = (date: Date) => {
-    if (isInArray(date, props.selectedDates)) {
-      props.removeSelectedDate(date);
+    if (selectMultiple) {
+      // When select multiple is on, we need to add/remove selected dates when clicked.
+      if (isInArray(date, props.selectedDates)) {
+        // If it is present, then we need to remove it.
+        props.setSelectedDates(
+          props.selectedDates.filter(
+            (selectedDate: Date) => selectedDate.getTime() !== date.getTime()
+          )
+        );
+      } else {
+        // If it isn't present, then add to selected.
+        props.setSelectedDates([date, ...props.selectedDates]);
+      }
     } else {
-      props.addSelectedDate(date);
+      // When select multiple is off, we should switch the date when clicked.
+      props.setSelectedDates([date]);
     }
+  };
+
+  const toggleSelectMultiple = () => {
+    if (selectMultiple) {
+      props.setSelectedDates([
+        new Date(Math.max(...props.selectedDates.map((d) => d.getTime()))),
+      ]);
+    }
+
+    setSelectMultiple(!selectMultiple);
   };
 
   // TODO: Style the toolbar correctly.
   // TODO: A button to increment and decrement the month would be nice.
   return (
     <div ref={ref} className="flex flex-col gap-2">
-      <div className="flex flex-row-reverse justify-center gap-1">
+      <div className="flex flex-row">
+        <span className="grow" />
         <Button
-          className="m-1 h-8 w-6 p-1"
-          variant="ghost"
-          onClick={() => {
-            setIndex(index - 1);
-          }}
+          className={cn(
+            'w-[125px]',
+            selectMultiple ? 'border-success text-success hover:text-success' : ''
+          )}
+          variant="outline"
+          onClick={toggleSelectMultiple}
         >
-          <ChevronRightIcon />
+          Select Multiple
         </Button>
-        {dates.map((date: Date, i: number) => (
-          <BudgetsToolcard
-            key={i}
-            date={date}
-            isSelected={isInArray(date, props.selectedDates)}
-            isNetCashflowPositive={
-              (props.timeToMonthlyTotalsMap.get(date.getTime()) ?? -1) > 0
-            }
-            handleClick={handleClick}
-          />
-        ))}
+      </div>
+      <div className="flex flex-row justify-center gap-1">
         <Button
           className="m-1 h-8 w-6 p-1"
           variant="ghost"
@@ -119,6 +134,29 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
           }}
         >
           <ChevronLeftIcon />
+        </Button>
+        <div className="flex grow flex-row-reverse justify-between">
+          {dates.map((date: Date, i: number) => (
+            <BudgetsToolcard
+              key={i}
+              date={date}
+              isSelected={isInArray(date, props.selectedDates)}
+              isPending={props.isPending}
+              isNetCashflowPositive={
+                (props.timeToMonthlyTotalsMap.get(date.getTime()) ?? -1) > 0
+              }
+              handleClick={handleClick}
+            />
+          ))}
+        </div>
+        <Button
+          className="m-1 h-8 w-6 p-1"
+          variant="ghost"
+          onClick={() => {
+            setIndex(index - 1);
+          }}
+        >
+          <ChevronRightIcon />
         </Button>
       </div>
       <div
