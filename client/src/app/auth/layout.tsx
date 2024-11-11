@@ -1,7 +1,7 @@
 import Header from './header';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import AppSidebar from './app-sidebar';
-import PageContent, { Pages } from './tabs/page-content';
+import PageContent, { Pages } from './pages/page-content';
 import React from 'react';
 
 const DashboardLayout = (): JSX.Element => {

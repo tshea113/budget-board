@@ -22,7 +22,7 @@ import {
   LogOutIcon,
   UserPenIcon,
 } from 'lucide-react';
-import { Pages } from './tabs/page-content';
+import { Pages } from './pages/page-content';
 import {
   DropdownMenu,
   DropdownMenuContent,
