@@ -63,6 +63,7 @@ const AppSidebar = (props: AppSidebarProps): JSX.Element => {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
+                    isActive={props.currentPage === item.page}
                     asChild
                     onClick={() => props.setCurrentPage(item.page)}
                   >
