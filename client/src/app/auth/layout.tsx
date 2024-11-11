@@ -1,13 +1,28 @@
-import Tab from './tabs/tab';
 import Header from './header';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import AppSidebar from './app-sidebar';
+import PageContent, { Pages } from './pages/page-content';
+import React from 'react';
+
 const DashboardLayout = (): JSX.Element => {
+  const [currentPage, setCurrentPage] = React.useState(Pages.Dashboard);
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+
   return (
-    <div className="grid w-screen">
-      <div className="flex w-full flex-col gap-2 place-self-center p-3 2xl:max-w-screen-2xl">
-        <Header />
-        <Tab />
+    <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
+      <div className="flex w-screen flex-row justify-center">
+        <AppSidebar
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+        />
+        <div className="flex w-full grow flex-col gap-2 p-3 2xl:max-w-screen-2xl">
+          <Header />
+          <PageContent page={currentPage} />
+        </div>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 
