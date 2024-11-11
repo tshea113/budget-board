@@ -12,10 +12,10 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import {
+  ArrowLeftFromLineIcon,
   ArrowRightFromLineIcon,
   BanknoteIcon,
   CalculatorIcon,
-  ChartNoAxesColumnIncreasingIcon,
   ChevronsUpDown,
   GoalIcon,
   LayoutDashboardIcon,
@@ -39,9 +39,9 @@ import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import SheetItem from '@/components/sheet-item';
 import AccountSettings from './account-settings/account-settings';
+import { useIsMobile } from '@/components/hooks/use-mobile';
 
-// Menu items.
-const items = [
+const menuItems = [
   {
     title: 'Dashboard',
     page: Pages.Dashboard,
@@ -62,11 +62,12 @@ const items = [
     page: Pages.Goals,
     icon: GoalIcon,
   },
-  {
-    title: 'Trends',
-    page: Pages.Trends,
-    icon: ChartNoAxesColumnIncreasingIcon,
-  },
+  // TODO: We can re-enable this when I create the trends page
+  // {
+  //   title: 'Trends',
+  //   page: Pages.Trends,
+  //   icon: ChartNoAxesColumnIncreasingIcon,
+  // },
 ];
 
 interface AppSidebarProps {
@@ -78,6 +79,8 @@ interface AppSidebarProps {
 
 const AppSidebar = (props: AppSidebarProps): JSX.Element => {
   const { request, setAccessToken } = React.useContext<any>(AuthContext);
+
+  const isMobile = useIsMobile();
 
   const queryClient = useQueryClient();
   const Logout = (): void => {
@@ -114,19 +117,25 @@ const AppSidebar = (props: AppSidebarProps): JSX.Element => {
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader>
-        <SidebarMenu className="flex flex-row justify-end">
-          <SidebarTrigger>
-            <ArrowRightFromLineIcon className="h-5 w-5" />
-          </SidebarTrigger>
-        </SidebarMenu>
-      </SidebarHeader>
+      {!isMobile && (
+        <SidebarHeader>
+          <SidebarMenu className="flex flex-row justify-end">
+            <SidebarTrigger>
+              {props.sidebarOpen ? (
+                <ArrowLeftFromLineIcon className="h-5 w-5" />
+              ) : (
+                <ArrowRightFromLineIcon className="h-5 w-5" />
+              )}
+            </SidebarTrigger>
+          </SidebarMenu>
+        </SidebarHeader>
+      )}
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
+              {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     isActive={props.currentPage === item.page}
@@ -153,7 +162,7 @@ const AppSidebar = (props: AppSidebarProps): JSX.Element => {
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
                 <Avatar className="h-8 w-8">
-                  <AvatarFallback>
+                  <AvatarFallback className="bg-primary text-primary-foreground">
                     {userInfoQuery.data?.email.charAt(0).toLocaleUpperCase() ?? 'A'}
                   </AvatarFallback>
                 </Avatar>
