@@ -79,7 +79,7 @@
     --sidebar-primary: 224 49% 70%;
     --sidebar-primary-foreground: 228 18% 11%;
     --sidebar-accent: 233 6% 25%;
-    --sidebar-accent-foreground: 230 3% 57%;
+    --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 224.3 76.3% 48%;
   }
