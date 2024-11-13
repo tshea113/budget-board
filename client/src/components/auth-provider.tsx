@@ -1,3 +1,4 @@
+import { getProjectEnvVariables } from '@/shared/projectEnvVariables';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { createContext, useState } from 'react';
 import React from 'react';
@@ -16,6 +17,8 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
   const [accessTokenExpirationDate, setAccessTokenExpirationDate] = useState(new Date(0));
   const [loading, setLoading] = useState<boolean>(false);
 
+  const { envVariables } = getProjectEnvVariables();
+
   // The access token will refresh when there are less than this amount of seconds left before it expires.
   const accessTokenRefreshTime = 30;
 
@@ -27,7 +30,7 @@ const AuthProvider = ({ children }: { children: any }): JSX.Element => {
 
   // base url is sourced from environment variables
   const client = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
+    baseURL: envVariables.VITE_API_URL,
     withCredentials: true,
   });
 
