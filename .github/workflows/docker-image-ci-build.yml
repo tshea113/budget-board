@@ -1,8 +1,9 @@
 name: Docker Image CI Build and Publish
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - main
 
 # Defines two custom environment variables for the workflow.
 # These are used for the Container registry domain, and a name for the
@@ -38,6 +39,8 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha
 
       - name: Build and push Docker image
         id: push
