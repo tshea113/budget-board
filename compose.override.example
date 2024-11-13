@@ -13,9 +13,8 @@ services:
     ports:
       - 8080:8080
   budget-board-client:
-    build:
-      args:
-        VITE_API_URL: https://example.com
+    environment:
+      VITE_API_URL: https://example.com
     ports:
       - 80:80
       - 443:443
