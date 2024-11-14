@@ -9,6 +9,8 @@ services:
     container_name: budget-board-client
     restart: unless-stopped
     build: ./client
+    volumes:
+      - ./client/.docker/nginx/conf/nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - budget-board-server
   budget-board-db:
