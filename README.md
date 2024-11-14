@@ -2,7 +2,7 @@
 
 [![Docker Image CI](https://github.com/tshea113/budget-board/actions/workflows/docker-image.yml/badge.svg?branch=main)](https://github.com/tshea113/budget-board/actions/workflows/docker-image.yml)
 
-A simple and focused app for monthly budgeting and tracking financial goals 
+A simple and focused app for monthly budgeting and tracking financial goals
 
 > [!WARNING]
 > This project is in development!
@@ -74,7 +74,7 @@ This container hosts a PostgreSQL database used for storing app data. If you hav
 ### Setting up Nginx
 
 The budget-board-client container requires a configuration file for nginx.
-There are two example nginx.conf files depending on how you would like to deploy.
+There are two example nginx.conf files located in `.docker/nginx/conf`.
 You will need to update some fields in the file and rename one of the following files to `nginx.conf`.
 
 The files are largely the same, except the https config file will redirect all traffic to port 443 and require that the site be connect to through https.

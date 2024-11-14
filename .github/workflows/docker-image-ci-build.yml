@@ -19,9 +19,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - dockerfile: ./client/Dockerfile
+          - dockerfile: ./client
             image: ghcr.io/tshea113/budget-board/client
-          - dockerfile: ./server/Dockerfile
+          - dockerfile: ./server
             image: ghcr.io/tshea113/budget-board/server
 
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
@@ -54,8 +54,7 @@ jobs:
         id: push
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: ${{ matrix.dockerfile }}
+          context: ${{ matrix.dockerfile }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
