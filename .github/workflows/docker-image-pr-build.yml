@@ -21,8 +21,10 @@ jobs:
       - name: Rename file
         run: mv "client/nginx(http).conf.example" client/nginx.conf
 
-      - name: Delete file
-        run: rm -f "client/nginx(http).conf.example"
-
       - name: Build the Docker image
-        run: docker build ${{ matrix.dockerfile }} --tag ${{ matrix.image }}:$(date +%s)
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          file: ${{ matrix.dockerfile }}
+          push: false
+          tags: ${{ matrix.image }}:$(date +%s)
