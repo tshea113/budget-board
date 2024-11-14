@@ -28,7 +28,7 @@ jobs:
         id: push
         uses: docker/build-push-action@v6
         with:
-          file: ${{ matrix.dockerfile }}
+          context: ${{ matrix.dockerfile }}
           push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
