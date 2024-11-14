@@ -2,13 +2,13 @@ services:
   budget-board-server:
     container_name: budget-board-server
     restart: unless-stopped
-    image: ghcr.io/tshea113/budget-board/server:sha-9763259
+    image: ghcr.io/tshea113/budget-board/server:latest
     environment:
       - Logging__LogLevel__Default=Information
   budget-board-client:
     container_name: budget-board-client
     restart: unless-stopped
-    image: ghcr.io/tshea113/budget-board/client:sha-9763259
+    image: ghcr.io/tshea113/budget-board/client:latest
     volumes:
       - ./client/.docker/nginx/conf/nginx.conf:/etc/nginx/conf.d/default.conf
   budget-board-db:
