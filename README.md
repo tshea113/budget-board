@@ -20,7 +20,7 @@ Feel free to open an issue if you notice any bugs or have any feature requests!
 
 ## Getting Started
 
-This project is built and deployed using Docker Compose. You will need to create a `compose.override.yml` file with some configuration information.
+This project is deployed using Docker Compose. You will need to create a `compose.override.yml` file with some configuration information.
 An example has been provided, and more details about the configurations are below.
 
 ### Configuration
@@ -29,10 +29,6 @@ An example has been provided, and more details about the configurations are belo
 
 You will need to create a `compose.override.yml` file with some necessary configuration information.
 You can use `compose.override.example` as a template.
-
-> [!NOTE]
-> Many of the environment variables set in the override file are used during the build.
-> You will need to re-build and deploy the container for changes to take effect.
 
 Here are some of the configuration options for the different containers:
 
@@ -83,16 +79,16 @@ This should match the values you configured for `volumes` in `compose.override.y
 
 ### Deploy
 
-Build & deploy the app by running the following command:
+Deploy the app by running the following command:
 
 ```
-docker compose --profile include-db up --build
+docker compose --profile include-db up
 ```
 
 If you don't want to run the postgres container, you can run:
 
 ```
-docker compose up --build
+docker compose up
 ```
 
 You can now access the app at the specified `CLIENT_URL`.
