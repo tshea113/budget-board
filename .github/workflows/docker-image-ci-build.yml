@@ -53,8 +53,8 @@ jobs:
             latest=true
           tags: |
             type=semver,pattern={{raw}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
+            type=semver,pattern=v{{major}}.{{minor}}
+            type=semver,pattern=v{{major}}
             type=sha
             raw,value=stable,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
 
