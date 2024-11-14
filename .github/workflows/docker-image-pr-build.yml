@@ -18,8 +18,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Rename file
-        run: mv "client/nginx(http).conf.example" client/nginx.conf
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ matrix.image }}
 
       - name: Build the Docker image
         id: push
@@ -27,4 +30,5 @@ jobs:
         with:
           file: ${{ matrix.dockerfile }}
           push: false
-          tags: ${{ matrix.image }}:$(date +%s)
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
