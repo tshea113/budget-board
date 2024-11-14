@@ -1,6 +1,8 @@
 name: Docker Image CI Build and Publish
 
 on:
+  release:
+    types: [published]
   push:
     branches:
       - main
@@ -48,6 +50,7 @@ jobs:
         with:
           images: ${{ matrix.image }}
           tags: |
+            type=semver,pattern={{raw}}
             type=sha
 
       - name: Build and push Docker image
