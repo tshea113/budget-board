@@ -1,6 +1,8 @@
 # Budget Board
 
-[![Docker Image CI](https://github.com/tshea113/budget-board/actions/workflows/docker-image.yml/badge.svg?branch=main)](https://github.com/tshea113/budget-board/actions/workflows/docker-image.yml)
+[![Build and Publish](https://github.com/tshea113/budget-board/actions/workflows/docker-image-ci-build.yml/badge.svg)](https://github.com/tshea113/budget-board/actions/workflows/docker-image-ci-build.yml)
+![GitHub Release](https://img.shields.io/github/v/release/tshea113/budget-board)
+
 
 A simple and focused app for monthly budgeting and tracking financial goals
 
