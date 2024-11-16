@@ -3,20 +3,18 @@ import TransactionCard, { TransactionCardType } from './transaction-card';
 import React from 'react';
 import PageSizeSelect from '@/components/page-size-select';
 import PageSelect from '@/components/page-select';
-import TransactionsConfiguration from './transactions-configuration/transactions-configuration';
-import { filterInvisibleTransactions } from '@/lib/transactions';
-import SortByMenu, { Sorts } from './sort-by-menu';
-import { SortDirection } from './sort-button';
+import { SortDirection } from './transactions-header/sort-button';
+import { Sorts } from './transactions-header/sort-by-menu';
 
 interface TransactionCardsProps {
   transactions: Transaction[];
+  sort: Sorts;
+  sortDirection: SortDirection;
 }
 
 const TransactionCards = (props: TransactionCardsProps): JSX.Element => {
   const [page, setPage] = React.useState(1);
   const [itemsPerPage, setItemsPerPage] = React.useState(25);
-  const [sort, setSort] = React.useState(Sorts.Date);
-  const [sortDirection, setSortDirection] = React.useState(SortDirection.Decending);
 
   React.useEffect(() => {
     setPage(1);
@@ -33,7 +31,7 @@ const TransactionCards = (props: TransactionCardsProps): JSX.Element => {
   ): Transaction[] => {
     switch (sortValue) {
       case Sorts.Date:
-        return sortDirection === SortDirection.Decending
+        return props.sortDirection === SortDirection.Decending
           ? transactions.sort(
               (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
             )
@@ -41,7 +39,7 @@ const TransactionCards = (props: TransactionCardsProps): JSX.Element => {
               (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
             );
       case Sorts.Merchant:
-        return sortDirection === SortDirection.Decending
+        return props.sortDirection === SortDirection.Decending
           ? transactions.sort((a, b) =>
               b.merchantName
                 .toLocaleLowerCase()
@@ -53,7 +51,7 @@ const TransactionCards = (props: TransactionCardsProps): JSX.Element => {
                 .localeCompare(b.merchantName.toLocaleLowerCase())
             );
       case Sorts.Category:
-        return sortDirection === SortDirection.Decending
+        return props.sortDirection === SortDirection.Decending
           ? transactions.sort((a, b) =>
               (b.subcategory === null || b.subcategory === ''
                 ? (b.category ?? 'Uncategorized')
@@ -81,7 +79,7 @@ const TransactionCards = (props: TransactionCardsProps): JSX.Element => {
                 )
             );
       case Sorts.Amount:
-        return sortDirection === SortDirection.Decending
+        return props.sortDirection === SortDirection.Decending
           ? transactions.sort((a, b) => (a.amount < b.amount ? 1 : -1))
           : transactions.sort((a, b) => (a.amount > b.amount ? 1 : -1));
       default:
@@ -91,19 +89,7 @@ const TransactionCards = (props: TransactionCardsProps): JSX.Element => {
 
   return (
     <div className="flex w-full flex-col gap-2">
-      <div className="flex flex-row items-end">
-        <SortByMenu
-          currentSort={sort}
-          setCurrentSort={setSort}
-          sortDirection={sortDirection}
-          setSortDirection={setSortDirection}
-        />
-        <div className="grow" />
-        <TransactionsConfiguration
-          transactions={filterInvisibleTransactions(props.transactions)}
-        />
-      </div>
-      {sortTransactions(props.transactions, sort)
+      {sortTransactions(props.transactions, props.sort)
         .slice((page - 1) * itemsPerPage, (page - 1) * itemsPerPage + itemsPerPage)
         .map((transaction: Transaction) => (
           <TransactionCard

@@ -1,4 +1,4 @@
-import SortButton, { SortDirection } from './sort-button';
+import SortButton, { SortDirection } from './transactions-header/sort-button';
 
 export enum Sorts {
   Date,
