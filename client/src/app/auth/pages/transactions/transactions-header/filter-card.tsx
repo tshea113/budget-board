@@ -20,50 +20,50 @@ const FilterCard = (props: FilterCardProps): JSX.Element => {
     <Card>
       <div className="flex w-full flex-row gap-4 p-1">
         <div className="flex flex-col gap-1">
-          <span>From:</span>
+          <span>Start Date</span>
           <DatePicker
-            value={props.filters.fromDate}
+            value={props.filters.startDate}
             onDayClick={(date: Date) => {
               props.setFilters({
                 accounts: props.filters.accounts,
                 category: props.filters.category,
-                fromDate: getStandardDate(date),
-                toDate: props.filters.toDate,
+                startDate: getStandardDate(date),
+                endDate: props.filters.endDate,
               });
             }}
           />
         </div>
         <div className="flex flex-col gap-1">
-          <span>To:</span>
+          <span>End Date</span>
           <DatePicker
-            value={props.filters.toDate}
+            value={props.filters.endDate}
             onDayClick={(date: Date) => {
               props.setFilters({
                 accounts: props.filters.accounts,
                 category: props.filters.category,
-                fromDate: props.filters.fromDate,
-                toDate: getStandardDate(date),
+                startDate: props.filters.startDate,
+                endDate: getStandardDate(date),
               });
             }}
           />
         </div>
         <div className="flex flex-col gap-1">
-          <span>Account:</span>
+          <span>Account</span>
           <AccountInput
             selectedAccountIds={props.filters.accounts}
             setSelectedAccountIds={(newAccountIds: string[]) => {
               props.setFilters({
                 accounts: newAccountIds,
                 category: props.filters.category,
-                fromDate: props.filters.fromDate,
-                toDate: props.filters.toDate,
+                startDate: props.filters.startDate,
+                endDate: props.filters.endDate,
               });
             }}
             hideHidden={true}
           />
         </div>
         <div className="flex flex-col gap-1">
-          <span>Category:</span>
+          <span>Category</span>
           <CategoryInput
             selectedCategory={props.filters.category}
             categories={transactionCategories}
@@ -71,8 +71,8 @@ const FilterCard = (props: FilterCardProps): JSX.Element => {
               props.setFilters({
                 accounts: props.filters.accounts,
                 category: newCategory,
-                fromDate: props.filters.fromDate,
-                toDate: props.filters.toDate,
+                startDate: props.filters.startDate,
+                endDate: props.filters.endDate,
               });
             }}
           />
