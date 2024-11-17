@@ -18,6 +18,7 @@ import { AxiosResponse } from 'axios';
 interface AccountInputProps {
   selectedAccountIds: string[];
   setSelectedAccountIds: (accountIds: string[]) => void;
+  hideHidden?: boolean;
 }
 
 const AccountInput = (props: AccountInputProps): JSX.Element => {
@@ -40,6 +41,14 @@ const AccountInput = (props: AccountInputProps): JSX.Element => {
       return [];
     },
   });
+
+  const filteredAccounts = React.useMemo(() => {
+    if (props.hideHidden)
+      return (accountsQuery.data ?? []).filter(
+        (a) => !a.hideAccount && !a.hideTransactions
+      );
+    return accountsQuery.data ?? [];
+  }, [accountsQuery.data, props.hideHidden]);
 
   const toggleSelect = (account: Account) => {
     if (props.selectedAccountIds.some((a) => areStringsEqual(a, account.id))) {
@@ -74,7 +83,7 @@ const AccountInput = (props: AccountInputProps): JSX.Element => {
           <CommandList>
             <CommandEmpty>No accounts found.</CommandEmpty>
             <CommandGroup>
-              {(accountsQuery.data ?? []).map((account: Account) => {
+              {filteredAccounts.map((account: Account) => {
                 const isSelected = props.selectedAccountIds.includes(account.id);
 
                 return (

@@ -35,15 +35,12 @@ const Transactions = (): JSX.Element => {
   });
 
   const filteredTransactions = React.useMemo(() => {
-    let filteredTransactions = transactionsQuery.data ?? [];
-
     if (filters.accounts.length > 0) {
-      filteredTransactions = filteredTransactions.filter((t) =>
+      return (transactionsQuery.data ?? []).filter((t) =>
         filters.accounts.some((f) => areStringsEqual(f, t.accountID))
       );
     }
-
-    return filteredTransactions;
+    return transactionsQuery.data ?? [];
   }, [filters, transactionsQuery.data]);
 
   if (transactionsQuery.isPending) {

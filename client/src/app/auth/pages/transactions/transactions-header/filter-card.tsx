@@ -23,6 +23,7 @@ const FilterCard = (props: FilterCardProps): JSX.Element => {
             setSelectedAccountIds={(newAccountIds: string[]) => {
               props.setFilters({ accounts: newAccountIds });
             }}
+            hideHidden={true}
           />
         </div>
         <div className="flex flex-col gap-1"></div>
