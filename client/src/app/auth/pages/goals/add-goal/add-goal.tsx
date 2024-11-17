@@ -141,8 +141,8 @@ const AddGoal = (): JSX.Element => {
                         <FormLabel>Associated Accounts</FormLabel>
                         <FormControl>
                           <AccountInput
-                            initialValues={field.value}
-                            onSelectChange={field.onChange}
+                            selectedAccountIds={field.value}
+                            setSelectedAccountIds={field.onChange}
                           />
                         </FormControl>
                         <FormMessage />

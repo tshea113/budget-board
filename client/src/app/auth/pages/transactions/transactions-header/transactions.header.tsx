@@ -1,6 +1,6 @@
 import { filterInvisibleTransactions } from '@/lib/transactions';
 import TransactionsConfiguration from '../transactions-configuration/transactions-configuration';
-import { Transaction } from '@/types/transaction';
+import { Filters, Transaction } from '@/types/transaction';
 import { SortDirection } from './sort-button';
 import SortByMenu, { Sorts } from './sort-by-menu';
 import { Button } from '@/components/ui/button';
@@ -15,10 +15,13 @@ interface TransactionsHeaderProps {
   setSort: (newSort: Sorts) => void;
   sortDirection: SortDirection;
   setSortDirection: (newSortDirection: SortDirection) => void;
+  filters: Filters;
+  setFilters: (newFilters: Filters) => void;
 }
 
 const TransactionsHeader = (props: TransactionsHeaderProps): JSX.Element => {
   const [isFilterCardOpen, setIsFilterCardOpen] = React.useState(false);
+
   return (
     <div className="flex w-full flex-col gap-2">
       <div className="flex w-full flex-row items-end gap-2">
@@ -34,7 +37,13 @@ const TransactionsHeader = (props: TransactionsHeaderProps): JSX.Element => {
             isFilterCardOpen ? 'border-primary text-primary hover:text-primary' : ''
           )}
           variant="outline"
-          onClick={() => setIsFilterCardOpen(!isFilterCardOpen)}
+          onClick={() => {
+            if (isFilterCardOpen) {
+              // Closing the filter card clears the filters
+              props.setFilters(new Filters());
+            }
+            setIsFilterCardOpen(!isFilterCardOpen);
+          }}
         >
           <span>Filter</span>
           <FilterIcon className="h-4 w-4" />
@@ -44,7 +53,11 @@ const TransactionsHeader = (props: TransactionsHeaderProps): JSX.Element => {
           transactions={filterInvisibleTransactions(props.transactions)}
         />
       </div>
-      <FilterCard isOpen={isFilterCardOpen} />
+      <FilterCard
+        isOpen={isFilterCardOpen}
+        filters={props.filters}
+        setFilters={props.setFilters}
+      />
     </div>
   );
 };

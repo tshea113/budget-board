@@ -15,6 +15,20 @@ export interface Transaction {
 
 export interface NewTransaction extends Partial<Transaction> {}
 
+export interface IFilters {
+  accounts: string[];
+}
+
+export class Filters implements IFilters {
+  accounts: string[] = [];
+
+  constructor(filter?: Filters) {
+    if (filter) {
+      this.accounts = filter.accounts;
+    }
+  }
+}
+
 export const hiddenTransactionCategory = 'Hide from Budgets';
 
 export const transactionCategories: ICategory[] = [
