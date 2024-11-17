@@ -1,6 +1,12 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
+const DATE = 1;
+const HOUR = 12;
+const MINUTES = 0;
+const SECONDS = 0;
+const MILLISECONDS = 0;
+
 export const cn = (...inputs: ClassValue[]): string => twMerge(clsx(inputs));
 
 /**
@@ -58,11 +64,11 @@ export const initCurrentMonth = (): Date => {
 
   // We only really care about the month and year here, so we need to set
   // a consistent time for the rest.
-  date.setDate(1);
-  date.setHours(12);
-  date.setMinutes(0);
-  date.setSeconds(0);
-  date.setMilliseconds(0);
+  date.setDate(DATE);
+  date.setHours(HOUR);
+  date.setMinutes(MINUTES);
+  date.setSeconds(SECONDS);
+  date.setMilliseconds(MILLISECONDS);
 
   return date;
 };
@@ -124,3 +130,19 @@ export const getMonthAndYearDateString = (date: Date): string => {
  */
 export const getDaysInMonth = (month: number, year: number): number =>
   new Date(year, month, 0).getDate();
+
+/**
+ * Creates a date that has standard values for the time.
+ * @param date The date-time you wish to convert to standardized date.
+ * @returns The specified date with a time of 12:00:00:00.
+ */
+export const getStandardDate = (date: Date) =>
+  new Date(
+    new Date(date).getFullYear(),
+    new Date(date).getMonth(),
+    new Date(date).getDate(),
+    HOUR,
+    MINUTES,
+    SECONDS,
+    MILLISECONDS
+  );

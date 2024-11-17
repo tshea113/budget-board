@@ -15,7 +15,7 @@ const EditableCategoryCell = (props: EditableCategoryCellProps): JSX.Element => 
     () =>
       props.transaction.subcategory && props.transaction.subcategory.length > 0
         ? props.transaction.subcategory
-        : props.transaction.category ?? '',
+        : (props.transaction.category ?? ''),
     [props.transaction]
   );
 
@@ -54,8 +54,8 @@ const EditableCategoryCell = (props: EditableCategoryCellProps): JSX.Element => 
       {props.isSelected ? (
         <CategoryInput
           className="w-[190px]"
-          initialValue={categoryDisplayValue}
-          onSelectChange={onCategoryPick}
+          selectedCategory={categoryDisplayValue}
+          setSelectedCategory={onCategoryPick}
           categories={transactionCategories}
         />
       ) : (

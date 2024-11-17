@@ -17,14 +17,13 @@ import { buildCategoriesTree, getFormattedCategoryValue } from '@/lib/category';
 
 interface CategoryInputProps {
   className?: string;
-  initialValue: string;
   categories: ICategory[];
-  onSelectChange: (category: string) => void;
+  selectedCategory: string;
+  setSelectedCategory: (category: string) => void;
 }
 
 const CategoryInput = (props: CategoryInputProps): JSX.Element => {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(props.initialValue ?? '');
 
   return (
     <div className={props.className ?? ''}>
@@ -39,8 +38,8 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
               e.stopPropagation();
             }}
           >
-            {value.length > 0
-              ? getFormattedCategoryValue(value, props.categories)
+            {props.selectedCategory.length > 0
+              ? getFormattedCategoryValue(props.selectedCategory, props.categories)
               : 'Select category...'}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
@@ -66,15 +65,16 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
                     className="font-bold"
                     value={category.value}
                     onSelect={(currentValue) => {
-                      setValue(currentValue === value ? '' : currentValue);
-                      props.onSelectChange(currentValue === value ? '' : currentValue);
+                      props.setSelectedCategory(
+                        currentValue === props.selectedCategory ? '' : currentValue
+                      );
                       setOpen(false);
                     }}
                   >
                     <Check
                       className={cn(
                         'mr-2 h-4 w-4',
-                        areStringsEqual(value, category.value)
+                        areStringsEqual(props.selectedCategory, category.value)
                           ? 'opacity-100'
                           : 'opacity-0'
                       )}
@@ -83,10 +83,11 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
                   </CommandItem>
                   <CommandSubcategory
                     category={category}
-                    initialValue={value}
-                    updateValue={(currentValue) => {
-                      setValue(currentValue === value ? '' : currentValue);
-                      props.onSelectChange(currentValue === value ? '' : currentValue);
+                    selectedCategory={props.selectedCategory}
+                    setSelectedCategory={(currentValue: string) => {
+                      props.setSelectedCategory(
+                        currentValue === props.selectedCategory ? '' : currentValue
+                      );
                       setOpen(false);
                     }}
                   />
