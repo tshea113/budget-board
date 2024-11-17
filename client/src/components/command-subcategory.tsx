@@ -1,39 +1,29 @@
 import { CommandItem } from '@/components/ui/command';
 import { areStringsEqual, cn } from '@/lib/utils';
-import { ICategoryNode } from '@/types/category';
+import { ICategory, ICategoryNode } from '@/types/category';
 import { Check } from 'lucide-react';
-import React from 'react';
 
 interface CommandSubcategoryProps {
   category: ICategoryNode;
-  initialValue: string;
-  updateValue: (newValue: string) => void;
+  selectedCategory: string;
+  setSelectedCategory: (newValue: string) => void;
 }
 
-const CommandSubcategory = ({
-  category,
-  initialValue,
-  updateValue,
-}: CommandSubcategoryProps): JSX.Element => {
-  const [value, setValue] = React.useState(initialValue);
-
-  const onSelect = (newValue: string): void => {
-    setValue(newValue);
-    updateValue(newValue);
-  };
-
+const CommandSubcategory = (props: CommandSubcategoryProps): JSX.Element => {
   return (
     <>
-      {category.subCategories.map((subCategory) => (
+      {props.category.subCategories.map((subCategory: ICategory) => (
         <CommandItem
           key={subCategory.value}
           value={subCategory.value}
-          onSelect={onSelect}
+          onSelect={props.setSelectedCategory}
         >
           <Check
             className={cn(
               'mr-8 h-4 w-4',
-              areStringsEqual(value, subCategory.value) ? 'opacity-100' : 'opacity-0'
+              areStringsEqual(props.selectedCategory, subCategory.value)
+                ? 'opacity-100'
+                : 'opacity-0'
             )}
           />
           {subCategory.value}

@@ -21,10 +21,14 @@ export interface IFilters {
 
 export class Filters implements IFilters {
   accounts: string[] = [];
+  category: string = '';
+  fromDate: Date | undefined = undefined;
+  toDate: Date | undefined = undefined;
 
   constructor(filter?: Filters) {
     if (filter) {
       this.accounts = filter.accounts;
+      this.category = filter.category;
     }
   }
 }

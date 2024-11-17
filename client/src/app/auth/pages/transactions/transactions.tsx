@@ -4,12 +4,13 @@ import { AuthContext } from '@/components/auth-provider';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
-import { Filters, Transaction } from '@/types/transaction';
+import { Filters, Transaction, transactionCategories } from '@/types/transaction';
 import TransactionCards from './transaction-cards';
 import { SortDirection } from './transactions-header/sort-button';
 import TransactionsHeader from './transactions-header/transactions.header';
 import { Sorts } from './transactions-header/sort-by-menu';
-import { areStringsEqual } from '@/lib/utils';
+import { areStringsEqual, getStandardDate } from '@/lib/utils';
+import { getIsParentCategory } from '@/lib/category';
 
 const Transactions = (): JSX.Element => {
   const [sort, setSort] = React.useState(Sorts.Date);
@@ -35,12 +36,33 @@ const Transactions = (): JSX.Element => {
   });
 
   const filteredTransactions = React.useMemo(() => {
+    let filteredTransactions = transactionsQuery.data ?? [];
     if (filters.accounts.length > 0) {
-      return (transactionsQuery.data ?? []).filter((t) =>
+      filteredTransactions = filteredTransactions.filter((t) =>
         filters.accounts.some((f) => areStringsEqual(f, t.accountID))
       );
     }
-    return transactionsQuery.data ?? [];
+    if (filters.category && filters.category.length > 0) {
+      filteredTransactions = filteredTransactions.filter((t) =>
+        getIsParentCategory(filters.category, transactionCategories)
+          ? areStringsEqual(t.category ?? '', filters.category)
+          : areStringsEqual(t.subcategory ?? '', filters.category)
+      );
+    }
+    if (filters.fromDate) {
+      filteredTransactions = filteredTransactions.filter(
+        (t) =>
+          getStandardDate(t.date).getTime() >=
+          getStandardDate(filters.fromDate!).getTime()
+      );
+    }
+    if (filters.toDate) {
+      filteredTransactions = filteredTransactions.filter(
+        (t) =>
+          getStandardDate(t.date).getTime() <= getStandardDate(filters.toDate!).getTime()
+      );
+    }
+    return filteredTransactions;
   }, [filters, transactionsQuery.data]);
 
   if (transactionsQuery.isPending) {
