@@ -7,8 +7,7 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { getAccountsById } from '@/lib/accounts';
-import { cn } from '@/lib/utils';
+import { areStringsEqual, cn } from '@/lib/utils';
 import { Account } from '@/types/account';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import React from 'react';
@@ -17,11 +16,14 @@ import { useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 
 interface AccountInputProps {
-  initialValues?: string[];
-  onSelectChange: (accountIds: string[]) => void;
+  selectedAccountIds: string[];
+  setSelectedAccountIds: (accountIds: string[]) => void;
+  hideHidden?: boolean;
 }
 
 const AccountInput = (props: AccountInputProps): JSX.Element => {
+  const [isOpen, setIsOpen] = React.useState(false);
+
   const { request } = React.useContext<any>(AuthContext);
 
   const accountsQuery = useQuery({
@@ -40,21 +42,22 @@ const AccountInput = (props: AccountInputProps): JSX.Element => {
     },
   });
 
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [selectedValues, setSelectedValues] = React.useState<Account[]>(
-    getAccountsById(props.initialValues ?? [], accountsQuery.data ?? [])
-  );
-  const selectedValuesSet = React.useRef(new Set(selectedValues));
+  const filteredAccounts = React.useMemo(() => {
+    if (props.hideHidden)
+      return (accountsQuery.data ?? []).filter(
+        (a) => !a.hideAccount && !a.hideTransactions
+      );
+    return accountsQuery.data ?? [];
+  }, [accountsQuery.data, props.hideHidden]);
 
   const toggleSelect = (account: Account) => {
-    if (selectedValuesSet.current.has(account)) {
-      selectedValuesSet.current.delete(account);
-      setSelectedValues(selectedValues.filter((v) => v !== account));
+    if (props.selectedAccountIds.some((a) => areStringsEqual(a, account.id))) {
+      props.setSelectedAccountIds(
+        props.selectedAccountIds.filter((a) => !areStringsEqual(a, account.id))
+      );
     } else {
-      selectedValuesSet.current.add(account);
-      setSelectedValues([...selectedValues, account]);
+      props.setSelectedAccountIds([...props.selectedAccountIds, account.id]);
     }
-    props.onSelectChange(Array.from(selectedValuesSet.current).map((v) => v.id));
   };
 
   return (
@@ -69,8 +72,8 @@ const AccountInput = (props: AccountInputProps): JSX.Element => {
             e.stopPropagation();
           }}
         >
-          {selectedValues.length > 0
-            ? selectedValues.length + ' account(s) selected.'
+          {props.selectedAccountIds.length > 0
+            ? props.selectedAccountIds.length + ' account(s) selected.'
             : 'Select accounts...'}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -80,8 +83,8 @@ const AccountInput = (props: AccountInputProps): JSX.Element => {
           <CommandList>
             <CommandEmpty>No accounts found.</CommandEmpty>
             <CommandGroup>
-              {(accountsQuery.data ?? []).map((account: Account) => {
-                const isSelected = selectedValuesSet.current.has(account);
+              {filteredAccounts.map((account: Account) => {
+                const isSelected = props.selectedAccountIds.includes(account.id);
 
                 return (
                   <CommandItem

@@ -15,6 +15,26 @@ export interface Transaction {
 
 export interface NewTransaction extends Partial<Transaction> {}
 
+export interface IFilters {
+  accounts: string[];
+}
+
+export class Filters implements IFilters {
+  accounts: string[] = [];
+  category: string = '';
+  startDate: Date | undefined = undefined;
+  endDate: Date | undefined = undefined;
+
+  constructor(filter?: Filters) {
+    if (filter) {
+      this.accounts = filter.accounts;
+      this.category = filter.category;
+      this.startDate = filter.startDate;
+      this.endDate = filter.endDate;
+    }
+  }
+}
+
 export const hiddenTransactionCategory = 'Hide from Budgets';
 
 export const transactionCategories: ICategory[] = [

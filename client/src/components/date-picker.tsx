@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 
 interface DatePickerProps {
   className?: string;
-  value: Date;
+  value?: Date;
   startMonth?: Date;
   endMonth?: Date;
   onDayClick?: (day: Date) => void;
@@ -43,15 +43,19 @@ const DatePicker = (props: DatePickerProps): JSX.Element => {
           startMonth={
             props.startMonth ??
             new Date(
-              new Date(props.value).getFullYear() - 100,
-              new Date(props.value).getMonth()
+              props.value
+                ? new Date(props.value).getFullYear() - 100
+                : new Date().getFullYear() - 100,
+              props.value ? new Date(props.value).getMonth() : new Date().getMonth()
             )
           }
           endMonth={
             props.endMonth ??
             new Date(
-              new Date(props.value).getFullYear() + 100,
-              new Date(props.value).getMonth()
+              props.value
+                ? new Date(props.value).getFullYear() + 100
+                : new Date().getFullYear() + 100,
+              props.value ? new Date(props.value).getMonth() : new Date().getMonth()
             )
           }
         />

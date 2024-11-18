@@ -94,8 +94,8 @@ const AddBudget = ({ date }: AddBudgetProps): JSX.Element => {
                   <FormLabel>Category</FormLabel>
                   <FormControl>
                     <CategoryInput
-                      initialValue={field.value}
-                      onSelectChange={field.onChange}
+                      selectedCategory={field.value}
+                      setSelectedCategory={field.onChange}
                       categories={transactionCategories}
                     />
                   </FormControl>
