@@ -18,7 +18,7 @@ const FilterCard = (props: FilterCardProps): JSX.Element => {
 
   return (
     <Card>
-      <div className="flex w-full flex-row gap-4 p-1">
+      <div className="flex flex-row flex-wrap gap-4 p-2">
         <div className="flex flex-col gap-1">
           <span>Start Date</span>
           <DatePicker

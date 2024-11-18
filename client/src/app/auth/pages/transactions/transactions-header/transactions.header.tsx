@@ -23,8 +23,8 @@ const TransactionsHeader = (props: TransactionsHeaderProps): JSX.Element => {
   const [isFilterCardOpen, setIsFilterCardOpen] = React.useState(false);
 
   return (
-    <div className="flex w-full flex-col gap-2">
-      <div className="flex w-full flex-row items-end gap-2">
+    <div className="flex w-full flex-col gap-4 @container">
+      <div className="flex w-full flex-col items-start gap-2 @2xl:flex-row @2xl:items-end">
         <SortByMenu
           currentSort={props.sort}
           setCurrentSort={props.setSort}
@@ -53,11 +53,13 @@ const TransactionsHeader = (props: TransactionsHeaderProps): JSX.Element => {
           transactions={filterInvisibleTransactions(props.transactions)}
         />
       </div>
-      <FilterCard
-        isOpen={isFilterCardOpen}
-        filters={props.filters}
-        setFilters={props.setFilters}
-      />
+      <div className="flex w-full flex-row">
+        <FilterCard
+          isOpen={isFilterCardOpen}
+          filters={props.filters}
+          setFilters={props.setFilters}
+        />
+      </div>
     </div>
   );
 };

@@ -70,7 +70,7 @@ const Transactions = (): JSX.Element => {
   }
 
   return (
-    <div className="flex w-full flex-col items-center gap-2">
+    <div className="flex w-full flex-col items-center gap-4">
       <EmailVerified />
       <TransactionsHeader
         transactions={filteredTransactions}
