@@ -2,6 +2,7 @@ import AccountInput from '@/components/account-input';
 import CategoryInput from '@/components/category-input';
 import DatePicker from '@/components/date-picker';
 import { Card } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { getStandardDate } from '@/lib/utils';
 import { Filters, transactionCategories } from '@/types/transaction';
 
@@ -17,8 +18,10 @@ const FilterCard = (props: FilterCardProps): JSX.Element => {
   }
 
   return (
-    <Card>
-      <div className="flex flex-row flex-wrap gap-4 p-2">
+    <Card className="flex flex-col gap-1 p-2">
+      <span className="text-lg font-semibold">Filter</span>
+      <Separator />
+      <div className="flex flex-row flex-wrap gap-4">
         <div className="flex flex-col gap-1">
           <span>Start Date</span>
           <DatePicker
