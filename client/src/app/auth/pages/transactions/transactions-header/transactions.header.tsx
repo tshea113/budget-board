@@ -31,29 +31,31 @@ const TransactionsHeader = (props: TransactionsHeaderProps): JSX.Element => {
           sortDirection={props.sortDirection}
           setSortDirection={props.setSortDirection}
         />
-        <Button
-          className={cn(
-            'flex flex-row items-center gap-1',
-            isFilterCardOpen ? 'border-primary text-primary hover:text-primary' : ''
-          )}
-          variant="outline"
-          onClick={() => {
-            if (isFilterCardOpen) {
-              // Closing the filter card clears the filters
-              props.setFilters(new Filters());
-            }
-            setIsFilterCardOpen(!isFilterCardOpen);
-          }}
-        >
-          <span>Filter</span>
-          <FilterIcon className="h-4 w-4" />
-        </Button>
-        <div className="grow" />
-        <TransactionsConfiguration
-          transactions={filterInvisibleTransactions(props.transactions)}
-        />
+        <div className="flex w-full grow flex-row @2xl:w-fit">
+          <Button
+            className={cn(
+              'flex flex-row items-center gap-1',
+              isFilterCardOpen ? 'border-primary text-primary hover:text-primary' : ''
+            )}
+            variant="outline"
+            onClick={() => {
+              if (isFilterCardOpen) {
+                // Closing the filter card clears the filters
+                props.setFilters(new Filters());
+              }
+              setIsFilterCardOpen(!isFilterCardOpen);
+            }}
+          >
+            <span>Filter</span>
+            <FilterIcon className="h-4 w-4" />
+          </Button>
+          <div className="grow" />
+          <TransactionsConfiguration
+            transactions={filterInvisibleTransactions(props.transactions)}
+          />
+        </div>
       </div>
-      <div className="flex w-full flex-row">
+      <div className="flex flex-row">
         <FilterCard
           isOpen={isFilterCardOpen}
           filters={props.filters}
