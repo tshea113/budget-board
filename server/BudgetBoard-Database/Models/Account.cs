@@ -15,6 +15,7 @@ public class Account
     public DateTime? Deleted { get; set; } = null;
     public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
     public ICollection<Goal> Goals { get; set; } = new List<Goal>();
+    public ICollection<Balance> Balances { get; set; } = new List<Balance>();
     public required Guid UserID { get; set; }
     public ApplicationUser? User { get; set; } = null!;
 }
