@@ -59,6 +59,7 @@ public class SimpleFinController : Controller
 
             await _simpleFinHandler.SyncAccountsAsync(user, simpleFinData.Accounts);
             await _simpleFinHandler.SyncTransactionsAsync(user, simpleFinData.Accounts);
+            await _simpleFinHandler.SyncBalancesAsync(user, simpleFinData.Accounts);
 
             await UserHandler.UpdateLastSyncAsync(user, _userDataContext);
 
@@ -111,7 +112,9 @@ public class SimpleFinController : Controller
         {
             var users = _userDataContext.Users
                 .Include(user => user.Accounts)
-                .ThenInclude(a => a.Transactions)
+                    .ThenInclude(a => a.Transactions)
+                .Include(user => user.Accounts)
+                    .ThenInclude(a => a.Balances)
                 .AsSplitQuery()
                 .ToList();
             var user = users.Single(u => u.Id == new Guid(id));

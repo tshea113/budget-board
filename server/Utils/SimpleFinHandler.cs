@@ -123,6 +123,30 @@ public class SimpleFinHandler
         }
     }
 
+    public async Task SyncBalancesAsync(ApplicationUser user, List<Models.SimpleFinDetails.Account> accountsData)
+    {
+        foreach (var accountData in accountsData)
+        {
+            var foundAccount = AccountHandler.GetAccount(user, accountData.Id);
+            if (foundAccount != null)
+            {
+                var balanceDates = foundAccount.Balances.Select(b => b.DateTime);
+                // TODO: Maybe this should be 24 hours? I think it could be 24 if we auto sync.//
+                if (balanceDates.Count() == 0 || balanceDates.Max().AddHours(12) < DateTime.UnixEpoch.AddSeconds(accountData.BalanceDate))
+                {
+                    var newBalance = new Database.Models.Balance
+                    {
+                        Amount = decimal.Parse(accountData.Balance, CultureInfo.InvariantCulture.NumberFormat),
+                        DateTime = DateTime.UnixEpoch.AddSeconds(accountData.BalanceDate),
+                        AccountID = foundAccount.ID,
+                    };
+
+                    await BalanceHandler.AddBalanceAsync(user, _userDataContext, newBalance);
+                }
+            }
+        }
+    }
+
     private static SimpleFinData GetUrlCredentials(string accessToken)
     {
         string[] url = accessToken.Split("//");

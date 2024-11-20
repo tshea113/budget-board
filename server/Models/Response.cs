@@ -141,4 +141,20 @@ namespace BudgetBoard.Models
             UserID = goal.UserID;
         }
     }
+
+    public class BalanceResponse
+    {
+        public Guid ID { get; set; }
+        public decimal Amount { get; set; }
+        public DateTime DateTime { get; set; }
+        public Guid AccountID { get; set; }
+
+        public BalanceResponse(Balance balance)
+        {
+            ID = balance.ID;
+            Amount = balance.Amount;
+            DateTime = balance.DateTime;
+            AccountID = balance.AccountID;
+        }
+    }
 }
