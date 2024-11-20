@@ -23,8 +23,8 @@ const TransactionsHeader = (props: TransactionsHeaderProps): JSX.Element => {
   const [isFilterCardOpen, setIsFilterCardOpen] = React.useState(false);
 
   return (
-    <div className="flex w-full flex-col gap-4 @container">
-      <div className="flex w-full flex-col items-start gap-2 @2xl:flex-row @2xl:items-end">
+    <div className="flex w-full flex-col gap-2 @container">
+      <div className="flex w-full flex-col items-start gap-4 @2xl:flex-row @2xl:items-end">
         <SortByMenu
           currentSort={props.sort}
           setCurrentSort={props.setSort}

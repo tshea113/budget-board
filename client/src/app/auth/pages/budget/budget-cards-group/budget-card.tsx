@@ -85,7 +85,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
   return (
     <Card
       className={cn(
-        'flex flex-row shadow-md hover:bg-muted',
+        'flex flex-row shadow-md hover:border-primary',
         isSelected ? 'bg-muted' : 'bg-card',
         selectEffect && 'animate-pop'
       )}

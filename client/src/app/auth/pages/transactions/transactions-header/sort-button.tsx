@@ -28,7 +28,11 @@ const SortButton = (props: SortButtonProps): JSX.Element => {
   }
 
   return (
-    <Button variant="outline" onClick={props.onClick}>
+    <Button
+      className="hover:border-primary hover:bg-background"
+      variant="outline"
+      onClick={props.onClick}
+    >
       {props.label}
       {sortedIcon}
     </Button>
