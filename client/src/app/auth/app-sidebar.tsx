@@ -159,19 +159,22 @@ const AppSidebar = (props: AppSidebarProps): JSX.Element => {
             <DropdownMenuTrigger>
               <SidebarMenuButton
                 size="lg"
+                asChild
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback className="bg-primary text-primary-foreground">
-                    {userInfoQuery.data?.email.charAt(0).toLocaleUpperCase() ?? 'A'}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">
-                    {userInfoQuery.data?.email}
-                  </span>
+                <div className="flex flex-row">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="bg-primary text-primary-foreground">
+                      {userInfoQuery.data?.email.charAt(0).toLocaleUpperCase() ?? 'A'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-semibold">
+                      {userInfoQuery.data?.email}
+                    </span>
+                  </div>
+                  <ChevronsUpDown className="ml-auto size-4" />
                 </div>
-                <ChevronsUpDown className="ml-auto size-4" />
               </SidebarMenuButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

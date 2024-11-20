@@ -73,7 +73,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
     <Card
       className={cn(
         'flex flex-row p-2 @container',
-        props.type === TransactionCardType.Normal ? 'hover:bg-muted' : '',
+        props.type === TransactionCardType.Normal ? 'hover:border-primary' : '',
         isSelected ? 'bg-muted' : 'bg-card',
         selectEffect && 'animate-pop',
         props.className
