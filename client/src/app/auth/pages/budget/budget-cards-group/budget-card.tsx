@@ -120,6 +120,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
                 doEditBudget.mutate({ ...props.budgets[0], limit: newValue })
               }
               hideCents={true}
+              disableColor={true}
             />
             <span
               className={cn(
