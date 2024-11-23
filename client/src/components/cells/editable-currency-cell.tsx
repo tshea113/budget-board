@@ -9,6 +9,7 @@ interface EditableCurrencyCellProps {
   value: number;
   isSelected: boolean;
   editCell: (newValue: number) => void;
+  disableColor?: boolean;
   invertColor?: boolean;
   hideCents?: boolean;
 }
@@ -53,7 +54,11 @@ const EditableCurrencyCell = (props: EditableCurrencyCellProps): JSX.Element => 
         <span
           className={cn(
             'font-semibold',
-            props.value < 0 ? 'text-destructive' : 'text-success',
+            props.disableColor
+              ? 'text-foreground'
+              : props.value < 0
+                ? 'text-destructive'
+                : 'text-success',
             props.textClassName
           )}
         >
