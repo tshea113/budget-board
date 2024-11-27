@@ -1,18 +1,19 @@
-import Modal from '@/components/modal';
 import Login from './login';
-import Signup from './sign-up';
+import Register from './register';
 import React from 'react';
 import ResetPassword from './reset-password';
 import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 export enum LoginCardState {
   Login,
   ResetPassword,
+  Register,
 }
 
 const Welcome = (): JSX.Element => {
   const [loginCardState, setLoginCardState] = React.useState<LoginCardState>(
-    LoginCardState.ResetPassword
+    LoginCardState.Login
   );
   const [email, setEmail] = React.useState<string>('');
 
@@ -22,6 +23,8 @@ const Welcome = (): JSX.Element => {
         return <Login setLoginCardState={setLoginCardState} setEmail={setEmail} />;
       case LoginCardState.ResetPassword:
         return <ResetPassword setLoginCardState={setLoginCardState} email={email} />;
+      case LoginCardState.Register:
+        return <Register setLoginCardState={setLoginCardState} />;
       default:
         return <>There was an error.</>;
     }
@@ -37,11 +40,18 @@ const Welcome = (): JSX.Element => {
         </p>
       </div>
       <Card className="w-full max-w-md p-2">{getCardState()}</Card>
-      <div className="mt-10 hidden items-center justify-center gap-x-6">
-        <Modal button="Sign Up">
-          <Signup />
-        </Modal>
-      </div>
+      {loginCardState !== LoginCardState.Register && (
+        <div className="flex flex-row items-center gap-1">
+          <span>Don't have an account?</span>
+          <Button
+            className="p-1"
+            variant="link"
+            onClick={() => setLoginCardState(LoginCardState.Register)}
+          >
+            Register here
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

@@ -121,7 +121,7 @@ const Login = (props: LoginProps): JSX.Element => {
         onSubmit={form.handleSubmit(async (data, event) => {
           await submitUserLogin(data, event);
         })}
-        className="space-y-8"
+        className="flex flex-col gap-4"
       >
         <FormField
           control={form.control}
