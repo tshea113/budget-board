@@ -17,8 +17,14 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
+import { LoginCardState } from './welcome';
+import { Button } from '@/components/ui/button';
 
-const Signup = (): JSX.Element => {
+interface RegisterProps {
+  setLoginCardState: (loginCardState: LoginCardState) => void;
+}
+
+const Register = (props: RegisterProps): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const formSchema = z
@@ -51,7 +57,7 @@ const Signup = (): JSX.Element => {
 
   const { request } = React.useContext<any>(AuthContext);
 
-  const submitUserSignup = async (
+  const submitUserRegister = async (
     values: z.infer<typeof formSchema>,
     e: any
   ): Promise<void> => {
@@ -71,6 +77,7 @@ const Signup = (): JSX.Element => {
     })
       .then(() => {
         toast.success('Account created! Check your email for confirmation.');
+        props.setLoginCardState(LoginCardState.Login);
       })
       .catch((error: AxiosError) => {
         if (error?.response?.data) {
@@ -92,13 +99,12 @@ const Signup = (): JSX.Element => {
 
   return (
     <Form {...form}>
-      <h1 className="text-xl font-bold">Sign Up</h1>
       <form
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={form.handleSubmit(async (data, event) => {
-          await submitUserSignup(data, event);
+          await submitUserRegister(data, event);
         })}
-        className="space-y-8"
+        className="flex flex-col gap-4"
       >
         <FormField
           control={form.control}
@@ -139,10 +145,19 @@ const Signup = (): JSX.Element => {
             </FormItem>
           )}
         />
-        <ResponsiveButton {...{ loading }}>Submit</ResponsiveButton>
+        <ResponsiveButton className="w-full" {...{ loading }}>
+          Register
+        </ResponsiveButton>
+        <Button
+          className="w-full"
+          variant="outline"
+          onClick={() => props.setLoginCardState(LoginCardState.Login)}
+        >
+          Return to Login
+        </Button>
       </form>
     </Form>
   );
 };
 
-export default Signup;
+export default Register;

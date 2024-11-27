@@ -18,6 +18,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { LoginCardState } from './welcome';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 
 interface ResetPasswordProps {
   setLoginCardState: (loginCardState: LoginCardState) => void;
@@ -85,13 +86,12 @@ const ResetPassword = (props: ResetPasswordProps): JSX.Element => {
 
   return (
     <Form {...form}>
-      <h1 className="text-xl font-bold">Reset Password</h1>
       <form
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={form.handleSubmit(async (data, event) => {
           await submitPasswordUpdate(data, event);
         })}
-        className="space-y-4"
+        className="flex flex-col gap-4"
       >
         <FormField
           control={form.control}
@@ -132,7 +132,16 @@ const ResetPassword = (props: ResetPasswordProps): JSX.Element => {
             </FormItem>
           )}
         />
-        <ResponsiveButton loading={loading}>Submit</ResponsiveButton>
+        <ResponsiveButton className="w-full" loading={loading}>
+          Reset Password
+        </ResponsiveButton>
+        <Button
+          className="w-full"
+          variant="outline"
+          onClick={() => props.setLoginCardState(LoginCardState.Login)}
+        >
+          Return to Login
+        </Button>
       </form>
     </Form>
   );
