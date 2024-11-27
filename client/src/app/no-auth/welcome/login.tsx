@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import * as z from 'zod';
-import { useState } from 'react';
 import ResponsiveButton from '@/components/responsive-button';
 import { Button } from '@/components/ui/button';
 import { AxiosError, AxiosResponse } from 'axios';
@@ -20,6 +19,7 @@ import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import { LoginCardState } from './welcome';
 import { toast } from 'sonner';
+import LoadingIcon from '@/components/loading-icon';
 
 interface LoginProps {
   setLoginCardState: (loginCardState: LoginCardState) => void;
@@ -27,7 +27,8 @@ interface LoginProps {
 }
 
 const Login = (props: LoginProps): JSX.Element => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = React.useState(false);
+  const [resetLoading, setResetLoading] = React.useState(false);
 
   const { request, setAccessToken } = React.useContext<any>(AuthContext);
 
@@ -89,17 +90,25 @@ const Login = (props: LoginProps): JSX.Element => {
 
   const resetPassword = (email: string): void => {
     if (email) {
+      setResetLoading(true);
       request({
         url: '/api/forgotPassword',
         method: 'POST',
         data: {
           email,
         },
-      }).then(() => {
-        props.setLoginCardState(LoginCardState.ResetPassword);
-        props.setEmail(email);
-        toast.success('An email has been set with a reset code.');
-      });
+      })
+        .then(() => {
+          props.setLoginCardState(LoginCardState.ResetPassword);
+          props.setEmail(email);
+          toast.success('An email has been set with a reset code.');
+        })
+        .catch(() => {
+          toast.error('There was an error resetting your password.');
+        })
+        .finally(() => {
+          setResetLoading(false);
+        });
     } else {
       toast.error('Please enter your email to reset your password.');
     }
@@ -107,7 +116,6 @@ const Login = (props: LoginProps): JSX.Element => {
 
   return (
     <Form {...form}>
-      <h1 className="text-xl font-bold">Login</h1>
       <form
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={form.handleSubmit(async (data, event) => {
@@ -141,8 +149,10 @@ const Login = (props: LoginProps): JSX.Element => {
             </FormItem>
           )}
         />
-        <div className="flex items-center space-x-5">
-          <ResponsiveButton {...{ loading }}>Submit</ResponsiveButton>
+        <div className="flex w-full flex-col items-center gap-2">
+          <ResponsiveButton className="w-full" {...{ loading }}>
+            Login
+          </ResponsiveButton>
           <Button
             variant="link"
             type="button"
@@ -150,7 +160,10 @@ const Login = (props: LoginProps): JSX.Element => {
               resetPassword(form.getValues('email'));
             }}
           >
-            Forgot Password?
+            <div className="flex flex-row items-center gap-2">
+              Forgot Password?
+              {resetLoading && <LoadingIcon />}
+            </div>
           </Button>
         </div>
       </form>
