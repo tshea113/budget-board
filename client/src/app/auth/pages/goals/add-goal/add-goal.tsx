@@ -100,7 +100,7 @@ const AddGoal = (): JSX.Element => {
   };
 
   return (
-    <ScrollArea className="h-full pr-3">
+    <ScrollArea className="h-full pr-3" type="auto">
       <Form {...form}>
         <form
           onSubmit={(event) => {
