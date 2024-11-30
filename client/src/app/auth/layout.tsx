@@ -1,6 +1,6 @@
-import Header from './header';
+import Header from './header/header';
 import { SidebarProvider } from '@/components/ui/sidebar';
-import AppSidebar from './app-sidebar';
+import AppSidebar from './header/app-sidebar';
 import PageContent, { Pages } from './pages/page-content';
 import React from 'react';
 

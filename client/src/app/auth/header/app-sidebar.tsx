@@ -22,7 +22,6 @@ import {
   LogOutIcon,
   UserPenIcon,
 } from 'lucide-react';
-import { Pages } from './pages/page-content';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,8 +37,9 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import SheetItem from '@/components/sheet-item';
-import AccountSettings from './account-settings/account-settings';
 import { useIsMobile } from '@/components/hooks/use-mobile';
+import { Pages } from '../pages/page-content';
+import AccountSettings from '../account-settings/account-settings';
 
 const menuItems = [
   {

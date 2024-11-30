@@ -1,4 +1,3 @@
-import { Card } from '@/components/ui/card';
 import TransactionCard, {
   TransactionCardType,
 } from '../../transactions/transaction-card';
@@ -40,7 +39,7 @@ const UncategorizedTransactionsCard = (): JSX.Element => {
 
   if (filteredTransactions.length !== 0 && transactionsQuery.isSuccess) {
     return (
-      <Card className="w-full bg-card p-2 text-card-foreground">
+      <div className="w-full p-2">
         <div className="flex flex-col items-center sm:grid sm:grid-cols-2">
           <span className="text-2xl font-semibold tracking-tight">
             Uncategorized Transactions
@@ -53,7 +52,7 @@ const UncategorizedTransactionsCard = (): JSX.Element => {
           />
         </div>
 
-        <ScrollArea className="flex h-full max-h-[300px] flex-col py-2 pr-4">
+        <ScrollArea className="flex h-full max-h-[300px] flex-col py-2 pr-4" type="auto">
           {filteredTransactions
             .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
             .slice((page - 1) * itemsPerPage, (page - 1) * itemsPerPage + itemsPerPage)
@@ -66,7 +65,7 @@ const UncategorizedTransactionsCard = (): JSX.Element => {
               />
             ))}
         </ScrollArea>
-      </Card>
+      </div>
     );
   } else {
     return <></>;

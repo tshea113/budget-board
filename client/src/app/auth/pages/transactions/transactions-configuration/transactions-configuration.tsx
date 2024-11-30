@@ -31,7 +31,7 @@ const TransactionsConfiguration = (
         <SheetContent side="top" className="h-full">
           <div className="flex h-full w-full flex-row justify-center">
             <div className="w-full space-y-3 2xl:max-w-screen-2xl">
-              <ScrollArea className="h-full">
+              <ScrollArea className="h-full" type="auto">
                 <SheetHeader>Transactions Configuration</SheetHeader>
                 <DeletedTransactionsAccordion deletedTransactions={props.transactions} />
               </ScrollArea>

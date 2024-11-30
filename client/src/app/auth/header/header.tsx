@@ -1,6 +1,7 @@
 import { useIsMobile } from '@/components/hooks/use-mobile';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { MenuIcon } from 'lucide-react';
+import SyncAccountButton from './sync-account-button';
 
 const Header = (): JSX.Element => {
   const isMobile = useIsMobile();
@@ -11,7 +12,9 @@ const Header = (): JSX.Element => {
           <MenuIcon />
         </SidebarTrigger>
       )}
-      <h2 className="grow text-3xl font-semibold tracking-tight">Budget Board</h2>
+      <h2 className="text-3xl font-semibold tracking-tight">Budget Board</h2>
+      <div className="grow" />
+      <SyncAccountButton />
     </div>
   );
 };
