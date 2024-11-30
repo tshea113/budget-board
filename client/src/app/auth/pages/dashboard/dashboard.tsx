@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import AccountCard from './accounts/account-card';
-import WelcomeHeader from './welcome-header';
 import EmailVerified from '../../../../components/email-verified';
 import UncategorizedTransactionsCard from './uncategorized-transactions/uncategorized-transactions-card';
 import NetWorthCard from './net-worth/net-worth-card';
@@ -16,7 +15,6 @@ const Dashboard = (): JSX.Element => {
           <NetWorthCard />
         </div>
         <div className="w-full space-y-2">
-          <WelcomeHeader />
           <UncategorizedTransactionsCard />
           <SpendingTrendsCard />
         </div>
