@@ -1,0 +1,26 @@
+upstream backend_server {
+  # This should be the name of the server container and it's configured port
+  server budget-board-server:8080;
+}
+
+server {
+  listen 80;
+
+  # You should configure this to the domain that points to this app.
+  server_name ${VITE_API_URL};
+
+  access_log /var/log/nginx/nginx.vhost.access.log;
+  error_log /var/log/nginx/nginx.vhost.error.log;
+
+  location / {
+    # This would be the directory where your React app's static files are stored.
+    root /usr/share/nginx/html;
+    try_files ${DOLLAR}uri /index.html;
+  }
+
+  location /api/ {
+    # This will redirect a request from this container to our backend container.
+    proxy_pass http://backend_server/api/;
+    proxy_set_header Host ${DOLLAR}proxy_host:${DOLLAR}proxy_port;
+ }
+}

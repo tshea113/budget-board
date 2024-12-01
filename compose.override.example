@@ -5,22 +5,10 @@ services:
       POSTGRES_DATABASE: budgetboard
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: superSecretPassword
-      CLIENT_URL: https://example.com
-      AUTO_UPDATE_DB: false
+      AUTO_UPDATE_DB: true
       EMAIL_SENDER: test@gmail.com
       EMAIL_SENDER_PASSWORD: yourPassword
       EMAIL_SMTP_HOST: smtp.gmail.com
-    ports:
-      - 8080:8080
-  budget-board-client:
-    environment:
-      VITE_API_URL: https://example.com
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - ./client/certs/budgetboard.crt:/etc/ssl/certs/budgetboard.crt:ro
-      - ./client/certs/budgetboard.key:/etc/ssl/private/budgetboard.key:ro
   budget-board-db:
     environment:
       POSTGRES_USER: postgres
