@@ -67,6 +67,9 @@ builder.Services.AddDbContext<UserDataContext>(
 
 builder.Services.AddAuthorization();
 
+// If the user sets the email env variables, then configure confirmation emails, otherwise disable.
+var emailSender = builder.Configuration.GetValue<string>("EMAIL_SENDER");
+
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>(opt =>
 {
     opt.Password.RequiredLength = 3;
@@ -76,11 +79,13 @@ builder.Services.AddIdentityApiEndpoints<ApplicationUser>(opt =>
     opt.Password.RequireUppercase = false;
     opt.Password.RequireLowercase = false;
     opt.User.RequireUniqueEmail = true;
-    opt.SignIn.RequireConfirmedEmail = true;
+    opt.SignIn.RequireConfirmedEmail = !string.IsNullOrEmpty(emailSender);
 })
     .AddEntityFrameworkStores<UserDataContext>();
 
-builder.Services.AddTransient<IEmailSender, EmailSender>();
+if (!string.IsNullOrEmpty(emailSender)) {
+    builder.Services.AddTransient<IEmailSender, EmailSender>();
+}
 
 builder.Services.AddOptions<BearerTokenOptions>(IdentityConstants.BearerScheme).Configure(options =>
 {
