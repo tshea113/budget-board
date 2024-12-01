@@ -69,9 +69,13 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>(opt =>
 {
-    opt.Password.RequiredLength = 8;
-    opt.User.RequireUniqueEmail = true;
+    opt.Password.RequiredLength = 3;
+    opt.Password.RequiredUniqueChars = 0;
     opt.Password.RequireNonAlphanumeric = false;
+    opt.Password.RequireDigit = false;
+    opt.Password.RequireUppercase = false;
+    opt.Password.RequireLowercase = false;
+    opt.User.RequireUniqueEmail = true;
     opt.SignIn.RequireConfirmedEmail = true;
 })
     .AddEntityFrameworkStores<UserDataContext>();
