@@ -2,6 +2,7 @@ using BudgetBoard.Database.Data;
 using BudgetBoard.Database.Models;
 using BudgetBoard.Utils;
 using Microsoft.AspNetCore.Authentication.BearerToken;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -108,6 +109,12 @@ builder.Services.AddHttpClient();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+});
+
 var autoUpdateDb = builder.Configuration.GetValue<bool>("AUTO_UPDATE_DB");
 
 var app = builder.Build();
@@ -117,6 +124,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseForwardedHeaders();
 
 //Add support to logging request with SERILOG
 app.UseSerilogRequestLogging();
@@ -134,7 +143,7 @@ app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapPost("/api/logout", async (SignInManager<ApplicationUser> signInManager,
+app.MapPost("/logout", async (SignInManager<ApplicationUser> signInManager,
     [FromBody] object empty) =>
 {
     if (empty != null)

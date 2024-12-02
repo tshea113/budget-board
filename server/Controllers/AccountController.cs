@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBoard.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class AccountController : ControllerBase
 {
