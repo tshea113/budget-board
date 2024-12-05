@@ -23,7 +23,7 @@ services:
     image: postgres:16
     restart: unless-stopped
     ports:
-      - "5432:5432"
+      - "6252:5432"
     networks:
       - budget-board-network
     profiles:
