@@ -84,7 +84,8 @@ builder.Services.AddIdentityApiEndpoints<ApplicationUser>(opt =>
 })
     .AddEntityFrameworkStores<UserDataContext>();
 
-if (!string.IsNullOrEmpty(emailSender)) {
+if (!string.IsNullOrEmpty(emailSender))
+{
     builder.Services.AddTransient<IEmailSender, EmailSender>();
 }
 
@@ -143,7 +144,7 @@ app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapPost("/logout", async (SignInManager<ApplicationUser> signInManager,
+app.MapPost("/api/logout", async (SignInManager<ApplicationUser> signInManager,
     [FromBody] object empty) =>
 {
     if (empty != null)
