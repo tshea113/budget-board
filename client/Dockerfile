@@ -26,5 +26,5 @@ COPY .docker/nginx/init-scripts/ /docker-entrypoint.d/
 COPY .docker/nginx/conf/nginx-substitute.sh .
 COPY .docker/nginx/conf/default.conf.template .
 
-EXPOSE 80
+EXPOSE ${PORT}
 ENTRYPOINT [ "/bin/sh", "nginx-substitute.sh"]

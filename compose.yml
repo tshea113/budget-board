@@ -14,8 +14,9 @@ services:
     image: ghcr.io/tshea113/budget-board/client:stable
     environment:
       VITE_API_URL: budget-board-client
+      PORT: 6253
     ports:
-      - 6253:80
+      - 6253:6253
     networks:
       - budget-board-network
   budget-board-db:
