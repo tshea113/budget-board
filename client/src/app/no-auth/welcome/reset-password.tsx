@@ -33,8 +33,8 @@ const ResetPassword = (props: ResetPasswordProps): JSX.Element => {
       resetCode: z.string(),
       newPassword: z
         .string()
-        .min(7, { message: 'Password must be at least 7 characters' }),
-      confirm: z.string().min(7, { message: 'Password must be at least 7 characters' }),
+        .min(3, { message: 'Password must be at least 3 characters' }),
+      confirm: z.string().min(3, { message: 'Password must be at least 3 characters' }),
     })
     .superRefine(({ confirm, newPassword }, ctx) => {
       if (confirm !== newPassword) {
