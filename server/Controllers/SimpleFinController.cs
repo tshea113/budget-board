@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBoard.Controllers;
 
-[Route("[controller]/[action]")]
+[Route("api/[controller]/[action]")]
 [ApiController]
 public class SimpleFinController : Controller
 {
