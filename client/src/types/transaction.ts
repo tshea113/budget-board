@@ -35,6 +35,12 @@ export class Filters implements IFilters {
   }
 }
 
+export enum TransactionCardType {
+  Normal,
+  Edit,
+  Uncategorized,
+}
+
 export const hiddenTransactionCategory = 'Hide from Budgets';
 
 export const transactionCategories: ICategory[] = [
