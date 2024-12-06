@@ -3,7 +3,6 @@
 [![Build and Publish](https://github.com/tshea113/budget-board/actions/workflows/docker-image-ci-build.yml/badge.svg)](https://github.com/tshea113/budget-board/actions/workflows/docker-image-ci-build.yml)
 ![GitHub Release](https://img.shields.io/github/v/release/tshea113/budget-board)
 
-
 A simple and focused app for monthly budgeting and tracking financial goals
 
 > [!WARNING]
@@ -20,17 +19,14 @@ Still, this is a side project, so development will probably be sporadic.
 
 Feel free to open an issue if you notice any bugs or have any feature requests!
 
-## Getting Started
-
-This project is deployed using Docker Compose. You will need to create a `compose.override.yml` file with some configuration information.
-An example has been provided, and more details about the configurations are below.
-
 ### Configuration
 
 #### Setting up Docker Compose
 
-You will need to create a `compose.override.yml` file with some necessary configuration information.
-You can use `compose.override.example` as a template.
+This project is deployed using Docker Compose.
+
+The `compose.yml` and `compose.override.yml` files are used to deploy the app.
+Both files are able to deploy the app as is, but it is recommended to at least update the database password.
 
 Here are some of the configuration options for the different containers:
 
@@ -38,75 +34,38 @@ Here are some of the configuration options for the different containers:
 
 This container runs the back-end API of the app.
 
-| Option                | Details                                                                                                                                                                                  |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| POSTGRES_HOST         | The host for the PostgreSQL database. If you are using the budget-board-db container, you do not need to configure this variable.                                                        |
-| POSTGRES_DATABASE     | The postgresql database name. If you are using the budget-board-db container, this should match `POSTGRES_DB`.                                                                           |
-| POSTGRES_USER         | The postgresql database user that budget board will use to connect to and interact with the database. If you are using the budget-board-db container, this should match `POSTGRES_USER`. |
-| POSTGRES_PASSWORD     | The user password. If you are using the budget-board-db container, this should match `POSTGRES_PASSWORD`.                                                                                |
-| CLIENT_URL            | This is the URL you will use to access your deployed project. See Configuring the Client URL under Additional Details for more information.                                              |
-| AUTO_UPDATE_DB        | Setting this to true will automatically update the database when the schema changes. Otherwise, you will need to update it manually.                                                     |
-| EMAIL_SENDER          | The email address that will send emails for verification, password resets, etc. See Additional Details for more information about setting this up.                                       |
-| EMAIL_SENDER_PASSWORD | The password of the email that will send emails for verification, password resets, etc.                                                                                                  |
-| EMAIL_SMTP_HOST       | The host server that will send the email.                                                                                                                                                |
-
-#### budget-board-client
-
-This container creates a reverse-proxy to serve the front-end client and route API requests to the back-end.
-
-| Option       | Details                                                                                                                                     |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| VITE_API_URL | See CLIENT_URL. These will be the same unless you have a reason to change.                                                                  |
-| volumes      | These can be omitted if you aren't using HTTPS, see below about SSL Certs. These will map the certs on your local machine to the container. |
+| Option                | Details                                                                                                                                                                                    |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| POSTGRES_HOST         | The host for the PostgreSQL database. This should match the variable of the same name under the budget-board-db container.                                                                 |
+| POSTGRES_DATABASE     | The postgresql database name. This should match the variable `POSTGRES_DB` under the budget-board-db container.                                                                            |
+| POSTGRES_USER         | The postgresql database user that budget board will use to connect to and interact with the database. This should match the variable of the same name under the budget-board-db container. |
+| POSTGRES_PASSWORD     | The user password. This should match the variable of the same name under the budget-board-db container.                                                                                    |
+| AUTO_UPDATE_DB        | Setting this to true will automatically update the database when the schema changes. Otherwise, you will need to update it manually.                                                       |
+| EMAIL_SENDER          | The email address that will send emails for verification, password resets, etc. See Additional Details for more information about setting this up.                                         |
+| EMAIL_SENDER_PASSWORD | The password of the email that will send emails for verification, password resets, etc.                                                                                                    |
+| EMAIL_SMTP_HOST       | The host server that will send the email.                                                                                                                                                  |
 
 #### budget-board-db
 
 This container hosts a PostgreSQL database used for storing app data. If you have an existing database or wish to use a cloud-based service, you can omit this container from the overrides file.
 
-| Option            | Details                                                                                                                                                              |
-| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| POSTGRES_USER     | The postgresql database user that will be used to connect to and interact with the database. This should match `POSTGRES_USER` in the budget-board-server container. |
-| POSTGRES_PASSWORD | The user password. This should match `POSTGRES_PASSWORD` in the budget-board-server container.                                                                       |
-| POSTGRES_DATABASE | The postgresql database name. This should match `POSTGRES_DB` in the budget-board-server container.                                                                  |
-
-### Setting up Nginx
-
-The budget-board-client container requires a configuration file for nginx.
-There are two example nginx.conf files located in `.docker/nginx/conf`.
-You will need to update some fields in the file and rename one of the following files to `nginx.conf`.
-
-The files are largely the same, except the https config file will redirect all traffic to port 443 and require that the site be connect to through https.
-You will need to enter the names for your certs.
-This should match the values you configured for `volumes` in `compose.override.yml`.
+| Option            | Details                                                                                                                                                                               |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| POSTGRES_USER     | The postgresql database user that will be used to connect to and interact with the database. This should match the variable of the same name under the budget-board-server container. |
+| POSTGRES_PASSWORD | The user password. This should match the variable of the same name under the budget-board-server container.                                                                           |
+| POSTGRES_DATABASE | The postgresql database name. This should match `POSTGRES_DB` in the budget-board-server container.                                                                                   |
 
 ### Deploy
 
 Deploy the app by running the following command:
 
 ```
-docker compose --profile include-db up
+docker compose up -d
 ```
 
-If you don't want to run the postgres container, you can run:
-
-```
-docker compose up
-```
-
-You can now access the app at the specified `CLIENT_URL`.
+You can now access the app at `localhost:6253`.
 
 ## Additional Details
-
-### Configuring the Client URL
-
-There are a couple places where you need to specify the domain that points to this app.
-This is dependent upon how you expect to access this app and where you are hosting it.
-Here are a couple of examples and their use cases:
-
-- `localhost` - If you only intend to access the app on the same system which you are hosting it (i.e. testing some changes for development).
-- The local IP or hostname - If you are only exposing this app to your local network, you can configure the `CLIENT_URL` and related options to the local IP or hostname of the system hosting the app (i.e. `192.168.1.23` or `budget-board.lan`).
-- The public IP or public domain - If you are exposing this app to the internet, then you would configure this to be the public IP or domain name that points to the app (i.e. `70.2.4.53` or `budget-board.com`).
-  - Note: This will require some extra network configuration beyond what is covered here.
 
 ### SimpleFIN Bridge
 
@@ -127,7 +86,11 @@ Here is some information about [manually applying EF Core Migrations](https://le
 
 ### SMTP Server
 
-Budget Board requires SMTP server to send emails for account password resets.
+You can optionally configure an SMTP server, so that users can receive emails to confirm their accounts and reset passwords.
+
 You can configure this in any way you'd like (self-hosted service, paid cloud service, etc.), but an easy way to do this for a small set of users is to create a gmail account.
 
 If you do want to use a gmail account there are many articles online about how to configure a google account get the gmail smtp access.
+
+> [!WARNING] If you choose to not configure an SMTP server, then users will have no convenient way to recover a lost password.
+> You will have to edit the database manually and update with a new hashed password.

@@ -1,5 +1,4 @@
 import { Skeleton } from '@/components/ui/skeleton';
-import EmailVerified from '../../../../components/email-verified';
 import { AuthContext } from '@/components/auth-provider';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -71,7 +70,6 @@ const Transactions = (): JSX.Element => {
 
   return (
     <div className="flex w-full flex-col items-center gap-4">
-      <EmailVerified />
       <TransactionsHeader
         transactions={filteredTransactions}
         sort={sort}

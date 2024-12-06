@@ -37,7 +37,7 @@ const Login = (props: LoginProps): JSX.Element => {
       .string()
       .min(1, { message: 'This field must be filled.' })
       .email('This is not a valid email'),
-    password: z.string().min(7, { message: 'Password must be at least 7 characters' }),
+    password: z.string().min(3, { message: 'Password must be at least 3 characters' }),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({

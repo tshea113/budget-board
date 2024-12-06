@@ -33,8 +33,8 @@ const Register = (props: RegisterProps): JSX.Element => {
         .string()
         .min(1, { message: 'This field must be filled.' })
         .email('This is not a valid email'),
-      password: z.string().min(8, { message: 'Password must be at least 8 characters' }),
-      confirm: z.string().min(8, { message: 'Password must be at least 8 characters' }),
+      password: z.string().min(3, { message: 'Password must be at least 3 characters' }),
+      confirm: z.string().min(3, { message: 'Password must be at least 3 characters' }),
     })
     .superRefine(({ confirm, password }, ctx) => {
       if (confirm !== password) {

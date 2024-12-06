@@ -23,5 +23,8 @@ FROM nginx:stable-alpine AS production-stage
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY .docker/nginx/init-scripts/ /docker-entrypoint.d/
 
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+COPY .docker/nginx/conf/nginx-substitute.sh .
+COPY .docker/nginx/conf/default.conf.template .
+
+EXPOSE ${PORT}
+ENTRYPOINT [ "/bin/sh", "nginx-substitute.sh"]

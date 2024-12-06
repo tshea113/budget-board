@@ -2,6 +2,7 @@ using BudgetBoard.Database.Data;
 using BudgetBoard.Database.Models;
 using BudgetBoard.Utils;
 using Microsoft.AspNetCore.Authentication.BearerToken;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -67,16 +68,26 @@ builder.Services.AddDbContext<UserDataContext>(
 
 builder.Services.AddAuthorization();
 
+// If the user sets the email env variables, then configure confirmation emails, otherwise disable.
+var emailSender = builder.Configuration.GetValue<string>("EMAIL_SENDER");
+
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>(opt =>
 {
-    opt.Password.RequiredLength = 8;
-    opt.User.RequireUniqueEmail = true;
+    opt.Password.RequiredLength = 3;
+    opt.Password.RequiredUniqueChars = 0;
     opt.Password.RequireNonAlphanumeric = false;
-    opt.SignIn.RequireConfirmedEmail = true;
+    opt.Password.RequireDigit = false;
+    opt.Password.RequireUppercase = false;
+    opt.Password.RequireLowercase = false;
+    opt.User.RequireUniqueEmail = true;
+    opt.SignIn.RequireConfirmedEmail = !string.IsNullOrEmpty(emailSender);
 })
     .AddEntityFrameworkStores<UserDataContext>();
 
-builder.Services.AddTransient<IEmailSender, EmailSender>();
+if (!string.IsNullOrEmpty(emailSender))
+{
+    builder.Services.AddTransient<IEmailSender, EmailSender>();
+}
 
 builder.Services.AddOptions<BearerTokenOptions>(IdentityConstants.BearerScheme).Configure(options =>
 {
@@ -99,6 +110,12 @@ builder.Services.AddHttpClient();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+});
+
 var autoUpdateDb = builder.Configuration.GetValue<bool>("AUTO_UPDATE_DB");
 
 var app = builder.Build();
@@ -108,6 +125,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseForwardedHeaders();
 
 //Add support to logging request with SERILOG
 app.UseSerilogRequestLogging();

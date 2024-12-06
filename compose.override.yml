@@ -1,0 +1,18 @@
+services:
+  budget-board-server:
+    environment:
+      POSTGRES_HOST: budget-board-db
+      POSTGRES_DATABASE: budgetboard
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: superSecretPassword
+      AUTO_UPDATE_DB: true
+
+      # Email confirmation is optional. See the README for more details.
+      # EMAIL_SENDER: example@gmail.com
+      # EMAIL_SENDER_PASSWORD: appPassword
+      # EMAIL_SMTP_HOST: smtp.gmail.com
+  budget-board-db:
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: superSecretPassword
+      POSTGRES_DB: budgetboard
