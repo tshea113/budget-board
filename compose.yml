@@ -2,7 +2,7 @@ services:
   budget-board-server:
     container_name: budget-board-server
     restart: unless-stopped
-    image: ghcr.io/tshea113/budget-board/server:stable
+    image: ghcr.io/tshea113/budget-board/server:release
     environment:
       Logging__LogLevel__Default: Information
       CLIENT_URL: budget-board-client
@@ -13,7 +13,7 @@ services:
   budget-board-client:
     container_name: budget-board-client
     restart: unless-stopped
-    image: ghcr.io/tshea113/budget-board/client:stable
+    image: ghcr.io/tshea113/budget-board/client:release
     environment:
       VITE_API_URL: budget-board-client
       PORT: 6253
