@@ -1,5 +1,5 @@
-import { Transaction } from '@/types/transaction';
-import TransactionCard, { TransactionCardType } from './transaction-card';
+import { Transaction, TransactionCardType } from '@/types/transaction';
+import TransactionCard from './transaction-card';
 import React from 'react';
 import PageSizeSelect from '@/components/page-size-select';
 import PageSelect from '@/components/page-select';

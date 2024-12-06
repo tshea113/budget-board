@@ -2,7 +2,7 @@ import { AuthContext } from '@/components/auth-provider';
 import { Card } from '@/components/ui/card';
 import { translateAxiosError } from '@/lib/requests';
 import { cn } from '@/lib/utils';
-import { Transaction } from '@/types/transaction';
+import { Transaction, TransactionCardType } from '@/types/transaction';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import React from 'react';
@@ -12,12 +12,6 @@ import EditableMerchantCell from './cells/editable-merchant-cell';
 import EditableDateCell from './cells/editable-date-cell';
 import LoadingIcon from '@/components/loading-icon';
 import { toast } from 'sonner';
-
-export enum TransactionCardType {
-  Normal,
-  Edit,
-  Uncategorized,
-}
 
 interface TransactionCardProps {
   className?: string;
@@ -72,7 +66,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
   return (
     <Card
       className={cn(
-        'flex flex-row p-2 @container',
+        '@container flex flex-row p-2',
         props.type === TransactionCardType.Normal ? 'hover:border-primary' : '',
         isSelected ? 'bg-muted' : 'bg-card',
         selectEffect && 'animate-pop',
@@ -81,7 +75,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
       onClick={toggleIsSelected}
       onAnimationEnd={() => setSelectEffect(false)}
     >
-      <div className="my-1 flex w-full flex-col flex-wrap gap-2 @xl:flex-row @xl:items-center">
+      <div className="@xl:flex-row @xl:items-center my-1 flex w-full flex-col flex-wrap gap-2">
         <span className="@xl:w-[200px]">
           <EditableDateCell
             transaction={props.transaction}
@@ -89,7 +83,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
             editCell={doEditTransaction.mutate}
           />
         </span>
-        <span className="flex-auto @xl:w-[200px]">
+        <span className="@xl:w-[200px] flex-auto">
           <EditableMerchantCell
             transaction={props.transaction}
             isSelected={isSelected}

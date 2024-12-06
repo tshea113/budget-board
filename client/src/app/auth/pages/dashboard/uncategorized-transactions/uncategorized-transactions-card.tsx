@@ -1,14 +1,12 @@
-import TransactionCard, {
-  TransactionCardType,
-} from '../../transactions/transaction-card';
 import { useQuery } from '@tanstack/react-query';
-import { Transaction } from '@/types/transaction';
+import { Transaction, TransactionCardType } from '@/types/transaction';
 import { AxiosResponse } from 'axios';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import { filterTransactionsByCategory } from '@/lib/transactions';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import PageIterator from './page-iterator';
+import TransactionCard from '../../transactions/transaction-card';
 
 const UncategorizedTransactionsCard = (): JSX.Element => {
   const [page, setPage] = React.useState(1);
