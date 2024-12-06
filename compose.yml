@@ -8,6 +8,8 @@ services:
       CLIENT_URL: budget-board-client
     networks:
       - budget-board-network
+    depends_on:
+      - budget-board-db
   budget-board-client:
     container_name: budget-board-client
     restart: unless-stopped
@@ -19,6 +21,8 @@ services:
       - 6253:6253
     networks:
       - budget-board-network
+    depends_on:
+      - budget-board-server
   budget-board-db:
     container_name: postgres-db
     image: postgres:16
@@ -27,8 +31,6 @@ services:
       - "6252:5432"
     networks:
       - budget-board-network
-    profiles:
-      - "include-db"
 networks:
   budget-board-network:
     name: budget-board-network

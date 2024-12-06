@@ -22,7 +22,6 @@ $RECYCLE.BIN/
 **/db.sqlite3
 **/__pycache__/
 .env*
-*.override.yml
 **/node_modules/
 nginx.conf
 

@@ -6,9 +6,11 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: superSecretPassword
       AUTO_UPDATE_DB: true
-      EMAIL_SENDER: test@gmail.com
-      EMAIL_SENDER_PASSWORD: yourPassword
-      EMAIL_SMTP_HOST: smtp.gmail.com
+
+      # Email confirmation is optional. See the README for more details.
+      # EMAIL_SENDER: example@gmail.com
+      # EMAIL_SENDER_PASSWORD: appPassword
+      # EMAIL_SMTP_HOST: smtp.gmail.com
   budget-board-db:
     environment:
       POSTGRES_USER: postgres
