@@ -36,7 +36,7 @@ This container runs the back-end API of the app.
 
 | Option                | Details                                                                                                                                                                                    |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| POSTGRES_HOST         | The host for the PostgreSQL database. This should match the variable of the same name under the budget-board-db container.                                                                 |
+| POSTGRES_HOST         | The host for the PostgreSQL database. You shouldn't need to edit this unless you are hosting your own postgres database.                                                                   |
 | POSTGRES_DATABASE     | The postgresql database name. This should match the variable `POSTGRES_DB` under the budget-board-db container.                                                                            |
 | POSTGRES_USER         | The postgresql database user that budget board will use to connect to and interact with the database. This should match the variable of the same name under the budget-board-db container. |
 | POSTGRES_PASSWORD     | The user password. This should match the variable of the same name under the budget-board-db container.                                                                                    |
