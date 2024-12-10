@@ -85,9 +85,7 @@ const AccountsConfigurationCard = (
       <div className="col-span-6 md:col-span-2">
         <CategoryInput
           selectedCategory={
-            props.account.subtype && props.account.subtype.length > 0
-              ? (props.account.subtype ?? '')
-              : (props.account.type ?? '')
+              accountSubTypeValue.length > 0 ? accountSubTypeValue : accountTypeValue
           }
           setSelectedCategory={(type: string) => {
             setAccountTypeValue(getParentCategory(type, accountCategories));
