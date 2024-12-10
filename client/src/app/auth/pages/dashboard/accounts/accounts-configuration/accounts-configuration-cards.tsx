@@ -1,5 +1,6 @@
 import { Account } from '@/types/account';
 import AccountsConfigurationCard from './accounts-configuration-card';
+import { Sortable, SortableItem } from '@/components/sortable';
 
 interface AccountsConfigurationCardsProps {
   accounts: Account[];
@@ -10,20 +11,26 @@ const AccountsConfigurationCards = (
 ): JSX.Element => {
   return (
     <>
-      <div className="hidden w-full grid-cols-11 items-center py-2 md:grid md:grid-cols-7">
-        <span className="col-span-4 text-center md:col-span-2">Account</span>
-        <span className="col-span-2 text-center md:col-span-2">Category</span>
-        <span className="col-span-2 text-center md:col-span-1">Hide Account?</span>
-        <span className="col-span-2 text-center md:col-span-1">Hide Transactions?</span>
-        <span className="col-span-3 text-center md:col-span-1">Delete</span>
+      <div className="hidden w-full items-center p-2 text-center md:flex md:flex-row">
+        <span className="md:w-1/2">Account</span>
+        <div className="flex w-1/2 flex-row justify-between">
+          <span className="w-1/4">Category</span>
+          <span className="w-[105px]">Hide Account?</span>
+          <span className="w-[135px]">Hide Transactions?</span>
+          <span className="w-[64px]">Delete</span>
+        </div>
       </div>
-      <div className="flex flex-col space-y-2">
-        {(props.accounts.filter((a: Account) => a.deleted === null) ?? []).map(
-          (account: Account) => (
-            <AccountsConfigurationCard key={account.id} account={account} />
-          )
-        )}
-      </div>
+      <Sortable value={props.accounts}>
+        <div className="flex flex-col space-y-2">
+          {(props.accounts.filter((a: Account) => a.deleted === null) ?? []).map(
+            (account: Account) => (
+              <SortableItem value={account.id}>
+                <AccountsConfigurationCard key={account.id} account={account} />
+              </SortableItem>
+            )
+          )}
+        </div>
+      </Sortable>
     </>
   );
 };

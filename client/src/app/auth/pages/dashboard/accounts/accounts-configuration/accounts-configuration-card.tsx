@@ -14,6 +14,8 @@ import { Label } from '@/components/ui/label';
 import CategoryInput from '@/components/category-input';
 import { getIsParentCategory, getParentCategory } from '@/lib/category';
 import { toast } from 'sonner';
+import { SortableDragHandle } from '@/components/sortable';
+import { GripVertical } from 'lucide-react';
 
 interface AccountsConfigurationCardProps {
   account: Account;
@@ -73,82 +75,88 @@ const AccountsConfigurationCard = (
   });
 
   return (
-    <Card className="grid grid-cols-6 grid-rows-3 items-center justify-items-center space-y-1 p-2 md:grid-cols-7 md:grid-rows-1">
-      <Input
-        className="col-span-6 md:col-span-2"
-        value={accountNameValue}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          setAccountNameValue(e.target.value);
-          setValueDirty(true);
-        }}
-      />
-      <div className="col-span-6 md:col-span-2">
-        <CategoryInput
-          selectedCategory={
+    <Card className="flex flex-row items-center gap-2 p-2">
+      <div className="flex w-1/2 flex-row items-center gap-2">
+        <SortableDragHandle variant="outline" size="icon" className="size-8 shrink-0">
+          <GripVertical />
+        </SortableDragHandle>
+        <Input
+          value={accountNameValue}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setAccountNameValue(e.target.value);
+            setValueDirty(true);
+          }}
+        />
+      </div>
+      <div className="flex w-1/2 flex-row items-center justify-between">
+        <div className="w-1/4">
+          <CategoryInput
+            selectedCategory={
               accountSubTypeValue.length > 0 ? accountSubTypeValue : accountTypeValue
-          }
-          setSelectedCategory={(type: string) => {
-            setAccountTypeValue(getParentCategory(type, accountCategories));
-            getIsParentCategory(type, accountCategories)
-              ? setAccountSubTypeValue('')
-              : setAccountSubTypeValue(type);
-            setValueDirty(true);
-          }}
-          categories={accountCategories}
-        />
-      </div>
-      <div className="col-span-2 flex flex-row space-x-2 md:col-span-1">
-        <Checkbox
-          id="hidden"
-          checked={hideAccountValue}
-          onCheckedChange={() => {
-            setHideAccountValue(!hideAccountValue);
-            setValueDirty(true);
-          }}
-        />
-        <Label className="md:hidden">Hide Account?</Label>
-      </div>
-      <div className="col-span-2 flex flex-row space-x-2 md:col-span-1">
-        <Checkbox
-          id="hidden"
-          checked={hideTransactionsValue}
-          onCheckedChange={() => {
-            setHideTransactionsValue(!hideTransactionsValue);
-            setValueDirty(true);
-          }}
-        />
-        <Label className="md:hidden">Hide Transactions?</Label>
-      </div>
-      <div className="col-span-2 md:col-span-1">
-        {valueDirty ? (
-          <div className="flex flex-row items-center space-x-2">
-            <ResponsiveButton
-              className="m-0 h-7 w-7 p-0"
-              onClick={() => {
-                doUpdateAccount.mutate();
-              }}
-              loading={doUpdateAccount.isPending}
-            >
-              <CheckIcon className="h-4 w-4" />
-            </ResponsiveButton>
-            <ResponsiveButton
-              className="m-0 h-7 w-7 p-0"
-              onClick={() => {
-                setAccountNameValue(props.account.name);
-                setHideTransactionsValue(props.account.hideTransactions);
-                setHideAccountValue(props.account.hideAccount);
-                setAccountTypeValue(props.account.type);
-                setAccountSubTypeValue(props.account.subtype);
-                setValueDirty(false);
-              }}
-              loading={false}
-            >
-              <Cross2Icon className="h-4 w-4" />
-            </ResponsiveButton>
-          </div>
-        ) : (
-          <DeleteAccount accountId={props.account.id} />
-        )}
+            }
+            setSelectedCategory={(type: string) => {
+              setAccountTypeValue(getParentCategory(type, accountCategories));
+              getIsParentCategory(type, accountCategories)
+                ? setAccountSubTypeValue('')
+                : setAccountSubTypeValue(type);
+              setValueDirty(true);
+            }}
+            categories={accountCategories}
+          />
+        </div>
+        <div className="flex w-[105px] flex-row justify-center gap-2">
+          <Checkbox
+            id="hidden"
+            checked={hideAccountValue}
+            onCheckedChange={() => {
+              setHideAccountValue(!hideAccountValue);
+              setValueDirty(true);
+            }}
+          />
+          <Label className="md:hidden">Hide Account?</Label>
+        </div>
+        <div className="flex w-[135px] flex-row justify-center gap-2">
+          <Checkbox
+            id="hidden"
+            checked={hideTransactionsValue}
+            onCheckedChange={() => {
+              setHideTransactionsValue(!hideTransactionsValue);
+              setValueDirty(true);
+            }}
+          />
+          <Label className="md:hidden">Hide Transactions?</Label>
+        </div>
+        <div className="flex w-[64px] flex-row justify-center">
+          {valueDirty ? (
+            <div className="flex flex-row gap-2">
+              <ResponsiveButton
+                className="m-0 h-7 w-7 p-0"
+                onClick={() => {
+                  doUpdateAccount.mutate();
+                }}
+                loading={doUpdateAccount.isPending}
+              >
+                <CheckIcon className="h-4 w-4" />
+              </ResponsiveButton>
+              <ResponsiveButton
+                className="m-0 h-7 w-7 p-0"
+                onClick={() => {
+                  setAccountNameValue(props.account.name);
+                  setHideTransactionsValue(props.account.hideTransactions);
+                  setHideAccountValue(props.account.hideAccount);
+                  setAccountTypeValue(props.account.type);
+                  setAccountSubTypeValue(props.account.subtype);
+                  setValueDirty(false);
+                }}
+                loading={false}
+              >
+                <Cross2Icon className="h-4 w-4" />
+              </ResponsiveButton>
+            </div>
+          ) : (
+            <DeleteAccount accountId={props.account.id} />
+          )}
+        </div>
       </div>
     </Card>
   );
