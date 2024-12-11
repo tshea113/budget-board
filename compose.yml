@@ -29,8 +29,14 @@ services:
     restart: unless-stopped
     ports:
       - "6252:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
     networks:
       - budget-board-network
+
+volumes:
+  db-data:
+
 networks:
   budget-board-network:
     name: budget-board-network
