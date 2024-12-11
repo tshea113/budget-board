@@ -1,5 +1,20 @@
 import { type Account } from '@/types/account';
 
+/**
+ * Creates a map of accounts to their institutions.
+ * @param accounts Acounts you wish to group by institution.
+ * @returns A map of accounts to institutions.
+ */
+export const groupAccountsByInstitution = (accounts: Account[]): Map<string, Account[]> =>
+  accounts.reduce(
+    (accountMap: Map<string, Account[]>, item: Account) =>
+      accountMap.set(item.institution, [
+        ...(accountMap.get(item.institution) || []),
+        item,
+      ]),
+    new Map<string, Account[]>()
+  );
+
 export const filterVisibleAccounts = (accounts: Account[]): Account[] =>
   accounts.filter((a: Account) => !(a.hideAccount || a.deleted !== null));
 

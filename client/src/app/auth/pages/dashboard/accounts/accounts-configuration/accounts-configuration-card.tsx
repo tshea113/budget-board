@@ -19,6 +19,7 @@ import { GripVertical } from 'lucide-react';
 
 interface AccountsConfigurationCardProps {
   account: Account;
+  isReorder: boolean;
 }
 
 const AccountsConfigurationCard = (
@@ -75,11 +76,13 @@ const AccountsConfigurationCard = (
   });
 
   return (
-    <Card className="flex flex-row items-center gap-2 p-2">
-      <div className="flex w-1/2 flex-row items-center gap-2">
-        <SortableDragHandle variant="outline" size="icon" className="size-8 shrink-0">
-          <GripVertical />
-        </SortableDragHandle>
+    <Card className="flex flex-col items-center gap-2 p-2 md:flex-row">
+      <div className="flex w-full flex-row items-center gap-2 md:w-1/3">
+        {props.isReorder && (
+          <SortableDragHandle variant="outline" size="icon" className="size-8 shrink-0">
+            <GripVertical />
+          </SortableDragHandle>
+        )}
         <Input
           value={accountNameValue}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,23 +91,22 @@ const AccountsConfigurationCard = (
           }}
         />
       </div>
-      <div className="flex w-1/2 flex-row items-center justify-between">
-        <div className="w-1/4">
-          <CategoryInput
-            selectedCategory={
-              accountSubTypeValue.length > 0 ? accountSubTypeValue : accountTypeValue
-            }
-            setSelectedCategory={(type: string) => {
-              setAccountTypeValue(getParentCategory(type, accountCategories));
-              getIsParentCategory(type, accountCategories)
-                ? setAccountSubTypeValue('')
-                : setAccountSubTypeValue(type);
-              setValueDirty(true);
-            }}
-            categories={accountCategories}
-          />
-        </div>
-        <div className="flex w-[105px] flex-row justify-center gap-2">
+      <div className="flex w-full flex-row flex-wrap items-center justify-between gap-2 md:w-2/3 md:flex-nowrap">
+        <CategoryInput
+          className="min-w-[185px] md:w-1/4"
+          selectedCategory={
+            accountSubTypeValue.length > 0 ? accountSubTypeValue : accountTypeValue
+          }
+          setSelectedCategory={(type: string) => {
+            setAccountTypeValue(getParentCategory(type, accountCategories));
+            getIsParentCategory(type, accountCategories)
+              ? setAccountSubTypeValue('')
+              : setAccountSubTypeValue(type);
+            setValueDirty(true);
+          }}
+          categories={accountCategories}
+        />
+        <div className="flex flex-row justify-center gap-2 p-1 md:w-1/4">
           <Checkbox
             id="hidden"
             checked={hideAccountValue}
@@ -115,7 +117,7 @@ const AccountsConfigurationCard = (
           />
           <Label className="md:hidden">Hide Account?</Label>
         </div>
-        <div className="flex w-[135px] flex-row justify-center gap-2">
+        <div className="flex flex-row justify-center gap-2 p-1 md:w-1/4">
           <Checkbox
             id="hidden"
             checked={hideTransactionsValue}
@@ -126,7 +128,7 @@ const AccountsConfigurationCard = (
           />
           <Label className="md:hidden">Hide Transactions?</Label>
         </div>
-        <div className="flex w-[64px] flex-row justify-center">
+        <div className="flex min-w-[64px] flex-row justify-center p-2 md:w-1/4">
           {valueDirty ? (
             <div className="flex flex-row gap-2">
               <ResponsiveButton

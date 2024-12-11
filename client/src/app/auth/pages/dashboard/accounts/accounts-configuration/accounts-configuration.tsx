@@ -11,12 +11,17 @@ import { type Account } from '@/types/account';
 import DeletedAccountsCards from './deleted-accounts-cards';
 import AccountsConfigurationCards from './accounts-configuration-cards';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { cn } from '@/lib/utils';
+import React from 'react';
+import AccountsConfigurationGroups from '../groups/accounts-configuration-groups';
 
 interface AccountsConfigurationProps {
   accounts: Account[];
 }
 
 const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element => {
+  const [isReorder, setIsReorder] = React.useState(false);
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -26,13 +31,35 @@ const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element =
       </SheetTrigger>
       <SheetTitle hidden />
       <SheetContent side="top" className="flex h-full w-full flex-row justify-center">
-        <div className="w-full space-y-3 2xl:max-w-screen-2xl">
-          <ScrollArea className="h-full pr-3">
-            <SheetHeader className="pb-2">Accounts Configuration</SheetHeader>
-            <AccountsConfigurationCards accounts={props.accounts} />
-            <DeletedAccountsCards
-              deletedAccounts={props.accounts.filter((a: Account) => a.deleted !== null)}
-            />
+        <div className="w-full gap-3 pt-2 2xl:max-w-screen-2xl">
+          <ScrollArea className="h-full pr-4" type="auto">
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-row items-center justify-between">
+                <SheetHeader>Accounts Configuration</SheetHeader>
+                <Button
+                  className={cn(
+                    isReorder ? 'border-success text-success hover:text-success' : ''
+                  )}
+                  variant="outline"
+                  onClick={() => setIsReorder(!isReorder)}
+                >
+                  Reorder
+                </Button>
+              </div>
+              <AccountsConfigurationGroups
+                accounts={props.accounts.filter((a: Account) => a.deleted === null)}
+                isReorder={isReorder}
+              />
+              <AccountsConfigurationCards
+                accounts={props.accounts.filter((a: Account) => a.deleted === null)}
+                isReorder={isReorder}
+              />
+              <DeletedAccountsCards
+                deletedAccounts={props.accounts.filter(
+                  (a: Account) => a.deleted !== null
+                )}
+              />
+            </div>
           </ScrollArea>
         </div>
       </SheetContent>
