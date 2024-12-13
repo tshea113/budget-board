@@ -1,26 +1,26 @@
 ﻿using BudgetBoard.Database.Data;
 using BudgetBoard.Database.Models;
+using BudgetBoard.Models.SimpleFinDetails;
 
 namespace BudgetBoard.Utils;
 
 public static class AccountHandler
 {
-    public static Account? GetAccount(ApplicationUser userData, string simpleFinId) =>
+    public static BudgetBoard.Database.Models.Account? GetAccount(ApplicationUser userData, string simpleFinId) =>
         userData.Accounts.FirstOrDefault(a => a.SyncID == simpleFinId);
 
-    public static async Task AddAccountAsync(ApplicationUser userData, UserDataContext userDataContext, Account account)
+    public static async Task AddAccountAsync(ApplicationUser userData, UserDataContext userDataContext, BudgetBoard.Database.Models.Account account)
     {
         userData.Accounts.Add(account);
         await userDataContext.SaveChangesAsync();
     }
 
-    public static async Task<bool> UpdateAccountAsync(ApplicationUser userData, UserDataContext userDataContext, Account newAccount)
+    public static async Task<bool> UpdateAccountAsync(ApplicationUser userData, UserDataContext userDataContext, BudgetBoard.Database.Models.Account newAccount)
     {
-        Account? account = userData.Accounts.Single(a => a.ID == newAccount.ID);
+        BudgetBoard.Database.Models.Account? account = userData.Accounts.Single(a => a.ID == newAccount.ID);
         if (account == null) return false;
 
         account.Name = newAccount.Name;
-        account.Institution = newAccount.Institution;
         account.Type = newAccount.Type;
         account.Subtype = newAccount.Subtype;
         account.CurrentBalance = newAccount.CurrentBalance;
@@ -28,5 +28,26 @@ public static class AccountHandler
 
         await userDataContext.SaveChangesAsync();
         return true;
+    }
+
+    public static async Task<Guid> SyncInstitution(ApplicationUser userData, UserDataContext userDataContext, Organization org)
+    {
+        var institution = userData.Institutions.FirstOrDefault(i => i.Name == org.Name);
+
+        if (institution == null)
+        {
+            institution = new Institution
+            {
+                Name = org.Name ?? string.Empty,
+                UserID = userData.Id,
+            };
+
+            userData.Institutions.Add(institution);
+            await userDataContext.SaveChangesAsync();
+
+            return userData.Institutions.First(institution => institution.Name == org.Name).ID;
+        }
+
+        return institution.ID;
     }
 }

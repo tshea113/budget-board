@@ -152,7 +152,6 @@ public class AccountController : ControllerBase
             if (account == null) return Unauthorized("You are not authorized to access this content.");
 
             account.Name = newAccount.Name;
-            account.Institution = newAccount.Institution;
             account.Type = newAccount.Type;
             account.Subtype = newAccount.Subtype;
             account.HideTransactions = newAccount.HideTransactions;

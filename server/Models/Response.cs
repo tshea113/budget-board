@@ -24,7 +24,7 @@ namespace BudgetBoard.Models
         public Guid ID { get; set; }
         public string? SyncID { get; set; }
         public string Name { get; set; } = string.Empty;
-        public string Institution { get; set; } = string.Empty;
+        public Guid? InstitutionID { get; set; }
         public string Type { get; set; } = string.Empty;
         public string Subtype { get; set; } = string.Empty;
         public float CurrentBalance { get; set; } = 0.0f;
@@ -38,7 +38,7 @@ namespace BudgetBoard.Models
         {
             ID = account.ID;
             Name = account.Name;
-            Institution = account.Institution;
+            InstitutionID = account.InstitutionID;
             Type = account.Type;
             Subtype = account.Subtype;
             CurrentBalance = account.CurrentBalance;

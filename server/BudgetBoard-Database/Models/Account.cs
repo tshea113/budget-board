@@ -5,7 +5,8 @@ public class Account
     public Guid ID { get; set; }
     public string? SyncID { get; set; }
     public required string Name { get; set; }
-    public required string Institution { get; set; }
+    public Guid? InstitutionID { get; set; }
+    public Institution Institution { get; set; } = null!;
     public string Type { get; set; } = "";
     public string Subtype { get; set; } = "";
     public float CurrentBalance { get; set; } = 0.0f;
