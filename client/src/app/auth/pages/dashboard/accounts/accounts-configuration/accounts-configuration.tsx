@@ -35,7 +35,9 @@ const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element =
           <ScrollArea className="h-full pr-4" type="auto">
             <div className="flex flex-col gap-3">
               <div className="flex flex-row items-center justify-between">
-                <SheetHeader>Accounts Configuration</SheetHeader>
+                <SheetHeader className="text-lg font-semibold">
+                  Accounts Configuration
+                </SheetHeader>
                 <Button
                   className={cn(
                     isReorder ? 'border-success text-success hover:text-success' : ''
