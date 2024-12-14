@@ -13,7 +13,13 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import React from 'react';
 import AccountsConfigurationGroups from './accounts-configuration-groups';
-import { Institution } from '@/types/institution';
+import { Institution, InstitutionIndexRequest } from '@/types/institution';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AuthContext } from '@/components/auth-provider';
+import { AxiosError } from 'axios';
+import { toast } from 'sonner';
+import { translateAxiosError } from '@/lib/requests';
+import ResponsiveButton from '@/components/responsive-button';
 
 interface AccountsConfigurationProps {
   institutions: Institution[];
@@ -25,11 +31,31 @@ const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element =
   );
   const [isReorder, setIsReorder] = React.useState(false);
 
+  const { request } = React.useContext<any>(AuthContext);
+  const queryClient = useQueryClient();
+  const doIndexInstitutions = useMutation({
+    mutationFn: async (institutions: InstitutionIndexRequest[]) =>
+      await request({
+        url: '/api/institution/setindices',
+        method: 'PUT',
+        data: institutions,
+      }),
+    onSuccess: async () =>
+      await queryClient.invalidateQueries({
+        queryKey: ['institutions'],
+      }),
+    onError: (error: AxiosError) => toast.error(translateAxiosError(error)),
+  });
+
   const onReorderClick = () => {
     if (isReorder) {
-      // TODO: Save the new order in the backend
-      console.log('Save the new order');
-      console.log(sortedInstitutions);
+      const indexedInstitutions: InstitutionIndexRequest[] = sortedInstitutions.map(
+        (inst, index) => ({
+          id: inst.id,
+          index,
+        })
+      );
+      doIndexInstitutions.mutate(indexedInstitutions);
     }
     setIsReorder(!isReorder);
   };
@@ -50,15 +76,16 @@ const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element =
                 <SheetHeader className="text-lg font-semibold">
                   Accounts Configuration
                 </SheetHeader>
-                <Button
+                <ResponsiveButton
                   className={cn(
                     isReorder ? 'border-success text-success hover:text-success' : ''
                   )}
                   variant="outline"
                   onClick={onReorderClick}
+                  loading={doIndexInstitutions.isPending}
                 >
                   {isReorder ? 'Save' : 'Reorder'}
-                </Button>
+                </ResponsiveButton>
               </div>
               <AccountsConfigurationGroups
                 sortedInstitutions={sortedInstitutions}

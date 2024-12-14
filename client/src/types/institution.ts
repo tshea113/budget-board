@@ -7,3 +7,8 @@ export interface Institution {
   userID: string;
   accounts: Account[];
 }
+
+export interface InstitutionIndexRequest {
+  id: string;
+  index: number;
+}

@@ -128,6 +128,34 @@ public class InstitutionController : ControllerBase
         }
     }
 
+    [HttpPut]
+    [Authorize]
+    [Route("[action]")]
+    public async Task<IActionResult> SetIndices([FromBody] List<InstitutionIndexRequest> institutions)
+    {
+        try
+        {
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
+
+            foreach (var institution in institutions)
+            {
+                var inst = user.Institutions.Single(i => i.ID == institution.ID);
+                if (inst == null) return Unauthorized("You are not authorized to access this content.");
+
+                inst.Index = institution.Index;
+            }
+
+            await _userDataContext.SaveChangesAsync();
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
+        }
+    }
+
     private async Task<ApplicationUser?> GetCurrentUser(string id)
     {
         try
