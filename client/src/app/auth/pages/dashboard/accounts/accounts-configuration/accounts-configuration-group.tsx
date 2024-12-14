@@ -13,17 +13,14 @@ interface AccountsConfigurationGroupProps {
 const AccountsConfigurationGroup = (props: AccountsConfigurationGroupProps) => {
   return (
     <Card className="flex flex-row items-center gap-2 border-2 bg-background p-2">
-      {/* TODO: I want this to be full height */}
-      {props.isReorder && (
-        <SortableDragHandle
-          variant="outline"
-          size="icon"
-          className="h-full min-h-[75px] w-7 shrink-0"
-        >
-          <GripVertical />
-        </SortableDragHandle>
-      )}
-      <div className="flex w-full flex-col gap-2">
+      <div className="shrink-0 self-stretch">
+        {props.isReorder && (
+          <SortableDragHandle variant="outline" size="icon" className="h-full w-7">
+            <GripVertical />
+          </SortableDragHandle>
+        )}
+      </div>
+      <div className="flex h-full w-full flex-col gap-2">
         <span className="text-lg font-semibold tracking-tight">{props.group.name}</span>
         <Separator />
         <AccountsConfigurationCards

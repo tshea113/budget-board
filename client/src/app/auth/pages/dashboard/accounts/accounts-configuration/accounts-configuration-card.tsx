@@ -78,11 +78,14 @@ const AccountsConfigurationCard = (
   return (
     <Card className="flex flex-col items-center gap-2 p-2 md:flex-row">
       <div className="flex w-full flex-row items-center gap-2 md:w-1/3">
-        {props.isReorder && (
-          <SortableDragHandle variant="outline" size="icon" className="size-8 shrink-0">
-            <GripVertical />
-          </SortableDragHandle>
-        )}
+        <div className="self-stretch">
+          {props.isReorder && (
+            <SortableDragHandle variant="outline" size="icon" className="h-full w-7">
+              <GripVertical />
+            </SortableDragHandle>
+          )}
+        </div>
+
         <Input
           value={accountNameValue}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
