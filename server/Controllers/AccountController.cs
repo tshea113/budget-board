@@ -167,6 +167,34 @@ public class AccountController : ControllerBase
         }
     }
 
+    [HttpPut]
+    [Authorize]
+    [Route("[action]")]
+    public async Task<IActionResult> SetIndices([FromBody] List<AccountIndexRequest> accounts)
+    {
+        try
+        {
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
+
+            foreach (var account in accounts)
+            {
+                var acc = user.Accounts.Single(a => a.ID == account.ID);
+                if (acc == null) return Unauthorized("You are not authorized to access this content.");
+
+                acc.Index = account.Index;
+            }
+
+            await _userDataContext.SaveChangesAsync();
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
+        }
+    }
+
     private async Task<ApplicationUser?> GetCurrentUser(string id)
     {
         try

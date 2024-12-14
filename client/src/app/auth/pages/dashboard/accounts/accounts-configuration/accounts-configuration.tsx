@@ -7,7 +7,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { GearIcon } from '@radix-ui/react-icons';
-import { type Account } from '@/types/account';
+import { AccountIndexRequest, type Account } from '@/types/account';
 import DeletedAccountsCards from './delete/deleted-accounts-cards';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
@@ -47,6 +47,20 @@ const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element =
     onError: (error: AxiosError) => toast.error(translateAxiosError(error)),
   });
 
+  const doIndexAccounts = useMutation({
+    mutationFn: async (accounts: AccountIndexRequest[]) =>
+      await request({
+        url: '/api/account/setindices',
+        method: 'PUT',
+        data: accounts,
+      }),
+    onSuccess: async () =>
+      await queryClient.invalidateQueries({
+        queryKey: ['accounts'],
+      }),
+    onError: (error: AxiosError) => toast.error(translateAxiosError(error)),
+  });
+
   const onReorderClick = () => {
     if (isReorder) {
       const indexedInstitutions: InstitutionIndexRequest[] = sortedInstitutions.map(
@@ -56,6 +70,14 @@ const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element =
         })
       );
       doIndexInstitutions.mutate(indexedInstitutions);
+
+      const indexedAccounts: AccountIndexRequest[] = sortedInstitutions.flatMap((inst) =>
+        inst.accounts.map((acc, index) => ({
+          id: acc.id,
+          index,
+        }))
+      );
+      doIndexAccounts.mutate(indexedAccounts);
     }
     setIsReorder(!isReorder);
   };
@@ -82,7 +104,7 @@ const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element =
                   )}
                   variant="outline"
                   onClick={onReorderClick}
-                  loading={doIndexInstitutions.isPending}
+                  loading={doIndexInstitutions.isPending || doIndexAccounts.isPending}
                 >
                   {isReorder ? 'Save' : 'Reorder'}
                 </ResponsiveButton>

@@ -15,6 +15,11 @@ export interface Account {
   userID: string;
 }
 
+export interface AccountIndexRequest {
+  id: string;
+  index: number;
+}
+
 export interface NewAccount extends Partial<Account> {}
 
 export const accountCategories: ICategory[] = [

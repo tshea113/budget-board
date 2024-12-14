@@ -15,11 +15,6 @@ const AccountsConfigurationCards = (
     props.accounts?.filter((a: Account) => a.deleted === null) ?? []
   );
 
-  React.useEffect(() => {
-    console.log('Save accounts order');
-    console.log(sortedAccounts);
-  }, [props.isReorder]);
-
   return (
     <div className="flex flex-col gap-2">
       <div className="hidden w-full items-center text-center md:flex md:flex-row">
