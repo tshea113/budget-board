@@ -162,8 +162,6 @@ public class InstitutionController : ControllerBase
         {
             var users = await _userDataContext.Users
                 .Include(u => u.Institutions)
-                .ThenInclude(a => a.Accounts)
-                .AsSplitQuery()
                 .ToListAsync();
             var user = users.Single(u => u.Id == new Guid(id));
 

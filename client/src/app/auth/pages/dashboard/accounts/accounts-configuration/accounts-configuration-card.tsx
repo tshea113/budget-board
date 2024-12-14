@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { translateAxiosError } from '@/lib/requests';
-import { accountCategories, type Account } from '@/types/account';
+import { accountCategories, AccountEditRequest, type Account } from '@/types/account';
 import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
@@ -44,26 +44,19 @@ const AccountsConfigurationCard = (
 
   const doUpdateAccount = useMutation({
     mutationFn: async () => {
-      const newAccount: Account = {
+      const editedAccount: AccountEditRequest = {
         id: props.account.id,
-        syncID: props.account.syncID,
         name: accountNameValue,
-        institution: props.account.institution,
         type: accountTypeValue,
         subtype: accountSubTypeValue,
-        currentBalance: props.account.currentBalance,
-        balanceDate: props.account.balanceDate,
         hideTransactions: hideTransactionsValue,
         hideAccount: hideAccountValue,
-        deleted: props.account.deleted,
-        index: props.account.index,
-        userID: props.account.userID,
       };
 
       return await request({
         url: '/api/account',
         method: 'PUT',
-        data: newAccount,
+        data: editedAccount,
       });
     },
     onSuccess: async () => {

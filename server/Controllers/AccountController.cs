@@ -141,21 +141,21 @@ public class AccountController : ControllerBase
 
     [HttpPut]
     [Authorize]
-    public async Task<IActionResult> Edit([FromBody] Account newAccount)
+    public async Task<IActionResult> Edit([FromBody] AccountEditRequest editedAccount)
     {
         try
         {
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
             if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-            Account? account = user.Accounts.Single(a => a.ID == newAccount.ID);
+            Account? account = user.Accounts.Single(a => a.ID == editedAccount.ID);
             if (account == null) return Unauthorized("You are not authorized to access this content.");
 
-            account.Name = newAccount.Name;
-            account.Type = newAccount.Type;
-            account.Subtype = newAccount.Subtype;
-            account.HideTransactions = newAccount.HideTransactions;
-            account.HideAccount = newAccount.HideAccount;
+            account.Name = editedAccount.Name;
+            account.Type = editedAccount.Type;
+            account.Subtype = editedAccount.Subtype;
+            account.HideTransactions = editedAccount.HideTransactions;
+            account.HideAccount = editedAccount.HideAccount;
 
             await _userDataContext.SaveChangesAsync();
 

@@ -2,6 +2,22 @@
 
 namespace BudgetBoard.Models;
 
+public class AccountEditRequest
+{
+    public Guid ID { get; set; }
+    public required string Name { get; set; }
+    public string Type { get; set; } = "";
+    public string Subtype { get; set; } = "";
+    public bool HideTransactions { get; set; } = false;
+    public bool HideAccount { get; set; } = false;
+}
+
+public class AccountIndexRequest
+{
+    public Guid ID { get; set; }
+    public int Index { get; set; }
+}
+
 public class AccountResponse
 {
     public Guid ID { get; set; }
@@ -33,10 +49,4 @@ public class AccountResponse
         Index = account.Index;
         UserID = account.UserID;
     }
-}
-
-public class AccountIndexRequest
-{
-    public Guid ID { get; set; }
-    public int Index { get; set; }
 }

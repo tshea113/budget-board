@@ -16,6 +16,15 @@ export interface Account {
   userID: string;
 }
 
+export interface AccountEditRequest {
+  id: string;
+  name: string;
+  type: string;
+  subtype: string;
+  hideTransactions: boolean;
+  hideAccount: boolean;
+}
+
 export interface AccountIndexRequest {
   id: string;
   index: number;
