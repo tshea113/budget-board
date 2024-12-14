@@ -54,7 +54,7 @@
     "cmdk": "^1.0.4",
     "date-fns": "^4.1.0",
     "eslint": "^9.17.0",
-    "eslint-config-love": "^86.1.1",
+    "eslint-config-love": "^112.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-n": "^17.15.0",
