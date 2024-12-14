@@ -4,7 +4,7 @@ export interface Account {
   id: string;
   syncID: string;
   name: string;
-  institution: string;
+  institutionID: string;
   type: string;
   subtype: string;
   currentBalance: number;
@@ -12,6 +12,7 @@ export interface Account {
   hideTransactions: boolean;
   hideAccount: boolean;
   deleted: Date;
+  index: number;
   userID: string;
 }
 

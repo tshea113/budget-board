@@ -10,6 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { translateAxiosError } from '@/lib/requests';
 import { toast } from 'sonner';
 import { Institution } from '@/types/institution';
+import { Account } from '@/types/account';
 
 const AccountCard = (): JSX.Element => {
   const { request } = React.useContext<any>(AuthContext);
@@ -29,13 +30,35 @@ const AccountCard = (): JSX.Element => {
     },
   });
 
+  const accountsQuery = useQuery({
+    queryKey: ['accounts'],
+    queryFn: async (): Promise<Account[]> => {
+      const res: AxiosResponse = await request({
+        url: '/api/account',
+        method: 'GET',
+      });
+
+      if (res.status == 200) {
+        return res.data;
+      }
+
+      return [];
+    },
+  });
+
   React.useEffect(() => {
     if (institutionQuery.error) {
       toast.error(translateAxiosError(institutionQuery.error as AxiosError));
     }
   }, [institutionQuery.error]);
 
-  if (institutionQuery.isPending) {
+  React.useEffect(() => {
+    if (accountsQuery.error) {
+      toast.error(translateAxiosError(accountsQuery.error as AxiosError));
+    }
+  }, [accountsQuery.error]);
+
+  if (institutionQuery.isPending || accountsQuery.isPending) {
     return (
       <Card>
         <div className="m-3 flex flex-col space-y-3">
@@ -51,12 +74,18 @@ const AccountCard = (): JSX.Element => {
       <div className="flex flex-row items-center p-2">
         <span className="w-1/2 text-2xl font-semibold tracking-tight">Accounts</span>
         <div className="flex w-1/2 flex-row justify-end">
-          <AccountsConfiguration institutions={institutionQuery.data ?? []} />
+          <AccountsConfiguration
+            institutions={institutionQuery.data ?? []}
+            accounts={accountsQuery.data ?? []}
+          />
         </div>
       </div>
       <Separator />
       <div className="p-2">
-        <InstitutionItems institutions={institutionQuery.data ?? []} />
+        <InstitutionItems
+          institutions={institutionQuery.data ?? []}
+          accounts={accountsQuery.data ?? []}
+        />
       </div>
     </Card>
   );

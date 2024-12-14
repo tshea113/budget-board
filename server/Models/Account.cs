@@ -15,6 +15,7 @@ public class AccountResponse
     public bool HideTransactions { get; set; } = false;
     public bool HideAccount { get; set; } = false;
     public DateTime? Deleted { get; set; } = null;
+    public int Index { get; set; }
     public Guid UserID { get; set; }
 
     public AccountResponse(Account account)
@@ -29,6 +30,7 @@ public class AccountResponse
         HideTransactions = account.HideTransactions;
         HideAccount = account.HideAccount;
         Deleted = account.Deleted;
+        Index = account.Index;
         UserID = account.UserID;
     }
 }

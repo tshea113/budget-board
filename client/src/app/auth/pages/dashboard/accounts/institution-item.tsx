@@ -6,9 +6,14 @@ import { Institution } from '@/types/institution';
 
 interface InstitutionItemProps {
   institution: Institution;
+  accounts: Account[];
 }
 
 const InstitutionItem = (props: InstitutionItemProps): JSX.Element => {
+  const sortedFilteredAccounts = filterVisibleAccounts(props.accounts).sort(
+    (a, b) => a.index - b.index
+  );
+
   return (
     <div className="flex flex-col gap-2">
       <Card className="bg-card-accent px-1">
@@ -17,7 +22,7 @@ const InstitutionItem = (props: InstitutionItemProps): JSX.Element => {
         </span>
       </Card>
       <div className="flex flex-col gap-1">
-        {filterVisibleAccounts(props.institution.accounts).map((account: Account) => (
+        {sortedFilteredAccounts.map((account: Account) => (
           <AccountItem key={account.id} account={account} />
         ))}
       </div>

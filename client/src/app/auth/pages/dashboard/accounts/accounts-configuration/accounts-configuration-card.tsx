@@ -56,6 +56,7 @@ const AccountsConfigurationCard = (
         hideTransactions: hideTransactionsValue,
         hideAccount: hideAccountValue,
         deleted: props.account.deleted,
+        index: props.account.index,
         userID: props.account.userID,
       };
 
@@ -85,7 +86,6 @@ const AccountsConfigurationCard = (
             </SortableDragHandle>
           )}
         </div>
-
         <Input
           value={accountNameValue}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
