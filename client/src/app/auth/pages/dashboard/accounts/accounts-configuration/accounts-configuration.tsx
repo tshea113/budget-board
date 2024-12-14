@@ -8,19 +8,31 @@ import {
 } from '@/components/ui/sheet';
 import { GearIcon } from '@radix-ui/react-icons';
 import { type Account } from '@/types/account';
-import DeletedAccountsCards from './deleted-accounts-cards';
-import AccountsConfigurationCards from './accounts-configuration-cards';
+import DeletedAccountsCards from './delete/deleted-accounts-cards';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import React from 'react';
-import AccountsConfigurationGroups from '../groups/accounts-configuration-groups';
+import AccountsConfigurationGroups from './accounts-configuration-groups';
+import { Institution } from '@/types/institution';
 
 interface AccountsConfigurationProps {
-  accounts: Account[];
+  institutions: Institution[];
 }
 
 const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element => {
+  const [sortedInstitutions, setSortedInstitutions] = React.useState<Institution[]>(
+    props.institutions.sort((a, b) => a.index - b.index)
+  );
   const [isReorder, setIsReorder] = React.useState(false);
+
+  const onReorderClick = () => {
+    if (isReorder) {
+      // TODO: Save the new order in the backend
+      console.log('Save the new order');
+      console.log(sortedInstitutions);
+    }
+    setIsReorder(!isReorder);
+  };
 
   return (
     <Sheet>
@@ -43,23 +55,20 @@ const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element =
                     isReorder ? 'border-success text-success hover:text-success' : ''
                   )}
                   variant="outline"
-                  onClick={() => setIsReorder(!isReorder)}
+                  onClick={onReorderClick}
                 >
-                  Reorder
+                  {isReorder ? 'Save' : 'Reorder'}
                 </Button>
               </div>
               <AccountsConfigurationGroups
-                accounts={props.accounts.filter((a: Account) => a.deleted === null)}
-                isReorder={isReorder}
-              />
-              <AccountsConfigurationCards
-                accounts={props.accounts.filter((a: Account) => a.deleted === null)}
+                sortedInstitutions={sortedInstitutions}
+                setSortedInstitutions={setSortedInstitutions}
                 isReorder={isReorder}
               />
               <DeletedAccountsCards
-                deletedAccounts={props.accounts.filter(
-                  (a: Account) => a.deleted !== null
-                )}
+                deletedAccounts={props.institutions
+                  .flatMap((i) => i.accounts)
+                  .filter((a: Account) => a.deleted !== null)}
               />
             </div>
           </ScrollArea>

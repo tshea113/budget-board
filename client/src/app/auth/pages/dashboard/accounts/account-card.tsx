@@ -1,23 +1,23 @@
 import { Card } from '@/components/ui/card';
 import AccountsConfiguration from './accounts-configuration/accounts-configuration';
-import AccountItems from './account-items';
+import InstitutionItems from './institution-items';
 import { Separator } from '@/components/ui/separator';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
-import { Account } from '@/types/account';
 import { Skeleton } from '@/components/ui/skeleton';
 import { translateAxiosError } from '@/lib/requests';
 import { toast } from 'sonner';
+import { Institution } from '@/types/institution';
 
 const AccountCard = (): JSX.Element => {
   const { request } = React.useContext<any>(AuthContext);
-  const accountsQuery = useQuery({
-    queryKey: ['accounts'],
-    queryFn: async (): Promise<Account[]> => {
+  const institutionQuery = useQuery({
+    queryKey: ['institutions'],
+    queryFn: async (): Promise<Institution[]> => {
       const res: AxiosResponse = await request({
-        url: '/api/account',
+        url: '/api/institution',
         method: 'GET',
       });
 
@@ -30,12 +30,12 @@ const AccountCard = (): JSX.Element => {
   });
 
   React.useEffect(() => {
-    if (accountsQuery.error) {
-      toast.error(translateAxiosError(accountsQuery.error as AxiosError));
+    if (institutionQuery.error) {
+      toast.error(translateAxiosError(institutionQuery.error as AxiosError));
     }
-  }, [accountsQuery.error]);
+  }, [institutionQuery.error]);
 
-  if (accountsQuery.isPending) {
+  if (institutionQuery.isPending) {
     return (
       <Card>
         <div className="m-3 flex flex-col space-y-3">
@@ -51,12 +51,12 @@ const AccountCard = (): JSX.Element => {
       <div className="flex flex-row items-center p-2">
         <span className="w-1/2 text-2xl font-semibold tracking-tight">Accounts</span>
         <div className="flex w-1/2 flex-row justify-end">
-          <AccountsConfiguration accounts={accountsQuery.data ?? []} />
+          <AccountsConfiguration institutions={institutionQuery.data ?? []} />
         </div>
       </div>
       <Separator />
       <div className="p-2">
-        <AccountItems accounts={accountsQuery.data ?? []} />
+        <InstitutionItems institutions={institutionQuery.data ?? []} />
       </div>
     </Card>
   );

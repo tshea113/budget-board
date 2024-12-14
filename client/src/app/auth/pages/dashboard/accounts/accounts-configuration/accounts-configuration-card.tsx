@@ -8,7 +8,7 @@ import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
 import React from 'react';
-import DeleteAccount from './delete-account';
+import DeleteAccount from './delete/delete-account';
 import { AuthContext } from '@/components/auth-provider';
 import { Label } from '@/components/ui/label';
 import CategoryInput from '@/components/category-input';
