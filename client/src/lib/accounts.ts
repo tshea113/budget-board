@@ -8,8 +8,8 @@ import { type Account } from '@/types/account';
 export const groupAccountsByInstitution = (accounts: Account[]): Map<string, Account[]> =>
   accounts.reduce(
     (accountMap: Map<string, Account[]>, item: Account) =>
-      accountMap.set(item.institution, [
-        ...(accountMap.get(item.institution) || []),
+      accountMap.set(item.institutionID, [
+        ...(accountMap.get(item.institutionID) || []),
         item,
       ]),
     new Map<string, Account[]>()
