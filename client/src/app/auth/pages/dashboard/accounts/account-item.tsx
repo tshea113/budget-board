@@ -7,22 +7,20 @@ interface AccountItemProps {
 
 const AccountItem = (props: AccountItemProps): JSX.Element => {
   return (
-    <div className="grid grid-rows-2 px-1">
-      <div className="row-span-1 grid grid-cols-10">
-        <div className="col-span-6 text-left">
-          <span className="text-base tracking-tight">{props.account.name}</span>
-        </div>
+    <div className="flex flex-col px-1">
+      <div className="flex flex-row justify-between">
+        <span className="text-base tracking-tight">{props.account.name}</span>
         <span
           className={cn(
-            'col-span-4 text-right font-semibold',
+            'font-semibold',
             props.account.currentBalance < 0 ? 'text-destructive' : 'text-success'
           )}
         >
           {convertNumberToCurrency(props.account.currentBalance, true)}
         </span>
       </div>
-      <span className="row-span-1 text-left text-sm text-muted-foreground">
-        Last updated:{' '}
+      <span className="text-sm text-muted-foreground">
+        {'Last updated: '}
         {props.account.balanceDate
           ? new Date(props.account.balanceDate).toLocaleString()
           : 'Never!'}

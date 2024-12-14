@@ -70,6 +70,7 @@ public class SimpleFinHandler
                 // sync the other info? Do we expect that to change?
                 foundAccount.CurrentBalance = float.Parse(accountData.Balance, CultureInfo.InvariantCulture.NumberFormat);
                 foundAccount.BalanceDate = DateTime.UnixEpoch.AddSeconds(accountData.BalanceDate);
+                foundAccount.InstitutionID = await AccountHandler.SyncInstitution(user, _userDataContext, accountData.Org);
             }
             else
             {
@@ -77,7 +78,7 @@ public class SimpleFinHandler
                 {
                     SyncID = accountData.Id,
                     Name = accountData.Name,
-                    Institution = accountData.Org.Name ?? string.Empty,
+                    InstitutionID = await AccountHandler.SyncInstitution(user, _userDataContext, accountData.Org),
                     CurrentBalance = float.Parse(accountData.Balance, CultureInfo.InvariantCulture.NumberFormat),
                     BalanceDate = DateTime.UnixEpoch.AddSeconds(accountData.BalanceDate),
                     UserID = user.Id

@@ -3,20 +3,23 @@ import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { translateAxiosError } from '@/lib/requests';
-import { accountCategories, type Account } from '@/types/account';
+import { accountCategories, AccountEditRequest, type Account } from '@/types/account';
 import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
 import React from 'react';
-import DeleteAccount from './delete-account';
+import DeleteAccount from './delete/delete-account';
 import { AuthContext } from '@/components/auth-provider';
 import { Label } from '@/components/ui/label';
 import CategoryInput from '@/components/category-input';
 import { getIsParentCategory, getParentCategory } from '@/lib/category';
 import { toast } from 'sonner';
+import { SortableDragHandle } from '@/components/sortable';
+import { GripVertical } from 'lucide-react';
 
 interface AccountsConfigurationCardProps {
   account: Account;
+  isReorder: boolean;
 }
 
 const AccountsConfigurationCard = (
@@ -41,25 +44,19 @@ const AccountsConfigurationCard = (
 
   const doUpdateAccount = useMutation({
     mutationFn: async () => {
-      const newAccount: Account = {
+      const editedAccount: AccountEditRequest = {
         id: props.account.id,
-        syncID: props.account.syncID,
         name: accountNameValue,
-        institution: props.account.institution,
         type: accountTypeValue,
         subtype: accountSubTypeValue,
-        currentBalance: props.account.currentBalance,
-        balanceDate: props.account.balanceDate,
         hideTransactions: hideTransactionsValue,
         hideAccount: hideAccountValue,
-        deleted: props.account.deleted,
-        userID: props.account.userID,
       };
 
       return await request({
         url: '/api/account',
         method: 'PUT',
-        data: newAccount,
+        data: editedAccount,
       });
     },
     onSuccess: async () => {
@@ -73,21 +70,28 @@ const AccountsConfigurationCard = (
   });
 
   return (
-    <Card className="grid grid-cols-6 grid-rows-3 items-center justify-items-center space-y-1 p-2 md:grid-cols-7 md:grid-rows-1">
-      <Input
-        className="col-span-6 md:col-span-2"
-        value={accountNameValue}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          setAccountNameValue(e.target.value);
-          setValueDirty(true);
-        }}
-      />
-      <div className="col-span-6 md:col-span-2">
+    <Card className="flex flex-col items-center gap-2 p-2 md:flex-row">
+      <div className="flex w-full flex-row items-center gap-2 md:w-1/3">
+        <div className="self-stretch">
+          {props.isReorder && (
+            <SortableDragHandle variant="outline" size="icon" className="h-full w-7">
+              <GripVertical />
+            </SortableDragHandle>
+          )}
+        </div>
+        <Input
+          value={accountNameValue}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setAccountNameValue(e.target.value);
+            setValueDirty(true);
+          }}
+        />
+      </div>
+      <div className="flex w-full flex-row flex-wrap items-center justify-between gap-2 md:w-2/3 md:flex-nowrap">
         <CategoryInput
+          className="min-w-[185px] md:w-1/4"
           selectedCategory={
-            props.account.subtype && props.account.subtype.length > 0
-              ? (props.account.subtype ?? '')
-              : (props.account.type ?? '')
+            accountSubTypeValue.length > 0 ? accountSubTypeValue : accountTypeValue
           }
           setSelectedCategory={(type: string) => {
             setAccountTypeValue(getParentCategory(type, accountCategories));
@@ -98,59 +102,59 @@ const AccountsConfigurationCard = (
           }}
           categories={accountCategories}
         />
-      </div>
-      <div className="col-span-2 flex flex-row space-x-2 md:col-span-1">
-        <Checkbox
-          id="hidden"
-          checked={hideAccountValue}
-          onCheckedChange={() => {
-            setHideAccountValue(!hideAccountValue);
-            setValueDirty(true);
-          }}
-        />
-        <Label className="md:hidden">Hide Account?</Label>
-      </div>
-      <div className="col-span-2 flex flex-row space-x-2 md:col-span-1">
-        <Checkbox
-          id="hidden"
-          checked={hideTransactionsValue}
-          onCheckedChange={() => {
-            setHideTransactionsValue(!hideTransactionsValue);
-            setValueDirty(true);
-          }}
-        />
-        <Label className="md:hidden">Hide Transactions?</Label>
-      </div>
-      <div className="col-span-2 md:col-span-1">
-        {valueDirty ? (
-          <div className="flex flex-row items-center space-x-2">
-            <ResponsiveButton
-              className="m-0 h-7 w-7 p-0"
-              onClick={() => {
-                doUpdateAccount.mutate();
-              }}
-              loading={doUpdateAccount.isPending}
-            >
-              <CheckIcon className="h-4 w-4" />
-            </ResponsiveButton>
-            <ResponsiveButton
-              className="m-0 h-7 w-7 p-0"
-              onClick={() => {
-                setAccountNameValue(props.account.name);
-                setHideTransactionsValue(props.account.hideTransactions);
-                setHideAccountValue(props.account.hideAccount);
-                setAccountTypeValue(props.account.type);
-                setAccountSubTypeValue(props.account.subtype);
-                setValueDirty(false);
-              }}
-              loading={false}
-            >
-              <Cross2Icon className="h-4 w-4" />
-            </ResponsiveButton>
-          </div>
-        ) : (
-          <DeleteAccount accountId={props.account.id} />
-        )}
+        <div className="flex flex-row justify-center gap-2 p-1 md:w-1/4">
+          <Checkbox
+            id="hidden"
+            checked={hideAccountValue}
+            onCheckedChange={() => {
+              setHideAccountValue(!hideAccountValue);
+              setValueDirty(true);
+            }}
+          />
+          <Label className="md:hidden">Hide Account?</Label>
+        </div>
+        <div className="flex flex-row justify-center gap-2 p-1 md:w-1/4">
+          <Checkbox
+            id="hidden"
+            checked={hideTransactionsValue}
+            onCheckedChange={() => {
+              setHideTransactionsValue(!hideTransactionsValue);
+              setValueDirty(true);
+            }}
+          />
+          <Label className="md:hidden">Hide Transactions?</Label>
+        </div>
+        <div className="flex min-w-[64px] flex-row justify-center p-2 md:w-1/4">
+          {valueDirty ? (
+            <div className="flex flex-row gap-2">
+              <ResponsiveButton
+                className="m-0 h-7 w-7 p-0"
+                onClick={() => {
+                  doUpdateAccount.mutate();
+                }}
+                loading={doUpdateAccount.isPending}
+              >
+                <CheckIcon className="h-4 w-4" />
+              </ResponsiveButton>
+              <ResponsiveButton
+                className="m-0 h-7 w-7 p-0"
+                onClick={() => {
+                  setAccountNameValue(props.account.name);
+                  setHideTransactionsValue(props.account.hideTransactions);
+                  setHideAccountValue(props.account.hideAccount);
+                  setAccountTypeValue(props.account.type);
+                  setAccountSubTypeValue(props.account.subtype);
+                  setValueDirty(false);
+                }}
+                loading={false}
+              >
+                <Cross2Icon className="h-4 w-4" />
+              </ResponsiveButton>
+            </div>
+          ) : (
+            <DeleteAccount accountId={props.account.id} />
+          )}
+        </div>
       </div>
     </Card>
   );

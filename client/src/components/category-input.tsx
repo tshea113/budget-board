@@ -66,7 +66,9 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
                     value={category.value}
                     onSelect={(currentValue) => {
                       props.setSelectedCategory(
-                        currentValue === props.selectedCategory ? '' : currentValue
+                        areStringsEqual(currentValue, props.selectedCategory)
+                          ? ''
+                          : currentValue
                       );
                       setOpen(false);
                     }}

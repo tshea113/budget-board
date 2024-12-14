@@ -11,14 +11,14 @@ namespace BudgetBoard.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AccountController : ControllerBase
+public class InstitutionController : ControllerBase
 {
-    private readonly ILogger<AccountController> _logger;
+    private readonly ILogger<InstitutionController> _logger;
 
     private readonly UserDataContext _userDataContext;
     private UserManager<ApplicationUser> _userManager;
 
-    public AccountController(UserDataContext context, UserManager<ApplicationUser> userManager, ILogger<AccountController> logger)
+    public InstitutionController(UserDataContext context, UserManager<ApplicationUser> userManager, ILogger<InstitutionController> logger)
     {
         _userDataContext = context;
         _userManager = userManager;
@@ -34,7 +34,7 @@ public class AccountController : ControllerBase
             var user = await GetCurrentUser(_userManager.GetUserId(User) ?? string.Empty);
             if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-            return Ok(user.Accounts.Select(a => new AccountResponse(a)));
+            return Ok(user.Institutions.Select(i => new InstitutionResponse(i)));
         }
         catch (Exception ex)
         {
@@ -51,10 +51,10 @@ public class AccountController : ControllerBase
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
             if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-            var account = user.Accounts.First(a => a.ID == guid);
-            if (account == null) return NotFound();
+            var institution = user.Institutions.First(a => a.ID == guid);
+            if (institution == null) return NotFound();
 
-            return Ok(new AccountResponse(account));
+            return Ok(new InstitutionResponse(institution));
         }
         catch (Exception ex)
         {
@@ -64,14 +64,14 @@ public class AccountController : ControllerBase
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> Add([FromBody] Account account)
+    public async Task<IActionResult> Add([FromBody] Institution institution)
     {
         try
         {
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
             if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-            user.Accounts.Add(account);
+            user.Institutions.Add(institution);
             await _userDataContext.SaveChangesAsync();
 
             return Ok();
@@ -91,44 +91,10 @@ public class AccountController : ControllerBase
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
             if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-            var account = user.Accounts.Single(a => a.ID == guid);
-            if (account == null) return Unauthorized("You are not authorized to access this content.");
+            var institution = user.Institutions.Single(i => i.ID == guid);
+            if (institution == null) return Unauthorized("You are not authorized to access this content.");
 
-            account.Deleted = DateTime.Now.ToUniversalTime();
-
-            if (deleteTransactions)
-            {
-                foreach (var transaction in account.Transactions)
-                {
-                    transaction.Deleted = DateTime.Now.ToUniversalTime();
-                }
-            }
-
-            await _userDataContext.SaveChangesAsync();
-
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
-        }
-    }
-
-    [HttpPost]
-    [Authorize]
-    [Route("[action]")]
-    public async Task<IActionResult> Restore(Guid guid)
-    {
-        try
-        {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-            if (user == null) return Unauthorized("You are not authorized to access this content.");
-
-            var account = user.Accounts.Single(a => a.ID == guid);
-            if (account == null) return Unauthorized("You are not authorized to access this content.");
-
-            account.Deleted = null;
-
+            _userDataContext.Entry(institution).State = EntityState.Deleted;
             await _userDataContext.SaveChangesAsync();
 
             return Ok();
@@ -141,22 +107,17 @@ public class AccountController : ControllerBase
 
     [HttpPut]
     [Authorize]
-    public async Task<IActionResult> Edit([FromBody] AccountEditRequest editedAccount)
+    public async Task<IActionResult> Edit([FromBody] Institution newInstitution)
     {
         try
         {
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
             if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-            Account? account = user.Accounts.Single(a => a.ID == editedAccount.ID);
-            if (account == null) return Unauthorized("You are not authorized to access this content.");
+            Institution? institution = user.Institutions.Single(i => i.ID == newInstitution.ID);
+            if (institution == null) return Unauthorized("You are not authorized to access this content.");
 
-            account.Name = editedAccount.Name;
-            account.Type = editedAccount.Type;
-            account.Subtype = editedAccount.Subtype;
-            account.HideTransactions = editedAccount.HideTransactions;
-            account.HideAccount = editedAccount.HideAccount;
-
+            institution.Index = newInstitution.Index;
             await _userDataContext.SaveChangesAsync();
 
             return Ok();
@@ -170,19 +131,19 @@ public class AccountController : ControllerBase
     [HttpPut]
     [Authorize]
     [Route("[action]")]
-    public async Task<IActionResult> SetIndices([FromBody] List<AccountIndexRequest> accounts)
+    public async Task<IActionResult> SetIndices([FromBody] List<InstitutionIndexRequest> institutions)
     {
         try
         {
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
             if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-            foreach (var account in accounts)
+            foreach (var institution in institutions)
             {
-                var acc = user.Accounts.Single(a => a.ID == account.ID);
-                if (acc == null) return Unauthorized("You are not authorized to access this content.");
+                var inst = user.Institutions.Single(i => i.ID == institution.ID);
+                if (inst == null) return Unauthorized("You are not authorized to access this content.");
 
-                acc.Index = account.Index;
+                inst.Index = institution.Index;
             }
 
             await _userDataContext.SaveChangesAsync();
@@ -200,9 +161,7 @@ public class AccountController : ControllerBase
         try
         {
             var users = await _userDataContext.Users
-                .Include(u => u.Accounts)
-                .ThenInclude(a => a.Transactions)
-                .AsSplitQuery()
+                .Include(u => u.Institutions)
                 .ToListAsync();
             var user = users.Single(u => u.Id == new Guid(id));
 

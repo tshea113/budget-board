@@ -43,6 +43,15 @@ namespace BudgetBoard.Database.Data
                 a.ToTable("Account");
             });
 
+            modelBuilder.Entity<Institution>((i) =>
+            {
+                i.HasMany(e => e.Accounts)
+                .WithOne(e => e.Institution)
+                .HasForeignKey(e => e.InstitutionID);
+
+                i.ToTable("Institution");
+            });
+
             modelBuilder.Entity<Transaction>().ToTable("Transaction");
 
             modelBuilder.Entity<Budget>().ToTable("Budget");
