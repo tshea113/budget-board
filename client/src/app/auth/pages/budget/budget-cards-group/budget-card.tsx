@@ -94,7 +94,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
     >
       <div className="flex w-full flex-col px-3 py-1">
         <div className="flex min-h-10 flex-row items-center @container">
-          <div className="flex w-1/2 grow flex-row items-center justify-start gap-2">
+          <div className="flex w-2/5 flex-row items-center justify-start gap-2 md:w-1/2">
             <span className="select-none text-lg font-semibold tracking-tight @sm:text-xl">
               {getFormattedCategoryValue(
                 props.budgets[0].category,
@@ -103,7 +103,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
             </span>
             {(doEditBudget.isPending || doDeleteBudget.isPending) && <LoadingIcon />}
           </div>
-          <div className="flex w-1/2 flex-row justify-items-center text-base font-semibold @sm:text-lg">
+          <div className="flex w-3/5 flex-row justify-items-center text-base font-semibold @sm:text-lg md:w-1/2">
             <span className="w-1/3 select-none text-center">
               {convertNumberToCurrency(
                 props.amount * getSignForBudget(props.budgets[0].category),
