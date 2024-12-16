@@ -32,7 +32,7 @@ public static class AccountHandler
 
     public static async Task<Guid> SyncInstitution(ApplicationUser userData, UserDataContext userDataContext, Organization org)
     {
-        var institution = userData.Institutions.FirstOrDefault(i => i.Name == org.Name);
+        var institution = userData.Institutions.FirstOrDefault(i => i.Name.Equals(org.Name));
 
         if (institution == null)
         {
