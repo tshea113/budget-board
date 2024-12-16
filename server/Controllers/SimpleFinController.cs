@@ -115,6 +115,7 @@ public class SimpleFinController : Controller
                     .ThenInclude(a => a.Transactions)
                 .Include(user => user.Accounts)
                     .ThenInclude(a => a.Balances)
+                .Include(user => user.Institutions)
                 .AsSplitQuery()
                 .ToList();
             var user = users.Single(u => u.Id == new Guid(id));
