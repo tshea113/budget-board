@@ -4,18 +4,14 @@ interface BudgetHeaderProps {
 
 const BudgetHeader = (props: BudgetHeaderProps): JSX.Element => {
   return (
-    <div className="my-2 space-y-1 px-3 py-1">
-      <div className="grid grid-cols-2 @container">
-        <div>
-          <h3 className="scroll-m-20 justify-self-start text-lg font-semibold tracking-tight @sm:text-xl">
-            {props.children}
-          </h3>
-        </div>
-        <div className="grid grid-cols-3 justify-items-center">
-          <div>Amount</div>
-          <div>Budget</div>
-          <div>Left</div>
-        </div>
+    <div className="my-2 flex flex-row @container">
+      <span className="w-2/5 text-lg font-semibold tracking-tight @sm:text-xl md:w-1/2">
+        {props.children}
+      </span>
+      <div className="flex w-3/5 flex-row justify-items-center text-center md:w-1/2">
+        <div className="w-1/3">Amount</div>
+        <div className="w-1/3">Budget</div>
+        <div className="w-1/3">Left</div>
       </div>
     </div>
   );
