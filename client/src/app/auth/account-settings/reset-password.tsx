@@ -26,11 +26,11 @@ const ResetPassword = (): JSX.Element => {
     .object({
       oldPassword: z
         .string()
-        .min(7, { message: 'Password must be at least 7 characters' }),
+        .min(3, { message: 'Password must be at least 3 characters' }),
       newPassword: z
         .string()
-        .min(7, { message: 'Password must be at least 7 characters' }),
-      confirm: z.string().min(7, { message: 'Password must be at least 7 characters' }),
+        .min(3, { message: 'Password must be at least 3 characters' }),
+      confirm: z.string().min(3, { message: 'Password must be at least 3 characters' }),
     })
     .superRefine(({ confirm, newPassword }, ctx) => {
       if (confirm !== newPassword) {
@@ -89,21 +89,21 @@ const ResetPassword = (): JSX.Element => {
   };
 
   return (
-    <Card className="mt-5 p-6">
+    <Card className="flex flex-col gap-2 p-3">
+      <span className="text-lg font-bold tracking-tight">Reset Password</span>
       <Form {...form}>
-        <h1 className="text-xl font-bold">Reset Password</h1>
         <form
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onSubmit={form.handleSubmit(async (data, event) => {
             await submitPasswordUpdate(data, event);
           })}
-          className="space-y-4"
+          className="flex flex-col gap-4"
         >
           <FormField
             control={form.control}
             name="oldPassword"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex flex-col">
                 <FormLabel>Old Password</FormLabel>
                 <FormControl>
                   <Input {...field} type="password" />
@@ -116,7 +116,7 @@ const ResetPassword = (): JSX.Element => {
             control={form.control}
             name="newPassword"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex flex-col">
                 <FormLabel>New Password</FormLabel>
                 <FormControl>
                   <Input {...field} type="password" />
@@ -129,7 +129,7 @@ const ResetPassword = (): JSX.Element => {
             control={form.control}
             name="confirm"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex flex-col">
                 <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
                   <Input {...field} type="password" />
