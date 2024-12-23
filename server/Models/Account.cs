@@ -41,6 +41,8 @@ public class AccountResponse
         InstitutionID = account.InstitutionID;
         Type = account.Type;
         Subtype = account.Subtype;
+        CurrentBalance = account.Balances.OrderByDescending(b => b.DateTime).FirstOrDefault()?.Amount ?? 0;
+        BalanceDate = account.Balances.OrderByDescending(b => b.DateTime).FirstOrDefault()?.DateTime;
         HideTransactions = account.HideTransactions;
         HideAccount = account.HideAccount;
         Deleted = account.Deleted;

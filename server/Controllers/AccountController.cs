@@ -34,23 +34,7 @@ public class AccountController : ControllerBase
             var user = await GetCurrentUser(_userManager.GetUserId(User) ?? string.Empty);
             if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-            var accountsResponse = new List<AccountResponse>();
-
-            foreach (Account account in user.Accounts)
-            {
-                var currentBalance = user.Accounts.First(a => a.ID == account.ID).Balances
-                    .OrderByDescending(b => b.DateTime)
-                    .FirstOrDefault();
-                var accountResponse = new AccountResponse(account)
-                {
-                    CurrentBalance = currentBalance?.Amount ?? 0,
-                    BalanceDate = currentBalance?.DateTime ?? DateTime.UnixEpoch
-                };
-
-                accountsResponse.Add(accountResponse);
-            }
-
-            return Ok(accountsResponse);
+            return Ok(user.Accounts.Select(a => new AccountResponse(a)));
         }
         catch (Exception ex)
         {
