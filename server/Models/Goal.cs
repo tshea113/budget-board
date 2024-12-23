@@ -1,6 +1,29 @@
 ﻿using BudgetBoard.Database.Models;
+using System.Text.Json.Serialization;
 
 namespace BudgetBoard.Models;
+
+public class GoalRequest
+{
+    public required string Name { get; set; }
+    public DateTime? CompleteDate { get; set; }
+    public required decimal Amount { get; set; }
+    public decimal? InitialAmount { get; set; }
+    public decimal? MonthlyContribution { get; set; }
+    public required ICollection<string> AccountIds { get; set; }
+
+    [JsonConstructor]
+    public GoalRequest()
+    {
+        Name = string.Empty;
+        CompleteDate = null;
+        Amount = 0.0M;
+        InitialAmount = null;
+        MonthlyContribution = null;
+        AccountIds = [];
+
+    }
+}
 
 public class GoalResponse
 {

@@ -41,7 +41,7 @@ public class GoalController : ControllerBase
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> Add([FromBody] NewGoal newGoal)
+    public async Task<IActionResult> Add([FromBody] GoalRequest newGoal)
     {
         try
         {

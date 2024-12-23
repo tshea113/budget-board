@@ -12,13 +12,3 @@ public class Goal
     public required Guid UserID { get; set; }
     public ApplicationUser? User { get; set; } = null!;
 }
-
-public class NewGoal
-{
-    public required string Name { get; set; }
-    public DateTime? CompleteDate { get; set; }
-    public required decimal Amount { get; set; }
-    public decimal? InitialAmount { get; set; }
-    public decimal? MonthlyContribution { get; set; }
-    public required ICollection<string> AccountIds { get; set; }
-}

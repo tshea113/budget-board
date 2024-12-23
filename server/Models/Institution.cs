@@ -1,4 +1,5 @@
 ﻿using BudgetBoard.Database.Models;
+using System.Text.Json.Serialization;
 
 namespace BudgetBoard.Models;
 
@@ -15,6 +16,16 @@ public class InstitutionResponse
     public int Index { get; set; }
     public Guid UserID { get; set; }
     public ICollection<AccountResponse> Accounts { get; set; }
+
+    [JsonConstructor]
+    public InstitutionResponse()
+    {
+        ID = Guid.NewGuid();
+        Name = string.Empty;
+        Index = 0;
+        UserID = Guid.NewGuid();
+        Accounts = [];
+    }
 
     public InstitutionResponse(Institution institution)
     {
