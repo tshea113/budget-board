@@ -95,20 +95,20 @@ public class GoalController : ControllerBase
 
     [HttpPut]
     [Authorize]
-    public async Task<IActionResult> Edit([FromBody] Goal newGoal)
+    public async Task<IActionResult> Edit([FromBody] GoalResponse editedGoal)
     {
         try
         {
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
             if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-            Goal? goal = await _userDataContext.Goals.FindAsync(newGoal.ID);
+            Goal? goal = await _userDataContext.Goals.FindAsync(editedGoal.ID);
             if (goal == null) return NotFound();
 
-            goal.Name = newGoal.Name;
-            goal.Amount = newGoal.Amount;
-            goal.CompleteDate = newGoal.CompleteDate;
-            goal.MonthlyContribution = newGoal.MonthlyContribution;
+            goal.Name = editedGoal.Name;
+            goal.Amount = editedGoal.Amount;
+            goal.CompleteDate = editedGoal.CompleteDate;
+            goal.MonthlyContribution = editedGoal.MonthlyContribution;
 
             await _userDataContext.SaveChangesAsync();
 
