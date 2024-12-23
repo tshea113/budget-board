@@ -10,6 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarTrigger,
+  useSidebar,
 } from '@/components/ui/sidebar';
 import {
   ArrowLeftFromLineIcon,
@@ -37,7 +38,6 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import SheetItem from '@/components/sheet-item';
-import { useIsMobile } from '@/components/hooks/use-mobile';
 import { Pages } from '../pages/page-content';
 import AccountSettings from '../account-settings/account-settings';
 
@@ -73,14 +73,12 @@ const menuItems = [
 interface AppSidebarProps {
   currentPage: Pages;
   setCurrentPage: (currentPage: Pages) => void;
-  sidebarOpen: boolean;
-  setSidebarOpen: (open: boolean) => void;
 }
 
 const AppSidebar = (props: AppSidebarProps): JSX.Element => {
   const { request, setAccessToken } = React.useContext<any>(AuthContext);
 
-  const isMobile = useIsMobile();
+  const { open, setOpen, setOpenMobile, isMobile } = useSidebar();
 
   const queryClient = useQueryClient();
   const Logout = (): void => {
@@ -121,7 +119,7 @@ const AppSidebar = (props: AppSidebarProps): JSX.Element => {
         <SidebarHeader>
           <SidebarMenu className="flex flex-row justify-end">
             <SidebarTrigger>
-              {props.sidebarOpen ? (
+              {open ? (
                 <ArrowLeftFromLineIcon className="h-5 w-5" />
               ) : (
                 <ArrowRightFromLineIcon className="h-5 w-5" />
@@ -140,7 +138,10 @@ const AppSidebar = (props: AppSidebarProps): JSX.Element => {
                   <SidebarMenuButton
                     isActive={props.currentPage === item.page}
                     asChild
-                    onClick={() => props.setCurrentPage(item.page)}
+                    onClick={() => {
+                      props.setCurrentPage(item.page);
+                      isMobile ? setOpenMobile(false) : setOpen(false);
+                    }}
                   >
                     <div>
                       <item.icon />
