@@ -23,8 +23,6 @@ public static class AccountHandler
         account.Name = newAccount.Name;
         account.Type = newAccount.Type;
         account.Subtype = newAccount.Subtype;
-        account.CurrentBalance = newAccount.CurrentBalance;
-        account.BalanceDate = newAccount.BalanceDate;
 
         await userDataContext.SaveChangesAsync();
         return true;

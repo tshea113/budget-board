@@ -9,8 +9,6 @@ public class Account
     public Institution Institution { get; set; } = null!;
     public string Type { get; set; } = "";
     public string Subtype { get; set; } = "";
-    public float CurrentBalance { get; set; } = 0.0f;
-    public DateTime? BalanceDate { get; set; } = null;
     public bool HideTransactions { get; set; } = false;
     public bool HideAccount { get; set; } = false;
     public DateTime? Deleted { get; set; } = null;

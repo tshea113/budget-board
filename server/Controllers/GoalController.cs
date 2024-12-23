@@ -48,14 +48,14 @@ public class GoalController : ControllerBase
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
             if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-            float runningBalance = 0.0f;
+            decimal runningBalance = 0.0M;
             var accounts = new List<Account>();
             foreach (var accountId in newGoal.AccountIds)
             {
                 var account = user.Accounts.FirstOrDefault((a) => a.ID == new Guid(accountId));
                 if (account != null)
                 {
-                    runningBalance += account.CurrentBalance;
+                    runningBalance += account.Balances.OrderByDescending(b => b.DateTime).FirstOrDefault()?.Amount ?? 0;
                     accounts.Add(account);
                 }
 
@@ -152,6 +152,7 @@ public class GoalController : ControllerBase
                 .ThenInclude((g) => g.Accounts)
                 .ThenInclude((a) => a.Transactions)
                 .Include(u => u.Accounts)
+                .ThenInclude(a => a.Balances)
                 .AsSplitQuery()
                 .ToListAsync();
             var user = users.Single(u => u.Id == new Guid(id));

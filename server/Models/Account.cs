@@ -26,7 +26,7 @@ public class AccountResponse
     public Guid? InstitutionID { get; set; }
     public string Type { get; set; } = string.Empty;
     public string Subtype { get; set; } = string.Empty;
-    public float CurrentBalance { get; set; } = 0.0f;
+    public decimal CurrentBalance { get; set; } = 0.0M;
     public DateTime? BalanceDate { get; set; } = null;
     public bool HideTransactions { get; set; } = false;
     public bool HideAccount { get; set; } = false;
@@ -41,8 +41,6 @@ public class AccountResponse
         InstitutionID = account.InstitutionID;
         Type = account.Type;
         Subtype = account.Subtype;
-        CurrentBalance = account.CurrentBalance;
-        BalanceDate = account.BalanceDate;
         HideTransactions = account.HideTransactions;
         HideAccount = account.HideAccount;
         Deleted = account.Deleted;

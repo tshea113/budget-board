@@ -66,10 +66,6 @@ public class SimpleFinHandler
             var foundAccount = AccountHandler.GetAccount(user, accountData.Id);
             if (foundAccount != null)
             {
-                // TODO: Currently only syncing the account balance and the date for that balance. Should we also
-                // sync the other info? Do we expect that to change?
-                foundAccount.CurrentBalance = float.Parse(accountData.Balance, CultureInfo.InvariantCulture.NumberFormat);
-                foundAccount.BalanceDate = DateTime.UnixEpoch.AddSeconds(accountData.BalanceDate);
                 foundAccount.InstitutionID = await AccountHandler.SyncInstitution(user, _userDataContext, accountData.Org);
             }
             else
@@ -79,8 +75,6 @@ public class SimpleFinHandler
                     SyncID = accountData.Id,
                     Name = accountData.Name,
                     InstitutionID = await AccountHandler.SyncInstitution(user, _userDataContext, accountData.Org),
-                    CurrentBalance = float.Parse(accountData.Balance, CultureInfo.InvariantCulture.NumberFormat),
-                    BalanceDate = DateTime.UnixEpoch.AddSeconds(accountData.BalanceDate),
                     UserID = user.Id
                 };
 
@@ -132,10 +126,14 @@ public class SimpleFinHandler
             if (foundAccount != null)
             {
                 var balanceDates = foundAccount.Balances.Select(b => b.DateTime);
-                // TODO: Maybe this should be 24 hours? I think it could be 24 if we auto sync.//
-                if (balanceDates.Count() == 0 || balanceDates.Max().AddHours(12) < DateTime.UnixEpoch.AddSeconds(accountData.BalanceDate))
+                /**
+                 * We should only update the balance if account has no balances or the
+                 * last balance is older than the last balance in the SimpleFin data.
+                 */
+                if (!balanceDates.Any() ||
+                    balanceDates.Max() < DateTime.UnixEpoch.AddSeconds(accountData.BalanceDate))
                 {
-                    var newBalance = new Database.Models.Balance
+                    var newBalance = new Balance
                     {
                         Amount = decimal.Parse(accountData.Balance, CultureInfo.InvariantCulture.NumberFormat),
                         DateTime = DateTime.UnixEpoch.AddSeconds(accountData.BalanceDate),

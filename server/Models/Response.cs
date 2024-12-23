@@ -94,9 +94,9 @@ namespace BudgetBoard.Models
         public Guid ID { get; set; }
         public string Name { get; set; } = string.Empty;
         public DateTime? CompleteDate { get; set; }
-        public float Amount { get; set; } = 0.0f;
-        public float? InitialAmount { get; set; }
-        public float? MonthlyContribution { get; set; }
+        public decimal Amount { get; set; } = 0.0M;
+        public decimal? InitialAmount { get; set; }
+        public decimal? MonthlyContribution { get; set; }
         public ICollection<AccountResponse> Accounts { get; set; } = new List<AccountResponse>();
         public Guid UserID { get; set; }
 
