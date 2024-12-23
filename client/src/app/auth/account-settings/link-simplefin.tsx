@@ -73,7 +73,7 @@ const LinkSimpleFin = (): JSX.Element => {
 
   return (
     <Card className="flex flex-col gap-2 p-3">
-      <span className="text-xl font-bold tracking-tight">Link SimpleFIN</span>
+      <span className="text-lg font-bold tracking-tight">Link SimpleFIN</span>
       <div className="flex flex-col gap-4">
         <Button
           className={cn(userQuery.data?.accessToken ? 'border-success' : '')}
