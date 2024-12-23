@@ -1,13 +1,13 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { AuthContext } from '@/components/auth-provider';
 import ResponsiveButton from '@/components/responsive-button';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { translateAxiosError } from '@/lib/requests';
+import { cn } from '@/lib/utils';
 import { User } from '@/types/user';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosResponse, type AxiosError } from 'axios';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -34,6 +34,7 @@ const LinkSimpleFin = (): JSX.Element => {
     },
   });
 
+  const queryClient = useQueryClient();
   const doSetAccessToken = useMutation({
     mutationFn: async (newToken: string) =>
       await request({
@@ -41,6 +42,10 @@ const LinkSimpleFin = (): JSX.Element => {
         method: 'POST',
         params: { newToken },
       }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['user'] });
+      toast.success('SimpleFin account linked!');
+    },
     onError: (error: AxiosError) => {
       toast.error(translateAxiosError(error));
     },
@@ -67,10 +72,14 @@ const LinkSimpleFin = (): JSX.Element => {
   }, [userQuery.error]);
 
   return (
-    <Card className="mt-5">
-      <CardHeader>Link an Account</CardHeader>
-      <CardContent className="space-y-2">
-        <Button variant="outline" onClick={toggleForm}>
+    <Card className="flex flex-col gap-2 p-3">
+      <span className="text-xl font-bold tracking-tight">Link SimpleFIN</span>
+      <div className="flex flex-col gap-4">
+        <Button
+          className={cn(userQuery.data?.accessToken ? 'border-success' : '')}
+          variant="outline"
+          onClick={toggleForm}
+        >
           {userQuery.data?.accessToken
             ? 'Your SimpleFin account is linked!'
             : 'Link your SimpleFin account.'}
@@ -78,20 +87,19 @@ const LinkSimpleFin = (): JSX.Element => {
         {formVisible && (
           <Form {...form}>
             <form
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
               onSubmit={form.handleSubmit(async (data: FormValues, event) => {
                 event?.preventDefault();
                 if (userQuery.data) {
                   doSetAccessToken.mutate(data.accessToken);
                 }
               })}
-              className="space-y-4"
+              className="flex flex-col gap-2"
             >
               <FormField
                 control={form.control}
                 name="accessToken"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex flex-col">
                     <FormLabel>SimpleFin Key</FormLabel>
                     <FormControl>
                       <Input {...field} />
@@ -105,7 +113,7 @@ const LinkSimpleFin = (): JSX.Element => {
             </form>
           </Form>
         )}
-      </CardContent>
+      </div>
     </Card>
   );
 };
