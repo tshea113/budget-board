@@ -202,6 +202,8 @@ public class AccountController : ControllerBase
             var users = await _userDataContext.Users
                 .Include(u => u.Accounts)
                 .ThenInclude(a => a.Transactions)
+                .Include(u => u.Accounts)
+                .ThenInclude(a => a.Balances)
                 .AsSplitQuery()
                 .ToListAsync();
             var user = users.Single(u => u.Id == new Guid(id));

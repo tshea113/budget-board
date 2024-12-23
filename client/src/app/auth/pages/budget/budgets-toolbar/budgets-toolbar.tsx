@@ -70,11 +70,11 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
           });
           doCopyBudget.mutate(res.data as Budget[]);
         } else {
-          toast.error('Last month has no budget!');
+          toast.error('Previous month has no budget!');
         }
       })
       .catch(() => {
-        toast.error("There was an error copying last month's budget.");
+        toast.error("There was an error copying the previous month's budget.");
       });
   };
 
@@ -184,7 +184,7 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
             loading={doCopyBudget.isPending}
             onClick={onCopyBudgets}
           >
-            Copy last month
+            Copy previous month
           </ResponsiveButton>
         )}
         <span className="grow" />

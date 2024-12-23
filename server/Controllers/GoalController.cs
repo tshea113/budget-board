@@ -41,21 +41,21 @@ public class GoalController : ControllerBase
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> Add([FromBody] NewGoal newGoal)
+    public async Task<IActionResult> Add([FromBody] GoalRequest newGoal)
     {
         try
         {
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
             if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-            float runningBalance = 0.0f;
+            decimal runningBalance = 0.0M;
             var accounts = new List<Account>();
             foreach (var accountId in newGoal.AccountIds)
             {
                 var account = user.Accounts.FirstOrDefault((a) => a.ID == new Guid(accountId));
                 if (account != null)
                 {
-                    runningBalance += account.CurrentBalance;
+                    runningBalance += account.Balances.OrderByDescending(b => b.DateTime).FirstOrDefault()?.Amount ?? 0;
                     accounts.Add(account);
                 }
 
@@ -95,20 +95,20 @@ public class GoalController : ControllerBase
 
     [HttpPut]
     [Authorize]
-    public async Task<IActionResult> Edit([FromBody] Goal newGoal)
+    public async Task<IActionResult> Edit([FromBody] GoalResponse editedGoal)
     {
         try
         {
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
             if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-            Goal? goal = await _userDataContext.Goals.FindAsync(newGoal.ID);
+            Goal? goal = await _userDataContext.Goals.FindAsync(editedGoal.ID);
             if (goal == null) return NotFound();
 
-            goal.Name = newGoal.Name;
-            goal.Amount = newGoal.Amount;
-            goal.CompleteDate = newGoal.CompleteDate;
-            goal.MonthlyContribution = newGoal.MonthlyContribution;
+            goal.Name = editedGoal.Name;
+            goal.Amount = editedGoal.Amount;
+            goal.CompleteDate = editedGoal.CompleteDate;
+            goal.MonthlyContribution = editedGoal.MonthlyContribution;
 
             await _userDataContext.SaveChangesAsync();
 
@@ -152,6 +152,7 @@ public class GoalController : ControllerBase
                 .ThenInclude((g) => g.Accounts)
                 .ThenInclude((a) => a.Transactions)
                 .Include(u => u.Accounts)
+                .ThenInclude(a => a.Balances)
                 .AsSplitQuery()
                 .ToListAsync();
             var user = users.Single(u => u.Id == new Guid(id));
