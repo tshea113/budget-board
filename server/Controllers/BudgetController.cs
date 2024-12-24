@@ -55,7 +55,7 @@ namespace BudgetBoard.Controllers
                 if (user.Budgets.Any((b) =>
                     b.Date.Month == budget.Date.Month
                     && b.Date.Year == budget.Date.Year
-                    && b.Category == budget.Category))
+                    && b.Category.Equals(budget.Category, StringComparison.CurrentCultureIgnoreCase)))
                 {
                     return BadRequest("Budget category already exists for this month!");
                 }
@@ -96,7 +96,7 @@ namespace BudgetBoard.Controllers
                     if (user.Budgets.Any((b) =>
                         b.Date.Month == budget.Date.Month
                         && b.Date.Year == budget.Date.Year
-                        && b.Category == budget.Category))
+                        && b.Category.Equals(budget.Category, StringComparison.CurrentCultureIgnoreCase)))
                     {
                         continue;
                     }
