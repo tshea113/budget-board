@@ -48,7 +48,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
         queryClient.getQueryData(['budgets']) ?? [];
 
       queryClient.setQueryData(['budgets'], (oldBudgets: BudgetResponse[]) =>
-        oldBudgets.map((oldBudget) =>
+        oldBudgets?.map((oldBudget) =>
           oldBudget.id === variables.id ? variables : oldBudget
         )
       );
