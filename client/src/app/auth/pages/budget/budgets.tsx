@@ -117,6 +117,7 @@ const Budgets = (): JSX.Element => {
         <Unbudgets
           transactions={transactionsWithoutHidden}
           budgets={budgetsQuery.data ?? []}
+          selectedDates={selectedDates}
           isPending={budgetsQuery.isPending || transactionsForMonthsQuery.isPending}
         />
       </div>

@@ -13,9 +13,8 @@ import { Input } from '@/components/ui/input';
 import ResponsiveButton from '@/components/responsive-button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { translateAxiosError } from '@/lib/requests';
-import { type NewBudget } from '@/types/budget';
+import { type NewBudgetRequest } from '@/types/budget';
 import CategoryInput from '@/components/category-input';
-import { defaultGuid } from '@/types/user';
 import { AxiosError } from 'axios';
 import { AuthContext } from '@/components/auth-provider';
 import React from 'react';
@@ -44,7 +43,7 @@ const AddBudget = ({ date }: AddBudgetProps): JSX.Element => {
 
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: async (newBudget: NewBudget) =>
+    mutationFn: async (newBudget: NewBudgetRequest) =>
       await request({
         url: '/api/budget',
         method: 'POST',
@@ -66,11 +65,10 @@ const AddBudget = ({ date }: AddBudgetProps): JSX.Element => {
   const submitBudget: SubmitHandler<FormValues> = (
     values: z.infer<typeof formSchema>
   ): any => {
-    const newBudget: NewBudget = {
+    const newBudget: NewBudgetRequest = {
       date,
       category: values.category,
       limit: values.limit,
-      userId: defaultGuid,
     };
     mutation.mutate(newBudget);
   };

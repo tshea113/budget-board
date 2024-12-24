@@ -70,6 +70,7 @@ const getUnbudgetedTransactions = (
 interface UnbudgetProps {
   transactions: Transaction[];
   budgets: Budget[];
+  selectedDates: Date[];
   isPending: boolean;
 }
 
@@ -111,6 +112,7 @@ const Unbudgets = (props: UnbudgetProps): JSX.Element => {
                 key={unbudget.category}
                 name={unbudget.category}
                 amount={unbudget.amount}
+                selectedDates={props.selectedDates}
               />
             )
           )}

@@ -6,7 +6,11 @@ export interface Budget {
   userId: string;
 }
 
-export interface NewBudget extends Partial<Budget> {}
+export interface NewBudgetRequest {
+  date: Date;
+  category: string;
+  limit: number;
+}
 
 export enum CashFlowValue {
   Positive,
