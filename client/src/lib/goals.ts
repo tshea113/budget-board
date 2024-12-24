@@ -1,4 +1,4 @@
-import { Goal } from '@/types/goal';
+import { IGoalResponse } from '@/types/goal';
 import { getMonthsUntilDate } from './utils';
 import { sumAccountsTotalBalance } from './accounts';
 import { Transaction } from '@/types/transaction';
@@ -8,7 +8,7 @@ import { Transaction } from '@/types/transaction';
  * @param goal The goal for which you want to know the monthly contribution amount
  * @returns The expected monthly contribution amount for the provided goal
  */
-export const getMonthlyContributionTotal = (goal: Goal): number => {
+export const getMonthlyContributionTotal = (goal: IGoalResponse): number => {
   if (goal.completeDate) {
     const monthsUntilComplete = getMonthsUntilDate(goal.completeDate);
     if (goal.initialAmount < 0) {
@@ -42,14 +42,14 @@ export const getGoalTargetAmount = (amount: number, initialAmount: number): numb
 };
 
 export const sumTransactionsForGoalForMonth = (
-  goal: Goal,
+  goal: IGoalResponse,
   transactionsForMonth: Transaction[]
 ): number =>
   transactionsForMonth
     .filter((t) => goal.accounts.some((a) => a.id === t.accountID))
     .reduce((n, { amount }) => n + amount, 0);
 
-export const calculateCompleteDate = (goal: Goal): string => {
+export const calculateCompleteDate = (goal: IGoalResponse): string => {
   let dateString = '';
   if (goal.completeDate) {
     dateString = new Date(goal.completeDate).toLocaleDateString('en-US', {

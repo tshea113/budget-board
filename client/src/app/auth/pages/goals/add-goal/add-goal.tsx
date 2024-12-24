@@ -1,19 +1,8 @@
 import AccountInput from '@/components/account-input';
 import ResponsiveButton from '@/components/responsive-button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { GoalCondition, GoalType, NewGoal } from '@/types/goal';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { GoalCondition, GoalType, INewGoalRequest, NewGoalRequest } from '@/types/goal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { z } from 'zod';
 import GoalConditionSelect from './goal-condition-select';
 import React from 'react';
 import DatePicker from '@/components/date-picker';
@@ -21,15 +10,9 @@ import GoalApplyAccountSelect from './goal-apply-amount-select';
 import GoalTypeSelect from './goal-type-select';
 import { cn } from '@/lib/utils';
 import { AuthContext } from '@/components/auth-provider';
-import { ScrollArea } from '@/components/ui/scroll-area';
-
-const formSchema = z.object({
-  name: z.string().min(1).max(50),
-  amount: z.coerce.number().min(0),
-  accountIds: z.array(z.string()).min(1),
-  completeDate: z.date(),
-  monthlyContribution: z.coerce.number().min(0),
-});
+import { Card } from '@/components/ui/card';
+import { toast } from 'sonner';
+import { translateAxiosError } from '@/lib/requests';
 
 const AddGoal = (): JSX.Element => {
   const [goalTypeValue, setgoalTypeValue] = React.useState<GoalType>(GoalType.None);
@@ -37,22 +20,18 @@ const AddGoal = (): JSX.Element => {
     GoalCondition.TimedGoal
   );
   const [goalApplyAccountAmount, setGoalApplyAccountAmount] = React.useState(true);
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: '',
-      amount: 0,
-      accountIds: [],
-      completeDate: new Date(),
-      monthlyContribution: 0,
-    },
-  });
+
+  const [newGoalName, setNewGoalName] = React.useState('');
+  const [newGoalAccounts, setNewGoalAccounts] = React.useState<string[]>([]);
+  const [newGoalAmount, setNewGoalAmount] = React.useState('');
+  const [newGoalCompleteDate, setNewGoalCompleteDate] = React.useState<Date | null>(null);
+  const [newGoalMonthlyContribution, setNewGoalMonthlyContribution] = React.useState('');
 
   const { request } = React.useContext<any>(AuthContext);
 
   const queryClient = useQueryClient();
   const doAddGoal = useMutation({
-    mutationFn: async (newGoal: NewGoal) =>
+    mutationFn: async (newGoal: INewGoalRequest) =>
       await request({
         url: '/api/goal',
         method: 'POST',
@@ -61,159 +40,128 @@ const AddGoal = (): JSX.Element => {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['goals'] });
     },
+    onError: (error: any) => {
+      toast.error(translateAxiosError(error));
+    },
   });
 
-  interface FormValues {
-    name: string;
-    amount: number;
-    accountIds: string[];
-    completeDate: Date;
-    monthlyContribution: number;
-  }
-
-  const submitGoal: SubmitHandler<FormValues> = (
-    values: z.infer<typeof formSchema>
-  ): any => {
-    let newGoal: NewGoal = {
-      name: values.name,
-      accountIds: values.accountIds,
-    };
+  const submitGoal = (): any => {
+    if (newGoalName.length === 0) {
+      toast.error('Please fill out the name.');
+      return;
+    } else if (newGoalAccounts.length === 0) {
+      toast.error('Please select at least one account.');
+      return;
+    }
+    const newGoal = new NewGoalRequest(newGoalName, newGoalAccounts);
 
     if (goalTypeValue === GoalType.SaveGoal) {
-      newGoal.amount = values.amount;
+      if (newGoalAmount.length === 0) {
+        toast.error('Please fill out the amount.');
+        return;
+      }
+      newGoal.amount = parseFloat(newGoalAmount);
+
       // The backend will calculate the initial amount if it isn't already set.
       if (goalApplyAccountAmount) {
         newGoal.initialAmount = 0;
       }
     } else {
-      // Naturally, paying off a loan has a target of 0.
       newGoal.amount = 0;
     }
 
     if (goalConditionValue === GoalCondition.TimedGoal) {
-      newGoal.completeDate = values.completeDate;
+      if (newGoalCompleteDate === null) {
+        toast.error('Please fill out the end date.');
+        return;
+      }
+
+      newGoal.completeDate = newGoalCompleteDate;
     } else if (goalConditionValue === GoalCondition.MonthlyGoal) {
-      newGoal.monthlyContribution = values.monthlyContribution;
+      if (newGoalMonthlyContribution.length === 0) {
+        toast.error('Please fill out the monthly contribution.');
+        return;
+      }
+
+      newGoal.monthlyContribution = parseFloat(newGoalMonthlyContribution);
     }
 
     doAddGoal.mutate(newGoal);
   };
 
   return (
-    <ScrollArea className="h-full pr-3" type="auto">
-      <Form {...form}>
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            void form.handleSubmit(submitGoal)(event);
-          }}
-        >
-          <GoalTypeSelect defaultValue={goalTypeValue} onValueChange={setgoalTypeValue} />
-          {goalTypeValue.length > 0 && (
-            <>
-              <div
-                className={cn(
-                  'grid grid-cols-1 items-start justify-center gap-4',
-                  goalTypeValue === GoalType.SaveGoal
-                    ? 'grid-rows-3 sm:grid-cols-3 sm:grid-rows-1'
-                    : 'grid-rows-2 sm:grid-cols-2 sm:grid-rows-1'
-                )}
-              >
-                <div className="m-2 space-y-2">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <FormLabel>Name</FormLabel>
-                        <FormControl>
-                          <Input type="text" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="accountIds"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <FormLabel>Associated Accounts</FormLabel>
-                        <FormControl>
-                          <AccountInput
-                            selectedAccountIds={field.value}
-                            setSelectedAccountIds={field.onChange}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                {goalTypeValue === GoalType.SaveGoal && (
-                  <div className="m-2 space-y-4">
-                    <FormField
-                      control={form.control}
-                      name="amount"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel>Amount</FormLabel>
-                          <FormControl>
-                            <Input type="number" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <GoalApplyAccountSelect
-                      defaultValue={goalApplyAccountAmount}
-                      onValueChange={setGoalApplyAccountAmount}
-                    />
-                  </div>
-                )}
-                <div className="m-2 space-y-4">
-                  <GoalConditionSelect
-                    defaultValue={goalConditionValue}
-                    onValueChange={setGoalConditionValue}
-                  />
-                  {goalConditionValue === 'timedGoal' && (
-                    <FormField
-                      control={form.control}
-                      name="completeDate"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel>Target Date</FormLabel>
-                          <FormControl>
-                            <DatePicker value={field.value} onDayClick={field.onChange} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  )}
-                  {goalConditionValue === 'monthlyGoal' && (
-                    <FormField
-                      control={form.control}
-                      name="monthlyContribution"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel>Monthly Contribution</FormLabel>
-                          <FormControl>
-                            <Input type="number" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  )}
-                </div>
-              </div>
-              <ResponsiveButton loading={doAddGoal.isPending}>Add Goal</ResponsiveButton>
-            </>
+    <Card className="flex w-full max-w-5xl flex-col gap-3 p-2 @container">
+      <GoalTypeSelect defaultValue={goalTypeValue} onValueChange={setgoalTypeValue} />
+      <div className={cn(goalTypeValue.length > 0 ? 'flex flex-col gap-3' : 'hidden')}>
+        <div className="flex flex-col justify-evenly gap-3 @3xl:flex-row">
+          <div className="flex w-full flex-col place-content-center gap-2 @3xl:w-1/3">
+            <Input
+              type="text"
+              value={newGoalName}
+              onChange={(e) => setNewGoalName(e.target.value)}
+              placeholder="Name"
+            />
+            <AccountInput
+              selectedAccountIds={newGoalAccounts}
+              setSelectedAccountIds={setNewGoalAccounts}
+            />
+          </div>
+          {goalTypeValue === GoalType.SaveGoal && (
+            <div className="flex w-full flex-col place-content-center gap-2 @3xl:w-1/3">
+              <Input
+                className="h-8 @sm:h-8"
+                value={newGoalAmount}
+                onChange={(e) => {
+                  const result = parseInt(e.target.value, 10);
+                  if (isNaN(result)) {
+                    setNewGoalAmount('');
+                  } else {
+                    setNewGoalAmount(result.toString());
+                  }
+                }}
+                type="text"
+                placeholder="Amount"
+              />
+              <GoalApplyAccountSelect
+                defaultValue={goalApplyAccountAmount}
+                onValueChange={setGoalApplyAccountAmount}
+              />
+            </div>
           )}
-        </form>
-      </Form>
-    </ScrollArea>
+          <div className="flex w-full flex-col place-content-center gap-2 @3xl:w-1/3">
+            <GoalConditionSelect
+              defaultValue={goalConditionValue}
+              onValueChange={setGoalConditionValue}
+            />
+            {goalConditionValue === 'timedGoal' && (
+              <DatePicker
+                value={newGoalCompleteDate ?? undefined}
+                onDayClick={setNewGoalCompleteDate}
+              />
+            )}
+            {goalConditionValue === 'monthlyGoal' && (
+              <Input
+                className="h-8 @sm:h-8"
+                value={newGoalMonthlyContribution}
+                onChange={(e) => {
+                  const result = parseInt(e.target.value, 10);
+                  if (isNaN(result)) {
+                    setNewGoalMonthlyContribution('');
+                  } else {
+                    setNewGoalMonthlyContribution(result.toString());
+                  }
+                }}
+                type="text"
+                placeholder="Monthly Contribution"
+              />
+            )}
+          </div>
+        </div>
+        <ResponsiveButton loading={doAddGoal.isPending} onClick={submitGoal}>
+          Add Goal
+        </ResponsiveButton>
+      </div>
+    </Card>
   );
 };
 

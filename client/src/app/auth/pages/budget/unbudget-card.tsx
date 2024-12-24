@@ -80,7 +80,6 @@ const UnbudgetCard = (props: UnbudgetCardProps): JSX.Element => {
               </div>
               <ResponsiveButton
                 className="h-8 w-8 shrink-0 p-0"
-                variant="outline"
                 loading={doAddBudget.isPending}
                 onClick={() => {
                   doAddBudget.mutate({

@@ -1,12 +1,12 @@
 import DatePicker from '@/components/date-picker';
 import { calculateCompleteDate } from '@/lib/goals';
-import { Goal } from '@/types/goal';
+import { IGoalResponse } from '@/types/goal';
 import React from 'react';
 
 interface EditableGoalTargetDateCellProps {
-  goal: Goal;
+  goal: IGoalResponse;
   isSelected: boolean;
-  editCell: (newGoal: Goal) => void;
+  editCell: (newGoal: IGoalResponse) => void;
 }
 
 const EditableGoalTargetDateCell = (
@@ -18,7 +18,7 @@ const EditableGoalTargetDateCell = (
 
   const onDatePick = (date: Date): void => {
     setGoalTargetDateValue(date);
-    const newGoal: Goal = {
+    const newGoal: IGoalResponse = {
       ...props.goal,
       completeDate: date,
     };

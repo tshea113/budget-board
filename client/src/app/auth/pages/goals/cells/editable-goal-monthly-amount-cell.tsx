@@ -1,13 +1,13 @@
 import { Input } from '@/components/ui/input';
 import { getMonthlyContributionTotal } from '@/lib/goals';
 import { convertNumberToCurrency } from '@/lib/utils';
-import { Goal } from '@/types/goal';
+import { IGoalResponse } from '@/types/goal';
 import React from 'react';
 
 interface EditableGoalMonthlyAmountCellProps {
-  goal: Goal;
+  goal: IGoalResponse;
   isSelected: boolean;
-  editCell: (newGoal: Goal) => void;
+  editCell: (newGoal: IGoalResponse) => void;
 }
 
 const EditableGoalMonthlyAmountCell = (
@@ -20,7 +20,7 @@ const EditableGoalMonthlyAmountCell = (
   const onInputBlur = (): void => {
     if (props.goal.monthlyContribution) {
       if (!isNaN(parseFloat(goalAmountValue))) {
-        const newGoal: Goal = {
+        const newGoal: IGoalResponse = {
           ...props.goal,
           monthlyContribution: parseFloat(goalAmountValue),
         };
