@@ -1,6 +1,6 @@
 import { Account } from './account';
 
-interface Goal {
+export interface GoalResponse {
   id: string;
   name: string;
   completeDate: Date | null;
@@ -11,25 +11,52 @@ interface Goal {
   userID: string;
 }
 
-interface NewGoal extends Partial<Goal> {
+export interface INewGoalRequest {
+  name: string;
+  completeDate: Date | null;
+  amount: number;
+  initialAmount: number | null;
+  monthlyContribution: number | null;
   accountIds: string[];
 }
 
-enum GoalType {
+export class NewGoalRequest implements INewGoalRequest {
+  name: string;
+  completeDate: Date | null;
+  amount: number;
+  initialAmount: number | null;
+  monthlyContribution: number | null;
+  accountIds: string[];
+
+  constructor(
+    name?: string,
+    accountIds?: string[],
+    completeDate?: Date | null,
+    amount?: number,
+    initialAmount?: number | null,
+    monthlyContribution?: number | null
+  ) {
+    this.name = name ?? '';
+    this.accountIds = accountIds ?? [];
+    this.completeDate = completeDate ?? null;
+    this.amount = amount ?? 0;
+    this.initialAmount = initialAmount ?? null;
+    this.monthlyContribution = monthlyContribution ?? null;
+  }
+}
+
+export enum GoalType {
   None = '',
   SaveGoal = 'saveGoal',
   PayGoal = 'payGoal',
 }
 
-enum GoalCondition {
+export enum GoalCondition {
   TimedGoal = 'timedGoal',
   MonthlyGoal = 'monthlyGoal',
 }
 
-enum GoalTarget {
+export enum GoalTarget {
   TargetBalanceGoal = 'targetBalanceGoal',
   TargetAmountGoal = 'targetAmountGoal',
 }
-
-export type { Goal, NewGoal };
-export { GoalCondition, GoalTarget, GoalType };

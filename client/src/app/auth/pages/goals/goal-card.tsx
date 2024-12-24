@@ -8,7 +8,7 @@ import {
   sumTransactionsForGoalForMonth,
 } from '@/lib/goals';
 import { convertNumberToCurrency, cn, getProgress } from '@/lib/utils';
-import { Goal } from '@/types/goal';
+import { GoalResponse } from '@/types/goal';
 import { TrashIcon } from '@radix-ui/react-icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
@@ -25,7 +25,7 @@ import LoadingIcon from '@/components/loading-icon';
 import { toast } from 'sonner';
 
 interface GoalCardProps {
-  goal: Goal;
+  goal: GoalResponse;
 }
 
 const GoalCard = (props: GoalCardProps): JSX.Element => {
@@ -77,24 +77,24 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
   });
 
   const doEditGoal = useMutation({
-    mutationFn: async (newGoal: Goal) =>
+    mutationFn: async (newGoal: GoalResponse) =>
       await request({
         url: '/api/goal',
         method: 'PUT',
         data: newGoal,
       }),
-    onMutate: async (variables: Goal) => {
+    onMutate: async (variables: GoalResponse) => {
       await queryClient.cancelQueries({ queryKey: ['goals'] });
 
-      const previousGoals: Goal[] = queryClient.getQueryData(['goals']) ?? [];
+      const previousGoals: GoalResponse[] = queryClient.getQueryData(['goals']) ?? [];
 
-      queryClient.setQueryData(['goals'], (oldGoals: Goal[]) =>
+      queryClient.setQueryData(['goals'], (oldGoals: GoalResponse[]) =>
         oldGoals.map((oldGoal) => (oldGoal.id === variables.id ? variables : oldGoal))
       );
 
       return { previousGoals };
     },
-    onError: (error: AxiosError, _variables: Goal, context) => {
+    onError: (error: AxiosError, _variables: GoalResponse, context) => {
       queryClient.setQueryData(['goals'], context?.previousGoals ?? []);
       toast.error(translateAxiosError(error));
     },
