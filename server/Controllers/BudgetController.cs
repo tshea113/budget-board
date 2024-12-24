@@ -92,6 +92,15 @@ namespace BudgetBoard.Controllers
 
                 foreach (AddBudgetRequest budget in budgets)
                 {
+                    // Do not allow duplicate categories in a given month
+                    if (user.Budgets.Any((b) =>
+                        b.Date.Month == budget.Date.Month
+                        && b.Date.Year == budget.Date.Year
+                        && b.Category == budget.Category))
+                    {
+                        continue;
+                    }
+
                     Budget newBudget = new()
                     {
                         Date = budget.Date,

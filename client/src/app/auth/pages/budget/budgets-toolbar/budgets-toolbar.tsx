@@ -43,9 +43,9 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
         method: 'POST',
         data: newBudgets,
       }),
-    onSuccess: async (variables: BudgetResponse[]) =>
+    onSuccess: async (_, variables: NewBudgetRequest[]) =>
       await queryClient.invalidateQueries({
-        queryKey: ['budgets', variables[0].date],
+        queryKey: ['budgets', variables[0]?.date],
       }),
     onError: (error: AxiosError) => toast.error(translateAxiosError(error)),
   });
@@ -69,6 +69,7 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
               limit: budget.limit,
             };
           });
+          console.log(newBudgets);
           doCopyBudget.mutate(newBudgets);
         } else {
           toast.error('Previous month has no budget!');
