@@ -15,7 +15,7 @@ const AddButtonPopover = ({ children }: AddButtonProps): JSX.Element => {
           <PlusIcon></PlusIcon>
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end" sideOffset={5} alignOffset={15}>
+      <PopoverContent align="end" sideOffset={5} alignOffset={15} className="p-2">
         {children}
       </PopoverContent>
     </Popover>

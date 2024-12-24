@@ -1,14 +1,3 @@
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { type SubmitHandler, useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { Input } from '@/components/ui/input';
 import ResponsiveButton from '@/components/responsive-button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -20,29 +9,20 @@ import { AuthContext } from '@/components/auth-provider';
 import React from 'react';
 import { transactionCategories } from '@/types/transaction';
 import { toast } from 'sonner';
-
-const formSchema = z.object({
-  category: z.string().min(1).max(50),
-  limit: z.coerce.number().min(0),
-});
+import { SendIcon } from 'lucide-react';
 
 interface AddBudgetProps {
   date: Date;
 }
 
-const AddBudget = ({ date }: AddBudgetProps): JSX.Element => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      category: '',
-      limit: 0,
-    },
-  });
+const AddBudget = (props: AddBudgetProps): JSX.Element => {
+  const [newCategory, setNewCategory] = React.useState<string>('');
+  const [newLimit, setNewLimit] = React.useState<string>('');
 
   const { request } = React.useContext<any>(AuthContext);
 
   const queryClient = useQueryClient();
-  const mutation = useMutation({
+  const doAddBudget = useMutation({
     mutationFn: async (newBudget: NewBudgetRequest) =>
       await request({
         url: '/api/budget',
@@ -51,73 +31,58 @@ const AddBudget = ({ date }: AddBudgetProps): JSX.Element => {
       }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['budgets'] });
+      toast.success('Budget added successfully.');
     },
     onError: (error: AxiosError) => {
       toast.error(translateAxiosError(error));
     },
   });
 
-  interface FormValues {
-    category: string;
-    limit: number;
-  }
-
-  const submitBudget: SubmitHandler<FormValues> = (
-    values: z.infer<typeof formSchema>
-  ): any => {
-    const newBudget: NewBudgetRequest = {
-      date,
-      category: values.category,
-      limit: values.limit,
-    };
-    mutation.mutate(newBudget);
-  };
-
   return (
-    <div className="w-full p-1">
-      <Form {...form}>
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            void form.handleSubmit(submitBudget)(event);
+    <div className="flex w-full flex-row gap-2">
+      <div className="flex flex-col items-center justify-center gap-2">
+        <div className="w-full">
+          <CategoryInput
+            selectedCategory={newCategory}
+            setSelectedCategory={setNewCategory}
+            categories={transactionCategories}
+          />
+        </div>
+        <Input
+          className="h-8 @sm:h-8"
+          value={newLimit}
+          onChange={(e) => {
+            const result = parseInt(e.target.value, 10);
+            if (isNaN(result)) {
+              setNewLimit('');
+            } else {
+              setNewLimit(result.toString());
+            }
           }}
-          className="space-y-8"
-        >
-          <div className="flex flex-col items-center justify-center gap-4">
-            <FormField
-              control={form.control}
-              name="category"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Category</FormLabel>
-                  <FormControl>
-                    <CategoryInput
-                      selectedCategory={field.value}
-                      setSelectedCategory={field.onChange}
-                      categories={transactionCategories}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="limit"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Limit</FormLabel>
-                  <FormControl>
-                    <Input type="number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <ResponsiveButton loading={mutation.isPending}>Add Budget</ResponsiveButton>
-          </div>
-        </form>
-      </Form>
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+          type="text"
+          placeholder="Limit"
+        />
+      </div>
+      <ResponsiveButton
+        className="h-[80px] w-8 shrink-0 p-0"
+        loading={doAddBudget.isPending}
+        onClick={() => {
+          if (newCategory.length > 0 && newLimit.length > 0) {
+            doAddBudget.mutate({
+              date: props.date,
+              category: newCategory,
+              limit: parseInt(newLimit, 10),
+            });
+          } else {
+            toast.error('Please fill in all fields.');
+          }
+        }}
+      >
+        <SendIcon className="h-4 w-4" />
+      </ResponsiveButton>
     </div>
   );
 };
