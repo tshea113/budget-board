@@ -71,24 +71,6 @@ namespace BudgetBoard.Models
         }
     }
 
-    public class BudgetResponse
-    {
-        public Guid ID { get; set; }
-        public DateTime Date { get; set; }
-        public string Category { get; set; } = string.Empty;
-        public float Limit { get; set; } = 0.0f;
-        public Guid UserID { get; set; }
-
-        public BudgetResponse(Budget budget)
-        {
-            ID = budget.ID;
-            Date = budget.Date;
-            Category = budget.Category;
-            Limit = budget.Limit;
-            UserID = budget.UserID;
-        }
-    }
-
     public class BalanceResponse
     {
         public Guid ID { get; set; }
