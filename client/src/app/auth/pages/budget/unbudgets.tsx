@@ -4,12 +4,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Budget } from '@/types/budget';
+import { BudgetResponse } from '@/types/budget';
 import { Transaction, transactionCategories } from '@/types/transaction';
 import UnbudgetCard from './unbudget-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getParentCategory } from '@/lib/category';
-import { areStringsEqual } from '@/lib/utils';
+import { areStringsEqual, convertNumberToCurrency } from '@/lib/utils';
 
 interface Unbudget {
   category: string;
@@ -17,7 +17,7 @@ interface Unbudget {
 }
 
 const getUnbudgetedTransactions = (
-  budgets: Budget[],
+  budgets: BudgetResponse[],
   transactions: Transaction[]
 ): Unbudget[] => {
   if (budgets == null || transactions == null) return [];
@@ -69,7 +69,8 @@ const getUnbudgetedTransactions = (
 
 interface UnbudgetProps {
   transactions: Transaction[];
-  budgets: Budget[];
+  budgets: BudgetResponse[];
+  selectedDates: Date[];
   isPending: boolean;
 }
 
@@ -86,29 +87,32 @@ const Unbudgets = (props: UnbudgetProps): JSX.Element => {
     <Accordion type="single" collapsible className="w-full">
       <AccordionItem value="item-1">
         <AccordionTrigger>
-          <div className="flex w-full flex-row pl-3">
-            <div className="w-1/2 text-left text-lg font-semibold tracking-tight">
+          <div className="flex w-full flex-row pl-3 @container">
+            <span className="w-2/5 text-left text-lg font-semibold tracking-tight md:w-1/2">
               Other
-            </div>
-            <div className="w-1/2">
-              <div className="w-1/3 text-center text-lg font-semibold tracking-tight">
-                $
-                {getUnbudgetedTransactions(props.budgets, props.transactions)
-                  .reduce((a: number, b: Unbudget) => {
-                    return a + b.amount;
-                  }, 0)
-                  .toFixed()}
-              </div>
+            </span>
+            <div className="flex w-3/5 flex-row md:w-1/2">
+              <span className="w-1/3 text-center text-lg font-semibold tracking-tight">
+                {convertNumberToCurrency(
+                  getUnbudgetedTransactions(props.budgets, props.transactions).reduce(
+                    (a: number, b: Unbudget) => {
+                      return a + b.amount;
+                    },
+                    0
+                  )
+                )}
+              </span>
             </div>
           </div>
         </AccordionTrigger>
-        <AccordionContent className="space-y-1">
+        <AccordionContent className="flex flex-col gap-1">
           {getUnbudgetedTransactions(props.budgets, props.transactions).map(
             (unbudget: Unbudget) => (
               <UnbudgetCard
                 key={unbudget.category}
                 name={unbudget.category}
-                amount={unbudget.amount.toFixed()}
+                amount={unbudget.amount}
+                selectedDates={props.selectedDates}
               />
             )
           )}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { BudgetGroup, getBudgetsForGroup } from '@/lib/budgets';
-import { type Budget } from '@/types/budget';
+import { type BudgetResponse } from '@/types/budget';
 import BudgetTotalCard from './budget-total-card';
 import { initCurrentMonth } from '@/lib/utils';
 import { type Transaction } from '@/types/transaction';
@@ -24,7 +24,7 @@ const Budgets = (): JSX.Element => {
   const budgetsQuery = useQueries({
     queries: selectedDates.map((date: Date) => ({
       queryKey: ['budgets', date],
-      queryFn: async (): Promise<Budget[]> => {
+      queryFn: async (): Promise<BudgetResponse[]> => {
         const res: AxiosResponse = await request({
           url: '/api/budget',
           method: 'GET',
@@ -117,6 +117,7 @@ const Budgets = (): JSX.Element => {
         <Unbudgets
           transactions={transactionsWithoutHidden}
           budgets={budgetsQuery.data ?? []}
+          selectedDates={selectedDates}
           isPending={budgetsQuery.isPending || transactionsForMonthsQuery.isPending}
         />
       </div>

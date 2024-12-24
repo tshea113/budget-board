@@ -44,7 +44,7 @@ namespace BudgetBoard.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Add([FromBody] Budget budget)
+        public async Task<IActionResult> Add([FromBody] AddBudgetRequest budget)
         {
             try
             {
@@ -60,9 +60,15 @@ namespace BudgetBoard.Controllers
                     return BadRequest("Budget category already exists for this month!");
                 }
 
-                budget.UserID = user.Id;
+                Budget newBudget = new()
+                {
+                    Date = budget.Date,
+                    Category = budget.Category,
+                    Limit = budget.Limit,
+                    UserID = user.Id
+                };
 
-                user.Budgets.Add(budget);
+                user.Budgets.Add(newBudget);
                 await _userDataContext.SaveChangesAsync();
 
                 return Ok();
@@ -77,19 +83,33 @@ namespace BudgetBoard.Controllers
         [Authorize]
         [ActionName("AddMultiple")]
         [Route("[action]")]
-        public async Task<IActionResult> Add([FromBody] Budget[] budgets)
+        public async Task<IActionResult> Add([FromBody] AddBudgetRequest[] budgets)
         {
             try
             {
                 var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
                 if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-                foreach (Budget budget in budgets)
+                foreach (AddBudgetRequest budget in budgets)
                 {
-                    budget.ID = default;
-                    budget.UserID = user.Id;
+                    // Do not allow duplicate categories in a given month
+                    if (user.Budgets.Any((b) =>
+                        b.Date.Month == budget.Date.Month
+                        && b.Date.Year == budget.Date.Year
+                        && b.Category == budget.Category))
+                    {
+                        continue;
+                    }
 
-                    user.Budgets.Add(budget);
+                    Budget newBudget = new()
+                    {
+                        Date = budget.Date,
+                        Category = budget.Category,
+                        Limit = budget.Limit,
+                        UserID = user.Id
+                    };
+
+                    user.Budgets.Add(newBudget);
                 }
 
                 await _userDataContext.SaveChangesAsync();
@@ -104,7 +124,7 @@ namespace BudgetBoard.Controllers
 
         [HttpPut]
         [Authorize]
-        public async Task<IActionResult> Edit([FromBody] Budget editBudget)
+        public async Task<IActionResult> Edit([FromBody] BudgetResponse editBudget)
         {
             try
             {
