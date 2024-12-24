@@ -1,6 +1,6 @@
 import { Account } from './account';
 
-export interface GoalResponse {
+export interface IGoalResponse {
   id: string;
   name: string;
   completeDate: Date | null;

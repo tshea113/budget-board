@@ -2,11 +2,11 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { Account } from '@/types/account';
-import { Goal } from '@/types/goal';
+import { IGoalResponse } from '@/types/goal';
 
 interface GoalDetailsProps {
   className?: string;
-  goal: Goal;
+  goal: IGoalResponse;
 }
 
 const GoalDetails = (props: GoalDetailsProps): JSX.Element => {

@@ -1,4 +1,4 @@
-import { GoalResponse } from '@/types/goal';
+import { IGoalResponse } from '@/types/goal';
 import GoalCard from './goal-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import React from 'react';
@@ -11,7 +11,7 @@ const GoalCards = (): JSX.Element => {
 
   const goalsQuery = useQuery({
     queryKey: ['goals'],
-    queryFn: async (): Promise<GoalResponse[]> => {
+    queryFn: async (): Promise<IGoalResponse[]> => {
       const res: AxiosResponse = await request({
         url: '/api/goal',
         method: 'GET',
@@ -43,7 +43,7 @@ const GoalCards = (): JSX.Element => {
 
   return (
     <>
-      {(goalsQuery.data ?? []).map((goal: GoalResponse) => (
+      {(goalsQuery.data ?? []).map((goal: IGoalResponse) => (
         <GoalCard key={goal.id} goal={goal} />
       ))}
     </>

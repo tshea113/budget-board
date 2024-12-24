@@ -1,13 +1,13 @@
 import { Input } from '@/components/ui/input';
 import { getGoalTargetAmount } from '@/lib/goals';
 import { convertNumberToCurrency } from '@/lib/utils';
-import { Goal } from '@/types/goal';
+import { IGoalResponse } from '@/types/goal';
 import React from 'react';
 
 interface EditableGoalTargetAmountCellProps {
-  goal: Goal;
+  goal: IGoalResponse;
   isSelected: boolean;
-  editCell: (newGoal: Goal) => void;
+  editCell: (newGoal: IGoalResponse) => void;
 }
 
 const EditableGoalTargetAmountCell = (
@@ -19,7 +19,7 @@ const EditableGoalTargetAmountCell = (
 
   const onInputBlur = (): void => {
     if (!isNaN(parseFloat(goalAmountValue))) {
-      const newGoal: Goal = {
+      const newGoal: IGoalResponse = {
         ...props.goal,
         amount: parseFloat(goalAmountValue),
       };

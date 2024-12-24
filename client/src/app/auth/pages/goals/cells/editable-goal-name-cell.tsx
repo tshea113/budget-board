@@ -1,11 +1,11 @@
 import { Input } from '@/components/ui/input';
-import { Goal } from '@/types/goal';
+import { IGoalResponse } from '@/types/goal';
 import React from 'react';
 
 interface EditableGoalNameCellProps {
-  goal: Goal;
+  goal: IGoalResponse;
   isSelected: boolean;
-  editCell: (newGoal: Goal) => void;
+  editCell: (newGoal: IGoalResponse) => void;
 }
 
 const EditableGoalNameCell = (props: EditableGoalNameCellProps): JSX.Element => {
@@ -13,7 +13,7 @@ const EditableGoalNameCell = (props: EditableGoalNameCellProps): JSX.Element => 
 
   const onGoalNameBlur = (): void => {
     if (goalNameValue && goalNameValue.length > 0) {
-      const newGoal: Goal = {
+      const newGoal: IGoalResponse = {
         ...props.goal,
         name: goalNameValue,
       };
