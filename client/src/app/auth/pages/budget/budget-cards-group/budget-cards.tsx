@@ -1,4 +1,4 @@
-import { type Budget } from '@/types/budget';
+import { type BudgetResponse } from '@/types/budget';
 import { transactionCategories, type Transaction } from '@/types/transaction';
 import { Skeleton } from '@/components/ui/skeleton';
 import BudgetCard from './budget-card';
@@ -9,7 +9,7 @@ import React from 'react';
 import { groupBudgetsByCategory } from '@/lib/budgets';
 
 interface BudgetCardsProps {
-  budgetData: Budget[];
+  budgetData: BudgetResponse[];
   transactionsData: Transaction[];
   isPending: boolean;
 }
@@ -20,7 +20,7 @@ const BudgetCards = (props: BudgetCardsProps): JSX.Element => {
     [props.budgetData]
   );
 
-  const getCardsForMap = (map: Map<string, Budget[]>): JSX.Element[] => {
+  const getCardsForMap = (map: Map<string, BudgetResponse[]>): JSX.Element[] => {
     const comps: JSX.Element[] = [];
     map.forEach((value, key) =>
       comps.push(

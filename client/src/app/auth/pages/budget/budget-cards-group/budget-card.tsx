@@ -8,7 +8,7 @@ import { getSignForBudget } from '@/lib/budgets';
 import { getFormattedCategoryValue } from '@/lib/category';
 import { translateAxiosError } from '@/lib/requests';
 import { cn, convertNumberToCurrency, getProgress } from '@/lib/utils';
-import { type Budget } from '@/types/budget';
+import { type BudgetResponse } from '@/types/budget';
 import { transactionCategories } from '@/types/transaction';
 import { TrashIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -17,7 +17,7 @@ import React from 'react';
 import { toast } from 'sonner';
 
 interface BudgetCardProps {
-  budgets: Budget[];
+  budgets: BudgetResponse[];
   amount: number;
   isIncome: boolean;
 }
@@ -27,7 +27,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
   const [selectEffect, setSelectEffect] = React.useState(false);
 
   const limit = React.useMemo(
-    () => props.budgets.reduce((n: number, b: Budget) => n + b.limit, 0),
+    () => props.budgets.reduce((n: number, b: BudgetResponse) => n + b.limit, 0),
     [props.budgets]
   );
 
@@ -35,18 +35,19 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
 
   const queryClient = useQueryClient();
   const doEditBudget = useMutation({
-    mutationFn: async (newBudget: Budget) =>
+    mutationFn: async (newBudget: BudgetResponse) =>
       await request({
         url: '/api/budget',
         method: 'PUT',
         data: newBudget,
       }),
-    onMutate: async (variables: Budget) => {
+    onMutate: async (variables: BudgetResponse) => {
       await queryClient.cancelQueries({ queryKey: ['budgets'] });
 
-      const previousBudgets: Budget[] = queryClient.getQueryData(['budgets']) ?? [];
+      const previousBudgets: BudgetResponse[] =
+        queryClient.getQueryData(['budgets']) ?? [];
 
-      queryClient.setQueryData(['budgets'], (oldBudgets: Budget[]) =>
+      queryClient.setQueryData(['budgets'], (oldBudgets: BudgetResponse[]) =>
         oldBudgets.map((oldBudget) =>
           oldBudget.id === variables.id ? variables : oldBudget
         )
@@ -54,7 +55,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
 
       return { previousBudgets };
     },
-    onError: (error: AxiosError, _variables: Budget, context) => {
+    onError: (error: AxiosError, _variables: BudgetResponse, context) => {
       queryClient.setQueryData(['budgets'], context?.previousBudgets ?? []);
       toast.error(translateAxiosError(error));
     },

@@ -4,7 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Budget } from '@/types/budget';
+import { BudgetResponse } from '@/types/budget';
 import { Transaction, transactionCategories } from '@/types/transaction';
 import UnbudgetCard from './unbudget-card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -17,7 +17,7 @@ interface Unbudget {
 }
 
 const getUnbudgetedTransactions = (
-  budgets: Budget[],
+  budgets: BudgetResponse[],
   transactions: Transaction[]
 ): Unbudget[] => {
   if (budgets == null || transactions == null) return [];
@@ -69,7 +69,7 @@ const getUnbudgetedTransactions = (
 
 interface UnbudgetProps {
   transactions: Transaction[];
-  budgets: Budget[];
+  budgets: BudgetResponse[];
   selectedDates: Date[];
   isPending: boolean;
 }

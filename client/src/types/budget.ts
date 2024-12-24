@@ -1,4 +1,4 @@
-export interface Budget {
+export interface BudgetResponse {
   id: string;
   date: Date;
   category: string;

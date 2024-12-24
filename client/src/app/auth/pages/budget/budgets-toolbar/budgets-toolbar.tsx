@@ -5,12 +5,11 @@ import { cn, getDateFromMonthsAgo, initCurrentMonth, isInArray } from '@/lib/uti
 import React from 'react';
 import ResponsiveButton from '@/components/responsive-button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Budget, CashFlowValue } from '@/types/budget';
+import { BudgetResponse, CashFlowValue, NewBudgetRequest } from '@/types/budget';
 import { AuthContext } from '@/components/auth-provider';
 import { AxiosError, AxiosResponse } from 'axios';
 import { toast } from 'sonner';
 import { translateAxiosError } from '@/lib/requests';
-import { defaultGuid } from '@/types/user';
 import AddButtonPopover from '@/components/add-button-popover';
 import AddBudget from '../add-budget';
 import { useMeasure } from '@uidotdev/usehooks';
@@ -38,13 +37,13 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
 
   const queryClient = useQueryClient();
   const doCopyBudget = useMutation({
-    mutationFn: async (newBudgets: Budget[]) =>
+    mutationFn: async (newBudgets: NewBudgetRequest[]) =>
       await request({
         url: '/api/budget/addmultiple',
         method: 'POST',
         data: newBudgets,
       }),
-    onSuccess: async (variables: Budget[]) =>
+    onSuccess: async (variables: BudgetResponse[]) =>
       await queryClient.invalidateQueries({
         queryKey: ['budgets', variables[0].date],
       }),
@@ -61,14 +60,16 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
       params: { date: lastMonth },
     })
       .then((res: AxiosResponse<any, any>) => {
-        const budgets: Budget[] = res.data;
+        const budgets: BudgetResponse[] = res.data;
         if (budgets.length !== 0) {
-          budgets.forEach((budget) => {
-            budget.id = defaultGuid;
-            budget.date = props.selectedDates[0];
-            budget.userId = defaultGuid;
+          const newBudgets: NewBudgetRequest[] = budgets.map((budget) => {
+            return {
+              date: props.selectedDates[0],
+              category: budget.category,
+              limit: budget.limit,
+            };
           });
-          doCopyBudget.mutate(res.data as Budget[]);
+          doCopyBudget.mutate(newBudgets);
         } else {
           toast.error('Previous month has no budget!');
         }

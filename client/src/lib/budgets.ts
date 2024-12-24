@@ -1,4 +1,4 @@
-import { type Budget } from '@/types/budget';
+import { type BudgetResponse } from '@/types/budget';
 import { transactionCategories } from '@/types/transaction';
 import { getParentCategory } from './category';
 import { areStringsEqual } from './utils';
@@ -13,7 +13,7 @@ export enum BudgetGroup {
  * @param budgetData Array of budgets
  * @returns Summed total of budget amounts
  */
-export const sumBudgetAmounts = (budgetData: Budget[]): number => {
+export const sumBudgetAmounts = (budgetData: BudgetResponse[]): number => {
   return budgetData.reduce((n, { limit }) => n + limit, 0);
 };
 
@@ -22,9 +22,11 @@ export const sumBudgetAmounts = (budgetData: Budget[]): number => {
  * @param budgets Budgets to be grouped
  * @returns A map of categories to budgets
  */
-export const groupBudgetsByCategory = (budgets: Budget[]): Map<string, Budget[]> =>
+export const groupBudgetsByCategory = (
+  budgets: BudgetResponse[]
+): Map<string, BudgetResponse[]> =>
   budgets
-    .sort((a: Budget, b: Budget) => {
+    .sort((a: BudgetResponse, b: BudgetResponse) => {
       if (a.category.toUpperCase() < b.category.toUpperCase()) {
         return -1;
       } else if (a.category.toUpperCase() > b.category.toUpperCase()) {
@@ -34,7 +36,7 @@ export const groupBudgetsByCategory = (budgets: Budget[]): Map<string, Budget[]>
       }
     })
     .reduce(
-      (budgetMap: any, item: Budget) =>
+      (budgetMap: any, item: BudgetResponse) =>
         budgetMap.set(item.category.toLowerCase(), [
           ...(budgetMap.get(item.category.toLowerCase()) || []),
           item,
@@ -42,17 +44,20 @@ export const groupBudgetsByCategory = (budgets: Budget[]): Map<string, Budget[]>
       new Map()
     );
 
-export const getBudgetsForMonth = (budgetData: Budget[], date: Date): Budget[] =>
+export const getBudgetsForMonth = (
+  budgetData: BudgetResponse[],
+  date: Date
+): BudgetResponse[] =>
   budgetData.filter(
-    (b: Budget) =>
+    (b: BudgetResponse) =>
       new Date(b.date).getMonth() === new Date(date).getMonth() &&
       new Date(b.date).getUTCFullYear() === new Date(date).getUTCFullYear()
   ) ?? [];
 
 export const getBudgetsForGroup = (
-  budgetData: Budget[] | undefined,
+  budgetData: BudgetResponse[] | undefined,
   budgetGroup: BudgetGroup
-): Budget[] => {
+): BudgetResponse[] => {
   if (budgetData == null) return [];
 
   if (budgetGroup === BudgetGroup.Income) {
