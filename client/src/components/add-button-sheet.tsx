@@ -16,7 +16,11 @@ const AddButtonSheet = ({ children }: AddButtonProps): JSX.Element => {
         </Button>
       </SheetTrigger>
       <SheetTitle hidden />
-      <SheetContent side="top" className="flex h-full w-full flex-row justify-center">
+      <SheetContent
+        side="top"
+        aria-describedby={undefined}
+        className="flex h-full w-full flex-row justify-center"
+      >
         <div className="w-full 2xl:max-w-screen-2xl">{children}</div>
       </SheetContent>
     </Sheet>
