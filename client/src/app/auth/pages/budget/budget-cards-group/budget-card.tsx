@@ -95,7 +95,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
     >
       <div className="flex w-full flex-col px-3 py-1">
         <div className="flex min-h-10 flex-row items-center @container">
-          <div className="flex w-2/5 flex-row items-center justify-start gap-2 md:w-1/2">
+          <div className="flex min-h-8 w-2/5 flex-row items-center justify-start gap-2 md:w-1/2">
             <span className="select-none text-lg font-semibold tracking-tight @sm:text-xl">
               {getFormattedCategoryValue(
                 props.budgets[0].category,
@@ -104,7 +104,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
             </span>
             {(doEditBudget.isPending || doDeleteBudget.isPending) && <LoadingIcon />}
           </div>
-          <div className="flex w-3/5 flex-row justify-items-center text-base font-semibold @sm:text-lg md:w-1/2">
+          <div className="flex min-h-8 w-3/5 flex-row items-center justify-items-center text-base font-semibold @sm:text-lg md:w-1/2">
             <span className="w-1/3 select-none text-center">
               {convertNumberToCurrency(
                 props.amount * getSignForBudget(props.budgets[0].category),
@@ -113,7 +113,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
             </span>
             <EditableCurrencyCell
               className="w-1/3 text-center"
-              inputClassName="h-6 px-1 @sm:h-8"
+              inputClassName="h-7 px-1 @sm:h-8 @sm:text-lg text-base p-0 md:text-lg"
               textClassName="select-none"
               value={limit}
               isSelected={isSelected}
@@ -150,7 +150,10 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
           max={100}
         />
       </div>
-
+      {/* It's a little jank how this ruins the alignment of the columns when a row is
+          selected, but I don't really know the best way to solve the issue, sine we run
+          out of space at low screen widths. It's only minorly ugly, so I'm just going to
+          leave it be. */}
       {isSelected && (
         <div className="place-items-center">
           <ResponsiveButton
