@@ -4,7 +4,7 @@ interface BudgetHeaderProps {
 
 const BudgetHeader = (props: BudgetHeaderProps): JSX.Element => {
   return (
-    <div className="my-2 flex flex-row @container">
+    <div className="mx-3 my-2 flex flex-row @container">
       <span className="w-2/5 text-lg font-semibold tracking-tight @sm:text-xl md:w-1/2">
         {props.children}
       </span>
