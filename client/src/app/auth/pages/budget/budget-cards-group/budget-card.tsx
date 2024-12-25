@@ -150,7 +150,10 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
           max={100}
         />
       </div>
-
+      {/* It's a little jank how this ruins the alignment of the columns when a row is
+          selected, but I don't really know the best way to solve the issue, sine we run
+          out of space at low screen widths. It's only minorly ugly, so I'm just going to
+          leave it be. */}
       {isSelected && (
         <div className="place-items-center">
           <ResponsiveButton
