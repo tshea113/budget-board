@@ -40,6 +40,7 @@ import { AuthContext } from '@/components/auth-provider';
 import SheetItem from '@/components/sheet-item';
 import { Pages } from '../pages/page-content';
 import AccountSettings from '../account-settings/account-settings';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const menuItems = [
   {
@@ -135,6 +136,8 @@ const AppSidebar = (props: AppSidebarProps): JSX.Element => {
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
+                  <Tooltip>
+                    <TooltipTrigger>
                   <SidebarMenuButton
                     isActive={props.currentPage === item.page}
                     asChild
@@ -148,6 +151,9 @@ const AppSidebar = (props: AppSidebarProps): JSX.Element => {
                       <span>{item.title}</span>
                     </div>
                   </SidebarMenuButton>
+                    </TooltipTrigger>
+                    <TooltipContent side="right">{item.title}</TooltipContent>
+                  </Tooltip>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
