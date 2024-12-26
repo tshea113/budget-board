@@ -9,9 +9,9 @@ A simple and focused app for monthly budgeting and tracking financial goals
 > This project is in development!
 > Expect breaking changes until v1.0 is released.
 
-<img width="75%" alt="dash" src="img/dash.png" />
-<img width="80%" alt="dash" src="img/budgets.png" />
-<img width="90%" alt="dash" src="img/transactions.png" />
+<img width="100%" alt="dash" src="img/dash.png" />
+<img width="100%" alt="dash" src="img/budgets.png" />
+<img width="100%" alt="dash" src="img/transactions.png" />
 <img width="100%" alt="dash" src="img/goals.png" />
 
 ## About The Project
