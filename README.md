@@ -7,7 +7,12 @@ A simple and focused app for monthly budgeting and tracking financial goals
 
 > [!WARNING]
 > This project is in development!
-> Expect breaking changes!
+> Expect breaking changes until v1.0 is released.
+
+<img width="100%" alt="dash" src="img/dash.png" />
+<img width="100%" alt="dash" src="img/budgets.png" />
+<img width="100%" alt="dash" src="img/transactions.png" />
+<img width="100%" alt="dash" src="img/goals.png" />
 
 ## About The Project
 
