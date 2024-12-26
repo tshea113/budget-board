@@ -2,6 +2,7 @@ import Dashboard from './dashboard/dashboard';
 import Budgets from './budget/budgets';
 import Transactions from './transactions/transactions';
 import Goals from './goals/goals';
+import Trends from './trends/trends';
 
 export enum Pages {
   Dashboard,
@@ -25,6 +26,8 @@ const PageContent = (props: PageContentProps): JSX.Element => {
       return <Budgets />;
     case Pages.Goals:
       return <Goals />;
+    case Pages.Trends:
+      return <Trends />;
     default:
       return <span>not found</span>;
   }

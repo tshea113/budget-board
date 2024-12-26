@@ -17,6 +17,7 @@ import {
   ArrowRightFromLineIcon,
   BanknoteIcon,
   CalculatorIcon,
+  ChartNoAxesColumnIncreasingIcon,
   ChevronsUpDown,
   GoalIcon,
   LayoutDashboardIcon,
@@ -63,12 +64,11 @@ const menuItems = [
     page: Pages.Goals,
     icon: GoalIcon,
   },
-  // TODO: We can re-enable this when I create the trends page
-  // {
-  //   title: 'Trends',
-  //   page: Pages.Trends,
-  //   icon: ChartNoAxesColumnIncreasingIcon,
-  // },
+  {
+    title: 'Trends',
+    page: Pages.Trends,
+    icon: ChartNoAxesColumnIncreasingIcon,
+  },
 ];
 
 interface AppSidebarProps {
@@ -138,19 +138,19 @@ const AppSidebar = (props: AppSidebarProps): JSX.Element => {
                 <SidebarMenuItem key={item.title}>
                   <Tooltip>
                     <TooltipTrigger>
-                  <SidebarMenuButton
-                    isActive={props.currentPage === item.page}
-                    asChild
-                    onClick={() => {
-                      props.setCurrentPage(item.page);
-                      isMobile ? setOpenMobile(false) : setOpen(false);
-                    }}
-                  >
-                    <div>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </div>
-                  </SidebarMenuButton>
+                      <SidebarMenuButton
+                        isActive={props.currentPage === item.page}
+                        asChild
+                        onClick={() => {
+                          props.setCurrentPage(item.page);
+                          isMobile ? setOpenMobile(false) : setOpen(false);
+                        }}
+                      >
+                        <div>
+                          <item.icon />
+                          <span>{item.title}</span>
+                        </div>
+                      </SidebarMenuButton>
                     </TooltipTrigger>
                     <TooltipContent side="right">{item.title}</TooltipContent>
                   </Tooltip>
