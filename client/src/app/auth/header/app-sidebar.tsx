@@ -152,7 +152,7 @@ const AppSidebar = (props: AppSidebarProps): JSX.Element => {
                         </div>
                       </SidebarMenuButton>
                     </TooltipTrigger>
-                    <TooltipContent side="right">{item.title}</TooltipContent>
+                    {!open && <TooltipContent side="right">{item.title}</TooltipContent>}
                   </Tooltip>
                 </SidebarMenuItem>
               ))}
