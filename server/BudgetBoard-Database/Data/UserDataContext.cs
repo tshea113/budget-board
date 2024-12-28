@@ -68,5 +68,6 @@ namespace BudgetBoard.Database.Data
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Budget> Budgets { get; set; }
         public DbSet<Goal> Goals { get; set; }
+        public DbSet<Balance> Balances { get; set; }
     }
 }
