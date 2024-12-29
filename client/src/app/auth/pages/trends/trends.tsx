@@ -1,7 +1,7 @@
 import { GraphType } from '@/types/trends';
 import React from 'react';
 import GraphSelect from './graph-select';
-import DebtsGraph from './debts-graph';
+import DebtsGraph from './debts/debts-graph';
 import { Card } from '@/components/ui/card';
 
 const Trends = (): JSX.Element => {
