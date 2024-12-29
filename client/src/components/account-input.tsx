@@ -19,6 +19,7 @@ interface AccountInputProps {
   selectedAccountIds: string[];
   setSelectedAccountIds: (accountIds: string[]) => void;
   hideHidden?: boolean;
+  filterTypes?: string[];
 }
 
 const AccountInput = (props: AccountInputProps): JSX.Element => {
@@ -43,11 +44,19 @@ const AccountInput = (props: AccountInputProps): JSX.Element => {
   });
 
   const filteredAccounts = React.useMemo(() => {
-    if (props.hideHidden)
-      return (accountsQuery.data ?? []).filter(
-        (a) => !a.hideAccount && !a.hideTransactions
+    let filteredAccounts = accountsQuery.data ?? [];
+
+    if (props.hideHidden) {
+      filteredAccounts = filteredAccounts.filter((a) => !a.hideAccount);
+    }
+
+    if (props.filterTypes && props.filterTypes.length > 0) {
+      filteredAccounts = filteredAccounts.filter((a) =>
+        props.filterTypes?.includes(a.type)
       );
-    return accountsQuery.data ?? [];
+    }
+
+    return filteredAccounts;
   }, [accountsQuery.data, props.hideHidden]);
 
   const toggleSelect = (account: Account) => {
