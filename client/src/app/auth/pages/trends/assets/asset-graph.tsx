@@ -146,14 +146,13 @@ const AssetsGraph = (): JSX.Element => {
   return (
     <div className="flex flex-col gap-2">
       <AccountsGraphHeader
-        {...{
-          selectedAccountIds,
-          setSelectedAccountIds,
-          startDate,
-          setStartDate,
-          endDate,
-          setEndDate,
-        }}
+        selectedAccountIds={selectedAccountIds}
+        setSelectedAccountIds={setSelectedAccountIds}
+        startDate={startDate}
+        setStartDate={setStartDate}
+        endDate={endDate}
+        setEndDate={setEndDate}
+        filters={['Checking', 'Savings', 'Investment', 'Cash']}
       />
       {selectedAccountIds.length === 0 ? (
         <div className="flex aspect-video max-h-[400px] w-full items-center justify-center">

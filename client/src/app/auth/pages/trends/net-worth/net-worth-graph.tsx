@@ -13,11 +13,7 @@ import {
   getChartColor,
   sumTooltipValues,
 } from '@/lib/chart';
-import {
-  convertNumberToCurrency,
-  getDateFromMonthsAgo,
-  initCurrentMonth,
-} from '@/lib/utils';
+import { convertNumberToCurrency, getDateFromMonthsAgo } from '@/lib/utils';
 import { Account } from '@/types/account';
 import { IBalance } from '@/types/balance';
 import { useQueries, useQuery } from '@tanstack/react-query';
@@ -29,7 +25,7 @@ import AccountsGraphHeader from '../accounts-graph-header';
 const NetWorthGraph = (): JSX.Element => {
   const [selectedAccountIds, setSelectedAccountIds] = React.useState<string[]>([]);
   const [startDate, setStartDate] = React.useState<Date>(getDateFromMonthsAgo(1));
-  const [endDate, setEndDate] = React.useState<Date>(initCurrentMonth());
+  const [endDate, setEndDate] = React.useState<Date>(new Date());
 
   const { request } = React.useContext<any>(AuthContext);
   const balancesQuery = useQueries({

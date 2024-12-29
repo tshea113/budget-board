@@ -15,6 +15,7 @@ interface AccountsGraphHeaderProps {
   setStartDate: (date: Date) => void;
   endDate: Date;
   setEndDate: (date: Date) => void;
+  filters?: string[];
 }
 
 const AccountsGraphHeader = (props: AccountsGraphHeaderProps): JSX.Element => {
@@ -43,19 +44,18 @@ const AccountsGraphHeader = (props: AccountsGraphHeaderProps): JSX.Element => {
             selectedAccountIds={props.selectedAccountIds}
             setSelectedAccountIds={props.setSelectedAccountIds}
             hideHidden={true}
-            filterTypes={['Checking', 'Savings', 'Investment', 'Cash', 'Other']}
+            filterTypes={props.filters}
           />
         </span>
         <Button
           onClick={() => {
-            console.log(
-              accountsQuery.data
-                ?.filter((account: Account) => !account.hideAccount)
-                ?.map((account) => account) ?? []
-            );
             props.setSelectedAccountIds(
               accountsQuery.data
-                ?.filter((account: Account) => !account.hideAccount)
+                ?.filter(
+                  (account: Account) =>
+                    !account.hideAccount &&
+                    (props.filters ? props.filters?.includes(account.type) : true)
+                )
                 ?.map((account) => account.id) ?? []
             );
           }}
