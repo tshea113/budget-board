@@ -79,7 +79,7 @@ interface AppSidebarProps {
 const AppSidebar = (props: AppSidebarProps): JSX.Element => {
   const { request, setAccessToken } = React.useContext<any>(AuthContext);
 
-  const { open, setOpen, setOpenMobile, isMobile } = useSidebar();
+  const { open, setOpen, openMobile, setOpenMobile, isMobile } = useSidebar();
 
   const queryClient = useQueryClient();
   const Logout = (): void => {
@@ -152,7 +152,9 @@ const AppSidebar = (props: AppSidebarProps): JSX.Element => {
                         </div>
                       </SidebarMenuButton>
                     </TooltipTrigger>
-                    {!open && <TooltipContent side="right">{item.title}</TooltipContent>}
+                    {!open && !openMobile && (
+                      <TooltipContent side="right">{item.title}</TooltipContent>
+                    )}
                   </Tooltip>
                 </SidebarMenuItem>
               ))}
