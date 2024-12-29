@@ -2,7 +2,6 @@ import AccountInput from '@/components/account-input';
 import { AuthContext } from '@/components/auth-provider';
 import DatePicker from '@/components/date-picker';
 import {
-  ChartConfig,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
@@ -11,12 +10,15 @@ import {
 } from '@/components/ui/chart';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getAccountBalanceMap } from '@/lib/balances';
-import { sumTooltipValues } from '@/lib/chart';
+import {
+  BuildAccountsBalanceChartConfig,
+  getChartColor,
+  sumTooltipValues,
+} from '@/lib/chart';
 import {
   convertNumberToCurrency,
   getDateFromMonthsAgo,
   getStandardDate,
-  initCurrentMonth,
 } from '@/lib/utils';
 import { Account } from '@/types/account';
 import { IBalance } from '@/types/balance';
@@ -28,7 +30,7 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 const DebtsGraph = (): JSX.Element => {
   const [selectedAccountIds, setSelectedAccountIds] = React.useState<string[]>([]);
   const [startDate, setStartDate] = React.useState<Date>(getDateFromMonthsAgo(1));
-  const [endDate, setEndDate] = React.useState<Date>(initCurrentMonth());
+  const [endDate, setEndDate] = React.useState<Date>(new Date());
 
   const { request } = React.useContext<any>(AuthContext);
   const balancesQuery = useQueries({
@@ -71,34 +73,6 @@ const DebtsGraph = (): JSX.Element => {
       return [];
     },
   });
-
-  const BuildChartConfig = (): ChartConfig => {
-    const accountBalanceMap: Map<string, IBalance[]> = getAccountBalanceMap(
-      balancesQuery.data ?? []
-    );
-    const chartConfig: ChartConfig = {};
-
-    accountBalanceMap.forEach((_balances: IBalance[], accountId: string) => {
-      const account = accountsQuery.data?.find((a) => a.id === accountId);
-
-      if (account == null) {
-        return;
-      }
-
-      // There are 5 colors for the chart lines. We will cycle through them.
-      const lineColorNumber = (
-        (selectedAccountIds.indexOf(accountId) + 1) %
-        5
-      ).toString();
-
-      chartConfig[accountId] = {
-        label: account.name,
-        color: `hsl(var(--chart-${lineColorNumber}))`,
-      };
-    });
-
-    return chartConfig;
-  };
 
   const BuildChartData = () => {
     const sortedDates: Date[] = balancesQuery.data
@@ -159,10 +133,12 @@ const DebtsGraph = (): JSX.Element => {
     return chartData;
   };
 
-  const getChartColor = (accountId: string) => chartConfig[accountId].color;
-
   const chartData = BuildChartData();
-  const chartConfig = BuildChartConfig();
+  const chartConfig = BuildAccountsBalanceChartConfig(
+    balancesQuery.data ?? [],
+    accountsQuery.data ?? [],
+    selectedAccountIds
+  );
 
   if (balancesQuery.isPending || accountsQuery.isPending) {
     return (
@@ -269,9 +245,9 @@ const DebtsGraph = (): JSX.Element => {
               key={accountId}
               dataKey={accountId}
               type="step"
-              fill={getChartColor(accountId)}
+              fill={getChartColor(accountId, chartConfig)}
               fillOpacity={0.4}
-              stroke={getChartColor(accountId)}
+              stroke={getChartColor(accountId, chartConfig)}
               stackId="a"
             />
           ))}

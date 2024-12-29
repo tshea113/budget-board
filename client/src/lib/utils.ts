@@ -1,8 +1,7 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-// Use the second date to reduce risk of undeflowing back to previous month
-const DATE = 2;
+const DATE = 1;
 const HOUR = 12;
 const MINUTES = 0;
 const SECONDS = 0;
