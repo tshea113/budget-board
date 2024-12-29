@@ -10,7 +10,11 @@ import {
   getRollingTotalSpendingForMonth,
   getTransactionsForMonth,
 } from '@/lib/transactions';
-import { getDaysInMonth, getMonthAndYearDateString } from '@/lib/utils';
+import {
+  convertNumberToCurrency,
+  getDaysInMonth,
+  getMonthAndYearDateString,
+} from '@/lib/utils';
 import { Transaction } from '@/types/transaction';
 import { Area, AreaChart, XAxis } from 'recharts';
 
@@ -86,7 +90,30 @@ const SpendingTrendsChart = (props: SpendingTrendsChartProps): JSX.Element => {
       <ChartContainer config={chartConfig} className="max-h-[400px] w-full">
         <AreaChart data={getChartData()}>
           <XAxis dataKey="day" tickLine={false} axisLine={false} />
-          <ChartTooltip content={<ChartTooltipContent />} />
+          <ChartTooltip
+            content={
+              <ChartTooltipContent
+                hideLabel
+                className="w-[220px]"
+                formatter={(value, name) => (
+                  <>
+                    <div
+                      className="h-2.5 w-2.5 shrink-0 rounded-[2px] bg-[--color-bg]"
+                      style={
+                        {
+                          '--color-bg': `var(--color-${name})`,
+                        } as React.CSSProperties
+                      }
+                    />
+                    {chartConfig[name as keyof typeof chartConfig]?.label || name}
+                    <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
+                      {convertNumberToCurrency(value as number, true)}
+                    </div>
+                  </>
+                )}
+              />
+            }
+          />
           <ChartLegend content={<ChartLegendContent />} />
           {props.months.length === 2 && (
             <Area

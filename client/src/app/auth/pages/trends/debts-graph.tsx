@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/chart';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getAccountBalanceMap } from '@/lib/balances';
+import { sumTooltipValues } from '@/lib/chart';
 import { convertNumberToCurrency } from '@/lib/utils';
 import { Account } from '@/types/account';
 import { IBalance } from '@/types/balance';
@@ -144,18 +145,6 @@ const DebtsGraph = (): JSX.Element => {
   const chartData = BuildChartData();
   const chartConfig = BuildChartConfig();
 
-  const sumTooltip = (obj: any) => {
-    let total = 0;
-
-    Object.values(obj).forEach((property) => {
-      if (typeof property === 'number') {
-        total += property;
-      }
-    });
-
-    return convertNumberToCurrency(total);
-  };
-
   if (balancesQuery.isPending || accountsQuery.isPending) {
     return (
       <div className="flex flex-col gap-3">
@@ -182,7 +171,7 @@ const DebtsGraph = (): JSX.Element => {
             content={
               <ChartTooltipContent
                 hideLabel
-                className="w-[200px]"
+                className="w-[220px]"
                 formatter={(value, name, item, index) => (
                   <>
                     <div
@@ -195,14 +184,14 @@ const DebtsGraph = (): JSX.Element => {
                     />
                     {chartConfig[name as keyof typeof chartConfig]?.label || name}
                     <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
-                      {convertNumberToCurrency(value as number)}
+                      {convertNumberToCurrency(value as number, true)}
                     </div>
                     {/* Add this after the last item */}
                     {index === selectedAccountIds.length - 1 && (
                       <div className="mt-1.5 flex basis-full items-center border-t pt-1.5 text-xs font-medium text-foreground">
                         Total
                         <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
-                          {sumTooltip(item.payload)}
+                          {convertNumberToCurrency(sumTooltipValues(item.payload), true)}
                         </div>
                       </div>
                     )}
