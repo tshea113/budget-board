@@ -69,7 +69,6 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
               limit: budget.limit,
             };
           });
-          console.log(newBudgets);
           doCopyBudget.mutate(newBudgets);
         } else {
           toast.error('Previous month has no budget!');
