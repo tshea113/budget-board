@@ -1,6 +1,4 @@
-import AccountInput from '@/components/account-input';
 import { AuthContext } from '@/components/auth-provider';
-import DatePicker from '@/components/date-picker';
 import {
   ChartContainer,
   ChartLegend,
@@ -15,19 +13,16 @@ import {
   getChartColor,
   sumTooltipValues,
 } from '@/lib/chart';
-import {
-  convertNumberToCurrency,
-  getDateFromMonthsAgo,
-  getStandardDate,
-} from '@/lib/utils';
+import { convertNumberToCurrency, getDateFromMonthsAgo } from '@/lib/utils';
 import { Account } from '@/types/account';
 import { IBalance } from '@/types/balance';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import React from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+import AccountsGraphHeader from '../accounts-graph-header';
 
-const DebtsGraph = (): JSX.Element => {
+const LiabilitiesGraph = (): JSX.Element => {
   const [selectedAccountIds, setSelectedAccountIds] = React.useState<string[]>([]);
   const [startDate, setStartDate] = React.useState<Date>(getDateFromMonthsAgo(1));
   const [endDate, setEndDate] = React.useState<Date>(new Date());
@@ -151,34 +146,16 @@ const DebtsGraph = (): JSX.Element => {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex w-full max-w-[300px] flex-row items-end gap-2">
-        <AccountInput
-          selectedAccountIds={selectedAccountIds}
-          setSelectedAccountIds={setSelectedAccountIds}
-          hideHidden={true}
-          filterTypes={['Loan', 'Credit Card', 'Mortgage']}
-        />
-        <div className="flex flex-col gap-1">
-          <span>Start Date</span>
-          <DatePicker
-            value={startDate}
-            onDayClick={(date: Date) => {
-              setStartDate(getStandardDate(date));
-            }}
-          />
-        </div>
-        <div className="flex flex-col gap-1">
-          <span>End Date</span>
-          <DatePicker
-            value={endDate}
-            onDayClick={(date: Date) => {
-              if (date.getTime() > startDate.getTime()) {
-                setEndDate(getStandardDate(date));
-              }
-            }}
-          />
-        </div>
-      </div>
+      <AccountsGraphHeader
+        {...{
+          selectedAccountIds,
+          setSelectedAccountIds,
+          startDate,
+          setStartDate,
+          endDate,
+          setEndDate,
+        }}
+      />
       {selectedAccountIds.length === 0 ? (
         <div className="flex aspect-video max-h-[400px] w-full items-center justify-center">
           <span className="text-center">Select an account to display the chart.</span>
@@ -266,4 +243,4 @@ const DebtsGraph = (): JSX.Element => {
   );
 };
 
-export default DebtsGraph;
+export default LiabilitiesGraph;

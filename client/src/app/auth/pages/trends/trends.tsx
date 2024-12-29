@@ -1,10 +1,10 @@
 import { GraphType } from '@/types/trends';
 import React from 'react';
 import GraphSelect from './graph-select';
-import DebtsGraph from './debts/debts-graph';
 import { Card } from '@/components/ui/card';
 import NetWorthGraph from './net-worth/net-worth-graph';
 import AssetsGraph from './assets/asset-graph';
+import LiabilitiesGraph from './liabilities/liabilities-graph';
 
 const Trends = (): JSX.Element => {
   const [currentGraph, setCurrentGraph] = React.useState<GraphType>(GraphType.Spending);
@@ -21,8 +21,8 @@ const Trends = (): JSX.Element => {
               return <h1>Income Graph</h1>;
             case GraphType.Assets:
               return <AssetsGraph />;
-            case GraphType.Debts:
-              return <DebtsGraph />;
+            case GraphType.Liabilities:
+              return <LiabilitiesGraph />;
             case GraphType.NetWorth:
               return <NetWorthGraph />;
             default:
