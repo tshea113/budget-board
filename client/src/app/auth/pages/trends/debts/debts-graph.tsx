@@ -23,7 +23,7 @@ import { IBalance } from '@/types/balance';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import React from 'react';
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 const DebtsGraph = (): JSX.Element => {
   const [selectedAccountIds, setSelectedAccountIds] = React.useState<string[]>([]);
@@ -101,20 +101,7 @@ const DebtsGraph = (): JSX.Element => {
   };
 
   const BuildChartData = () => {
-    const dates: Date[] = balancesQuery.data
-      .filter((balance, index, array) => {
-        const balanceDate = new Date(
-          new Date(balance.dateTime).getFullYear(),
-          new Date(balance.dateTime).getMonth(),
-          new Date(balance.dateTime).getDate()
-        );
-        // Check whether the value is unique and within the specified dates.
-        return (
-          array.indexOf(balance) === index &&
-          balanceDate >= startDate &&
-          balanceDate <= endDate
-        );
-      })
+    const sortedDates: Date[] = balancesQuery.data
       .map(
         (balance) =>
           new Date(
@@ -125,10 +112,19 @@ const DebtsGraph = (): JSX.Element => {
       )
       .sort((a, b) => a.getTime() - b.getTime());
 
+    const filteredDates: Date[] = sortedDates.filter((date, index, array) => {
+      // Check whether the value is unique and within the specified dates.
+      return (
+        array.findIndex((d) => d.getTime() === date.getTime()) === index &&
+        date >= startDate &&
+        date <= endDate
+      );
+    });
+
     const accountBalanceMap = getAccountBalanceMap(balancesQuery.data ?? []);
     const chartData: any[] = [];
 
-    dates.forEach((date: Date, dateIndex: number) => {
+    filteredDates.forEach((date: Date, dateIndex: number) => {
       const chartDatum: any = {
         date,
       };
@@ -208,7 +204,7 @@ const DebtsGraph = (): JSX.Element => {
         </div>
       </div>
       <ChartContainer config={chartConfig} className="max-h-[400px] w-full">
-        <AreaChart accessibilityLayer data={chartData}>
+        <BarChart accessibilityLayer data={chartData}>
           <CartesianGrid vertical={true} />
           <ChartLegend content={<ChartLegendContent />} />
           <ChartTooltip
@@ -269,7 +265,7 @@ const DebtsGraph = (): JSX.Element => {
           />
           <YAxis tickFormatter={(value) => convertNumberToCurrency(value as number)} />
           {selectedAccountIds.map((accountId) => (
-            <Area
+            <Bar
               key={accountId}
               dataKey={accountId}
               type="step"
@@ -279,7 +275,7 @@ const DebtsGraph = (): JSX.Element => {
               stackId="a"
             />
           ))}
-        </AreaChart>
+        </BarChart>
       </ChartContainer>
     </div>
   );
