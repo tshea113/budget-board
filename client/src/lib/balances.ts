@@ -1,7 +1,7 @@
 import { IBalance } from '@/types/balance';
 
 /**
- * Builds a map of accountIDs to their respecitive balances.
+ * Builds a map of accountIDs to their respecitive balances sorted in chronological order.
  * @param balances List of balances
  * @returns A map of accountIDs to their respective balances
  */
@@ -16,4 +16,31 @@ export const getAccountBalanceMap = (balances: IBalance[]): Map<string, IBalance
   );
 
   return accountBalanceMap;
+};
+
+/**
+ * Returns the average balance for each date in the list of balances.
+ * @param balances List of balances
+ * @returns A list of balances representing the average balance for each date
+ */
+export const getAverageBalanceForDates = (balances: IBalance[]): IBalance[] => {
+  const dateGroupedBalances = Map.groupBy(balances, (balance: IBalance) =>
+    new Date(
+      new Date(balance.dateTime).getFullYear(),
+      new Date(balance.dateTime).getMonth(),
+      new Date(balance.dateTime).getDate()
+    ).getTime()
+  );
+
+  const averageBalances: IBalance[] = [];
+
+  dateGroupedBalances.forEach((balances) => {
+    const balance: IBalance = balances[0];
+
+    balance.amount = balances.reduce((acc, b) => acc + b.amount, 0) / balances.length;
+
+    averageBalances.push(balance);
+  });
+
+  return averageBalances;
 };

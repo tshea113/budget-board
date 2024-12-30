@@ -1,5 +1,6 @@
 import { AuthContext } from '@/components/auth-provider';
 import {
+  ChartConfig,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
@@ -7,14 +8,10 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getAccountBalanceMap } from '@/lib/balances';
-import {
-  BuildAccountsBalanceChartConfig,
-  getChartColor,
-  sumTooltipValues,
-} from '@/lib/chart';
+import { getAccountBalanceMap, getAverageBalanceForDates } from '@/lib/balances';
+import { getChartColor, sumTooltipValues } from '@/lib/chart';
 import { convertNumberToCurrency, getDateFromMonthsAgo } from '@/lib/utils';
-import { Account } from '@/types/account';
+import { Account, liabilityAccountTypes } from '@/types/account';
 import { IBalance } from '@/types/balance';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
@@ -69,21 +66,15 @@ const NetWorthGraph = (): JSX.Element => {
     },
   });
 
+  interface ChartDatum {
+    date: Date;
+    assets: number;
+    liabilities: number;
+  }
+
   const BuildChartData = () => {
-    const dates: Date[] = balancesQuery.data
-      .filter((balance, index, array) => {
-        const balanceDate = new Date(
-          new Date(balance.dateTime).getFullYear(),
-          new Date(balance.dateTime).getMonth(),
-          new Date(balance.dateTime).getDate()
-        );
-        // Check whether the value is unique and within the specified dates.
-        return (
-          array.indexOf(balance) === index &&
-          balanceDate >= startDate &&
-          balanceDate <= endDate
-        );
-      })
+    // We need to create new dates that only have the year, month, and day to filter out duplicate dates
+    const sortedDates: Date[] = balancesQuery.data
       .map(
         (balance) =>
           new Date(
@@ -94,49 +85,96 @@ const NetWorthGraph = (): JSX.Element => {
       )
       .sort((a, b) => a.getTime() - b.getTime());
 
-    const accountBalanceMap = getAccountBalanceMap(balancesQuery.data ?? []);
-    const chartData: any[] = [];
+    // Filter out duplicate dates and dates outside the selected range
+    const filteredDates: Date[] = sortedDates.filter((date, index, array) => {
+      return (
+        array.findIndex((d) => d.getTime() === date.getTime()) === index &&
+        date >= startDate &&
+        date <= endDate
+      );
+    });
 
-    dates.forEach((date: Date, dateIndex: number) => {
-      const chartDatum: any = {
+    const accountBalanceMap: Map<string, IBalance[]> = getAccountBalanceMap(
+      balancesQuery.data ?? []
+    );
+    const chartData: ChartDatum[] = [];
+
+    // We need a data point for each date because we have at least 1 account that has a balance for that date.
+    filteredDates.forEach((date: Date) => {
+      const chartDatum: ChartDatum = {
         date,
+        assets: 0,
+        liabilities: 0,
       };
+      chartData.push(chartDatum);
+    });
 
-      accountBalanceMap.forEach((balances, accountId) => {
-        const balance = balances.find(
-          (b) =>
-            new Date(
-              new Date(b.dateTime).getFullYear(),
-              new Date(b.dateTime).getMonth(),
-              new Date(b.dateTime).getDate()
-            ).getTime() === date.getTime()
+    accountBalanceMap.forEach((balances, accountId) => {
+      // We need to group the balances by date to get the average balance for each date
+      const groupedBalances = getAverageBalanceForDates(balances);
+
+      const firstBalanceDate = new Date(
+        new Date(groupedBalances[0].dateTime).getFullYear(),
+        new Date(groupedBalances[0].dateTime).getMonth(),
+        new Date(groupedBalances[0].dateTime).getDate()
+      );
+
+      // We need to know where the first date is in the filtered dates array to know where to start adding balances
+      const dateStart = chartData.findIndex(
+        (datum: ChartDatum) => datum.date.getTime() === firstBalanceDate.getTime()
+      );
+
+      if (dateStart === -1) {
+        return;
+      }
+
+      let balanceIterator = 0;
+
+      chartData.forEach((datum: ChartDatum) => {
+        const account = accountsQuery.data?.find((account) => account.id === accountId);
+        if (account == null) {
+          return;
+        }
+        const chartIndex = liabilityAccountTypes.includes(account.type)
+          ? 'liabilities'
+          : 'assets';
+
+        const balance = groupedBalances[balanceIterator];
+        if (balance == null) {
+          return;
+        }
+
+        const balanceDate = new Date(
+          new Date(balance.dateTime).getFullYear(),
+          new Date(balance.dateTime).getMonth(),
+          new Date(balance.dateTime).getDate()
         );
 
-        if (balance == null) {
-          // The first date will have no previous value to carry over. Set it to 0.
-          if (dateIndex === 0) {
-            chartDatum[accountId] = 0;
-          } else {
-            // Carry over the previous value
-            chartDatum[accountId] = chartData[dateIndex - 1][accountId];
-          }
+        if (datum.date.getTime() < balanceDate.getTime()) {
+          datum[chartIndex] += groupedBalances[balanceIterator - 1]?.amount ?? 0;
         } else {
-          chartDatum[accountId] = balance.amount;
+          datum[chartIndex] += balance.amount;
+          if (balanceIterator < balances.length - 1) {
+            balanceIterator++;
+          }
         }
       });
-
-      chartData.push(chartDatum);
     });
 
     return chartData;
   };
 
   const chartData = BuildChartData();
-  const chartConfig = BuildAccountsBalanceChartConfig(
-    balancesQuery.data ?? [],
-    accountsQuery.data ?? [],
-    selectedAccountIds
-  );
+  const chartConfig = {
+    assets: {
+      label: 'Assets',
+      color: 'hsl(var(--success))',
+    },
+    liabilities: {
+      label: 'Liabilities',
+      color: 'hsl(var(--destructive))',
+    },
+  } satisfies ChartConfig;
 
   if (balancesQuery.isPending || accountsQuery.isPending) {
     return (
@@ -176,13 +214,15 @@ const NetWorthGraph = (): JSX.Element => {
                   className="w-[220px]"
                   formatter={(value, name, item, index) => (
                     <div className="custom-tooltip flex flex-col gap-1">
-                      <div>
-                        {new Date(item.payload.date).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric',
-                        })}
-                      </div>
+                      {index === 0 && (
+                        <div>
+                          {new Date(item.payload.date).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                          })}
+                        </div>
+                      )}
                       <div className="flex flex-row items-center gap-1">
                         <div
                           className="h-2.5 w-2.5 shrink-0 rounded-[2px] bg-[--color-bg]"
@@ -198,7 +238,7 @@ const NetWorthGraph = (): JSX.Element => {
                         </div>
                       </div>
                       {/* Add this after the last item */}
-                      {index === selectedAccountIds.length - 1 && (
+                      {index === 1 && (
                         <div className="mt-1.5 flex basis-full items-center border-t pt-1.5 text-xs font-medium text-foreground">
                           Total
                           <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
@@ -228,17 +268,22 @@ const NetWorthGraph = (): JSX.Element => {
               }
             />
             <YAxis tickFormatter={(value) => convertNumberToCurrency(value as number)} />
-            {selectedAccountIds.map((accountId) => (
-              <Bar
-                key={accountId}
-                dataKey={accountId}
-                type="step"
-                fill={getChartColor(accountId, chartConfig)}
-                fillOpacity={0.4}
-                stroke={getChartColor(accountId, chartConfig)}
-                stackId="a"
-              />
-            ))}
+            <Bar
+              dataKey={'liabilities'}
+              type="step"
+              fill={getChartColor('liabilities', chartConfig)}
+              fillOpacity={0.4}
+              stroke={getChartColor('liabilities', chartConfig)}
+              stackId="a"
+            />
+            <Bar
+              dataKey={'assets'}
+              type="step"
+              fill={getChartColor('assets', chartConfig)}
+              fillOpacity={0.4}
+              stroke={getChartColor('assets', chartConfig)}
+              stackId="a"
+            />
           </BarChart>
         </ChartContainer>
       )}

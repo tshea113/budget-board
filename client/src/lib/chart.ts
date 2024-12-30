@@ -23,12 +23,14 @@ export const sumTooltipValues = (tooltipPayload: any): number => {
 
 /**
  * Gets the chart color for a given account ID.
- * @param accountId The account ID to get the color for
+ * @param chartConfigIndex The index to get the color for
  * @param chartConfig The chart configuration for the given chart
  * @returns The color for the given account ID
  */
-export const getChartColor = (accountId: string, chartConfig: ChartConfig): string =>
-  chartConfig[accountId].color ?? '';
+export const getChartColor = (
+  chartConfigIndex: string,
+  chartConfig: ChartConfig
+): string => chartConfig[chartConfigIndex].color ?? '';
 
 /**
  * Builds a chart configuration of accounts balances for the selected accounts.
