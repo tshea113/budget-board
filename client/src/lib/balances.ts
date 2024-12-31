@@ -44,3 +44,20 @@ export const getAverageBalanceForDates = (balances: IBalance[]): IBalance[] => {
 
   return averageBalances;
 };
+
+/**
+ * Returns a list of sorted balance dates.
+ * @param balances List of balances
+ * @returns A list of sorted balance dates
+ */
+export const getSortedBalanceDates = (balances: IBalance[]): Date[] =>
+  balances
+    .map(
+      (balance) =>
+        new Date(
+          new Date(balance.dateTime).getFullYear(),
+          new Date(balance.dateTime).getMonth(),
+          new Date(balance.dateTime).getDate()
+        )
+    )
+    .sort((a, b) => a.getTime() - b.getTime());

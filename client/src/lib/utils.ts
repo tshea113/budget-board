@@ -146,3 +146,24 @@ export const getStandardDate = (date: Date) =>
     SECONDS,
     MILLISECONDS
   );
+
+/**
+ * Returns the unqiue dates within the specified range.
+ * @param dates Array of dates to filter
+ * @param startDate Start date of the range
+ * @param endDate End date of the range
+ * @returns A list of unqiue dates within the specified range.
+ */
+export const getUniqueDatesInRange = (
+  dates: Date[],
+  startDate: Date,
+  endDate: Date
+): Date[] =>
+  dates.filter((date, index, array) => {
+    // Check whether the value is unique and within the specified dates.
+    return (
+      array.findIndex((d) => d.getTime() === date.getTime()) === index &&
+      date >= startDate &&
+      date <= endDate
+    );
+  });

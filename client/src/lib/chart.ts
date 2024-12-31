@@ -1,7 +1,8 @@
 import { ChartConfig } from '@/components/ui/chart';
 import { IBalance } from '@/types/balance';
-import { getAccountBalanceMap } from './balances';
+import { getAccountBalanceMap, getSortedBalanceDates } from './balances';
 import { Account } from '@/types/account';
+import { getUniqueDatesInRange } from './utils';
 
 /**
  * Sums the values of a given tooltip object.
@@ -64,4 +65,50 @@ export const BuildAccountsBalanceChartConfig = (
   });
 
   return chartConfig;
+};
+
+export const BuildAccountBalanceChartData = (
+  balances: IBalance[],
+  startDate: Date,
+  endDate: Date,
+  invertData = false
+) => {
+  const sortedDates: Date[] = getSortedBalanceDates(balances);
+  const filteredDates: Date[] = getUniqueDatesInRange(sortedDates, startDate, endDate);
+
+  const accountBalanceMap = getAccountBalanceMap(balances);
+  const chartData: any[] = [];
+
+  filteredDates.forEach((date: Date, dateIndex: number) => {
+    const chartDatum: any = {
+      date,
+    };
+
+    accountBalanceMap.forEach((balances, accountId) => {
+      const balanceForCurrentDate = balances.find(
+        (b) =>
+          new Date(
+            new Date(b.dateTime).getFullYear(),
+            new Date(b.dateTime).getMonth(),
+            new Date(b.dateTime).getDate()
+          ).getTime() === date.getTime()
+      );
+
+      if (balanceForCurrentDate == null) {
+        // The first date will have no previous value to carry over. Set it to 0.
+        if (dateIndex === 0) {
+          chartDatum[accountId] = 0;
+        } else {
+          // Carry over the previous value
+          chartDatum[accountId] = chartData[dateIndex - 1][accountId];
+        }
+      } else {
+        chartDatum[accountId] = balanceForCurrentDate.amount * (invertData ? -1 : 1);
+      }
+    });
+
+    chartData.push(chartDatum);
+  });
+
+  return chartData;
 };
