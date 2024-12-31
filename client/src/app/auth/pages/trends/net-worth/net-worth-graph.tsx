@@ -9,14 +9,14 @@ import {
 } from '@/components/ui/chart';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getAccountBalanceMap, getAverageBalanceForDates } from '@/lib/balances';
-import { getChartColor, sumTooltipValues } from '@/lib/chart';
+import { getChartColor } from '@/lib/chart';
 import { convertNumberToCurrency, getDateFromMonthsAgo } from '@/lib/utils';
 import { Account, liabilityAccountTypes } from '@/types/account';
 import { IBalance } from '@/types/balance';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import React from 'react';
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+import { Bar, CartesianGrid, ComposedChart, Line, XAxis, YAxis } from 'recharts';
 import AccountsGraphHeader from '../accounts-graph-header';
 
 const NetWorthGraph = (): JSX.Element => {
@@ -70,6 +70,7 @@ const NetWorthGraph = (): JSX.Element => {
     date: Date;
     assets: number;
     liabilities: number;
+    net: number;
   }
 
   const BuildChartData = () => {
@@ -105,6 +106,7 @@ const NetWorthGraph = (): JSX.Element => {
         date,
         assets: 0,
         liabilities: 0,
+        net: 0,
       };
       chartData.push(chartDatum);
     });
@@ -161,6 +163,11 @@ const NetWorthGraph = (): JSX.Element => {
       });
     });
 
+    // Calculate the net worth.
+    chartData.forEach((datum: ChartDatum) => {
+      datum.net = datum.assets + datum.liabilities;
+    });
+
     return chartData;
   };
 
@@ -173,6 +180,10 @@ const NetWorthGraph = (): JSX.Element => {
     liabilities: {
       label: 'Liabilities',
       color: 'hsl(var(--destructive))',
+    },
+    net: {
+      label: 'Net Worth',
+      color: 'hsl(var(--foreground))',
     },
   } satisfies ChartConfig;
 
@@ -203,7 +214,7 @@ const NetWorthGraph = (): JSX.Element => {
         </div>
       ) : (
         <ChartContainer config={chartConfig} className="max-h-[400px] w-full">
-          <BarChart accessibilityLayer data={chartData} stackOffset="sign">
+          <ComposedChart accessibilityLayer data={chartData} stackOffset="sign">
             <CartesianGrid vertical={true} />
             <ChartLegend content={<ChartLegendContent />} />
             <ChartTooltip
@@ -237,18 +248,6 @@ const NetWorthGraph = (): JSX.Element => {
                           {convertNumberToCurrency(value as number, true)}
                         </div>
                       </div>
-                      {/* Add this after the last item */}
-                      {index === 1 && (
-                        <div className="mt-1.5 flex basis-full items-center border-t pt-1.5 text-xs font-medium text-foreground">
-                          Total
-                          <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
-                            {convertNumberToCurrency(
-                              sumTooltipValues(item.payload),
-                              true
-                            )}
-                          </div>
-                        </div>
-                      )}
                     </div>
                   )}
                 />
@@ -269,14 +268,6 @@ const NetWorthGraph = (): JSX.Element => {
             />
             <YAxis tickFormatter={(value) => convertNumberToCurrency(value as number)} />
             <Bar
-              dataKey={'liabilities'}
-              type="step"
-              fill={getChartColor('liabilities', chartConfig)}
-              fillOpacity={0.4}
-              stroke={getChartColor('liabilities', chartConfig)}
-              stackId="a"
-            />
-            <Bar
               dataKey={'assets'}
               type="step"
               fill={getChartColor('assets', chartConfig)}
@@ -284,7 +275,27 @@ const NetWorthGraph = (): JSX.Element => {
               stroke={getChartColor('assets', chartConfig)}
               stackId="a"
             />
-          </BarChart>
+            <Bar
+              dataKey={'liabilities'}
+              type="step"
+              fill={getChartColor('liabilities', chartConfig)}
+              fillOpacity={0.4}
+              stroke={getChartColor('liabilities', chartConfig)}
+              stackId="a"
+            />
+            <Line
+              dataKey={'net'}
+              type="linear"
+              stroke={getChartColor('net', chartConfig)}
+              dot={{
+                fill: getChartColor('net', chartConfig),
+              }}
+              activeDot={{
+                r: 6,
+              }}
+              strokeWidth={2}
+            />
+          </ComposedChart>
         </ChartContainer>
       )}
     </div>
