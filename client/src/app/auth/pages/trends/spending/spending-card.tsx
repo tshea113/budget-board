@@ -4,15 +4,17 @@ import { Transaction } from '@/types/transaction';
 import { AxiosResponse } from 'axios';
 import { AuthContext } from '@/components/auth-provider';
 import React from 'react';
-import { getDateFromMonthsAgo } from '@/lib/utils';
+import { getDateFromMonthsAgo, initCurrentMonth } from '@/lib/utils';
 import { filterHiddenTransactions } from '@/lib/transactions';
 import MonthToolCards from '@/components/month-toolcards';
 import { buildTimeToMonthlyTotalsMap } from '@/lib/budgets';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
 
 const SpendingCardContent = (): JSX.Element => {
   const [selectedMonths, setSelectedMonths] = React.useState<Date[]>([
-    new Date(),
     getDateFromMonthsAgo(1),
+    initCurrentMonth(),
   ]);
 
   // TODO: Query only selected dates transactions
@@ -38,6 +40,15 @@ const SpendingCardContent = (): JSX.Element => {
     transactionsQuery.data ?? []
   );
 
+  if (transactionsQuery.isPending) {
+    return (
+      <div className="flex flex-col gap-3">
+        <Skeleton className="h-[62px] w-full" />
+        <Skeleton className="aspect-video max-h-[400px] w-full" />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <MonthToolCards
@@ -51,12 +62,21 @@ const SpendingCardContent = (): JSX.Element => {
         isPending={false}
         allowSelectMultiple={true}
       />
-      <SpendingGraph
-        transactions={transactionsWithoutHidden}
-        months={selectedMonths}
-        includeGrid={true}
-        includeYAxis={true}
-      />
+      <div className="flex w-full flex-row justify-end">
+        <Button onClick={() => setSelectedMonths([])}>Clear</Button>
+      </div>
+      {selectedMonths.length === 0 ? (
+        <div className="flex aspect-video max-h-[400px] w-full items-center justify-center">
+          <span className="text-center">Select a month to display the chart.</span>
+        </div>
+      ) : (
+        <SpendingGraph
+          transactions={transactionsWithoutHidden}
+          months={selectedMonths}
+          includeGrid={true}
+          includeYAxis={true}
+        />
+      )}
     </div>
   );
 };

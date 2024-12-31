@@ -2,7 +2,17 @@ import { ChartConfig } from '@/components/ui/chart';
 import { IBalance } from '@/types/balance';
 import { getAccountBalanceMap, getSortedBalanceDates } from './balances';
 import { Account } from '@/types/account';
-import { getUniqueDatesInRange } from './utils';
+import {
+  getDaysInMonth,
+  getMonthAndYearDateString,
+  getUniqueDatesInRange,
+} from './utils';
+import { Transaction } from '@/types/transaction';
+import {
+  getRollingTotalSpendingForMonth,
+  getTransactionsForMonth,
+  RollingTotalSpendingPerDay,
+} from './transactions';
 
 /**
  * Sums the values of a given tooltip object.
@@ -56,7 +66,7 @@ export const BuildAccountsBalanceChartConfig = (
     }
 
     // There are 5 colors for the chart lines. We will cycle through them.
-    const lineColorNumber = ((selectedAccountIds.indexOf(accountId) + 1) % 5).toString();
+    const lineColorNumber = ((selectedAccountIds.indexOf(accountId) % 4) + 1).toString();
 
     chartConfig[accountId] = {
       label: account.name,
@@ -67,6 +77,14 @@ export const BuildAccountsBalanceChartConfig = (
   return chartConfig;
 };
 
+/**
+ * Builds a chart data object for the account balances.
+ * @param balances A list of accounts balances
+ * @param startDate The start date for the chart data
+ * @param endDate The end date for the chart data
+ * @param invertData True if you would like to invert the chart data for debts
+ * @returns A chart data object for the account balances
+ */
 export const BuildAccountBalanceChartData = (
   balances: IBalance[],
   startDate: Date,
@@ -111,4 +129,77 @@ export const BuildAccountBalanceChartData = (
   });
 
   return chartData;
+};
+
+/**
+ * Builds a chart configuration for the transaction data.
+ * @param months A list of months to build the chart configuration for
+ * @returns The chart configuration for the transaction data
+ */
+export const BuildTransactionChartConfig = (months: Date[]): ChartConfig => {
+  const chartConfig: ChartConfig = {};
+
+  months.forEach((month: Date) => {
+    // There are 5 colors for the chart lines. We will cycle through them.
+    const lineColorNumber = (
+      (months.findIndex((m) => m.getTime() === month.getTime()) % 5) +
+      1
+    ).toString();
+
+    chartConfig[getMonthAndYearDateString(month)] = {
+      label: getMonthAndYearDateString(month),
+      color: `hsl(var(--chart-${lineColorNumber}))`,
+    };
+  });
+  return chartConfig;
+};
+
+/**
+ * Builds the chart data for the given months and transactions.
+ * @param months A list of selected months
+ * @param transactions A list of transactions
+ * @returns The chart data for the given data
+ */
+export const BuildTransactionChartData = (
+  months: Date[],
+  transactions: Transaction[]
+): any[] => {
+  let spendingTrendsChartData: any[] = [];
+  months.forEach((month) => {
+    const transactionsForMonth = getTransactionsForMonth(transactions, month);
+
+    // If it is the current month, we only want to show the data up to today's date.
+    const today = new Date();
+    const isThisMonth =
+      month.getMonth() === today.getMonth() &&
+      month.getFullYear() === today.getFullYear();
+
+    const rollingTotalTransactionsForMonth: RollingTotalSpendingPerDay[] =
+      getRollingTotalSpendingForMonth(
+        transactionsForMonth,
+        isThisMonth
+          ? today.getDate()
+          : getDaysInMonth(month.getMonth(), month.getFullYear())
+      );
+
+    rollingTotalTransactionsForMonth.forEach(
+      (rollingTotalTransaction: RollingTotalSpendingPerDay) => {
+        const chartDay = spendingTrendsChartData.find(
+          (data) => data.day === rollingTotalTransaction.day
+        );
+
+        // On the very first loop, we need to create the data point.
+        if (chartDay == null) {
+          const newChartDay: any = {
+            day: rollingTotalTransaction.day,
+            [getMonthAndYearDateString(month)]: rollingTotalTransaction.amount,
+          };
+          spendingTrendsChartData.push(newChartDay);
+        } else {
+          chartDay[getMonthAndYearDateString(month)] = rollingTotalTransaction.amount;
+        }
+      }
+    );
+  });
+  return spendingTrendsChartData;
 };
