@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card';
 import NetWorthGraph from './net-worth/net-worth-graph';
 import AssetsGraph from './assets/asset-graph';
 import LiabilitiesGraph from './liabilities/liabilities-graph';
+import SpendingCard from './spending/spending-card';
 
 const Trends = (): JSX.Element => {
   const [currentGraph, setCurrentGraph] = React.useState<GraphType>(GraphType.Spending);
@@ -16,7 +17,7 @@ const Trends = (): JSX.Element => {
         {(() => {
           switch (currentGraph) {
             case GraphType.Spending:
-              return <h1>Spending Graph</h1>;
+              return <SpendingCard />;
             case GraphType.Income:
               return <h1>Income Graph</h1>;
             case GraphType.Assets:

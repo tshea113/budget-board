@@ -1,5 +1,9 @@
 import React from 'react';
-import { BudgetGroup, getBudgetsForGroup } from '@/lib/budgets';
+import {
+  BudgetGroup,
+  buildTimeToMonthlyTotalsMap,
+  getBudgetsForGroup,
+} from '@/lib/budgets';
 import { type BudgetResponse } from '@/types/budget';
 import BudgetTotalCard from './budget-total-card';
 import { initCurrentMonth } from '@/lib/utils';
@@ -9,11 +13,7 @@ import { AuthContext } from '@/components/auth-provider';
 import { useQueries } from '@tanstack/react-query';
 import BudgetCardsGroup from './budget-cards-group/budget-cards-group';
 import { AxiosResponse } from 'axios';
-import {
-  filterHiddenTransactions,
-  getTransactionsForMonth,
-  sumTransactionAmounts,
-} from '@/lib/transactions';
+import { filterHiddenTransactions } from '@/lib/transactions';
 import BudgetsToolbar from './budgets-toolbar/budgets-toolbar';
 
 const Budgets = (): JSX.Element => {
@@ -72,23 +72,14 @@ const Budgets = (): JSX.Element => {
   });
 
   // We need to filter out the transactions labelled with 'Hide From Budgets'
-  const transactionsWithoutHidden = React.useMemo(
-    () => filterHiddenTransactions(transactionsForMonthsQuery.data ?? []),
-    [transactionsForMonthsQuery]
+  const transactionsWithoutHidden = filterHiddenTransactions(
+    transactionsForMonthsQuery.data ?? []
   );
 
-  const timeToMonthlyTotalsMap: Map<number, number> = React.useMemo(() => {
-    const map = new Map();
-    selectedDates.forEach((selectedDate: Date) => {
-      map.set(
-        selectedDate.getTime(),
-        sumTransactionAmounts(
-          getTransactionsForMonth(transactionsForMonthsQuery.data, selectedDate)
-        )
-      );
-    });
-    return map;
-  }, [transactionsWithoutHidden, transactionsForMonthsQuery]);
+  const timeToMonthlyTotalsMap: Map<number, number> = buildTimeToMonthlyTotalsMap(
+    selectedDates,
+    transactionsWithoutHidden
+  );
 
   return (
     <div className="flex w-full flex-col justify-center gap-2 lg:flex-row">

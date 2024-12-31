@@ -1,5 +1,4 @@
 import { Card } from '@/components/ui/card';
-import SpendingTrendsChart from './spending-trends-chart';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import { useQuery } from '@tanstack/react-query';
@@ -15,6 +14,7 @@ import {
   getRollingTotalSpendingForMonth,
 } from '@/lib/transactions';
 import { Skeleton } from '@/components/ui/skeleton';
+import SpendingGraph from '../../trends/spending/spending-graph';
 
 const SpendingTrendsCard = (): JSX.Element => {
   const { request } = React.useContext<any>(AuthContext);
@@ -120,7 +120,7 @@ const SpendingTrendsCard = (): JSX.Element => {
         </span>
       </div>
       <div>
-        <SpendingTrendsChart
+        <SpendingGraph
           months={[getDateFromMonthsAgo(0), getDateFromMonthsAgo(1)]}
           transactions={filterHiddenTransactions(
             thisMonthTransactionsQuery.data ?? []

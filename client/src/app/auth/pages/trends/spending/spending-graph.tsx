@@ -16,20 +16,22 @@ import {
   getMonthAndYearDateString,
 } from '@/lib/utils';
 import { Transaction } from '@/types/transaction';
-import { Area, AreaChart, XAxis } from 'recharts';
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
-interface SpendingTrendsChartProps {
+interface SpendingGraphProps {
   transactions: Transaction[];
   months: Date[];
+  includeGrid?: boolean;
+  includeYAxis?: boolean;
 }
 
-interface SpendingTrendsChartData {
+interface SpendingGraphData {
   day: number;
   amount1?: number;
   amount2?: number;
 }
 
-const SpendingTrendsChart = (props: SpendingTrendsChartProps): JSX.Element => {
+const SpendingGraph = (props: SpendingGraphProps): JSX.Element => {
   const chartConfig = {
     amount1: {
       label: getMonthAndYearDateString(props.months.at(0) ?? new Date()),
@@ -42,7 +44,7 @@ const SpendingTrendsChart = (props: SpendingTrendsChartProps): JSX.Element => {
   } satisfies ChartConfig;
 
   const getChartData = () => {
-    let spendingTrendsChartData: SpendingTrendsChartData[] = [];
+    let spendingTrendsChartData: SpendingGraphData[] = [];
     props.months.forEach((month, index) => {
       const transactionsForMonth = getTransactionsForMonth(props.transactions, month);
 
@@ -64,7 +66,7 @@ const SpendingTrendsChart = (props: SpendingTrendsChartProps): JSX.Element => {
         );
 
         if (chartDay == null) {
-          const newChartDay: SpendingTrendsChartData = {
+          const newChartDay: SpendingGraphData = {
             day: rollingTotalTransaction.day,
           };
           if (index == 0) {
@@ -90,6 +92,10 @@ const SpendingTrendsChart = (props: SpendingTrendsChartProps): JSX.Element => {
       <ChartContainer config={chartConfig} className="max-h-[400px] w-full">
         <AreaChart data={getChartData()}>
           <XAxis dataKey="day" tickLine={false} axisLine={false} />
+          {props.includeYAxis && (
+            <YAxis tickFormatter={(value) => convertNumberToCurrency(value as number)} />
+          )}
+          {props.includeGrid && <CartesianGrid strokeDasharray="3 3" />}
           <ChartTooltip
             content={
               <ChartTooltipContent
@@ -149,4 +155,4 @@ const SpendingTrendsChart = (props: SpendingTrendsChartProps): JSX.Element => {
   );
 };
 
-export default SpendingTrendsChart;
+export default SpendingGraph;

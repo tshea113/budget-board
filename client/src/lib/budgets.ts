@@ -1,5 +1,5 @@
-import { type BudgetResponse } from '@/types/budget';
-import { transactionCategories } from '@/types/transaction';
+import { CashFlowValue, type BudgetResponse } from '@/types/budget';
+import { Transaction, transactionCategories } from '@/types/transaction';
 import { getParentCategory } from './category';
 import { areStringsEqual } from './utils';
 
@@ -43,6 +43,45 @@ export const groupBudgetsByCategory = (
         ]),
       new Map()
     );
+
+/**
+ * Returns the cash flow sign for the provided month.
+ * @param timeToMonthlyTotalsMap A map of months to total transactions for that month
+ * @param date The month to get the cash flow sign for
+ * @returns The sign of the cash flow for the month
+ */
+export const getCashFlowValue = (
+  timeToMonthlyTotalsMap: Map<number, number>,
+  date: Date
+): CashFlowValue => {
+  const cashFlow = timeToMonthlyTotalsMap.get(date.getTime()) ?? 0;
+  if (cashFlow > 0) {
+    return CashFlowValue.Positive;
+  } else if (cashFlow < 0) {
+    return CashFlowValue.Negative;
+  }
+  return CashFlowValue.Neutral;
+};
+
+/**
+ * Builds a map of months to the total transaction amounts for that month
+ * @param months Months to calculate transaction totals for
+ * @param transactions List of transactions to calculate totals from
+ * @returns A map of months to total transaction amounts
+ */
+export const buildTimeToMonthlyTotalsMap = (
+  months: Date[],
+  transactions: Transaction[]
+): Map<number, number> => {
+  const map = new Map();
+  months.forEach((month: Date) => {
+    const total = transactions
+      .filter((t) => new Date(t.date).getMonth() === month.getMonth())
+      .reduce((n, { amount }) => n + amount, 0);
+    map.set(month.getTime(), total);
+  });
+  return map;
+};
 
 export const getBudgetsForMonth = (
   budgetData: BudgetResponse[],

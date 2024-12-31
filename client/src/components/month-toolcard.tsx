@@ -4,7 +4,7 @@ import { CashFlowValue } from '@/types/budget';
 import { months } from '@/types/misc';
 import React from 'react';
 
-interface BudgetsToolCardProps {
+interface MonthToolCardProps {
   date: Date;
   isSelected: boolean;
   isPending: boolean;
@@ -12,7 +12,7 @@ interface BudgetsToolCardProps {
   handleClick: (date: Date) => void;
 }
 
-const BudgetsToolCard = (props: BudgetsToolCardProps): JSX.Element => {
+const MonthToolCard = (props: MonthToolCardProps): JSX.Element => {
   const [selectEffect, setSelectEffect] = React.useState(false);
 
   const toggleIsSelected = (): void => {
@@ -60,4 +60,4 @@ const BudgetsToolCard = (props: BudgetsToolCardProps): JSX.Element => {
   );
 };
 
-export default BudgetsToolCard;
+export default MonthToolCard;
