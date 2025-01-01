@@ -114,17 +114,17 @@ const LiabilitiesGraph = (): JSX.Element => {
               cursor={false}
               content={
                 <ChartTooltipContent
-                  hideLabel
+                  labelFormatter={(_, payload) => {
+                    // This is jank but it works
+                    return new Date(payload[0].payload.date).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                    });
+                  }}
                   className="w-[220px]"
                   formatter={(value, name, item, index) => (
                     <div className="custom-tooltip flex flex-col gap-1">
-                      <div>
-                        {new Date(item.payload.date).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric',
-                        })}
-                      </div>
                       <div className="flex flex-row items-center gap-1">
                         <div
                           className="h-2.5 w-2.5 shrink-0 rounded-[2px] bg-[--color-bg]"
