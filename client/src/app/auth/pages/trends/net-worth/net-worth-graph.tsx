@@ -230,14 +230,14 @@ const NetWorthGraph = (): JSX.Element => {
                       year: 'numeric',
                     });
                   }}
-                  formatter={(value, name) => (
-                    <div className="custom-tooltip flex flex-col gap-1">
+                  formatter={(value, name, item) => (
+                    <div className="custom-tooltip flex w-full flex-col gap-1">
                       <div className="flex flex-row items-center gap-1">
                         <div
                           className="h-2.5 w-2.5 shrink-0 rounded-[2px] bg-[--color-bg]"
                           style={
                             {
-                              '--color-bg': `var(--color-${name})`,
+                              '--color-bg': item.color,
                             } as React.CSSProperties
                           }
                         />

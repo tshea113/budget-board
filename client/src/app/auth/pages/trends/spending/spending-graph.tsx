@@ -30,24 +30,25 @@ const SpendingGraph = (props: SpendingGraphProps): JSX.Element => {
   return (
     <div>
       <ChartContainer config={chartConfig} className="max-h-[400px] w-full">
-        <AreaChart data={chartData}>
+        <AreaChart accessibilityLayer data={chartData}>
           <XAxis dataKey="day" tickLine={false} axisLine={false} />
           {props.includeYAxis && (
             <YAxis tickFormatter={(value) => convertNumberToCurrency(value as number)} />
           )}
           {props.includeGrid && <CartesianGrid strokeDasharray="3 3" />}
           <ChartTooltip
+            cursor={false}
             content={
               <ChartTooltipContent
                 hideLabel
                 className="w-[220px]"
-                formatter={(value, name) => (
-                  <>
+                formatter={(value, name, item) => (
+                  <div className="custom-tooltip flex w-full flex-row items-center gap-1">
                     <div
                       className="h-2.5 w-2.5 shrink-0 rounded-[2px] bg-[--color-bg]"
                       style={
                         {
-                          '--color-bg': `var(--color-${name})`,
+                          '--color-bg': item.color,
                         } as React.CSSProperties
                       }
                     />
@@ -55,7 +56,7 @@ const SpendingGraph = (props: SpendingGraphProps): JSX.Element => {
                     <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
                       {convertNumberToCurrency(value as number, true)}
                     </div>
-                  </>
+                  </div>
                 )}
               />
             }
