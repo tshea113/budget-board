@@ -1,6 +1,6 @@
 export enum GraphType {
   Spending = 'Spending',
-  Income = 'Income',
+  NetCashFlow = 'Net Cash Flow',
   Assets = 'Assets',
   Liabilities = 'Liabilities',
   NetWorth = 'Net Worth',
