@@ -136,16 +136,14 @@ export const getDaysInMonth = (month: number, year: number): number =>
  * @param date The date-time you wish to convert to standardized date.
  * @returns The specified date with a time of 12:00:00:00.
  */
-export const getStandardDate = (date: Date) =>
-  new Date(
-    new Date(date).getFullYear(),
-    new Date(date).getMonth(),
-    new Date(date).getDate(),
-    HOUR,
-    MINUTES,
-    SECONDS,
-    MILLISECONDS
-  );
+export const getStandardDate = (date: Date) => {
+  const newDate = new Date(date);
+  newDate.setHours(HOUR);
+  newDate.setMinutes(MINUTES);
+  newDate.setSeconds(SECONDS);
+  newDate.setMilliseconds(MILLISECONDS);
+  return newDate;
+};
 
 /**
  * Returns the unqiue dates within the specified range.

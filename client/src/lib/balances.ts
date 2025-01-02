@@ -63,3 +63,21 @@ export const getSortedBalanceDates = (balances: IBalance[]): Date[] =>
       )
     )
     .sort((a, b) => a.getTime() - b.getTime());
+
+/**
+ * Gets the date of the first recorded balance on or before the start date.
+ * @param balances A list of balances
+ * @param startDate The date of the requested first balance
+ * @returns The date of the first recorded balance on or before the start date. If the date does not exist, the start date is returned.
+ */
+export const getInitialBalanceDate = (balances: IBalance[], startDate: Date): Date =>
+  // If an account is missing data for the specified startDate, we should try to find the closest date before the startDate.
+  // This value will be undefined if there is no balance at or before the startDate. In that case we do not have any balances
+  // before the start date and the balance will be zero until the first balance is found.
+  getStandardDate(
+    balances
+      .slice()
+      .reverse()
+      .find((b) => new Date(b.dateTime).getTime() <= startDate.getTime())?.dateTime ??
+      startDate
+  );

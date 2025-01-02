@@ -7,8 +7,8 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getAccountBalanceMap } from '@/lib/balances';
 import {
+  BuildAccountBalanceChartData,
   BuildAccountsBalanceChartConfig,
   getChartColor,
   sumTooltipValues,
@@ -69,65 +69,11 @@ const AssetsGraph = (): JSX.Element => {
     },
   });
 
-  const BuildChartData = () => {
-    const sortedDates: Date[] = balancesQuery.data
-      .map(
-        (balance) =>
-          new Date(
-            new Date(balance.dateTime).getFullYear(),
-            new Date(balance.dateTime).getMonth(),
-            new Date(balance.dateTime).getDate()
-          )
-      )
-      .sort((a, b) => a.getTime() - b.getTime());
-
-    const filteredDates: Date[] = sortedDates.filter((date, index, array) => {
-      // Check whether the value is unique and within the specified dates.
-      return (
-        array.findIndex((d) => d.getTime() === date.getTime()) === index &&
-        date >= startDate &&
-        date <= endDate
-      );
-    });
-
-    const accountBalanceMap = getAccountBalanceMap(balancesQuery.data ?? []);
-    const chartData: any[] = [];
-
-    filteredDates.forEach((date: Date, dateIndex: number) => {
-      const chartDatum: any = {
-        date,
-      };
-
-      accountBalanceMap.forEach((balances, accountId) => {
-        const balance = balances.find(
-          (b) =>
-            new Date(
-              new Date(b.dateTime).getFullYear(),
-              new Date(b.dateTime).getMonth(),
-              new Date(b.dateTime).getDate()
-            ).getTime() === date.getTime()
-        );
-
-        if (balance == null) {
-          // The first date will have no previous value to carry over. Set it to 0.
-          if (dateIndex === 0) {
-            chartDatum[accountId] = 0;
-          } else {
-            // Carry over the previous value
-            chartDatum[accountId] = chartData[dateIndex - 1][accountId];
-          }
-        } else {
-          chartDatum[accountId] = balance.amount;
-        }
-      });
-
-      chartData.push(chartDatum);
-    });
-
-    return chartData;
-  };
-
-  const chartData = BuildChartData();
+  const chartData = BuildAccountBalanceChartData(
+    balancesQuery.data ?? [],
+    startDate,
+    endDate
+  );
   const chartConfig = BuildAccountsBalanceChartConfig(
     balancesQuery.data ?? [],
     accountsQuery.data ?? [],

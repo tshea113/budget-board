@@ -3,12 +3,14 @@ import { IBalance } from '@/types/balance';
 import {
   getAccountBalanceMap,
   getAverageBalanceForDates,
+  getInitialBalanceDate,
   getSortedBalanceDates,
 } from './balances';
 import { Account, liabilityAccountTypes } from '@/types/account';
 import {
   getDaysInMonth,
   getMonthAndYearDateString,
+  getStandardDate,
   getUniqueDatesInRange,
 } from './utils';
 import { Transaction } from '@/types/transaction';
@@ -17,6 +19,32 @@ import {
   getTransactionsForMonth,
   RollingTotalSpendingPerDay,
 } from './transactions';
+
+/**
+ * Gets a list of average balances for each date in the given date range.
+ * @param balances A list of balances
+ * @param startDate The start date for the range
+ * @param endDate The end date for the range
+ * @returns A list of average balances for each date in the given date range
+ */
+const getAveragedBalancesInRange = (
+  balances: IBalance[],
+  startDate: Date,
+  endDate: Date
+): IBalance[] => {
+  // Scope balances down to the specified range
+  const balancesInRange = balances.filter((balance) => {
+    const standardBalanceDate = getStandardDate(balance.dateTime);
+    console.log(getInitialBalanceDate(balances, startDate), standardBalanceDate);
+    return (
+      standardBalanceDate.getTime() >=
+        getInitialBalanceDate(balances, startDate).getTime() &&
+      standardBalanceDate.getTime() <= endDate.getTime()
+    );
+  });
+
+  return getAverageBalanceForDates(balancesInRange);
+};
 
 /**
  * Sums the values of a given tooltip object.
@@ -95,41 +123,58 @@ export const BuildAccountBalanceChartData = (
   endDate: Date,
   invertData = false
 ) => {
-  const sortedDates: Date[] = getSortedBalanceDates(balances);
-  const filteredDates: Date[] = getUniqueDatesInRange(sortedDates, startDate, endDate);
+  const filteredDates: Date[] = getUniqueDatesInRange(
+    getSortedBalanceDates(balances),
+    startDate,
+    endDate
+  );
 
-  const accountBalanceMap = getAccountBalanceMap(balances);
-  const chartData: any[] = [];
+  const accountBalanceMap: Map<string, IBalance[]> = getAccountBalanceMap(balances);
 
-  filteredDates.forEach((date: Date, dateIndex: number) => {
-    const chartDatum: any = {
-      date,
-    };
+  const chartData: any[] = filteredDates.map((date: Date) => {
+    const datum: any = { date };
+    accountBalanceMap.forEach((_, accountId) => {
+      datum[accountId] = 0;
+    });
+    return datum;
+  });
 
-    accountBalanceMap.forEach((balances, accountId) => {
-      const balanceForCurrentDate = balances.find(
-        (b) =>
-          new Date(
-            new Date(b.dateTime).getFullYear(),
-            new Date(b.dateTime).getMonth(),
-            new Date(b.dateTime).getDate()
-          ).getTime() === date.getTime()
+  accountBalanceMap.forEach((balances, accountId) => {
+    const averagedBalancesInRange = getAveragedBalancesInRange(
+      balances,
+      startDate,
+      endDate
+    );
+
+    console.log(averagedBalancesInRange);
+
+    let balanceIterator = 0;
+
+    chartData.forEach((datum: any) => {
+      const balance = averagedBalancesInRange[balanceIterator];
+      if (balance == null) {
+        return;
+      }
+
+      const balanceDate = getStandardDate(
+        new Date(
+          new Date(balance.dateTime).getFullYear(),
+          new Date(balance.dateTime).getMonth(),
+          new Date(balance.dateTime).getDate()
+        )
       );
 
-      if (balanceForCurrentDate == null) {
-        // The first date will have no previous value to carry over. Set it to 0.
-        if (dateIndex === 0) {
-          chartDatum[accountId] = 0;
-        } else {
-          // Carry over the previous value
-          chartDatum[accountId] = chartData[dateIndex - 1][accountId];
-        }
+      if (datum.date.getTime() < balanceDate.getTime()) {
+        datum[accountId] =
+          (averagedBalancesInRange[balanceIterator - 1]?.amount ?? 0) *
+          (invertData ? -1 : 1);
       } else {
-        chartDatum[accountId] = balanceForCurrentDate.amount * (invertData ? -1 : 1);
+        datum[accountId] = balance.amount * (invertData ? -1 : 1);
+        if (balanceIterator < balances.length - 1) {
+          balanceIterator++;
+        }
       }
     });
-
-    chartData.push(chartDatum);
   });
 
   return chartData;
@@ -175,23 +220,10 @@ export const BuildNetWorthChartData = (
 
   const accountBalanceMap: Map<string, IBalance[]> = getAccountBalanceMap(balances);
   accountBalanceMap.forEach((balances, accountId) => {
-    // If an account is missing data for the specified startDate, we should try to find the closest date before the startDate.
-    // This value will be undefined if there is no balance at or before the startDate. In that case we do not have any balances
-    // before the start date and the balance will be zero until the first balance is found.
-    const initialBalance = balances
-      .slice()
-      .reverse()
-      .find((b) => new Date(b.dateTime).getTime() <= startDate.getTime());
-
-    // Some dates may have multiple balances. We need to scope down to our date range and average them.
-    const averagedBalancesInRange = getAverageBalanceForDates(
-      balances.filter((balance) => {
-        return (
-          new Date(balance.dateTime).getTime() >=
-            new Date(initialBalance?.dateTime ?? startDate).getTime() &&
-          new Date(balance.dateTime).getTime() <= endDate.getTime()
-        );
-      })
+    const averagedBalancesInRange = getAveragedBalancesInRange(
+      balances,
+      startDate,
+      endDate
     );
 
     let balanceIterator = 0;
@@ -210,10 +242,12 @@ export const BuildNetWorthChartData = (
         return;
       }
 
-      const balanceDate = new Date(
-        new Date(balance.dateTime).getFullYear(),
-        new Date(balance.dateTime).getMonth(),
-        new Date(balance.dateTime).getDate()
+      const balanceDate = getStandardDate(
+        new Date(
+          new Date(balance.dateTime).getFullYear(),
+          new Date(balance.dateTime).getMonth(),
+          new Date(balance.dateTime).getDate()
+        )
       );
 
       if (datum.date.getTime() < balanceDate.getTime()) {
