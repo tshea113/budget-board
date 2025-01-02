@@ -35,7 +35,6 @@ const getAveragedBalancesInRange = (
   // Scope balances down to the specified range
   const balancesInRange = balances.filter((balance) => {
     const standardBalanceDate = getStandardDate(balance.dateTime);
-    console.log(getInitialBalanceDate(balances, startDate), standardBalanceDate);
     return (
       standardBalanceDate.getTime() >=
         getInitialBalanceDate(balances, startDate).getTime() &&
@@ -145,8 +144,6 @@ export const BuildAccountBalanceChartData = (
       startDate,
       endDate
     );
-
-    console.log(averagedBalancesInRange);
 
     let balanceIterator = 0;
 
