@@ -90,14 +90,11 @@ const NetWorthGraph = (): JSX.Element => {
     const filteredDates: Date[] = sortedDates.filter((date, index, array) => {
       return (
         array.findIndex((d) => d.getTime() === date.getTime()) === index &&
-        date >= startDate &&
-        date <= endDate
+        date.getTime() >= startDate.getTime() &&
+        date.getTime() <= endDate.getTime()
       );
     });
 
-    const accountBalanceMap: Map<string, IBalance[]> = getAccountBalanceMap(
-      balancesQuery.data ?? []
-    );
     const chartData: ChartDatum[] = [];
 
     // We need a data point for each date because we have at least 1 account that has a balance for that date.
@@ -111,24 +108,19 @@ const NetWorthGraph = (): JSX.Element => {
       chartData.push(chartDatum);
     });
 
+    const accountBalanceMap: Map<string, IBalance[]> = getAccountBalanceMap(
+      balancesQuery.data ?? []
+    );
     accountBalanceMap.forEach((balances, accountId) => {
       // We need to group the balances by date to get the average balance for each date
-      const groupedBalances = getAverageBalanceForDates(balances);
-
-      const firstBalanceDate = new Date(
-        new Date(groupedBalances[0].dateTime).getFullYear(),
-        new Date(groupedBalances[0].dateTime).getMonth(),
-        new Date(groupedBalances[0].dateTime).getDate()
+      const groupedBalancesInRange = getAverageBalanceForDates(balances).filter(
+        (balance) => {
+          return (
+            new Date(balance.dateTime).getTime() >= startDate.getTime() &&
+            new Date(balance.dateTime).getTime() <= endDate.getTime()
+          );
+        }
       );
-
-      // We need to know where the first date is in the filtered dates array to know where to start adding balances
-      const dateStart = chartData.findIndex(
-        (datum: ChartDatum) => datum.date.getTime() === firstBalanceDate.getTime()
-      );
-
-      if (dateStart === -1) {
-        return;
-      }
 
       let balanceIterator = 0;
 
@@ -141,7 +133,7 @@ const NetWorthGraph = (): JSX.Element => {
           ? 'liabilities'
           : 'assets';
 
-        const balance = groupedBalances[balanceIterator];
+        const balance = groupedBalancesInRange[balanceIterator];
         if (balance == null) {
           return;
         }
@@ -153,7 +145,7 @@ const NetWorthGraph = (): JSX.Element => {
         );
 
         if (datum.date.getTime() < balanceDate.getTime()) {
-          datum[chartIndex] += groupedBalances[balanceIterator - 1]?.amount ?? 0;
+          datum[chartIndex] += groupedBalancesInRange[balanceIterator - 1]?.amount ?? 0;
         } else {
           datum[chartIndex] += balance.amount;
           if (balanceIterator < balances.length - 1) {
