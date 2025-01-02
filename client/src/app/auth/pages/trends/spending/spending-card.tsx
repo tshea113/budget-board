@@ -63,7 +63,9 @@ const SpendingCardContent = (): JSX.Element => {
         allowSelectMultiple={true}
       />
       <div className="flex w-full flex-row justify-end">
-        <Button onClick={() => setSelectedMonths([])}>Clear</Button>
+        <Button size="sm" onClick={() => setSelectedMonths([])}>
+          Clear
+        </Button>
       </div>
       {selectedMonths.length === 0 ? (
         <div className="flex aspect-video max-h-[400px] w-full items-center justify-center">

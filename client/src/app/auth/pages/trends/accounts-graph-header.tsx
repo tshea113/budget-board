@@ -37,8 +37,8 @@ const AccountsGraphHeader = (props: AccountsGraphHeaderProps): JSX.Element => {
   });
 
   return (
-    <div className="flex w-full flex-row flex-wrap items-end gap-6">
-      <div className="flex grow flex-row flex-wrap gap-2">
+    <div className="flex w-full flex-row flex-wrap items-end gap-2">
+      <div className="flex grow flex-row flex-wrap items-center gap-2">
         <span className="w-full max-w-[300px]">
           <AccountInput
             selectedAccountIds={props.selectedAccountIds}
@@ -48,6 +48,7 @@ const AccountsGraphHeader = (props: AccountsGraphHeaderProps): JSX.Element => {
           />
         </span>
         <Button
+          size="sm"
           onClick={() => {
             props.setSelectedAccountIds(
               accountsQuery.data
@@ -62,7 +63,9 @@ const AccountsGraphHeader = (props: AccountsGraphHeaderProps): JSX.Element => {
         >
           Select All
         </Button>
-        <Button onClick={() => props.setSelectedAccountIds([])}>Clear</Button>
+        <Button size="sm" onClick={() => props.setSelectedAccountIds([])}>
+          Clear
+        </Button>
       </div>
       <div className="flex grow flex-row flex-wrap gap-2">
         <div className="flex flex-col gap-1">
