@@ -48,17 +48,19 @@ const Transactions = (): JSX.Element => {
           : areStringsEqual(t.subcategory ?? '', filters.category)
       );
     }
-    if (filters.startDate) {
+    if (filters.dateRange?.from) {
       filteredTransactions = filteredTransactions.filter(
         (t) =>
           getStandardDate(t.date).getTime() >=
-          getStandardDate(filters.startDate!).getTime()
+          getStandardDate(filters.dateRange!.from!).getTime()
       );
     }
-    if (filters.endDate) {
+    if (filters.dateRange?.to) {
+      console.log(filters.dateRange?.from);
       filteredTransactions = filteredTransactions.filter(
         (t) =>
-          getStandardDate(t.date).getTime() <= getStandardDate(filters.endDate!).getTime()
+          getStandardDate(t.date).getTime() <=
+          getStandardDate(filters.dateRange!.to!).getTime()
       );
     }
     return filteredTransactions;

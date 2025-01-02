@@ -1,10 +1,10 @@
 import AccountInput from '@/components/account-input';
 import CategoryInput from '@/components/category-input';
-import DatePicker from '@/components/date-picker';
+import DatePickerWithRange from '@/components/date-range-picker';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { getStandardDate } from '@/lib/utils';
 import { Filters, transactionCategories } from '@/types/transaction';
+import { DateRange } from 'react-day-picker';
 
 interface FilterCardProps {
   isOpen: boolean;
@@ -21,65 +21,42 @@ const FilterCard = (props: FilterCardProps): JSX.Element => {
     <Card className="flex flex-col gap-1 p-2">
       <span className="text-lg font-semibold">Filter</span>
       <Separator />
-      <div className="flex flex-row flex-wrap gap-4">
-        <div className="flex flex-col gap-1">
-          <span>Start Date</span>
-          <DatePicker
-            value={props.filters.startDate}
-            onDayClick={(date: Date) => {
+      <div className="flex w-full flex-row flex-wrap gap-4">
+        <span className="grow">
+          <DatePickerWithRange
+            value={props.filters.dateRange}
+            onSelect={(dateRange: DateRange) => {
               props.setFilters({
-                accounts: props.filters.accounts,
-                category: props.filters.category,
-                startDate: getStandardDate(date),
-                endDate: props.filters.endDate,
+                ...props.filters,
+                dateRange: dateRange,
               });
             }}
           />
-        </div>
-        <div className="flex flex-col gap-1">
-          <span>End Date</span>
-          <DatePicker
-            value={props.filters.endDate}
-            onDayClick={(date: Date) => {
-              props.setFilters({
-                accounts: props.filters.accounts,
-                category: props.filters.category,
-                startDate: props.filters.startDate,
-                endDate: getStandardDate(date),
-              });
-            }}
-          />
-        </div>
-        <div className="flex flex-col gap-1">
-          <span>Account</span>
+        </span>
+        <span className="grow">
           <AccountInput
             selectedAccountIds={props.filters.accounts}
             setSelectedAccountIds={(newAccountIds: string[]) => {
               props.setFilters({
+                ...props.filters,
                 accounts: newAccountIds,
-                category: props.filters.category,
-                startDate: props.filters.startDate,
-                endDate: props.filters.endDate,
               });
             }}
             hideHidden={true}
           />
-        </div>
-        <div className="flex flex-col gap-1">
-          <span>Category</span>
+        </span>
+        <span className="grow">
           <CategoryInput
             selectedCategory={props.filters.category}
             categories={transactionCategories}
             setSelectedCategory={(newCategory: string) => {
               props.setFilters({
-                accounts: props.filters.accounts,
+                ...props.filters,
                 category: newCategory,
-                startDate: props.filters.startDate,
-                endDate: props.filters.endDate,
               });
             }}
           />
-        </div>
+        </span>
       </div>
     </Card>
   );
