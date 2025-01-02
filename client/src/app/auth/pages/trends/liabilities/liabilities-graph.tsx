@@ -21,11 +21,14 @@ import { AxiosResponse } from 'axios';
 import React from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import AccountsGraphHeader from '../accounts-graph-header';
+import { DateRange } from 'react-day-picker';
 
 const LiabilitiesGraph = (): JSX.Element => {
   const [selectedAccountIds, setSelectedAccountIds] = React.useState<string[]>([]);
-  const [startDate, setStartDate] = React.useState<Date>(getDateFromMonthsAgo(1));
-  const [endDate, setEndDate] = React.useState<Date>(new Date());
+  const [dateRange, setDateRange] = React.useState<DateRange>({
+    from: getDateFromMonthsAgo(1),
+    to: new Date(),
+  });
 
   const { request } = React.useContext<any>(AuthContext);
   const balancesQuery = useQueries({
@@ -71,8 +74,8 @@ const LiabilitiesGraph = (): JSX.Element => {
 
   const chartData = BuildAccountBalanceChartData(
     balancesQuery.data ?? [],
-    startDate,
-    endDate,
+    dateRange.from ?? getDateFromMonthsAgo(1),
+    dateRange.to ?? new Date(),
     true
   );
   const chartConfig = BuildAccountsBalanceChartConfig(
@@ -95,10 +98,8 @@ const LiabilitiesGraph = (): JSX.Element => {
       <AccountsGraphHeader
         selectedAccountIds={selectedAccountIds}
         setSelectedAccountIds={setSelectedAccountIds}
-        startDate={startDate}
-        setStartDate={setStartDate}
-        endDate={endDate}
-        setEndDate={setEndDate}
+        dateRange={dateRange}
+        setDateRange={setDateRange}
         filters={['Loan', 'Credit Card', 'Mortgage']}
       />
       {selectedAccountIds.length === 0 ? (

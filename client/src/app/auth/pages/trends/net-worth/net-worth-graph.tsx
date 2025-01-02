@@ -17,11 +17,14 @@ import { AxiosResponse } from 'axios';
 import React from 'react';
 import { Bar, CartesianGrid, ComposedChart, Line, XAxis, YAxis } from 'recharts';
 import AccountsGraphHeader from '../accounts-graph-header';
+import { DateRange } from 'react-day-picker';
 
 const NetWorthGraph = (): JSX.Element => {
   const [selectedAccountIds, setSelectedAccountIds] = React.useState<string[]>([]);
-  const [startDate, setStartDate] = React.useState<Date>(getDateFromMonthsAgo(1));
-  const [endDate, setEndDate] = React.useState<Date>(new Date());
+  const [dateRange, setDateRange] = React.useState<DateRange>({
+    from: getDateFromMonthsAgo(1),
+    to: new Date(),
+  });
 
   const { request } = React.useContext<any>(AuthContext);
   const balancesQuery = useQueries({
@@ -68,8 +71,8 @@ const NetWorthGraph = (): JSX.Element => {
   const chartData = BuildNetWorthChartData(
     balancesQuery.data ?? [],
     accountsQuery.data ?? [],
-    startDate,
-    endDate
+    dateRange.from ?? getDateFromMonthsAgo(1),
+    dateRange.to ?? new Date()
   );
   const chartConfig = {
     assets: {
@@ -98,14 +101,10 @@ const NetWorthGraph = (): JSX.Element => {
   return (
     <div className="flex flex-col gap-2">
       <AccountsGraphHeader
-        {...{
-          selectedAccountIds,
-          setSelectedAccountIds,
-          startDate,
-          setStartDate,
-          endDate,
-          setEndDate,
-        }}
+        selectedAccountIds={selectedAccountIds}
+        setSelectedAccountIds={setSelectedAccountIds}
+        dateRange={dateRange}
+        setDateRange={setDateRange}
       />
       {selectedAccountIds.length === 0 ? (
         <div className="flex aspect-video max-h-[400px] w-full items-center justify-center">
