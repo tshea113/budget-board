@@ -8,10 +8,9 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getAccountBalanceMap, getAverageBalanceForDates } from '@/lib/balances';
-import { getChartColor } from '@/lib/chart';
+import { BuildNetWorthChartData, getChartColor } from '@/lib/chart';
 import { convertNumberToCurrency, getDateFromMonthsAgo } from '@/lib/utils';
-import { Account, liabilityAccountTypes } from '@/types/account';
+import { Account } from '@/types/account';
 import { IBalance } from '@/types/balance';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
@@ -66,104 +65,12 @@ const NetWorthGraph = (): JSX.Element => {
     },
   });
 
-  interface ChartDatum {
-    date: Date;
-    assets: number;
-    liabilities: number;
-    net: number;
-  }
-
-  const BuildChartData = () => {
-    // We need to create new dates that only have the year, month, and day to filter out duplicate dates
-    const sortedDates: Date[] = balancesQuery.data
-      .map(
-        (balance) =>
-          new Date(
-            new Date(balance.dateTime).getFullYear(),
-            new Date(balance.dateTime).getMonth(),
-            new Date(balance.dateTime).getDate()
-          )
-      )
-      .sort((a, b) => a.getTime() - b.getTime());
-
-    // Filter out duplicate dates and dates outside the selected range
-    const filteredDates: Date[] = sortedDates.filter((date, index, array) => {
-      return (
-        array.findIndex((d) => d.getTime() === date.getTime()) === index &&
-        date.getTime() >= startDate.getTime() &&
-        date.getTime() <= endDate.getTime()
-      );
-    });
-
-    const chartData: ChartDatum[] = [];
-
-    // We need a data point for each date because we have at least 1 account that has a balance for that date.
-    filteredDates.forEach((date: Date) => {
-      const chartDatum: ChartDatum = {
-        date,
-        assets: 0,
-        liabilities: 0,
-        net: 0,
-      };
-      chartData.push(chartDatum);
-    });
-
-    const accountBalanceMap: Map<string, IBalance[]> = getAccountBalanceMap(
-      balancesQuery.data ?? []
-    );
-    accountBalanceMap.forEach((balances, accountId) => {
-      // We need to group the balances by date to get the average balance for each date
-      const groupedBalancesInRange = getAverageBalanceForDates(balances).filter(
-        (balance) => {
-          return (
-            new Date(balance.dateTime).getTime() >= startDate.getTime() &&
-            new Date(balance.dateTime).getTime() <= endDate.getTime()
-          );
-        }
-      );
-
-      let balanceIterator = 0;
-
-      chartData.forEach((datum: ChartDatum) => {
-        const account = accountsQuery.data?.find((account) => account.id === accountId);
-        if (account == null) {
-          return;
-        }
-        const chartIndex = liabilityAccountTypes.includes(account.type)
-          ? 'liabilities'
-          : 'assets';
-
-        const balance = groupedBalancesInRange[balanceIterator];
-        if (balance == null) {
-          return;
-        }
-
-        const balanceDate = new Date(
-          new Date(balance.dateTime).getFullYear(),
-          new Date(balance.dateTime).getMonth(),
-          new Date(balance.dateTime).getDate()
-        );
-
-        if (datum.date.getTime() < balanceDate.getTime()) {
-          datum[chartIndex] += groupedBalancesInRange[balanceIterator - 1]?.amount ?? 0;
-        } else {
-          datum[chartIndex] += balance.amount;
-          if (balanceIterator < balances.length - 1) {
-            balanceIterator++;
-          }
-        }
-      });
-    });
-
-    // Calculate the net worth.
-    chartData.forEach((datum: ChartDatum) => {
-      datum.net = datum.assets + datum.liabilities;
-    });
-
-    return chartData;
-  };
-
-  const chartData = BuildChartData();
+  const chartData = BuildNetWorthChartData(
+    balancesQuery.data ?? [],
+    accountsQuery.data ?? [],
+    startDate,
+    endDate
+  );
   const chartConfig = {
     assets: {
       label: 'Assets',

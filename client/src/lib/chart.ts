@@ -1,7 +1,11 @@
 import { ChartConfig } from '@/components/ui/chart';
 import { IBalance } from '@/types/balance';
-import { getAccountBalanceMap, getSortedBalanceDates } from './balances';
-import { Account } from '@/types/account';
+import {
+  getAccountBalanceMap,
+  getAverageBalanceForDates,
+  getSortedBalanceDates,
+} from './balances';
+import { Account, liabilityAccountTypes } from '@/types/account';
 import {
   getDaysInMonth,
   getMonthAndYearDateString,
@@ -126,6 +130,106 @@ export const BuildAccountBalanceChartData = (
     });
 
     chartData.push(chartDatum);
+  });
+
+  return chartData;
+};
+
+export interface NetWorthChartDatum {
+  date: Date;
+  assets: number;
+  liabilities: number;
+  net: number;
+}
+
+/**
+ * Builds a chart data object for net worth.
+ * @param balances A list of balances
+ * @param accounts A list of accounts
+ * @param startDate Start date for the chart data
+ * @param endDate End date for the chart data
+ * @returns A chart data object for the given data
+ */
+export const BuildNetWorthChartData = (
+  balances: IBalance[],
+  accounts: Account[],
+  startDate: Date,
+  endDate: Date
+): NetWorthChartDatum[] => {
+  // We need to create a list of unique dates in the range of the start and end date for the given balances.
+  const filteredDates: Date[] = getUniqueDatesInRange(
+    getSortedBalanceDates(balances),
+    startDate,
+    endDate
+  );
+
+  // We need a data point for each date because we have at least 1 account that has a balance for that date.
+  const chartData = filteredDates.map((date: Date) => {
+    return {
+      date,
+      assets: 0,
+      liabilities: 0,
+      net: 0,
+    };
+  });
+
+  const accountBalanceMap: Map<string, IBalance[]> = getAccountBalanceMap(balances);
+  accountBalanceMap.forEach((balances, accountId) => {
+    // If an account is missing data for the specified startDate, we should try to find the closest date before the startDate.
+    // This value will be undefined if there is no balance at or before the startDate. In that case we do not have any balances
+    // before the start date and the balance will be zero until the first balance is found.
+    const initialBalance = balances
+      .slice()
+      .reverse()
+      .find((b) => new Date(b.dateTime).getTime() <= startDate.getTime());
+
+    // Some dates may have multiple balances. We need to scope down to our date range and average them.
+    const averagedBalancesInRange = getAverageBalanceForDates(
+      balances.filter((balance) => {
+        return (
+          new Date(balance.dateTime).getTime() >=
+            new Date(initialBalance?.dateTime ?? startDate).getTime() &&
+          new Date(balance.dateTime).getTime() <= endDate.getTime()
+        );
+      })
+    );
+
+    let balanceIterator = 0;
+
+    chartData.forEach((datum: NetWorthChartDatum) => {
+      const account = accounts.find((account) => account.id === accountId);
+      if (account == null) {
+        return;
+      }
+      const chartIndex = liabilityAccountTypes.includes(account.type)
+        ? 'liabilities'
+        : 'assets';
+
+      const balance = averagedBalancesInRange[balanceIterator];
+      if (balance == null) {
+        return;
+      }
+
+      const balanceDate = new Date(
+        new Date(balance.dateTime).getFullYear(),
+        new Date(balance.dateTime).getMonth(),
+        new Date(balance.dateTime).getDate()
+      );
+
+      if (datum.date.getTime() < balanceDate.getTime()) {
+        datum[chartIndex] += averagedBalancesInRange[balanceIterator - 1]?.amount ?? 0;
+      } else {
+        datum[chartIndex] += balance.amount;
+        if (balanceIterator < balances.length - 1) {
+          balanceIterator++;
+        }
+      }
+    });
+  });
+
+  // Calculate the net worth.
+  chartData.forEach((datum: NetWorthChartDatum) => {
+    datum.net = datum.assets + datum.liabilities;
   });
 
   return chartData;

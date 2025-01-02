@@ -1,4 +1,5 @@
 import { IBalance } from '@/types/balance';
+import { getStandardDate } from './utils';
 
 /**
  * Builds a map of accountIDs to their respecitive balances sorted in chronological order.
@@ -52,12 +53,13 @@ export const getAverageBalanceForDates = (balances: IBalance[]): IBalance[] => {
  */
 export const getSortedBalanceDates = (balances: IBalance[]): Date[] =>
   balances
-    .map(
-      (balance) =>
+    .map((balance) =>
+      getStandardDate(
         new Date(
           new Date(balance.dateTime).getFullYear(),
           new Date(balance.dateTime).getMonth(),
           new Date(balance.dateTime).getDate()
         )
+      )
     )
     .sort((a, b) => a.getTime() - b.getTime());
