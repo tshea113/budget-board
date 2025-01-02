@@ -138,6 +138,7 @@ const NetCashFlowGraph = () => {
         {monthButtons.map((months) => (
           <Button
             size="sm"
+            variant="outline"
             key={months}
             onClick={() => {
               // Clear prior to adding new months to prevent duplicates.
