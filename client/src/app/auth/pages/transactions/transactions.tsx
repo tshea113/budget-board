@@ -56,7 +56,6 @@ const Transactions = (): JSX.Element => {
       );
     }
     if (filters.dateRange?.to) {
-      console.log(filters.dateRange?.from);
       filteredTransactions = filteredTransactions.filter(
         (t) =>
           getStandardDate(t.date).getTime() <=
