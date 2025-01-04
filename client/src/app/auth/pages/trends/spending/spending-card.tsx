@@ -1,10 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 import SpendingGraph from './spending-graph';
 import { Transaction } from '@/types/transaction';
 import { AxiosResponse } from 'axios';
 import { AuthContext } from '@/components/auth-provider';
 import React from 'react';
-import { getDateFromMonthsAgo, initCurrentMonth } from '@/lib/utils';
+import { getDateFromMonthsAgo, getUniqueYears, initCurrentMonth } from '@/lib/utils';
 import { filterHiddenTransactions } from '@/lib/transactions';
 import MonthToolCards from '@/components/month-toolcards';
 import { buildTimeToMonthlyTotalsMap } from '@/lib/budgets';
@@ -17,21 +17,31 @@ const SpendingCardContent = (): JSX.Element => {
     initCurrentMonth(),
   ]);
 
-  // TODO: Query only selected dates transactions
+  // Querying by year is the best balance of covering probable dates a user will select,
+  // while also not potentially querying for a large amount of data.
   const { request } = React.useContext<any>(AuthContext);
-  const transactionsQuery = useQuery({
-    queryKey: ['transactions'],
-    queryFn: async (): Promise<Transaction[]> => {
-      const res: AxiosResponse = await request({
-        url: '/api/transaction',
-        method: 'GET',
-      });
+  const transactionsQuery = useQueries({
+    queries: getUniqueYears(selectedMonths).map((year: number) => ({
+      queryKey: ['transactions', { year }],
+      queryFn: async (): Promise<Transaction[]> => {
+        const res: AxiosResponse = await request({
+          url: '/api/transaction',
+          method: 'GET',
+          params: { year },
+        });
 
-      if (res.status == 200) {
-        return res.data;
-      }
+        if (res.status == 200) {
+          return res.data;
+        }
 
-      return [];
+        return [];
+      },
+    })),
+    combine: (results) => {
+      return {
+        data: results.map((result) => result.data ?? []).flat(1),
+        isPending: results.some((result) => result.isPending),
+      };
     },
   });
 
@@ -39,15 +49,6 @@ const SpendingCardContent = (): JSX.Element => {
   const transactionsWithoutHidden = filterHiddenTransactions(
     transactionsQuery.data ?? []
   );
-
-  if (transactionsQuery.isPending) {
-    return (
-      <div className="flex flex-col gap-3">
-        <Skeleton className="h-[62px] w-full" />
-        <Skeleton className="aspect-video max-h-[400px] w-full" />
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -71,6 +72,8 @@ const SpendingCardContent = (): JSX.Element => {
         <div className="flex aspect-video max-h-[400px] w-full items-center justify-center">
           <span className="text-center">Select a month to display the chart.</span>
         </div>
+      ) : transactionsQuery.isPending ? (
+        <Skeleton className="aspect-video max-h-[400px] w-full" />
       ) : (
         <SpendingGraph
           transactions={transactionsWithoutHidden}

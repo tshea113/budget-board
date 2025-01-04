@@ -165,3 +165,11 @@ export const getUniqueDatesInRange = (
       date <= endDate
     );
   });
+
+/**
+ * Returns a list of years from the provided list of dates.
+ * @param dates A list of dates
+ * @returns The unique years from the list of dates
+ */
+export const getUniqueYears = (dates: Date[]): number[] =>
+  Array.from(new Set(dates.map((date) => date.getFullYear())));

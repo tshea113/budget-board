@@ -17,10 +17,11 @@ import {
   areStringsEqual,
   convertNumberToCurrency,
   getDateFromMonthsAgo,
+  getUniqueYears,
   initCurrentMonth,
 } from '@/lib/utils';
 import { Transaction } from '@/types/transaction';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import React from 'react';
 import { Bar, CartesianGrid, ComposedChart, Line, XAxis, YAxis } from 'recharts';
@@ -31,21 +32,31 @@ const NetCashFlowGraph = () => {
     initCurrentMonth(),
   ]);
 
-  // TODO: Query only selected dates transactions
+  // Querying by year is the best balance of covering probable dates a user will select,
+  // while also not potentially querying for a large amount of data.
   const { request } = React.useContext<any>(AuthContext);
-  const transactionsQuery = useQuery({
-    queryKey: ['transactions'],
-    queryFn: async (): Promise<Transaction[]> => {
-      const res: AxiosResponse = await request({
-        url: '/api/transaction',
-        method: 'GET',
-      });
+  const transactionsQuery = useQueries({
+    queries: getUniqueYears(selectedMonths).map((year: number) => ({
+      queryKey: ['transactions', { year }],
+      queryFn: async (): Promise<Transaction[]> => {
+        const res: AxiosResponse = await request({
+          url: '/api/transaction',
+          method: 'GET',
+          params: { year },
+        });
 
-      if (res.status == 200) {
-        return res.data;
-      }
+        if (res.status == 200) {
+          return res.data;
+        }
 
-      return [];
+        return [];
+      },
+    })),
+    combine: (results) => {
+      return {
+        data: results.map((result) => result.data ?? []).flat(1),
+        isPending: results.some((result) => result.isPending),
+      };
     },
   });
 
