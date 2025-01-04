@@ -12,7 +12,9 @@ const Goals = (): JSX.Element => {
       <div className="flex flex-row justify-end">
         <Button
           variant="outline"
-          className={cn(isAddGoalOpen ? 'border-success' : '')}
+          className={cn(
+            isAddGoalOpen ? 'border-primary text-primary hover:text-primary' : ''
+          )}
           onClick={() => setIsAddGoalOpen(!isAddGoalOpen)}
         >
           <PlusIcon className="h-4 w-4" />

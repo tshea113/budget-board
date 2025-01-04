@@ -1,18 +1,16 @@
 import { Button } from '@/components/ui/button';
-import BudgetsToolcard from './budgets-toolcard';
-import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
-import { cn, getDateFromMonthsAgo, initCurrentMonth, isInArray } from '@/lib/utils';
+import { cn, initCurrentMonth } from '@/lib/utils';
 import React from 'react';
 import ResponsiveButton from '@/components/responsive-button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { BudgetResponse, CashFlowValue, NewBudgetRequest } from '@/types/budget';
+import { BudgetResponse, NewBudgetRequest } from '@/types/budget';
 import { AuthContext } from '@/components/auth-provider';
 import { AxiosError, AxiosResponse } from 'axios';
 import { toast } from 'sonner';
 import { translateAxiosError } from '@/lib/requests';
 import AddButtonPopover from '@/components/add-button-popover';
 import AddBudget from '../add-budget';
-import { useMeasure } from '@uidotdev/usehooks';
+import MonthToolCards from '../../../../../components/month-toolcards';
 
 interface BudgetsToolbarProps {
   selectedDates: Date[];
@@ -23,15 +21,7 @@ interface BudgetsToolbarProps {
 }
 
 const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
-  const [index, setIndex] = React.useState(0);
   const [selectMultiple, setSelectMultiple] = React.useState(false);
-
-  const [ref, { width }] = useMeasure();
-
-  // Padding of 25 on each side and each card is roughly 70 pixels.
-  const dates = Array.from({ length: Math.floor(((width ?? 0) - 72) / 68) }, (_, i) =>
-    getDateFromMonthsAgo(i + index)
-  );
 
   const { request } = React.useContext<any>(AuthContext);
 
@@ -69,7 +59,6 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
               limit: budget.limit,
             };
           });
-          console.log(newBudgets);
           doCopyBudget.mutate(newBudgets);
         } else {
           toast.error('Previous month has no budget!');
@@ -80,33 +69,12 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
       });
   };
 
-  const handleClick = (date: Date) => {
-    if (selectMultiple) {
-      // When select multiple is on, we need to add/remove selected dates when clicked.
-      if (isInArray(date, props.selectedDates)) {
-        // If it is present, then we need to remove it.
-        props.setSelectedDates(
-          props.selectedDates.filter(
-            (selectedDate: Date) => selectedDate.getTime() !== date.getTime()
-          )
-        );
-      } else {
-        // If it isn't present, then add to selected.
-        props.setSelectedDates([date, ...props.selectedDates]);
-      }
-    } else {
-      // When select multiple is off, we should switch the date when clicked.
-      props.setSelectedDates([date]);
-    }
-  };
-
   const toggleSelectMultiple = () => {
     if (selectMultiple) {
       // Need to pick the date used for our single date.
       if (props.selectedDates.length === 0) {
         // When nothing is selected, revert back to today.
         props.setSelectedDates([initCurrentMonth()]);
-        setIndex(0);
       } else {
         // Otherwise select the most recent selected date.
         props.setSelectedDates([
@@ -118,18 +86,8 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
     setSelectMultiple(!selectMultiple);
   };
 
-  const getCashFlowValue = (date: Date): CashFlowValue => {
-    const cashFlow = props.timeToMonthlyTotalsMap.get(date.getTime()) ?? 0;
-    if (cashFlow > 0) {
-      return CashFlowValue.Positive;
-    } else if (cashFlow < 0) {
-      return CashFlowValue.Negative;
-    }
-    return CashFlowValue.Neutral;
-  };
-
   return (
-    <div ref={ref} className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2">
       <div className="flex flex-row">
         <span className="grow" />
         <Button
@@ -143,39 +101,14 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
           Select Multiple
         </Button>
       </div>
-      <div className="flex flex-row items-center gap-2">
-        <Button
-          className="h-[62px] w-8 p-1"
-          variant="outline"
-          onClick={() => {
-            setIndex(index + 1);
-          }}
-        >
-          <ChevronLeftIcon />
-        </Button>
-        <div className="flex grow flex-row-reverse justify-between">
-          {dates.map((date: Date, i: number) => (
-            <BudgetsToolcard
-              key={i}
-              date={date}
-              isSelected={isInArray(date, props.selectedDates)}
-              isPending={props.isPending}
-              cashFlowValue={getCashFlowValue(date)}
-              handleClick={handleClick}
-            />
-          ))}
-        </div>
-        <Button
-          className="h-[62px] w-8 p-1"
-          disabled={index === 0}
-          variant="outline"
-          onClick={() => {
-            if (index > 0) setIndex(index - 1);
-          }}
-        >
-          <ChevronRightIcon />
-        </Button>
-      </div>
+      <MonthToolCards
+        selectedDates={props.selectedDates}
+        setSelectedDates={props.setSelectedDates}
+        timeToMonthlyTotalsMap={props.timeToMonthlyTotalsMap}
+        showCopy={props.showCopy}
+        isPending={props.isPending}
+        allowSelectMultiple={selectMultiple}
+      />
       <div
         className={cn('flex flex-row', (selectMultiple || props.isPending) && 'hidden')}
       >

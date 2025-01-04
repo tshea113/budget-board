@@ -37,6 +37,7 @@ const DatePicker = (props: DatePickerProps): JSX.Element => {
         <Calendar
           mode="single"
           selected={props.value}
+          defaultMonth={props.value}
           onDayClick={props.onDayClick}
           onDayBlur={props.onDayBlur}
           autoFocus

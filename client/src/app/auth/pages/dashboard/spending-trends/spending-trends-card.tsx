@@ -1,5 +1,4 @@
 import { Card } from '@/components/ui/card';
-import SpendingTrendsChart from './spending-trends-chart';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import { useQuery } from '@tanstack/react-query';
@@ -15,6 +14,7 @@ import {
   getRollingTotalSpendingForMonth,
 } from '@/lib/transactions';
 import { Skeleton } from '@/components/ui/skeleton';
+import SpendingGraph from '../../trends/spending/spending-graph';
 
 const SpendingTrendsCard = (): JSX.Element => {
   const { request } = React.useContext<any>(AuthContext);
@@ -22,13 +22,16 @@ const SpendingTrendsCard = (): JSX.Element => {
   const thisMonthTransactionsQuery = useQuery({
     queryKey: [
       'transactions',
-      { month: thisMonthDate.getMonth(), year: thisMonthDate.getUTCFullYear() },
+      { month: thisMonthDate.getMonth(), year: thisMonthDate.getFullYear() },
     ],
     queryFn: async (): Promise<Transaction[]> => {
       const res: AxiosResponse = await request({
         url: '/api/transaction',
         method: 'GET',
-        params: { date: thisMonthDate },
+        params: {
+          month: thisMonthDate.getMonth() + 1,
+          year: thisMonthDate.getFullYear(),
+        },
       });
 
       if (res.status == 200) {
@@ -42,13 +45,16 @@ const SpendingTrendsCard = (): JSX.Element => {
   const lastMonthTransactionsQuery = useQuery({
     queryKey: [
       'transactions',
-      { month: lastMonthDate.getMonth(), year: lastMonthDate.getUTCFullYear() },
+      { month: lastMonthDate.getMonth(), year: lastMonthDate.getFullYear() },
     ],
     queryFn: async (): Promise<Transaction[]> => {
       const res: AxiosResponse = await request({
         url: '/api/transaction',
         method: 'GET',
-        params: { date: lastMonthDate },
+        params: {
+          month: lastMonthDate.getMonth() + 1,
+          year: lastMonthDate.getFullYear(),
+        },
       });
 
       if (res.status == 200) {
@@ -120,7 +126,7 @@ const SpendingTrendsCard = (): JSX.Element => {
         </span>
       </div>
       <div>
-        <SpendingTrendsChart
+        <SpendingGraph
           months={[getDateFromMonthsAgo(0), getDateFromMonthsAgo(1)]}
           transactions={filterHiddenTransactions(
             thisMonthTransactionsQuery.data ?? []

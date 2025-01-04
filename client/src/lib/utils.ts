@@ -1,8 +1,7 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-// Use the second date to reduce risk of undeflowing back to previous month
-const DATE = 2;
+const DATE = 1;
 const HOUR = 12;
 const MINUTES = 0;
 const SECONDS = 0;
@@ -137,13 +136,40 @@ export const getDaysInMonth = (month: number, year: number): number =>
  * @param date The date-time you wish to convert to standardized date.
  * @returns The specified date with a time of 12:00:00:00.
  */
-export const getStandardDate = (date: Date) =>
-  new Date(
-    new Date(date).getFullYear(),
-    new Date(date).getMonth(),
-    new Date(date).getDate(),
-    HOUR,
-    MINUTES,
-    SECONDS,
-    MILLISECONDS
-  );
+export const getStandardDate = (date: Date) => {
+  const newDate = new Date(date);
+  newDate.setHours(HOUR);
+  newDate.setMinutes(MINUTES);
+  newDate.setSeconds(SECONDS);
+  newDate.setMilliseconds(MILLISECONDS);
+  return newDate;
+};
+
+/**
+ * Returns the unqiue dates within the specified range.
+ * @param dates Array of dates to filter
+ * @param startDate Start date of the range
+ * @param endDate End date of the range
+ * @returns A list of unqiue dates within the specified range.
+ */
+export const getUniqueDatesInRange = (
+  dates: Date[],
+  startDate: Date,
+  endDate: Date
+): Date[] =>
+  dates.filter((date, index, array) => {
+    // Check whether the value is unique and within the specified dates.
+    return (
+      array.findIndex((d) => d.getTime() === date.getTime()) === index &&
+      date >= startDate &&
+      date <= endDate
+    );
+  });
+
+/**
+ * Returns a list of years from the provided list of dates.
+ * @param dates A list of dates
+ * @returns The unique years from the list of dates
+ */
+export const getUniqueYears = (dates: Date[]): number[] =>
+  Array.from(new Set(dates.map((date) => date.getFullYear())));

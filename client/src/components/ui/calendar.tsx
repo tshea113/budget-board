@@ -93,7 +93,7 @@ function Calendar({
           'day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30',
         disabled: 'text-muted-foreground opacity-50',
         range_middle:
-          'aria-selected:bg-accent hover:aria-selected:!bg-accent rounded-none aria-selected:text-accent-foreground hover:aria-selected:text-accent-foreground',
+          'aria-selected:bg-accent hover:aria-selected:!bg-accent rounded-none hover:rounded-md aria-selected:text-accent-foreground hover:aria-selected:text-accent-foreground',
         hidden: 'invisible',
         ...classNames,
       }}

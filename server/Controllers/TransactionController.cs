@@ -24,7 +24,7 @@ public class TransactionController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> Get(bool getHidden = false, DateTime? date = null)
+    public async Task<IActionResult> Get(int? year, int? month, bool getHidden = false)
     {
 
         try
@@ -36,9 +36,14 @@ public class TransactionController : ControllerBase
                 .SelectMany(t => t.Transactions)
                 .Where(t => getHidden || !(t.Account?.HideTransactions ?? false));
 
-            if (date != null)
+            if (year != null)
             {
-                transactions = transactions.Where(t => t.Date.Month == date?.Month && t.Date.Year == date?.Year);
+                transactions = transactions.Where(t => t.Date.Year == year);
+            }
+
+            if (month != null)
+            {
+                transactions = transactions.Where(t => t.Date.Month == month);
             }
 
             return Ok(transactions.Select(t => new TransactionResponse(t)));

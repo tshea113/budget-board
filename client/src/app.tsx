@@ -8,6 +8,7 @@ import NoAuthRoute from './components/no-auth-route';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from './components/theme-provider';
 import { Toaster } from './components/ui/sonner';
+import { TooltipProvider } from './components/ui/tooltip';
 
 const router = createBrowserRouter([
   {
@@ -42,8 +43,10 @@ const App = (): JSX.Element => {
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <AuthProvider>
         <QueryClientProvider client={queryClient}>
-          <RouterProvider router={router} />
-          <Toaster />
+          <TooltipProvider>
+            <RouterProvider router={router} />
+            <Toaster />
+          </TooltipProvider>
         </QueryClientProvider>
       </AuthProvider>
     </ThemeProvider>

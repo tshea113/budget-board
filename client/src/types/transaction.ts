@@ -1,3 +1,4 @@
+import { DateRange } from 'react-day-picker';
 import { ICategory } from './category';
 
 export interface Transaction {
@@ -22,15 +23,13 @@ export interface IFilters {
 export class Filters implements IFilters {
   accounts: string[] = [];
   category: string = '';
-  startDate: Date | undefined = undefined;
-  endDate: Date | undefined = undefined;
+  dateRange: DateRange | undefined = undefined;
 
   constructor(filter?: Filters) {
     if (filter) {
       this.accounts = filter.accounts;
       this.category = filter.category;
-      this.startDate = filter.startDate;
-      this.endDate = filter.endDate;
+      this.dateRange = filter.dateRange;
     }
   }
 }

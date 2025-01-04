@@ -32,6 +32,9 @@ export interface AccountIndexRequest {
 
 export interface NewAccount extends Partial<Account> {}
 
+export const liabilityAccountTypes = ['Loan', 'Mortgage', 'Credit Card'];
+export const assetAccountTypes = ['Checking', 'Savings', 'Investment', 'Cash', 'Other'];
+
 export const accountCategories: ICategory[] = [
   {
     value: 'Checking',

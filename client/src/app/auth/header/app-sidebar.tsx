@@ -17,6 +17,7 @@ import {
   ArrowRightFromLineIcon,
   BanknoteIcon,
   CalculatorIcon,
+  ChartNoAxesColumnIncreasingIcon,
   ChevronsUpDown,
   GoalIcon,
   LayoutDashboardIcon,
@@ -40,6 +41,7 @@ import { AuthContext } from '@/components/auth-provider';
 import SheetItem from '@/components/sheet-item';
 import { Pages } from '../pages/page-content';
 import AccountSettings from '../account-settings/account-settings';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const menuItems = [
   {
@@ -62,12 +64,11 @@ const menuItems = [
     page: Pages.Goals,
     icon: GoalIcon,
   },
-  // TODO: We can re-enable this when I create the trends page
-  // {
-  //   title: 'Trends',
-  //   page: Pages.Trends,
-  //   icon: ChartNoAxesColumnIncreasingIcon,
-  // },
+  {
+    title: 'Trends',
+    page: Pages.Trends,
+    icon: ChartNoAxesColumnIncreasingIcon,
+  },
 ];
 
 interface AppSidebarProps {
@@ -78,7 +79,7 @@ interface AppSidebarProps {
 const AppSidebar = (props: AppSidebarProps): JSX.Element => {
   const { request, setAccessToken } = React.useContext<any>(AuthContext);
 
-  const { open, setOpen, setOpenMobile, isMobile } = useSidebar();
+  const { open, setOpen, openMobile, setOpenMobile, isMobile } = useSidebar();
 
   const queryClient = useQueryClient();
   const Logout = (): void => {
@@ -135,19 +136,26 @@ const AppSidebar = (props: AppSidebarProps): JSX.Element => {
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    isActive={props.currentPage === item.page}
-                    asChild
-                    onClick={() => {
-                      props.setCurrentPage(item.page);
-                      isMobile ? setOpenMobile(false) : setOpen(false);
-                    }}
-                  >
-                    <div>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </div>
-                  </SidebarMenuButton>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <SidebarMenuButton
+                        isActive={props.currentPage === item.page}
+                        asChild
+                        onClick={() => {
+                          props.setCurrentPage(item.page);
+                          isMobile ? setOpenMobile(false) : setOpen(false);
+                        }}
+                      >
+                        <div>
+                          <item.icon />
+                          <span>{item.title}</span>
+                        </div>
+                      </SidebarMenuButton>
+                    </TooltipTrigger>
+                    {!open && !openMobile && (
+                      <TooltipContent side="right">{item.title}</TooltipContent>
+                    )}
+                  </Tooltip>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
