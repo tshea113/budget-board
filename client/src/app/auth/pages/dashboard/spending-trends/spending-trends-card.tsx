@@ -22,13 +22,16 @@ const SpendingTrendsCard = (): JSX.Element => {
   const thisMonthTransactionsQuery = useQuery({
     queryKey: [
       'transactions',
-      { month: thisMonthDate.getMonth(), year: thisMonthDate.getUTCFullYear() },
+      { month: thisMonthDate.getMonth(), year: thisMonthDate.getFullYear() },
     ],
     queryFn: async (): Promise<Transaction[]> => {
       const res: AxiosResponse = await request({
         url: '/api/transaction',
         method: 'GET',
-        params: { date: thisMonthDate },
+        params: {
+          month: thisMonthDate.getMonth() + 1,
+          year: thisMonthDate.getFullYear(),
+        },
       });
 
       if (res.status == 200) {
@@ -42,13 +45,16 @@ const SpendingTrendsCard = (): JSX.Element => {
   const lastMonthTransactionsQuery = useQuery({
     queryKey: [
       'transactions',
-      { month: lastMonthDate.getMonth(), year: lastMonthDate.getUTCFullYear() },
+      { month: lastMonthDate.getMonth(), year: lastMonthDate.getFullYear() },
     ],
     queryFn: async (): Promise<Transaction[]> => {
       const res: AxiosResponse = await request({
         url: '/api/transaction',
         method: 'GET',
-        params: { date: lastMonthDate },
+        params: {
+          month: lastMonthDate.getMonth() + 1,
+          year: lastMonthDate.getFullYear(),
+        },
       });
 
       if (res.status == 200) {

@@ -42,7 +42,7 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
       'transactions',
       {
         month: new Date().getMonth(),
-        year: new Date().getUTCFullYear(),
+        year: new Date().getFullYear(),
         includeHidden: true,
       },
     ],
@@ -50,7 +50,11 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
       const res: AxiosResponse = await request({
         url: '/api/transaction',
         method: 'GET',
-        params: { getHidden: true, date: new Date() },
+        params: {
+          year: new Date().getFullYear(),
+          month: new Date().getMonth() + 1,
+          getHidden: true,
+        },
       });
 
       if (res.status == 200) {

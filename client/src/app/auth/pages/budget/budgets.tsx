@@ -53,7 +53,7 @@ const Budgets = (): JSX.Element => {
         const res: AxiosResponse = await request({
           url: '/api/transaction',
           method: 'GET',
-          params: { date: date },
+          params: { month: date.getMonth() + 1, year: date.getFullYear() },
         });
 
         if (res.status == 200) {
