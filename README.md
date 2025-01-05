@@ -49,6 +49,7 @@ This container runs the back-end API of the app.
 | EMAIL_SENDER          | The email address that will send emails for verification, password resets, etc. See Additional Details for more information about setting this up.                                         |
 | EMAIL_SENDER_PASSWORD | The password of the email that will send emails for verification, password resets, etc.                                                                                                    |
 | EMAIL_SMTP_HOST       | The host server that will send the email.                                                                                                                                                  |
+| DISABLE_AUTO_SYNC     | Set true if you would like to disable the SimpleFIN auto-sync feature.                                                                                                                     |
 
 #### budget-board-db
 
