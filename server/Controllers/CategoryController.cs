@@ -41,14 +41,26 @@ public class CategoryController : ControllerBase
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> Add([FromBody] Category category)
+    public async Task<IActionResult> Add([FromBody] AddCategoryRequest category)
     {
         try
         {
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
             if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-            user.Categories.Add(category);
+            if (user.Categories.Any(c => c.Value == category.Value))
+            {
+                return BadRequest("Category already exists.");
+            }
+
+            var newCategory = new Category
+            {
+                Value = category.Value,
+                Parent = category.Parent,
+                UserID = user.Id
+            };
+
+            user.Categories.Add(newCategory);
             await _userDataContext.SaveChangesAsync();
 
             return Ok();
@@ -71,7 +83,21 @@ public class CategoryController : ControllerBase
             var category = user.Categories.Single(a => a.ID == guid);
             if (category == null) return NotFound();
 
-            _userDataContext.Entry(category).State = EntityState.Deleted;
+            // We want to preserve the category in the database if it is in use. 
+            var transactionsForUser = user.Accounts.SelectMany(a => a.Transactions);
+            if (
+                transactionsForUser.Any(
+                    t => t.Category == category.Value ||
+                    t.Subcategory == category.Value) ||
+                user.Budgets.Any(b => b.Category == category.Value))
+            {
+                category.Deleted = true;
+            }
+            else
+            {
+                _userDataContext.Entry(category).State = EntityState.Deleted;
+            }
+
             await _userDataContext.SaveChangesAsync();
 
             return Ok();
@@ -88,6 +114,10 @@ public class CategoryController : ControllerBase
         {
             var users = await _userDataContext.Users
                 .Include(u => u.Categories)
+                .Include(u => u.Accounts)
+                    .ThenInclude(a => a.Transactions)
+                .Include(u => u.Budgets)
+                .AsSplitQuery()
                 .ToListAsync();
             var user = users.Single(u => u.Id == new Guid(id));
 

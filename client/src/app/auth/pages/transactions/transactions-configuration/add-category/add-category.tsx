@@ -9,6 +9,7 @@ import { ICategory } from '@/types/category';
 import { toast } from 'sonner';
 import CategoryInput from '@/components/category-input';
 import { transactionCategories } from '@/types/transaction';
+import { Card } from '@/components/ui/card';
 
 interface AddCategoryProps {}
 
@@ -20,9 +21,14 @@ const AddCategory = (props: AddCategoryProps): JSX.Element => {
 
   const queryClient = useQueryClient();
   const doAddCategory = useMutation({
-    mutationFn: async (category: ICategory) => console.log(category),
+    mutationFn: async (category: ICategory) =>
+      await request({
+        url: '/api/category',
+        method: 'POST',
+        data: category,
+      }),
     onSuccess: async () => {
-      console.log('bingus');
+      toast.success('Category added!');
     },
     onError: (error: AxiosError) => toast.error(translateAxiosError(error)),
   });
@@ -36,7 +42,7 @@ const AddCategory = (props: AddCategoryProps): JSX.Element => {
   };
 
   return (
-    <div className="flex w-full flex-grow flex-row items-center gap-4 p-2">
+    <Card className="flex w-full flex-grow flex-row items-center gap-4 p-2">
       <div className="flex grow flex-col gap-2">
         <span className="text-sm">Category Name</span>
         <Input
@@ -64,7 +70,7 @@ const AddCategory = (props: AddCategoryProps): JSX.Element => {
       >
         Add Category
       </ResponsiveButton>
-    </div>
+    </Card>
   );
 };
 
