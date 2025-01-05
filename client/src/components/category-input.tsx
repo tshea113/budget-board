@@ -20,6 +20,7 @@ interface CategoryInputProps {
   categories: ICategory[];
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
+  parentsOnly?: boolean;
 }
 
 const CategoryInput = (props: CategoryInputProps): JSX.Element => {
@@ -62,7 +63,7 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
                   }}
                 >
                   <CommandItem
-                    className="font-bold"
+                    className={cn(props.parentsOnly ? '' : 'font-bold')}
                     value={category.value}
                     onSelect={(currentValue) => {
                       props.setSelectedCategory(
@@ -83,16 +84,18 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
                     />
                     {category.value}
                   </CommandItem>
-                  <CommandSubcategory
-                    category={category}
-                    selectedCategory={props.selectedCategory}
-                    setSelectedCategory={(currentValue: string) => {
-                      props.setSelectedCategory(
-                        currentValue === props.selectedCategory ? '' : currentValue
-                      );
-                      setOpen(false);
-                    }}
-                  />
+                  {!props.parentsOnly && (
+                    <CommandSubcategory
+                      category={category}
+                      selectedCategory={props.selectedCategory}
+                      setSelectedCategory={(currentValue: string) => {
+                        props.setSelectedCategory(
+                          currentValue === props.selectedCategory ? '' : currentValue
+                        );
+                        setOpen(false);
+                      }}
+                    />
+                  )}
                 </CommandGroup>
               ))}
             </CommandList>
