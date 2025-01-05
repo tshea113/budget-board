@@ -4,6 +4,9 @@ namespace BudgetBoard.Utils;
 
 public static class Helpers
 {
+    public const long UNIX_MONTH = 2629743;
+    public const long UNIX_WEEK = 604800;
+
     public static IActionResult BuildErrorResponse(ILogger logger, string message)
     {
         logger.LogError(message);

@@ -1,5 +1,6 @@
 using BudgetBoard.Database.Data;
 using BudgetBoard.Database.Models;
+using BudgetBoard.Jobs;
 using BudgetBoard.Utils;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Quartz;
 using Serilog;
 using System.Text.Json.Serialization;
 
@@ -117,6 +119,28 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 });
 
 var autoUpdateDb = builder.Configuration.GetValue<bool>("AUTO_UPDATE_DB");
+
+if (!builder.Configuration.GetValue<bool>("DISABLE_AUTO_SYNC"))
+{
+    builder.Services.AddQuartz(options =>
+    {
+        var jobKey = new JobKey("SyncBackgroundJob");
+
+        options.AddJob<SyncBackgroundJob>(jobKey)
+            .AddTrigger(trigger =>
+            trigger
+                .ForJob(jobKey)
+                // Allow a minute for everything to settle after boot before starting the job
+                .StartAt(DateBuilder.FutureDate(1, IntervalUnit.Minute))
+                // Every day at 5am and 5pm
+                .WithCronSchedule("0 0 5,17 * * ?"));
+    });
+
+    builder.Services.AddQuartzHostedService(options =>
+    {
+        options.WaitForJobsToComplete = true;
+    });
+}
 
 var app = builder.Build();
 

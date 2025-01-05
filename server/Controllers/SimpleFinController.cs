@@ -11,9 +11,6 @@ namespace BudgetBoard.Controllers;
 [ApiController]
 public class SimpleFinController : Controller
 {
-    private const long UnixMonth = 2629743;
-    private const long UnixWeek = 604800;
-
     private readonly ILogger<SimpleFinController> _logger;
 
     private readonly UserDataContext _userDataContext;
@@ -44,12 +41,12 @@ public class SimpleFinController : Controller
             if (user.LastSync == DateTime.MinValue)
             {
                 // If we haven't synced before, sync the full 90 days of history
-                startDate = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() - (UnixMonth * 3);
+                startDate = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() - (Helpers.UNIX_MONTH * 3);
             }
             else
             {
-                var oneMonthAgo = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() - UnixMonth;
-                var lastSyncWithBuffer = ((DateTimeOffset)user.LastSync).ToUnixTimeSeconds() - UnixWeek;
+                var oneMonthAgo = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() - Helpers.UNIX_MONTH;
+                var lastSyncWithBuffer = ((DateTimeOffset)user.LastSync).ToUnixTimeSeconds() - Helpers.UNIX_WEEK;
 
                 startDate = Math.Min(oneMonthAgo, lastSyncWithBuffer);
             }
