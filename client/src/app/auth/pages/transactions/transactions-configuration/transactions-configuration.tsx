@@ -10,6 +10,7 @@ import { type Transaction } from '@/types/transaction';
 import { GearIcon } from '@radix-ui/react-icons';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import DeletedTransactionsAccordion from './deleted-transactions-accordion';
+import AddCategoryAccordion from './add-category/add-category-accordion';
 
 interface TransactionsConfigurationProps {
   className?: string;
@@ -33,6 +34,7 @@ const TransactionsConfiguration = (
             <div className="w-full space-y-3 2xl:max-w-screen-2xl">
               <ScrollArea className="h-full" type="auto">
                 <SheetHeader>Transactions Configuration</SheetHeader>
+                <AddCategoryAccordion />
                 <DeletedTransactionsAccordion deletedTransactions={props.transactions} />
               </ScrollArea>
             </div>
