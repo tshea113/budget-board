@@ -5,12 +5,13 @@ import { translateAxiosError } from '@/lib/requests';
 import { ICategoryResponse } from '@/types/category';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { Trash2Icon } from 'lucide-react';
+import { Trash2Icon, Undo2Icon } from 'lucide-react';
 import React from 'react';
 import { toast } from 'sonner';
 
 interface CustomCategoryCardProps {
   category: ICategoryResponse;
+  restore?: boolean;
 }
 
 const CustomCategoryCard = (props: CustomCategoryCardProps): JSX.Element => {
@@ -24,8 +25,22 @@ const CustomCategoryCard = (props: CustomCategoryCardProps): JSX.Element => {
         params: { guid },
       }),
     onSuccess: async () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
+      queryClient.invalidateQueries({ queryKey: ['transactionCategories'] });
       toast.success('Category deleted!');
+    },
+    onError: (error: AxiosError) => toast.error(translateAxiosError(error)),
+  });
+
+  const doRestoreCategory = useMutation({
+    mutationFn: async (guid: string) =>
+      await request({
+        url: '/api/transactionCategory/restore',
+        method: 'POST',
+        params: { guid },
+      }),
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: ['transactionCategories'] });
+      toast.success('Category restored!');
     },
     onError: (error: AxiosError) => toast.error(translateAxiosError(error)),
   });
@@ -36,11 +51,21 @@ const CustomCategoryCard = (props: CustomCategoryCardProps): JSX.Element => {
       <span className="w-1/2 grow">{props.category.parent}</span>
       <ResponsiveButton
         className="h-6 w-6 p-0"
-        variant="destructive"
-        onClick={() => doDeleteCategory.mutate(props.category.id)}
-        loading={doDeleteCategory.isPending}
+        variant={props.restore ? 'default' : 'destructive'}
+        onClick={() => {
+          if (props.restore) {
+            doRestoreCategory.mutate(props.category.id);
+          } else {
+            doDeleteCategory.mutate(props.category.id);
+          }
+        }}
+        loading={doDeleteCategory.isPending || doRestoreCategory.isPending}
       >
-        <Trash2Icon className="h-4 w-4" />
+        {props.restore ? (
+          <Undo2Icon className="h-4 w-4" />
+        ) : (
+          <Trash2Icon className="h-4 w-4" />
+        )}
       </ResponsiveButton>
     </Card>
   );

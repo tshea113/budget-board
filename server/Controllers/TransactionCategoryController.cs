@@ -76,12 +76,19 @@ public class TransactionCategoryController(UserDataContext context, ILogger<Tran
             var category = user.TransactionCategories.Single(a => a.ID == guid);
             if (category == null) return NotFound();
 
+            if (user.TransactionCategories.Any(c => c.Parent == category.Value))
+            {
+                return BadRequest("Category has subcategories, you must delete the subcategories first.");
+            }
+
             // We want to preserve the category in the database if it is in use. 
             var transactionsForUser = user.Accounts.SelectMany(a => a.Transactions);
             if (
                 transactionsForUser.Any(
-                    t => t.Category == category.Value ||
-                    t.Subcategory == category.Value) ||
+                    t => (t.Category ?? string.Empty).Equals(category.Value,
+                        StringComparison.OrdinalIgnoreCase) ||
+                    (t.Subcategory ?? string.Empty).Equals(category.Value,
+                        StringComparison.OrdinalIgnoreCase)) ||
                 user.Budgets.Any(b => b.Category == category.Value))
             {
                 category.Deleted = true;
@@ -90,6 +97,31 @@ public class TransactionCategoryController(UserDataContext context, ILogger<Tran
             {
                 _userDataContext.Entry(category).State = EntityState.Deleted;
             }
+
+            await _userDataContext.SaveChangesAsync();
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
+        }
+    }
+
+    [HttpPost]
+    [Authorize]
+    [Route("[action]")]
+    public async Task<IActionResult> Restore(Guid guid)
+    {
+        try
+        {
+            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
+            if (user == null) return Unauthorized("You are not authorized to access this content.");
+
+            var category = user.TransactionCategories.Single(a => a.ID == guid);
+            if (category == null) return NotFound();
+
+            category.Deleted = false;
 
             await _userDataContext.SaveChangesAsync();
 

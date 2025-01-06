@@ -44,7 +44,7 @@ const AddCategory = (): JSX.Element => {
         data: category,
       }),
     onSuccess: async () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
+      queryClient.invalidateQueries({ queryKey: ['transactionCategories'] });
       toast.success('Category added!');
     },
     onError: (error: AxiosError) => toast.error(translateAxiosError(error)),
@@ -57,6 +57,10 @@ const AddCategory = (): JSX.Element => {
     };
     doAddCategory.mutate(newCategory);
   };
+
+  const transactionCategoriesWithCustom = defaultTransactionCategories.concat(
+    transactionCategoriesQuery.data ?? []
+  );
 
   return (
     <Card className="flex w-full flex-col gap-4 p-2">
@@ -78,9 +82,7 @@ const AddCategory = (): JSX.Element => {
           <CategoryInput
             selectedCategory={newCategoryParent}
             setSelectedCategory={setNewCategoryParent}
-            categories={defaultTransactionCategories.concat(
-              transactionCategoriesQuery.data ?? []
-            )}
+            categories={transactionCategoriesWithCustom}
             parentsOnly={true}
           />
         )}

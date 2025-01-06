@@ -2,7 +2,7 @@ import { ICategory, CategoryNode } from '@/types/category';
 import { areStringsEqual } from './utils';
 
 /**
- * Builds a tree of category nodes and their children
+ * Builds an alphabetized tree of category nodes and their children
  * @param categories The array of category data
  * @returns An array of CategoryNode which each contain an array of its children.
  */
@@ -28,6 +28,10 @@ export const buildCategoriesTree = (categories: ICategory[]): CategoryNode[] => 
         parent.subCategories.push(new CategoryNode(category));
       }
     });
+
+  roots.sort((a, b) =>
+    a.value.toLocaleLowerCase().localeCompare(b.value.toLocaleLowerCase())
+  );
 
   return roots;
 };
