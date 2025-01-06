@@ -7,14 +7,15 @@ import {
 import { type BudgetResponse } from '@/types/budget';
 import BudgetTotalCard from './budget-total-card';
 import { initCurrentMonth } from '@/lib/utils';
-import { type Transaction } from '@/types/transaction';
+import { defaultTransactionCategories, type Transaction } from '@/types/transaction';
 import Unbudgets from './unbudgets';
 import { AuthContext } from '@/components/auth-provider';
-import { useQueries } from '@tanstack/react-query';
+import { useQueries, useQuery } from '@tanstack/react-query';
 import BudgetCardsGroup from './budget-cards-group/budget-cards-group';
 import { AxiosResponse } from 'axios';
 import { filterHiddenTransactions } from '@/lib/transactions';
 import BudgetsToolbar from './budgets-toolbar/budgets-toolbar';
+import { ICategoryResponse } from '@/types/category';
 
 const Budgets = (): JSX.Element => {
   const [selectedDates, setSelectedDates] = React.useState<Date[]>([initCurrentMonth()]);
@@ -71,6 +72,26 @@ const Budgets = (): JSX.Element => {
     },
   });
 
+  const transactionCategoriesQuery = useQuery({
+    queryKey: ['transactionCategories'],
+    queryFn: async () => {
+      const res = await request({
+        url: '/api/transactionCategory',
+        method: 'GET',
+      });
+
+      if (res.status === 200) {
+        return res.data as ICategoryResponse[];
+      }
+
+      return undefined;
+    },
+  });
+
+  const transactionCategoriesWithCustom = defaultTransactionCategories.concat(
+    transactionCategoriesQuery.data ?? []
+  );
+
   // We need to filter out the transactions labelled with 'Hide From Budgets'
   const transactionsWithoutHidden = filterHiddenTransactions(
     transactionsForMonthsQuery.data ?? []
@@ -94,15 +115,31 @@ const Budgets = (): JSX.Element => {
         <div className="space-y-10">
           <BudgetCardsGroup
             header={'Income'}
-            budgetData={getBudgetsForGroup(budgetsQuery.data, BudgetGroup.Income)}
+            budgetData={getBudgetsForGroup(
+              budgetsQuery.data,
+              BudgetGroup.Income,
+              transactionCategoriesWithCustom
+            )}
             transactionsData={transactionsWithoutHidden}
-            isPending={budgetsQuery.isPending || transactionsForMonthsQuery.isPending}
+            isPending={
+              budgetsQuery.isPending ||
+              transactionsForMonthsQuery.isPending ||
+              transactionCategoriesQuery.isPending
+            }
           />
           <BudgetCardsGroup
             header={'Spending'}
-            budgetData={getBudgetsForGroup(budgetsQuery.data, BudgetGroup.Spending)}
+            budgetData={getBudgetsForGroup(
+              budgetsQuery.data,
+              BudgetGroup.Spending,
+              transactionCategoriesWithCustom
+            )}
             transactionsData={transactionsWithoutHidden}
-            isPending={budgetsQuery.isPending || transactionsForMonthsQuery.isPending}
+            isPending={
+              budgetsQuery.isPending ||
+              transactionsForMonthsQuery.isPending ||
+              transactionCategoriesQuery.isPending
+            }
           />
         </div>
         <Unbudgets

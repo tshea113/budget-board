@@ -1,22 +1,39 @@
 import { Input } from '@/components/ui/input';
 import ResponsiveButton from '@/components/responsive-button';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { translateAxiosError } from '@/lib/requests';
 import { AxiosError } from 'axios';
 import { AuthContext } from '@/components/auth-provider';
 import React from 'react';
-import { ICategory } from '@/types/category';
+import { ICategory, ICategoryResponse } from '@/types/category';
 import { toast } from 'sonner';
 import CategoryInput from '@/components/category-input';
-import { transactionCategories } from '@/types/transaction';
+import { defaultTransactionCategories } from '@/types/transaction';
 import { Card } from '@/components/ui/card';
 import { SendIcon } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const AddCategory = (): JSX.Element => {
   const [newCategoryName, setNewCategoryName] = React.useState('');
   const [newCategoryParent, setNewCategoryParent] = React.useState('');
 
   const { request } = React.useContext<any>(AuthContext);
+
+  const transactionCategoriesQuery = useQuery({
+    queryKey: ['transactionCategories'],
+    queryFn: async () => {
+      const res = await request({
+        url: '/api/transactionCategory',
+        method: 'GET',
+      });
+
+      if (res.status === 200) {
+        return res.data as ICategoryResponse[];
+      }
+
+      return undefined;
+    },
+  });
 
   const queryClient = useQueryClient();
   const doAddCategory = useMutation({
@@ -55,12 +72,18 @@ const AddCategory = (): JSX.Element => {
       </div>
       <div className="flex flex-col gap-2">
         <span className="text-sm">Parent Category</span>
-        <CategoryInput
-          selectedCategory={newCategoryParent}
-          setSelectedCategory={setNewCategoryParent}
-          categories={transactionCategories}
-          parentsOnly={true}
-        />
+        {transactionCategoriesQuery.isPending ? (
+          <Skeleton className="h-10 w-full" />
+        ) : (
+          <CategoryInput
+            selectedCategory={newCategoryParent}
+            setSelectedCategory={setNewCategoryParent}
+            categories={defaultTransactionCategories.concat(
+              transactionCategoriesQuery.data ?? []
+            )}
+            parentsOnly={true}
+          />
+        )}
       </div>
       <ResponsiveButton
         className="w-full p-0"
