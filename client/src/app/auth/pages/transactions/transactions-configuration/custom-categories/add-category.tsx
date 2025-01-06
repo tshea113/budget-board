@@ -42,36 +42,34 @@ const AddCategory = (): JSX.Element => {
   };
 
   return (
-    <div className="w-full @container">
-      <Card className="flex flex-col gap-4 p-2 @md:flex-grow @md:flex-row @md:items-center">
-        <div className="flex grow flex-col gap-2">
-          <span className="text-sm">Category Name</span>
-          <Input
-            type="text"
-            value={newCategoryName}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setNewCategoryName(e.target.value)
-            }
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <span className="text-sm">Parent Category</span>
-          <CategoryInput
-            selectedCategory={newCategoryParent}
-            setSelectedCategory={setNewCategoryParent}
-            categories={transactionCategories}
-            parentsOnly={true}
-          />
-        </div>
-        <ResponsiveButton
-          className="w-full p-0 @md:h-[68px] @md:w-8"
-          loading={doAddCategory.isPending}
-          onClick={submitBudget}
-        >
-          <SendIcon className="h-4 w-4" />
-        </ResponsiveButton>
-      </Card>
-    </div>
+    <Card className="flex w-full flex-col gap-4 p-2">
+      <div className="flex grow flex-col gap-2">
+        <span className="text-sm">Category Name</span>
+        <Input
+          type="text"
+          value={newCategoryName}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setNewCategoryName(e.target.value)
+          }
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <span className="text-sm">Parent Category</span>
+        <CategoryInput
+          selectedCategory={newCategoryParent}
+          setSelectedCategory={setNewCategoryParent}
+          categories={transactionCategories}
+          parentsOnly={true}
+        />
+      </div>
+      <ResponsiveButton
+        className="w-full p-0"
+        loading={doAddCategory.isPending}
+        onClick={submitBudget}
+      >
+        <SendIcon className="h-4 w-4" />
+      </ResponsiveButton>
+    </Card>
   );
 };
 
