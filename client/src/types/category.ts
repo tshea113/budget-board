@@ -7,7 +7,6 @@ export interface ICategoryResponse extends ICategory {
   id: string;
   value: string;
   parent: string;
-  deleted: boolean;
   userId: string;
 }
 

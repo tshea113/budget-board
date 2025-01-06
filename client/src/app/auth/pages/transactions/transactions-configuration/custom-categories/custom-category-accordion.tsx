@@ -15,7 +15,7 @@ import CustomCategoryHeader from './custom-category-header';
 
 const AddCategoryAccordion = (): JSX.Element => {
   const { request } = React.useContext<any>(AuthContext);
-  const categoriesQuery = useQuery({
+  const transactionCategoriesQuery = useQuery({
     queryKey: ['transactionCategories'],
     queryFn: async () => {
       const res = await request({
@@ -31,14 +31,6 @@ const AddCategoryAccordion = (): JSX.Element => {
     },
   });
 
-  const categories = (categoriesQuery.data ?? []).filter(
-    (c: ICategoryResponse) => !c.deleted
-  );
-
-  const deletedCategories = (categoriesQuery.data ?? []).filter(
-    (c: ICategoryResponse) => c.deleted
-  );
-
   return (
     <div className="rounded-md px-3">
       <Accordion type="single" collapsible className="w-full" defaultValue="add-category">
@@ -51,26 +43,11 @@ const AddCategoryAccordion = (): JSX.Element => {
               <AddCategory />
               <div className="flex w-full flex-col gap-2">
                 <CustomCategoryHeader />
-                {categoriesQuery.isPending ? (
+                {transactionCategoriesQuery.isPending ? (
                   <Skeleton className="h-[42px] w-full" />
                 ) : (
-                  categories.map((category: ICategoryResponse) => (
+                  transactionCategoriesQuery.data?.map((category: ICategoryResponse) => (
                     <CustomCategoryCard key={category.id} category={category} />
-                  ))
-                )}
-              </div>
-              <div className="flex w-full flex-col gap-2">
-                <span>Deleted Categories</span>
-                <CustomCategoryHeader />
-                {categoriesQuery.isPending ? (
-                  <Skeleton className="h-[42px] w-full" />
-                ) : (
-                  deletedCategories.map((category: ICategoryResponse) => (
-                    <CustomCategoryCard
-                      key={category.id}
-                      category={category}
-                      restore={true}
-                    />
                   ))
                 )}
               </div>
