@@ -15,7 +15,7 @@ const DeletedTransactionsAccordion = (
   props: DeletedTransactionsAccordionProps
 ): JSX.Element => {
   return (
-    <div className="mx-2 px-3">
+    <div className="px-3">
       <Accordion
         type="single"
         collapsible

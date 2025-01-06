@@ -42,7 +42,7 @@ export enum TransactionCardType {
 
 export const hiddenTransactionCategory = 'Hide from Budgets';
 
-export const transactionCategories: ICategory[] = [
+export const defaultTransactionCategories: ICategory[] = [
   {
     value: 'Auto & Transport',
     parent: '',

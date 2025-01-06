@@ -4,12 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Skeleton } from '@/components/ui/skeleton';
 import { getFormattedCategoryValue } from '@/lib/category';
 import { translateAxiosError } from '@/lib/requests';
 import { convertNumberToCurrency } from '@/lib/utils';
 import { NewBudgetRequest } from '@/types/budget';
-import { transactionCategories } from '@/types/transaction';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { ICategoryResponse } from '@/types/category';
+import { defaultTransactionCategories } from '@/types/transaction';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { PlusIcon, SendIcon } from 'lucide-react';
 import React from 'react';
@@ -25,6 +27,22 @@ const UnbudgetCard = (props: UnbudgetCardProps): JSX.Element => {
   const [newBudgetLimit, setNewBudgetLimit] = React.useState<string>('');
 
   const { request } = React.useContext<any>(AuthContext);
+
+  const transactionCategoriesQuery = useQuery({
+    queryKey: ['transactionCategories'],
+    queryFn: async () => {
+      const res = await request({
+        url: '/api/transactionCategory',
+        method: 'GET',
+      });
+
+      if (res.status === 200) {
+        return res.data as ICategoryResponse[];
+      }
+
+      return undefined;
+    },
+  });
 
   const queryClient = useQueryClient();
   const doAddBudget = useMutation({
@@ -42,10 +60,18 @@ const UnbudgetCard = (props: UnbudgetCardProps): JSX.Element => {
     },
   });
 
+  const transactionCategoriesWithCustom = defaultTransactionCategories.concat(
+    transactionCategoriesQuery.data ?? []
+  );
+
   return (
     <Card className="flex w-full flex-row justify-between px-3 py-1 @container">
       <span className="w-2/5 text-lg font-semibold tracking-tight md:w-1/2">
-        {getFormattedCategoryValue(props.name, transactionCategories)}
+        {transactionCategoriesQuery.isPending ? (
+          <Skeleton className="h-8 w-full" />
+        ) : (
+          getFormattedCategoryValue(props.name, transactionCategoriesWithCustom)
+        )}
       </span>
       <div className="flex w-3/5 flex-row items-center justify-between md:w-1/2">
         <span className="w-1/3 text-center text-base font-semibold tracking-tight @sm:text-lg">
@@ -78,22 +104,26 @@ const UnbudgetCard = (props: UnbudgetCardProps): JSX.Element => {
                   placeholder="Limit"
                 />
               </div>
-              <ResponsiveButton
-                className="h-8 w-8 shrink-0 p-0"
-                loading={doAddBudget.isPending}
-                onClick={() => {
-                  doAddBudget.mutate({
-                    date: props.selectedDates[0],
-                    category: getFormattedCategoryValue(
-                      props.name,
-                      transactionCategories
-                    ),
-                    limit: parseInt(newBudgetLimit, 10),
-                  });
-                }}
-              >
-                <SendIcon className="h-4 w-4" />
-              </ResponsiveButton>
+              {transactionCategoriesQuery.isPending ? (
+                <Skeleton className="h-8 w-8 shrink-0" />
+              ) : (
+                <ResponsiveButton
+                  className="h-8 w-8 shrink-0 p-0"
+                  loading={doAddBudget.isPending}
+                  onClick={() => {
+                    doAddBudget.mutate({
+                      date: props.selectedDates[0],
+                      category: getFormattedCategoryValue(
+                        props.name,
+                        transactionCategoriesWithCustom
+                      ),
+                      limit: parseInt(newBudgetLimit, 10),
+                    });
+                  }}
+                >
+                  <SendIcon className="h-4 w-4" />
+                </ResponsiveButton>
+              )}
             </PopoverContent>
           </Popover>
         )}

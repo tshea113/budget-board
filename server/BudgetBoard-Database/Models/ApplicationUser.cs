@@ -9,6 +9,6 @@ public class ApplicationUser : IdentityUser<Guid>
     public ICollection<Account> Accounts { get; set; } = [];
     public ICollection<Budget> Budgets { get; set; } = [];
     public ICollection<Goal> Goals { get; set; } = [];
-    public ICollection<Category> Categories { get; set; } = [];
+    public ICollection<Category> TransactionCategories { get; set; } = [];
     public ICollection<Institution> Institutions { get; set; } = [];
 }

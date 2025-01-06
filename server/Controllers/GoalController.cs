@@ -12,11 +12,11 @@ namespace BudgetBoard.Controllers;
 [ApiController]
 public class GoalController : ControllerBase
 {
-    private readonly ILogger<CategoryController> _logger;
+    private readonly ILogger<GoalController> _logger;
 
     private readonly UserDataContext _userDataContext;
 
-    public GoalController(UserDataContext context, ILogger<CategoryController> logger)
+    public GoalController(UserDataContext context, ILogger<GoalController> logger)
     {
         _userDataContext = context;
         _logger = logger;
