@@ -233,7 +233,7 @@ namespace BudgetBoard.Database.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Category");
+                    b.ToTable("TransactionCategory", (string)null);
                 });
 
             modelBuilder.Entity("BudgetBoard.Database.Models.Goal", b =>
@@ -522,7 +522,7 @@ namespace BudgetBoard.Database.Migrations
             modelBuilder.Entity("BudgetBoard.Database.Models.Category", b =>
                 {
                     b.HasOne("BudgetBoard.Database.Models.ApplicationUser", "User")
-                        .WithMany("Categories")
+                        .WithMany("TransactionCategories")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -627,11 +627,11 @@ namespace BudgetBoard.Database.Migrations
 
                     b.Navigation("Budgets");
 
-                    b.Navigation("Categories");
-
                     b.Navigation("Goals");
 
                     b.Navigation("Institutions");
+
+                    b.Navigation("TransactionCategories");
                 });
 
             modelBuilder.Entity("BudgetBoard.Database.Models.Institution", b =>

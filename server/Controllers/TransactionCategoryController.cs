@@ -10,17 +10,10 @@ namespace BudgetBoard.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class CategoryController : ControllerBase
+public class TransactionCategoryController(UserDataContext context, ILogger<TransactionCategoryController> logger) : ControllerBase
 {
-    private readonly ILogger<CategoryController> _logger;
-
-    private readonly UserDataContext _userDataContext;
-
-    public CategoryController(UserDataContext context, ILogger<CategoryController> logger)
-    {
-        _userDataContext = context;
-        _logger = logger;
-    }
+    private readonly ILogger<TransactionCategoryController> _logger = logger;
+    private readonly UserDataContext _userDataContext = context;
 
     [HttpGet]
     [Authorize]
@@ -31,7 +24,7 @@ public class CategoryController : ControllerBase
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
             if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-            return Ok(user.Categories.Select(c => new CategoryResponse(c)));
+            return Ok(user.TransactionCategories.Select(c => new CategoryResponse(c)));
         }
         catch (Exception ex)
         {
@@ -48,7 +41,7 @@ public class CategoryController : ControllerBase
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
             if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-            if (user.Categories.Any(c => c.Value == category.Value))
+            if (user.TransactionCategories.Any(c => c.Value == category.Value))
             {
                 return BadRequest("Category already exists.");
             }
@@ -60,7 +53,7 @@ public class CategoryController : ControllerBase
                 UserID = user.Id
             };
 
-            user.Categories.Add(newCategory);
+            user.TransactionCategories.Add(newCategory);
             await _userDataContext.SaveChangesAsync();
 
             return Ok();
@@ -80,7 +73,7 @@ public class CategoryController : ControllerBase
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
             if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-            var category = user.Categories.Single(a => a.ID == guid);
+            var category = user.TransactionCategories.Single(a => a.ID == guid);
             if (category == null) return NotFound();
 
             // We want to preserve the category in the database if it is in use. 
@@ -113,7 +106,7 @@ public class CategoryController : ControllerBase
         try
         {
             var users = await _userDataContext.Users
-                .Include(u => u.Categories)
+                .Include(u => u.TransactionCategories)
                 .Include(u => u.Accounts)
                     .ThenInclude(a => a.Transactions)
                 .Include(u => u.Budgets)
