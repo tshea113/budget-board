@@ -45,10 +45,12 @@ const AddCategoryAccordion = (): JSX.Element => {
                 <CustomCategoryHeader />
                 {transactionCategoriesQuery.isPending ? (
                   <Skeleton className="h-[42px] w-full" />
-                ) : (
+                ) : transactionCategoriesQuery.data?.length > 0 ? (
                   transactionCategoriesQuery.data?.map((category: ICategoryResponse) => (
                     <CustomCategoryCard key={category.id} category={category} />
                   ))
+                ) : (
+                  <span>No custom categories.</span>
                 )}
               </div>
             </div>
