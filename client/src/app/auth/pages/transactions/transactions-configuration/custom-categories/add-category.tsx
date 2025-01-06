@@ -10,10 +10,9 @@ import { toast } from 'sonner';
 import CategoryInput from '@/components/category-input';
 import { transactionCategories } from '@/types/transaction';
 import { Card } from '@/components/ui/card';
+import { SendIcon } from 'lucide-react';
 
-interface AddCategoryProps {}
-
-const AddCategory = (props: AddCategoryProps): JSX.Element => {
+const AddCategory = (): JSX.Element => {
   const [newCategoryName, setNewCategoryName] = React.useState('');
   const [newCategoryParent, setNewCategoryParent] = React.useState('');
 
@@ -23,11 +22,12 @@ const AddCategory = (props: AddCategoryProps): JSX.Element => {
   const doAddCategory = useMutation({
     mutationFn: async (category: ICategory) =>
       await request({
-        url: '/api/category',
+        url: '/api/transactionCategory',
         method: 'POST',
         data: category,
       }),
     onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: ['categories'] });
       toast.success('Category added!');
     },
     onError: (error: AxiosError) => toast.error(translateAxiosError(error)),
@@ -42,35 +42,36 @@ const AddCategory = (props: AddCategoryProps): JSX.Element => {
   };
 
   return (
-    <Card className="flex w-full flex-grow flex-row items-center gap-4 p-2">
-      <div className="flex grow flex-col gap-2">
-        <span className="text-sm">Category Name</span>
-        <Input
-          type="text"
-          value={newCategoryName}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setNewCategoryName(e.target.value)
-          }
-        />
-      </div>
-      <div className="flex flex-col gap-2">
-        <span className="text-sm">Parent Category</span>
-        <CategoryInput
-          selectedCategory={newCategoryParent}
-          setSelectedCategory={setNewCategoryParent}
-          categories={transactionCategories}
-          parentsOnly={true}
-        />
-      </div>
-
-      <ResponsiveButton
-        loading={doAddCategory.isPending}
-        onClick={submitBudget}
-        className="self-end"
-      >
-        Add Category
-      </ResponsiveButton>
-    </Card>
+    <div className="w-full @container">
+      <Card className="flex flex-col gap-4 p-2 @md:flex-grow @md:flex-row @md:items-center">
+        <div className="flex grow flex-col gap-2">
+          <span className="text-sm">Category Name</span>
+          <Input
+            type="text"
+            value={newCategoryName}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setNewCategoryName(e.target.value)
+            }
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <span className="text-sm">Parent Category</span>
+          <CategoryInput
+            selectedCategory={newCategoryParent}
+            setSelectedCategory={setNewCategoryParent}
+            categories={transactionCategories}
+            parentsOnly={true}
+          />
+        </div>
+        <ResponsiveButton
+          className="w-full p-0 @md:h-[68px] @md:w-8"
+          loading={doAddCategory.isPending}
+          onClick={submitBudget}
+        >
+          <SendIcon className="h-4 w-4" />
+        </ResponsiveButton>
+      </Card>
+    </div>
   );
 };
 

@@ -24,14 +24,14 @@ const TransactionsHeader = (props: TransactionsHeaderProps): JSX.Element => {
 
   return (
     <div className="flex w-full flex-col gap-2 @container">
-      <div className="flex w-full flex-col items-start gap-4 @2xl:flex-row @2xl:items-end">
+      <div className="flex flex-col items-start gap-4 @2xl:flex-row @2xl:items-center @2xl:justify-between">
         <SortByMenu
           currentSort={props.sort}
           setCurrentSort={props.setSort}
           sortDirection={props.sortDirection}
           setSortDirection={props.setSortDirection}
         />
-        <div className="flex w-full grow flex-row @2xl:w-fit">
+        <div className="flex w-full flex-row items-center justify-end gap-2 @2xl:w-auto">
           <Button
             className={cn(
               'flex flex-row items-center gap-1',
@@ -49,13 +49,12 @@ const TransactionsHeader = (props: TransactionsHeaderProps): JSX.Element => {
             <span>Filter</span>
             <FilterIcon className="h-4 w-4" />
           </Button>
-          <div className="grow" />
           <TransactionsConfiguration
             transactions={filterInvisibleTransactions(props.transactions)}
           />
         </div>
       </div>
-      <div className="flex flex-row">
+      <div className="flex flex-row justify-end">
         <FilterCard
           isOpen={isFilterCardOpen}
           filters={props.filters}
