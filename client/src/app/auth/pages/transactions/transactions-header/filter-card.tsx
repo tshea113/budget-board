@@ -1,9 +1,14 @@
 import AccountInput from '@/components/account-input';
+import { AuthContext } from '@/components/auth-provider';
 import CategoryInput from '@/components/category-input';
 import DatePickerWithRange from '@/components/date-range-picker';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Filters, transactionCategories } from '@/types/transaction';
+import { Skeleton } from '@/components/ui/skeleton';
+import { ICategoryResponse } from '@/types/category';
+import { Filters, defaultTransactionCategories } from '@/types/transaction';
+import { useQuery } from '@tanstack/react-query';
+import React from 'react';
 import { DateRange } from 'react-day-picker';
 
 interface FilterCardProps {
@@ -13,6 +18,23 @@ interface FilterCardProps {
 }
 
 const FilterCard = (props: FilterCardProps): JSX.Element => {
+  const { request } = React.useContext<any>(AuthContext);
+  const transactionCategoriesQuery = useQuery({
+    queryKey: ['transactionCategories'],
+    queryFn: async () => {
+      const res = await request({
+        url: '/api/transactionCategory',
+        method: 'GET',
+      });
+
+      if (res.status === 200) {
+        return res.data as ICategoryResponse[];
+      }
+
+      return undefined;
+    },
+  });
+
   if (!props.isOpen) {
     return <></>;
   }
@@ -22,7 +44,7 @@ const FilterCard = (props: FilterCardProps): JSX.Element => {
       <span className="text-lg font-semibold">Filter</span>
       <Separator />
       <div className="flex w-full flex-row flex-wrap gap-4">
-        <span className="grow">
+        <div className="grow">
           <DatePickerWithRange
             value={props.filters.dateRange}
             onSelect={(dateRange: DateRange) => {
@@ -32,8 +54,8 @@ const FilterCard = (props: FilterCardProps): JSX.Element => {
               });
             }}
           />
-        </span>
-        <span className="grow">
+        </div>
+        <div className="grow">
           <AccountInput
             selectedAccountIds={props.filters.accounts}
             setSelectedAccountIds={(newAccountIds: string[]) => {
@@ -44,19 +66,25 @@ const FilterCard = (props: FilterCardProps): JSX.Element => {
             }}
             hideHidden={true}
           />
-        </span>
-        <span className="grow">
-          <CategoryInput
-            selectedCategory={props.filters.category}
-            categories={transactionCategories}
-            setSelectedCategory={(newCategory: string) => {
-              props.setFilters({
-                ...props.filters,
-                category: newCategory,
-              });
-            }}
-          />
-        </span>
+        </div>
+        <div className="grow">
+          {transactionCategoriesQuery.isPending ? (
+            <Skeleton className="h-10 w-full min-w-[160px] max-w-full" />
+          ) : (
+            <CategoryInput
+              selectedCategory={props.filters.category}
+              categories={defaultTransactionCategories.concat(
+                transactionCategoriesQuery.data ?? []
+              )}
+              setSelectedCategory={(newCategory: string) => {
+                props.setFilters({
+                  ...props.filters,
+                  category: newCategory,
+                });
+              }}
+            />
+          )}
+        </div>
       </div>
     </Card>
   );

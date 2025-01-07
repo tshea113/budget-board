@@ -3,13 +3,14 @@ import { AuthContext } from '@/components/auth-provider';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
-import { Filters, Transaction, transactionCategories } from '@/types/transaction';
+import { Filters, Transaction, defaultTransactionCategories } from '@/types/transaction';
 import TransactionCards from './transaction-cards';
 import { SortDirection } from './transactions-header/sort-button';
 import TransactionsHeader from './transactions-header/transactions.header';
 import { Sorts } from './transactions-header/sort-by-menu';
 import { areStringsEqual, getStandardDate } from '@/lib/utils';
 import { getIsParentCategory } from '@/lib/category';
+import { ICategoryResponse } from '@/types/category';
 
 const Transactions = (): JSX.Element => {
   const [sort, setSort] = React.useState(Sorts.Date);
@@ -34,6 +35,22 @@ const Transactions = (): JSX.Element => {
     },
   });
 
+  const transactionCategoriesQuery = useQuery({
+    queryKey: ['transactionCategories'],
+    queryFn: async () => {
+      const res = await request({
+        url: '/api/transactionCategory',
+        method: 'GET',
+      });
+
+      if (res.status === 200) {
+        return res.data as ICategoryResponse[];
+      }
+
+      return undefined;
+    },
+  });
+
   const filteredTransactions = React.useMemo(() => {
     let filteredTransactions = transactionsQuery.data ?? [];
     if (filters.accounts.length > 0) {
@@ -43,7 +60,10 @@ const Transactions = (): JSX.Element => {
     }
     if (filters.category && filters.category.length > 0) {
       filteredTransactions = filteredTransactions.filter((t) =>
-        getIsParentCategory(filters.category, transactionCategories)
+        getIsParentCategory(
+          filters.category,
+          defaultTransactionCategories.concat(transactionCategoriesQuery.data ?? [])
+        )
           ? areStringsEqual(t.category ?? '', filters.category)
           : areStringsEqual(t.subcategory ?? '', filters.category)
       );
@@ -65,7 +85,7 @@ const Transactions = (): JSX.Element => {
     return filteredTransactions;
   }, [filters, transactionsQuery.data]);
 
-  if (transactionsQuery.isPending) {
+  if (transactionsQuery.isPending || transactionCategoriesQuery.isPending) {
     return <Skeleton className="h-[550px] w-full rounded-xl" />;
   }
 

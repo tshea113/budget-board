@@ -3,10 +3,14 @@ import { Separator } from '@/components/ui/separator';
 import BudgetTotal from './budget-total';
 import { type BudgetResponse } from '@/types/budget';
 import { BudgetGroup, getBudgetsForGroup, sumBudgetAmounts } from '@/lib/budgets';
-import { type Transaction } from '@/types/transaction';
+import { defaultTransactionCategories, type Transaction } from '@/types/transaction';
 import { areStringsEqual } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { sumTransactionAmounts } from '@/lib/transactions';
+import React from 'react';
+import { AuthContext } from '@/components/auth-provider';
+import { useQuery } from '@tanstack/react-query';
+import { ICategoryResponse } from '@/types/category';
 
 interface BudgetTotalCardProps {
   budgetData: BudgetResponse[];
@@ -15,7 +19,28 @@ interface BudgetTotalCardProps {
 }
 
 const BudgetTotalCard = (props: BudgetTotalCardProps): JSX.Element => {
-  if (props.isPending) {
+  const { request } = React.useContext<any>(AuthContext);
+  const transactionCategoriesQuery = useQuery({
+    queryKey: ['transactionCategories'],
+    queryFn: async () => {
+      const res = await request({
+        url: '/api/transactionCategory',
+        method: 'GET',
+      });
+
+      if (res.status === 200) {
+        return res.data as ICategoryResponse[];
+      }
+
+      return undefined;
+    },
+  });
+
+  const transactionCategoriesWithCustom = defaultTransactionCategories.concat(
+    transactionCategoriesQuery.data ?? []
+  );
+
+  if (props.isPending || transactionCategoriesQuery.isPending) {
     return (
       <Card>
         <div className="m-3 flex flex-col space-y-3">
@@ -35,7 +60,13 @@ const BudgetTotalCard = (props: BudgetTotalCardProps): JSX.Element => {
         amount={sumTransactionAmounts(
           props.transactionData.filter((t) => areStringsEqual(t.category ?? '', 'Income'))
         )}
-        total={sumBudgetAmounts(getBudgetsForGroup(props.budgetData, BudgetGroup.Income))}
+        total={sumBudgetAmounts(
+          getBudgetsForGroup(
+            props.budgetData,
+            BudgetGroup.Income,
+            transactionCategoriesWithCustom
+          )
+        )}
         isIncome={true}
       />
       <BudgetTotal
@@ -46,7 +77,11 @@ const BudgetTotalCard = (props: BudgetTotalCardProps): JSX.Element => {
           )
         )}
         total={sumBudgetAmounts(
-          getBudgetsForGroup(props.budgetData, BudgetGroup.Spending)
+          getBudgetsForGroup(
+            props.budgetData,
+            BudgetGroup.Spending,
+            transactionCategoriesWithCustom
+          )
         )}
         isIncome={false}
       />

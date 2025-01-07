@@ -3,6 +3,13 @@ export interface ICategory {
   parent: string;
 }
 
+export interface ICategoryResponse extends ICategory {
+  id: string;
+  value: string;
+  parent: string;
+  userId: string;
+}
+
 export interface ICategoryNode extends ICategory {
   subCategories: ICategory[];
 }

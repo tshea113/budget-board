@@ -1,10 +1,7 @@
-import {
-  hiddenTransactionCategory,
-  transactionCategories,
-  type Transaction,
-} from '@/types/transaction';
+import { hiddenTransactionCategory, type Transaction } from '@/types/transaction';
 import { getIsParentCategory } from './category';
 import { areStringsEqual } from './utils';
+import { ICategory } from '@/types/category';
 
 export const filterVisibleTransactions = (transactions: Transaction[]): Transaction[] =>
   transactions.filter((t: Transaction) => t.deleted === null);
@@ -63,7 +60,8 @@ export const getTransactionsForMonth = (
  */
 export const sumTransactionAmountsByCategory = (
   transactionData: Transaction[],
-  categoryToSum: string
+  categoryToSum: string,
+  transactionCategories: ICategory[]
 ): number => {
   const transactionsForCategory = transactionData.filter((t: Transaction) => {
     // We need to figure out whether the category we are comparing on is a category or subcategory
