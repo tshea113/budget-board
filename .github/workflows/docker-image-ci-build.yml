@@ -42,6 +42,7 @@ jobs:
         with:
           filename: "/.env"
           placeholder: "VITE_VERSION=${VERSION}"
+        if: ${{ github.event_name == 'release' }}
 
       - name: Log in to the Container registry
         uses: docker/login-action@v3
