@@ -4,14 +4,16 @@ import LoadingIcon from '@/components/loading-icon';
 import ResponsiveButton from '@/components/responsive-button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { Skeleton } from '@/components/ui/skeleton';
 import { getSignForBudget } from '@/lib/budgets';
 import { getFormattedCategoryValue } from '@/lib/category';
 import { translateAxiosError } from '@/lib/requests';
 import { cn, convertNumberToCurrency, getProgress } from '@/lib/utils';
 import { type BudgetResponse } from '@/types/budget';
-import { transactionCategories } from '@/types/transaction';
+import { ICategoryResponse } from '@/types/category';
+import { defaultTransactionCategories } from '@/types/transaction';
 import { TrashIcon } from '@radix-ui/react-icons';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import React from 'react';
 import { toast } from 'sonner';
@@ -32,6 +34,22 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
   );
 
   const { request } = React.useContext<any>(AuthContext);
+
+  const transactionCategoriesQuery = useQuery({
+    queryKey: ['transactionCategories'],
+    queryFn: async () => {
+      const res = await request({
+        url: '/api/transactionCategory',
+        method: 'GET',
+      });
+
+      if (res.status === 200) {
+        return res.data as ICategoryResponse[];
+      }
+
+      return undefined;
+    },
+  });
 
   const queryClient = useQueryClient();
   const doEditBudget = useMutation({
@@ -83,6 +101,10 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
     if (props.budgets.length > 1) setIsSelected(false);
   }, [props.budgets]);
 
+  const transactionCategoriesWithCustom = defaultTransactionCategories.concat(
+    transactionCategoriesQuery.data ?? []
+  );
+
   return (
     <Card
       className={cn(
@@ -96,21 +118,33 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
       <div className="flex w-full flex-col px-3 py-1">
         <div className="flex min-h-10 flex-row items-center @container">
           <div className="flex min-h-8 w-2/5 flex-row items-center justify-start gap-2 md:w-1/2">
-            <span className="select-none text-lg font-semibold tracking-tight @sm:text-xl">
-              {getFormattedCategoryValue(
-                props.budgets[0].category,
-                transactionCategories
-              )}
-            </span>
+            {transactionCategoriesQuery.isPending ? (
+              <Skeleton className="h-8 w-full" />
+            ) : (
+              <span className="select-none text-lg font-semibold tracking-tight @sm:text-xl">
+                {getFormattedCategoryValue(
+                  props.budgets[0].category,
+                  transactionCategoriesWithCustom
+                )}
+              </span>
+            )}
             {(doEditBudget.isPending || doDeleteBudget.isPending) && <LoadingIcon />}
           </div>
           <div className="flex min-h-8 w-3/5 flex-row items-center justify-items-center text-base font-semibold @sm:text-lg md:w-1/2">
-            <span className="w-1/3 select-none text-center">
-              {convertNumberToCurrency(
-                props.amount * getSignForBudget(props.budgets[0].category),
-                false
-              )}
-            </span>
+            {transactionCategoriesQuery.isPending ? (
+              <Skeleton className="h-8 w-1/3" />
+            ) : (
+              <span className="w-1/3 select-none text-center">
+                {convertNumberToCurrency(
+                  props.amount *
+                    getSignForBudget(
+                      props.budgets[0].category,
+                      transactionCategoriesWithCustom
+                    ),
+                  false
+                )}
+              </span>
+            )}
             <EditableCurrencyCell
               className="w-1/3 text-center"
               inputClassName="h-7 px-1 @sm:h-8 @sm:text-lg text-base p-0 md:text-lg"
@@ -141,14 +175,22 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
             </span>
           </div>
         </div>
-        <Progress
-          className="h-2 w-full"
-          value={getProgress(
-            props.amount * getSignForBudget(props.budgets[0].category),
-            limit
-          )}
-          max={100}
-        />
+        {transactionCategoriesQuery.isPending ? (
+          <Skeleton className="h-2 w-full" />
+        ) : (
+          <Progress
+            className="h-2 w-full"
+            value={getProgress(
+              props.amount *
+                getSignForBudget(
+                  props.budgets[0].category,
+                  transactionCategoriesWithCustom
+                ),
+              limit
+            )}
+            max={100}
+          />
+        )}
       </div>
       {/* It's a little jank how this ruins the alignment of the columns when a row is
           selected, but I don't really know the best way to solve the issue, sine we run

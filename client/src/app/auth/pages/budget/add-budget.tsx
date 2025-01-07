@@ -1,15 +1,17 @@
 import { Input } from '@/components/ui/input';
 import ResponsiveButton from '@/components/responsive-button';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { translateAxiosError } from '@/lib/requests';
 import { type NewBudgetRequest } from '@/types/budget';
 import CategoryInput from '@/components/category-input';
 import { AxiosError } from 'axios';
 import { AuthContext } from '@/components/auth-provider';
 import React from 'react';
-import { transactionCategories } from '@/types/transaction';
+import { defaultTransactionCategories } from '@/types/transaction';
 import { toast } from 'sonner';
 import { SendIcon } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
+import { ICategoryResponse } from '@/types/category';
 
 interface AddBudgetProps {
   date: Date;
@@ -20,6 +22,22 @@ const AddBudget = (props: AddBudgetProps): JSX.Element => {
   const [newLimit, setNewLimit] = React.useState<string>('');
 
   const { request } = React.useContext<any>(AuthContext);
+
+  const transactionCategoriesQuery = useQuery({
+    queryKey: ['transactionCategories'],
+    queryFn: async () => {
+      const res = await request({
+        url: '/api/transactionCategory',
+        method: 'GET',
+      });
+
+      if (res.status === 200) {
+        return res.data as ICategoryResponse[];
+      }
+
+      return undefined;
+    },
+  });
 
   const queryClient = useQueryClient();
   const doAddBudget = useMutation({
@@ -42,11 +60,17 @@ const AddBudget = (props: AddBudgetProps): JSX.Element => {
     <div className="flex w-full flex-row gap-2">
       <div className="flex flex-col items-center justify-center gap-2">
         <div className="w-full">
-          <CategoryInput
-            selectedCategory={newCategory}
-            setSelectedCategory={setNewCategory}
-            categories={transactionCategories}
-          />
+          {transactionCategoriesQuery.isPending ? (
+            <Skeleton className="h-10 w-full" />
+          ) : (
+            <CategoryInput
+              selectedCategory={newCategory}
+              setSelectedCategory={setNewCategory}
+              categories={defaultTransactionCategories.concat(
+                transactionCategoriesQuery.data ?? []
+              )}
+            />
+          )}
         </div>
         <Input
           className="h-8 @sm:h-8"

@@ -60,6 +60,8 @@ namespace BudgetBoard.Database.Data
 
             modelBuilder.Entity<Balance>().ToTable("Balance");
 
+            modelBuilder.Entity<Category>().ToTable("TransactionCategory");
+
             modelBuilder.UseIdentityColumns();
         }
 
@@ -69,5 +71,6 @@ namespace BudgetBoard.Database.Data
         public DbSet<Budget> Budgets { get; set; }
         public DbSet<Goal> Goals { get; set; }
         public DbSet<Balance> Balances { get; set; }
+        public DbSet<Category> TransactionCategories { get; set; }
     }
 }

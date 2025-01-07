@@ -53,24 +53,6 @@ namespace BudgetBoard.Models
         }
     }
 
-    public class CategoryResponse
-    {
-        public Guid ID { get; set; }
-        public string Label { get; set; } = string.Empty;
-        public string Value { get; set; } = string.Empty;
-        public string Parent { get; set; } = string.Empty;
-        public Guid UserID { get; set; }
-
-        public CategoryResponse(Category category)
-        {
-            ID = category.ID;
-            Label = category.Label;
-            Value = category.Value;
-            Parent = category.Parent;
-            UserID = category.UserID;
-        }
-    }
-
     public class BalanceResponse
     {
         public Guid ID { get; set; }

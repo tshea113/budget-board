@@ -20,6 +20,7 @@ import { AuthContext } from '@/components/auth-provider';
 import { LoginCardState } from './welcome';
 import { toast } from 'sonner';
 import LoadingIcon from '@/components/loading-icon';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface LoginProps {
   setLoginCardState: (loginCardState: LoginCardState) => void;
@@ -31,6 +32,8 @@ const Login = (props: LoginProps): JSX.Element => {
   const [resetLoading, setResetLoading] = React.useState(false);
 
   const { request, setAccessToken } = React.useContext<any>(AuthContext);
+
+  const queryClient = useQueryClient();
 
   const formSchema = z.object({
     email: z
@@ -84,6 +87,8 @@ const Login = (props: LoginProps): JSX.Element => {
         }
       })
       .finally(() => {
+        // Invalidate all old queries, so we refetch for new user.
+        queryClient.invalidateQueries();
         setLoading(false);
       });
   };
