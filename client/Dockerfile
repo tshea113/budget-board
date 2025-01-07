@@ -1,7 +1,6 @@
 FROM node:lts-alpine AS build-stage
 
-ARG VITE_API_URL
-ARG VITE_API_URL ${VITE_API_URL}
+RUN echo $VITE_VERSION
 
 ENV NODE_ENV=development
 ENV NODE_OPTIONS="--max-old-space-size=4096"

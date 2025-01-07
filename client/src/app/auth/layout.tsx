@@ -12,9 +12,11 @@ const DashboardLayout = (): JSX.Element => {
     <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
       <div className="flex w-screen flex-row justify-center">
         <AppSidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
-        <div className="flex w-full grow flex-col gap-2 p-3 2xl:max-w-screen-2xl">
+        <div className="flex min-h-screen w-full grow flex-col gap-2 p-3 2xl:max-w-screen-2xl">
           <Header />
-          <PageContent page={currentPage} />
+          <div className="grow">
+            <PageContent page={currentPage} />
+          </div>
         </div>
       </div>
     </SidebarProvider>
