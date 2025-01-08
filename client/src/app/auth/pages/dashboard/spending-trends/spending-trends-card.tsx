@@ -103,29 +103,26 @@ const SpendingTrendsCard = (): JSX.Element => {
 
   if (thisMonthTransactionsQuery.isPending || lastMonthTransactionsQuery.isPending) {
     return (
-      <Card>
-        <div className="m-3 flex flex-col space-y-3">
-          <div className="grid w-full grid-cols-2 items-center">
-            <Skeleton className="h-10 w-1/2 max-w-[125px] justify-self-start" />
-            <Skeleton className="h-6 w-1/2 max-w-[250px] justify-self-end" />
-          </div>
-          <Skeleton className="h-[250px] rounded-xl" />
+      <Card className="flex flex-col gap-2 p-2">
+        <div className="grid w-full grid-cols-2 items-center">
+          <Skeleton className="h-10 w-1/2 max-w-[125px] justify-self-start" />
+          <Skeleton className="h-6 w-1/2 max-w-[250px] justify-self-end" />
         </div>
+        <Skeleton className="aspect-video max-h-[400px] w-full rounded-xl" />
       </Card>
     );
   }
 
   return (
-    <Card className="w-full bg-card p-6 text-card-foreground">
-      <div className="flex flex-row items-center">
-        <span className="w-1/2 text-2xl font-semibold tracking-tight">
-          Spending Trends
-        </span>
-        <span className="w-1/2 text-right tracking-tight">
+    <Card className="flex w-full flex-col bg-card text-card-foreground">
+      <div className="flex flex-row items-center p-2">
+        <span className="w-1/2 text-2xl font-bold tracking-tight">Spending Trends</span>
+        <span className="w-1/2 text-right font-semibold tracking-tight">
           You have spent {getSpendingComparisonString()} last month.
         </span>
       </div>
-      <div>
+
+      <div className="p-2">
         <SpendingGraph
           months={[getDateFromMonthsAgo(0), getDateFromMonthsAgo(1)]}
           transactions={filterHiddenTransactions(

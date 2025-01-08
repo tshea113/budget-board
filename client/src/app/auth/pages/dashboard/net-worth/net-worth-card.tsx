@@ -9,6 +9,7 @@ import NetWorthItem from './net-worth-item';
 import { Skeleton } from '@/components/ui/skeleton';
 import { translateAxiosError } from '@/lib/requests';
 import { toast } from 'sonner';
+import { filterVisibleAccounts } from '@/lib/accounts';
 
 const NetWorthCard = (): JSX.Element => {
   const { request } = React.useContext<any>(AuthContext);
@@ -34,10 +35,6 @@ const NetWorthCard = (): JSX.Element => {
     }
   }, [accountsQuery.error]);
 
-  const validAccounts = React.useMemo(() => {
-    return (accountsQuery.data ?? []).filter((a) => !a.hideAccount);
-  }, [accountsQuery]);
-
   if (accountsQuery.isPending) {
     return (
       <Card>
@@ -49,31 +46,35 @@ const NetWorthCard = (): JSX.Element => {
     );
   }
 
+  const validAccounts = filterVisibleAccounts(accountsQuery.data ?? []);
+
   return (
-    <Card className="bg-card text-card-foreground">
-      <div className="p-2">
-        <span className="w-1/2 text-2xl font-semibold tracking-tight">Net Worth</span>
-      </div>
+    <Card className="flex flex-col">
+      <span className="p-2 text-2xl font-bold tracking-tight">Net Worth</span>
       <Separator />
-      <div className="flex flex-col space-y-2 p-2">
-        <NetWorthItem
-          accounts={validAccounts}
-          types={['Checking', 'Credit Card']}
-          title={'Spending'}
-        />
-        <NetWorthItem accounts={validAccounts} types={['Loan']} title={'Loans'} />
-        <NetWorthItem accounts={validAccounts} types={['Savings']} title={'Savings'} />
+      <div className="flex flex-col gap-2 p-2">
+        <div className="flex flex-col gap-1">
+          <NetWorthItem
+            accounts={validAccounts}
+            types={['Checking', 'Credit Card']}
+            title={'Spending'}
+          />
+          <NetWorthItem accounts={validAccounts} types={['Loan']} title={'Loans'} />
+          <NetWorthItem accounts={validAccounts} types={['Savings']} title={'Savings'} />
+        </div>
         <Separator />
-        <NetWorthItem
-          accounts={validAccounts}
-          types={['Checking', 'Credit Card', 'Loan', 'Savings']}
-          title={'Liquid'}
-        />
-        <NetWorthItem
-          accounts={validAccounts}
-          types={['Investment']}
-          title={'Investments'}
-        />
+        <div className="flex flex-col gap-1">
+          <NetWorthItem
+            accounts={validAccounts}
+            types={['Checking', 'Credit Card', 'Loan', 'Savings']}
+            title={'Liquid'}
+          />
+          <NetWorthItem
+            accounts={validAccounts}
+            types={['Investment']}
+            title={'Investments'}
+          />
+        </div>
         <Separator />
         <NetWorthItem accounts={validAccounts} title={'Total'} />
       </div>

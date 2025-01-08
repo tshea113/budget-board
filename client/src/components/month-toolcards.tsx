@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import BudgetsToolcard from './month-toolcard';
+import MonthToolcard from './month-toolcard';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import React from 'react';
 import { getDateFromMonthsAgo, isInArray } from '@/lib/utils';
@@ -58,7 +58,7 @@ const MonthToolCards = (props: BudgetsToolbarProps): JSX.Element => {
       </Button>
       <div className="flex grow flex-row-reverse justify-between">
         {dates.map((date: Date, i: number) => (
-          <BudgetsToolcard
+          <MonthToolcard
             key={i}
             date={date}
             isSelected={isInArray(date, props.selectedDates)}

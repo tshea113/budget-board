@@ -44,9 +44,9 @@ const MonthToolCard = (props: MonthToolCardProps): JSX.Element => {
       onClick={toggleIsSelected}
       onAnimationEnd={() => setSelectEffect(false)}
     >
-      <Card
+      <div
         className={cn(
-          'h-[20px] w-full',
+          'h-[20px] w-full rounded-lg',
           getLightColor(props.cashFlowValue, props.isSelected)
         )}
       />

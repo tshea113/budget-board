@@ -19,7 +19,7 @@ const DatePicker = (props: DatePickerProps): JSX.Element => {
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={'outline'}
+          variant="dropdown"
           className={cn(
             props.className,
             'min-w-[50px] max-w-full justify-start text-left font-normal',

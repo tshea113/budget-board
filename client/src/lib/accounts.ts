@@ -15,6 +15,15 @@ export const groupAccountsByInstitution = (accounts: Account[]): Map<string, Acc
     new Map<string, Account[]>()
   );
 
+/**
+ * Returns a list of accounts that match the given types.
+ * @param accounts A list of accounts
+ * @param types A list of types to match against
+ * @returns A list of accounts that match the given types
+ */
+export const getAccountsOfTypes = (accounts: Account[], types: string[]): Account[] =>
+  accounts.filter((a) => types?.includes(a.type) || types?.includes(a.subtype));
+
 export const filterVisibleAccounts = (accounts: Account[]): Account[] =>
   accounts.filter((a: Account) => !(a.hideAccount || a.deleted !== null));
 
