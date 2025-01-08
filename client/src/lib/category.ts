@@ -76,8 +76,5 @@ export const getParentCategory = (
 export const getIsParentCategory = (
   categoryValue: string,
   categories: ICategory[]
-): boolean => {
-  return (
-    categories.find((c) => areStringsEqual(c.value, categoryValue))?.parent.length === 0
-  );
-};
+): boolean =>
+  categories.find((c) => areStringsEqual(c.value, categoryValue))?.parent.length === 0;
