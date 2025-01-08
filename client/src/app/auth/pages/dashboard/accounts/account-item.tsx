@@ -9,7 +9,7 @@ const AccountItem = (props: AccountItemProps): JSX.Element => {
   return (
     <div className="flex flex-col px-1">
       <div className="flex flex-row justify-between">
-        <span className="text-base tracking-tight">{props.account.name}</span>
+        <span className="text-base font-medium tracking-tight">{props.account.name}</span>
         <span
           className={cn(
             'font-semibold',
@@ -19,7 +19,7 @@ const AccountItem = (props: AccountItemProps): JSX.Element => {
           {convertNumberToCurrency(props.account.currentBalance, true)}
         </span>
       </div>
-      <span className="text-sm text-muted-foreground">
+      <span className="text-sm tracking-tight text-muted-foreground">
         {'Last updated: '}
         {props.account.balanceDate
           ? new Date(props.account.balanceDate).toLocaleString()

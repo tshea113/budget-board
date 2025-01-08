@@ -6,7 +6,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { GearIcon } from '@radix-ui/react-icons';
 import { type Account } from '@/types/account';
 import DeletedAccountsCards from './delete/deleted-accounts-cards';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -20,6 +19,7 @@ import { AxiosError } from 'axios';
 import { toast } from 'sonner';
 import { translateAxiosError } from '@/lib/requests';
 import ResponsiveButton from '@/components/responsive-button';
+import { SettingsIcon } from 'lucide-react';
 
 interface AccountsConfigurationProps {
   institutions: Institution[];
@@ -64,8 +64,8 @@ const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element =
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <GearIcon className="h-4 w-4" />
+        <Button variant="ghost" className="h-8 w-9 p-0">
+          <SettingsIcon className="h-5 w-5" />
         </Button>
       </SheetTrigger>
       <SheetTitle hidden />
