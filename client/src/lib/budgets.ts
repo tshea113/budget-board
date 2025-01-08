@@ -1,6 +1,6 @@
 import { CashFlowValue, type BudgetResponse } from '@/types/budget';
 import { Transaction } from '@/types/transaction';
-import { getParentCategory } from './category';
+import { getIsParentCategory, getParentCategory } from './category';
 import { areStringsEqual } from './utils';
 import { ICategory } from '@/types/category';
 
@@ -122,7 +122,7 @@ export const getUnbudgetedTransactions = (
 
   const filteredGroupedTransactions = groupedTransactions.filter((t) => {
     return !budgets.some(({ category }) => {
-      if (areStringsEqual(category, getParentCategory(category, transactionCategories))) {
+      if (getIsParentCategory(category, transactionCategories)) {
         // The budget is for a parent category, so check if it is the transaction's parent category
         return areStringsEqual(category, getParentCategory(t[0], transactionCategories));
       } else {
