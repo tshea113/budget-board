@@ -16,8 +16,8 @@ const InstitutionItem = (props: InstitutionItemProps): JSX.Element => {
 
   return (
     <div className="flex flex-col gap-2">
-      <Card className="rounded-none bg-card-accent px-1">
-        <span className="text-lg font-semibold tracking-tight text-card-accent-foreground">
+      <Card className="rounded-none bg-muted px-1">
+        <span className="text-lg font-semibold tracking-tight">
           {props.institution.name}
         </span>
       </Card>
