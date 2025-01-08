@@ -39,6 +39,7 @@ jobs:
 
       - name: Create .env File
         run: touch client/.env
+          echo "VITE_VERSION=${VERSION}" >> client/.env
         if: github.event_name == 'release'
 
       - name: Write Version to File
@@ -46,6 +47,10 @@ jobs:
         with:
           filename: "client/.env"
           placeholder: "VITE_VERSION=${VERSION}"
+        if: github.event_name == 'release'
+
+      - name: Print Version
+        run: cat client/.env
         if: github.event_name == 'release'
 
       - name: Log in to the Container registry
