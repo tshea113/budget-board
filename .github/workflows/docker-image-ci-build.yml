@@ -44,7 +44,7 @@ jobs:
       - name: Write Version to File
         uses: brettdorrans/write-version-to-file@v1.1.0
         with:
-          filename: "/client/.env"
+          filename: "client/.env"
           placeholder: "VITE_VERSION=${VERSION}"
         if: github.event_name == 'release'
 
