@@ -38,8 +38,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Create .env File
-        run: touch client/.env
-          echo "VITE_VERSION=${VERSION}" >> client/.env
+        run: echo "VITE_VERSION=${VERSION}" >> client/.env
         if: github.event_name == 'release'
 
       - name: Write Version to File
