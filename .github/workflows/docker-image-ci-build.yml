@@ -49,10 +49,6 @@ jobs:
           placeholder: "VITE_VERSION=${VERSION}"
         if: github.event_name == 'release'
 
-      - name: Print Version
-        run: cat client/.env
-        if: github.event_name == 'release'
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
