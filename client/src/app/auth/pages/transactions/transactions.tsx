@@ -8,9 +8,8 @@ import TransactionCards from './transaction-cards';
 import { SortDirection } from './transactions-header/sort-button';
 import TransactionsHeader from './transactions-header/transactions.header';
 import { Sorts } from './transactions-header/sort-by-menu';
-import { areStringsEqual, getStandardDate } from '@/lib/utils';
-import { getIsParentCategory } from '@/lib/category';
 import { ICategoryResponse } from '@/types/category';
+import { getFilteredTransactions } from '@/lib/transactions';
 
 const Transactions = (): JSX.Element => {
   const [sort, setSort] = React.useState(Sorts.Date);
@@ -51,39 +50,15 @@ const Transactions = (): JSX.Element => {
     },
   });
 
-  const filteredTransactions = React.useMemo(() => {
-    let filteredTransactions = transactionsQuery.data ?? [];
-    if (filters.accounts.length > 0) {
-      filteredTransactions = filteredTransactions.filter((t) =>
-        filters.accounts.some((f) => areStringsEqual(f, t.accountID))
-      );
-    }
-    if (filters.category && filters.category.length > 0) {
-      filteredTransactions = filteredTransactions.filter((t) =>
-        getIsParentCategory(
-          filters.category,
-          defaultTransactionCategories.concat(transactionCategoriesQuery.data ?? [])
-        )
-          ? areStringsEqual(t.category ?? '', filters.category)
-          : areStringsEqual(t.subcategory ?? '', filters.category)
-      );
-    }
-    if (filters.dateRange?.from) {
-      filteredTransactions = filteredTransactions.filter(
-        (t) =>
-          getStandardDate(t.date).getTime() >=
-          getStandardDate(filters.dateRange!.from!).getTime()
-      );
-    }
-    if (filters.dateRange?.to) {
-      filteredTransactions = filteredTransactions.filter(
-        (t) =>
-          getStandardDate(t.date).getTime() <=
-          getStandardDate(filters.dateRange!.to!).getTime()
-      );
-    }
-    return filteredTransactions;
-  }, [filters, transactionsQuery.data]);
+  const transactionCategoriesWithCustom = defaultTransactionCategories.concat(
+    transactionCategoriesQuery.data ?? []
+  );
+
+  const filteredTransactions = getFilteredTransactions(
+    transactionsQuery.data ?? [],
+    filters,
+    transactionCategoriesWithCustom
+  );
 
   if (transactionsQuery.isPending || transactionCategoriesQuery.isPending) {
     return <Skeleton className="h-[550px] w-full rounded-xl" />;

@@ -1,6 +1,10 @@
-import { hiddenTransactionCategory, type Transaction } from '@/types/transaction';
+import {
+  Filters,
+  hiddenTransactionCategory,
+  type Transaction,
+} from '@/types/transaction';
 import { getIsParentCategory } from './category';
-import { areStringsEqual } from './utils';
+import { areStringsEqual, getStandardDate } from './utils';
 import { ICategory } from '@/types/category';
 
 export const filterVisibleTransactions = (transactions: Transaction[]): Transaction[] =>
@@ -34,6 +38,48 @@ export const formatDate = (date: Date): string => {
     day: 'numeric',
   };
   return new Date(date).toLocaleDateString([], options);
+};
+
+/**
+ * Filters transactions based on the provided filters
+ * @param transactions The array of transactions to filter
+ * @param filters The filters to apply to the transactions
+ * @param transactionCategories The list of transaction categories
+ * @returns The filtered transactions
+ */
+export const getFilteredTransactions = (
+  transactions: Transaction[],
+  filters: Filters,
+  transactionCategories: ICategory[]
+): Transaction[] => {
+  let filteredTransactions = transactions;
+  if (filters.accounts.length > 0) {
+    filteredTransactions = filteredTransactions.filter((t) =>
+      filters.accounts.some((f) => areStringsEqual(f, t.accountID))
+    );
+  }
+  if (filters.category && filters.category.length > 0) {
+    filteredTransactions = filteredTransactions.filter((t) =>
+      getIsParentCategory(filters.category, transactionCategories)
+        ? areStringsEqual(t.category ?? '', filters.category)
+        : areStringsEqual(t.subcategory ?? '', filters.category)
+    );
+  }
+  if (filters.dateRange?.from) {
+    filteredTransactions = filteredTransactions.filter(
+      (t) =>
+        getStandardDate(t.date).getTime() >=
+        getStandardDate(filters.dateRange!.from!).getTime()
+    );
+  }
+  if (filters.dateRange?.to) {
+    filteredTransactions = filteredTransactions.filter(
+      (t) =>
+        getStandardDate(t.date).getTime() <=
+        getStandardDate(filters.dateRange!.to!).getTime()
+    );
+  }
+  return filteredTransactions;
 };
 
 /**
