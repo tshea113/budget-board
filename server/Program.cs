@@ -132,8 +132,8 @@ if (!builder.Configuration.GetValue<bool>("DISABLE_AUTO_SYNC"))
                 .ForJob(jobKey)
                 // Allow a minute for everything to settle after boot before starting the job
                 .StartAt(DateBuilder.FutureDate(1, IntervalUnit.Minute))
-                // Every day at 5am and 5pm
-                .WithCronSchedule("0 0 5,17 * * ?"));
+                // Sync every 8 hours
+                .WithSimpleSchedule(schedule => schedule.WithIntervalInHours(8).RepeatForever()));
     });
 
     builder.Services.AddQuartzHostedService(options =>
