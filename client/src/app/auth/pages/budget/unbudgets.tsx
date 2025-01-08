@@ -5,7 +5,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { BudgetResponse } from '@/types/budget';
-import { Transaction } from '@/types/transaction';
+import { defaultTransactionCategories, Transaction } from '@/types/transaction';
 import UnbudgetCard from './unbudget-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { convertNumberToCurrency } from '@/lib/utils';
@@ -40,6 +40,10 @@ const Unbudgets = (props: UnbudgetProps): JSX.Element => {
     },
   });
 
+  const transactionCategoriesWithCustom = defaultTransactionCategories.concat(
+    transactionCategoriesQuery.data ?? []
+  );
+
   if (props.isPending || transactionCategoriesQuery.isPending) {
     return (
       <div className="flex items-center justify-center">
@@ -62,7 +66,7 @@ const Unbudgets = (props: UnbudgetProps): JSX.Element => {
                   getUnbudgetedTransactions(
                     props.budgets,
                     props.transactions,
-                    transactionCategoriesQuery.data ?? []
+                    transactionCategoriesWithCustom
                   ).reduce((a: number, b: Unbudget) => {
                     return a + b.amount;
                   }, 0)
@@ -75,7 +79,7 @@ const Unbudgets = (props: UnbudgetProps): JSX.Element => {
           {getUnbudgetedTransactions(
             props.budgets,
             props.transactions,
-            transactionCategoriesQuery.data ?? []
+            transactionCategoriesWithCustom
           ).map((unbudget: Unbudget) => (
             <UnbudgetCard
               key={unbudget.category}

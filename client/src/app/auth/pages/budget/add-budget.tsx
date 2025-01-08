@@ -56,6 +56,10 @@ const AddBudget = (props: AddBudgetProps): JSX.Element => {
     },
   });
 
+  const transactionCategoriesWithCustom = defaultTransactionCategories.concat(
+    transactionCategoriesQuery.data ?? []
+  );
+
   return (
     <div className="flex w-full flex-row gap-2">
       <div className="flex flex-col items-center justify-center gap-2">
@@ -66,9 +70,7 @@ const AddBudget = (props: AddBudgetProps): JSX.Element => {
             <CategoryInput
               selectedCategory={newCategory}
               setSelectedCategory={setNewCategory}
-              categories={defaultTransactionCategories.concat(
-                transactionCategoriesQuery.data ?? []
-              )}
+              categories={transactionCategoriesWithCustom}
             />
           )}
         </div>

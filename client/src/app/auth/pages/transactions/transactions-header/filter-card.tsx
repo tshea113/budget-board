@@ -39,6 +39,10 @@ const FilterCard = (props: FilterCardProps): JSX.Element => {
     return <></>;
   }
 
+  const transactionCategoriesWithCustom = defaultTransactionCategories.concat(
+    transactionCategoriesQuery.data ?? []
+  );
+
   return (
     <Card className="flex flex-col gap-1 p-2">
       <span className="text-lg font-semibold">Filter</span>
@@ -73,9 +77,7 @@ const FilterCard = (props: FilterCardProps): JSX.Element => {
           ) : (
             <CategoryInput
               selectedCategory={props.filters.category}
-              categories={defaultTransactionCategories.concat(
-                transactionCategoriesQuery.data ?? []
-              )}
+              categories={transactionCategoriesWithCustom}
               setSelectedCategory={(newCategory: string) => {
                 props.setFilters({
                   ...props.filters,
