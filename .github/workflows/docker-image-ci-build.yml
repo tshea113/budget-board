@@ -37,6 +37,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Create .env File
+        run: touch /client/.env
+        if: github.event_name == 'release'
+
       - name: Write Version to File
         uses: brettdorrans/write-version-to-file@v1.1.0
         with:
