@@ -37,15 +37,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Create .env File
+        run: touch client/.env
+        if: github.event_name == 'release'
+
       - name: Write Version to File
         uses: brettdorrans/write-version-to-file@v1.1.0
         with:
           filename: "client/.env"
           placeholder: "VITE_VERSION=${VERSION}"
-        if: github.event_name == 'release'
-
-      - name: Print Version
-        run: cat client/.env
         if: github.event_name == 'release'
 
       - name: Log in to the Container registry
