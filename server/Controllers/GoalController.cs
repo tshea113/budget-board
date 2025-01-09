@@ -31,7 +31,21 @@ public class GoalController : ControllerBase
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
             if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-            return Ok(user.Goals.Select(g => new GoalResponse(g)));
+            var goalsResponse = new List<GoalResponse>();
+
+            var goals = user.Goals.ToList();
+            foreach (var goal in goals)
+            {
+                var goalResponse = new GoalResponse(goal)
+                {
+                    CompleteDate = GoalHelper.EstimateGoalCompleteDate(goal),
+                    MonthlyContribution = GoalHelper.EstimateGoalMonthlyContribution(goal)
+                };
+
+                goalsResponse.Add(goalResponse);
+            }
+
+            return Ok(goalsResponse);
         }
         catch (Exception ex)
         {

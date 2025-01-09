@@ -3,10 +3,10 @@ import { Account } from './account';
 export interface IGoalResponse {
   id: string;
   name: string;
-  completeDate: Date | null;
+  completeDate: Date;
   amount: number;
   initialAmount: number;
-  monthlyContribution: number | null;
+  monthlyContribution: number;
   accounts: Account[];
   userID: string;
 }

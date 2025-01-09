@@ -29,10 +29,10 @@ public class GoalResponse
 {
     public Guid ID { get; set; }
     public string Name { get; set; }
-    public DateTime? CompleteDate { get; set; }
+    public DateTime CompleteDate { get; set; }
     public decimal Amount { get; set; }
-    public decimal? InitialAmount { get; set; }
-    public decimal? MonthlyContribution { get; set; }
+    public decimal InitialAmount { get; set; }
+    public decimal MonthlyContribution { get; set; }
     public ICollection<AccountResponse> Accounts { get; set; }
     public Guid UserID { get; set; }
 
@@ -41,10 +41,10 @@ public class GoalResponse
     {
         ID = Guid.NewGuid();
         Name = string.Empty;
-        CompleteDate = null;
+        CompleteDate = DateTime.UnixEpoch;
         Amount = 0.0M;
-        InitialAmount = null;
-        MonthlyContribution = null;
+        InitialAmount = 0;
+        MonthlyContribution = 0;
         Accounts = [];
         UserID = Guid.NewGuid();
     }
@@ -53,10 +53,10 @@ public class GoalResponse
     {
         ID = goal.ID;
         Name = goal.Name;
-        CompleteDate = goal.CompleteDate;
+        CompleteDate = goal.CompleteDate ?? DateTime.UnixEpoch;
         Amount = goal.Amount;
-        InitialAmount = goal.InitialAmount;
-        MonthlyContribution = goal.MonthlyContribution;
+        InitialAmount = goal.InitialAmount ?? 0;
+        MonthlyContribution = goal.MonthlyContribution ?? 0;
         Accounts = goal.Accounts.Select(a => new AccountResponse(a)).ToList();
         UserID = goal.UserID;
     }
