@@ -1,5 +1,4 @@
 import DatePicker from '@/components/date-picker';
-import { calculateCompleteDate } from '@/lib/goals';
 import { IGoalResponse } from '@/types/goal';
 import React from 'react';
 
@@ -32,7 +31,12 @@ const EditableGoalTargetDateCell = (
       {props.isSelected && goalTargetDateValue ? (
         <DatePicker className="h-8" onDayClick={onDatePick} value={goalTargetDateValue} />
       ) : (
-        calculateCompleteDate(props.goal)
+        <span className="font-medium tracking-tight">
+          {new Date(props.goal.completeDate).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+          })}
+        </span>
       )}
     </>
   );

@@ -157,7 +157,7 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
         </div>
         <div className="flex w-full flex-row flex-wrap gap-2">
           <div className="flex flex-row gap-1 text-base">
-            <span>Projected:</span>
+            <span className="font-medium tracking-tight">Projected:</span>
             <EditableGoalTargetDateCell
               goal={props.goal}
               isSelected={isSelected}
