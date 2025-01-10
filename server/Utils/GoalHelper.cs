@@ -35,7 +35,8 @@ public static class GoalHelper
             var numberOfMonthsLeftWithInterest = Math.Ceiling(-1 * Math.Log((double)(1 - (amountLeft * interestRate / goal.MonthlyContribution ?? 0))) / Math.Log((double)(1 + interestRate)));
 
             // This include interest calculation is very shakey, so only enable it if requested.
-            if (includeInterest)
+            // For now, we will just apply this to loans.
+            if (includeInterest && goal.Amount == 0)
             {
                 return new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1)
                     .AddMonths(
@@ -49,7 +50,7 @@ public static class GoalHelper
         }
     }
 
-    public static decimal EstimateGoalMonthlyContribution(Goal goal)
+    public static decimal EstimateGoalMonthlyContribution(Goal goal, bool includeInterest = false)
     {
         if (goal.MonthlyContribution.HasValue)
         {
@@ -78,8 +79,23 @@ public static class GoalHelper
                 throw new ArgumentException("A monthly contribution cannot be estimated without a target date.");
             }
 
-            var numberOfMonthsLeft = ((goal.CompleteDate.Value.Year - DateTime.Now.Year) * 12) + (goal.CompleteDate.Value.Month - DateTime.Now.Month);
-            return amountLeft / numberOfMonthsLeft;
+            var numberOfMonthsLeft = (goal.CompleteDate.Value.Year - DateTime.Now.Year) * 12 +
+                (goal.CompleteDate.Value.Month - DateTime.Now.Month);
+
+            var monthlyPaymentsWithoutInterest = amountLeft / numberOfMonthsLeft;
+
+            var interestRate = EstimateInterestRate(goal);
+            var monthlyPaymentsWithInterest = amountLeft *
+                (interestRate * (decimal)Math.Pow(1 + (double)interestRate, numberOfMonthsLeft) /
+                (((decimal)Math.Pow(1 + (double)interestRate, numberOfMonthsLeft)) - 1));
+
+            // For now, we will just apply this to loans.
+            if (includeInterest && goal.Amount == 0)
+            {
+                return monthlyPaymentsWithInterest;
+            }
+
+            return monthlyPaymentsWithoutInterest;
         }
     }
 

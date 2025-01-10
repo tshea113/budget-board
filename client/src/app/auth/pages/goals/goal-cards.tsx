@@ -6,15 +6,22 @@ import { AuthContext } from '@/components/auth-provider';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 
-const GoalCards = (): JSX.Element => {
+interface GoalCardsProps {
+  includeInterest: boolean;
+}
+
+const GoalCards = (props: GoalCardsProps): JSX.Element => {
   const { request } = React.useContext<any>(AuthContext);
 
   const goalsQuery = useQuery({
-    queryKey: ['goals'],
+    queryKey: ['goals', { includeInterest: props.includeInterest }],
     queryFn: async (): Promise<IGoalResponse[]> => {
       const res: AxiosResponse = await request({
         url: '/api/goal',
         method: 'GET',
+        params: {
+          includeInterest: props.includeInterest,
+        },
       });
 
       if (res.status == 200) {
@@ -24,6 +31,10 @@ const GoalCards = (): JSX.Element => {
       return [];
     },
   });
+
+  React.useEffect(() => {
+    goalsQuery.refetch();
+  }, [props.includeInterest]);
 
   if (goalsQuery.isPending) {
     return (

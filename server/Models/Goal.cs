@@ -33,6 +33,7 @@ public class GoalResponse
     public decimal Amount { get; set; }
     public decimal InitialAmount { get; set; }
     public decimal MonthlyContribution { get; set; }
+    public decimal? EstimatedInterestRate { get; set; }
     public ICollection<AccountResponse> Accounts { get; set; }
     public Guid UserID { get; set; }
 
@@ -45,6 +46,7 @@ public class GoalResponse
         Amount = 0.0M;
         InitialAmount = 0;
         MonthlyContribution = 0;
+        EstimatedInterestRate = null;
         Accounts = [];
         UserID = Guid.NewGuid();
     }
@@ -57,6 +59,7 @@ public class GoalResponse
         Amount = goal.Amount;
         InitialAmount = goal.InitialAmount;
         MonthlyContribution = goal.MonthlyContribution ?? 0;
+        EstimatedInterestRate = null;
         Accounts = goal.Accounts.Select(a => new AccountResponse(a)).ToList();
         UserID = goal.UserID;
     }

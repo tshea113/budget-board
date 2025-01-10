@@ -25,13 +25,26 @@ const GoalDetails = (props: GoalDetailsProps): JSX.Element => {
       </PopoverTrigger>
       <PopoverContent className="p-3" align="start">
         <div>
-          <div className="flex flex-col">
-            <span className="pb-1 text-base font-semibold">Accounts</span>
-            {props.goal.accounts.map((account: Account) => (
-              <span key={account.id} className="text-sm">
-                {account.name}
-              </span>
-            ))}
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-col">
+              <span className="pb-1 text-base font-semibold">Accounts</span>
+              {props.goal.accounts.map((account: Account) => (
+                <span key={account.id} className="text-sm">
+                  {account.name}
+                </span>
+              ))}
+            </div>
+            {props.goal.estimatedInterestRate != null && (
+              <div className="flex flex-col">
+                <span className="pb-1 text-base font-semibold">Estimated APR</span>
+                <span className="text-sm">
+                  {props.goal.estimatedInterestRate.toLocaleString(undefined, {
+                    style: 'percent',
+                    minimumFractionDigits: 2,
+                  })}
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </PopoverContent>

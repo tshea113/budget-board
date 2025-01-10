@@ -7,6 +7,7 @@ export interface IGoalResponse {
   amount: number;
   initialAmount: number;
   monthlyContribution: number;
+  estimatedInterestRate: number | null;
   accounts: Account[];
   userID: string;
 }

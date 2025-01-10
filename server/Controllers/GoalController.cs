@@ -24,7 +24,7 @@ public class GoalController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get(bool includeInterest = false)
     {
         try
         {
@@ -38,8 +38,12 @@ public class GoalController : ControllerBase
             {
                 var goalResponse = new GoalResponse(goal)
                 {
-                    CompleteDate = GoalHelper.EstimateGoalCompleteDate(goal),
-                    MonthlyContribution = GoalHelper.EstimateGoalMonthlyContribution(goal)
+                    CompleteDate = GoalHelper.EstimateGoalCompleteDate(goal, includeInterest),
+                    MonthlyContribution = GoalHelper.EstimateGoalMonthlyContribution(goal, includeInterest),
+                    // This is a very shakey calculation, so only include it if requested.
+                    // For now, we will just apply this to loans.
+                    // The interest rate is estimated by month, so need to calculate the APR.
+                    EstimatedInterestRate = (includeInterest && goal.Amount == 0) ? GoalHelper.EstimateInterestRate(goal) * 12 : null
                 };
 
                 goalsResponse.Add(goalResponse);
@@ -85,7 +89,7 @@ public class GoalController : ControllerBase
                 UserID = user.Id,
             };
 
-            if (newGoal.InitialAmount.HasValue)
+            if (!newGoal.InitialAmount.HasValue)
             {
                 // The frontend will set the initial balance if we don't want to include existing balances
                 // in the goal.
