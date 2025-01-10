@@ -7,6 +7,7 @@ interface EditableDateCellProps {
   transaction: Transaction;
   isSelected: boolean;
   editCell: ((newTransaction: Transaction) => void) | undefined;
+  textClassName?: string;
 }
 
 const EditableDateCell = (props: EditableDateCellProps): JSX.Element => {
@@ -28,7 +29,7 @@ const EditableDateCell = (props: EditableDateCellProps): JSX.Element => {
       {props.isSelected ? (
         <DatePicker value={dateDisplayValue} onDayClick={onDatePick} />
       ) : (
-        <div className="w-full">{formatDate(dateDisplayValue)}</div>
+        <span className={props.textClassName}>{formatDate(dateDisplayValue)}</span>
       )}
     </div>
   );

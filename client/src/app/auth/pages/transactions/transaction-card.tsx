@@ -95,6 +95,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
             transaction={props.transaction}
             isSelected={isSelected}
             editCell={doEditTransaction.mutate}
+            textClassName="text-sm @xl:text-base"
           />
         </span>
         <span className="flex-auto @xl:w-[200px]">
@@ -102,6 +103,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
             transaction={props.transaction}
             isSelected={isSelected}
             editCell={doEditTransaction.mutate}
+            textClassName="font-semibold @xl:font-normal"
           />
         </span>
         <span className="@xl:w-[190px]">
@@ -109,6 +111,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
             transaction={props.transaction}
             isSelected={isSelected || props.type === TransactionCardType.Uncategorized}
             editCell={doEditTransaction.mutate}
+            textClassName="font-medium @xl:font-normal"
           />
         </span>
         <span className="w-[100px]">
