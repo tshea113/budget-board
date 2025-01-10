@@ -1,5 +1,4 @@
 import DatePicker from '@/components/date-picker';
-import { formatDate } from '@/lib/transactions';
 import { type Transaction } from '@/types/transaction';
 import React from 'react';
 
@@ -29,7 +28,13 @@ const EditableDateCell = (props: EditableDateCellProps): JSX.Element => {
       {props.isSelected ? (
         <DatePicker value={dateDisplayValue} onDayClick={onDatePick} />
       ) : (
-        <span className={props.textClassName}>{formatDate(dateDisplayValue)}</span>
+        <span className={props.textClassName}>
+          {new Date(dateDisplayValue).toLocaleDateString([], {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })}
+        </span>
       )}
     </div>
   );
