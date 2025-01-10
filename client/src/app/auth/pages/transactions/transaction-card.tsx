@@ -12,6 +12,8 @@ import EditableMerchantCell from './cells/editable-merchant-cell';
 import EditableDateCell from './cells/editable-date-cell';
 import LoadingIcon from '@/components/loading-icon';
 import { toast } from 'sonner';
+import ResponsiveButton from '@/components/responsive-button';
+import { TrashIcon } from 'lucide-react';
 
 interface TransactionCardProps {
   className?: string;
@@ -56,6 +58,18 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
     },
   });
 
+  const doDeleteTransaction = useMutation({
+    mutationFn: async (id: string) =>
+      await request({
+        url: '/api/transaction',
+        method: 'DELETE',
+        params: { guid: id },
+      }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['transactions'] });
+    },
+  });
+
   const toggleIsSelected = (): void => {
     if (props.type === TransactionCardType.Normal) {
       setIsSelected(!isSelected);
@@ -66,7 +80,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
   return (
     <Card
       className={cn(
-        '@container flex flex-row p-2',
+        'flex flex-row @container',
         props.type === TransactionCardType.Normal ? 'hover:border-primary' : '',
         isSelected ? 'bg-muted' : 'bg-card',
         selectEffect && 'animate-pop',
@@ -75,7 +89,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
       onClick={toggleIsSelected}
       onAnimationEnd={() => setSelectEffect(false)}
     >
-      <div className="@xl:flex-row @xl:items-center my-1 flex w-full flex-col flex-wrap gap-2">
+      <div className="my-0.5 flex w-full flex-col flex-wrap gap-2 p-2 @xl:flex-row @xl:items-center">
         <span className="@xl:w-[200px]">
           <EditableDateCell
             transaction={props.transaction}
@@ -83,7 +97,7 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
             editCell={doEditTransaction.mutate}
           />
         </span>
-        <span className="@xl:w-[200px] flex-auto">
+        <span className="flex-auto @xl:w-[200px]">
           <EditableMerchantCell
             transaction={props.transaction}
             isSelected={isSelected}
@@ -106,10 +120,24 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
             }
           />
         </span>
+        {doEditTransaction.isPending && <LoadingIcon className="h-5 w-5" />}
       </div>
-      <div className="content-center">
-        {doEditTransaction.isPending && <LoadingIcon className="mx-4 h-5 w-5" />}
-      </div>
+      {isSelected && (
+        <div className="items-center justify-center">
+          <ResponsiveButton
+            variant="destructive"
+            className="h-full w-10 p-0"
+            onClick={(e: any) => {
+              e.preventDefault();
+              e.stopPropagation();
+              doDeleteTransaction.mutate(props.transaction.id);
+            }}
+            loading={doDeleteTransaction.isPending}
+          >
+            <TrashIcon className="h-4 w-4" />
+          </ResponsiveButton>
+        </div>
+      )}
     </Card>
   );
 };

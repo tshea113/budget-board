@@ -1,4 +1,3 @@
-import { filterInvisibleTransactions } from '@/lib/transactions';
 import TransactionsConfiguration from '../transactions-configuration/transactions-configuration';
 import { Filters, Transaction } from '@/types/transaction';
 import { SortDirection } from './sort-button';
@@ -49,9 +48,7 @@ const TransactionsHeader = (props: TransactionsHeaderProps): JSX.Element => {
             <span>Filter</span>
             <FilterIcon className="h-4 w-4" />
           </Button>
-          <TransactionsConfiguration
-            transactions={filterInvisibleTransactions(props.transactions)}
-          />
+          <TransactionsConfiguration transactions={props.transactions} />
         </div>
       </div>
       <div className="flex flex-row justify-end">
