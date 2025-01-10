@@ -48,7 +48,11 @@ const TransactionsHeader = (props: TransactionsHeaderProps): JSX.Element => {
             <span>Filter</span>
             <FilterIcon className="h-4 w-4" />
           </Button>
-          <TransactionsConfiguration transactions={props.transactions} />
+          <TransactionsConfiguration
+            transactions={props.transactions.sort(
+              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+            )}
+          />
         </div>
       </div>
       <div className="flex flex-row justify-end">
