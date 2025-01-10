@@ -6,16 +6,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { type Transaction } from '@/types/transaction';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import DeletedTransactionsAccordion from './deleted-transactions-accordion';
 import AddCategoryAccordion from './custom-categories/custom-category-accordion';
 import { SettingsIcon } from 'lucide-react';
-import { getDeletedTransactions } from '@/lib/transactions';
 
 interface TransactionsConfigurationProps {
   className?: string;
-  transactions: Transaction[];
 }
 
 const TransactionsConfiguration = (
@@ -34,9 +31,7 @@ const TransactionsConfiguration = (
           <ScrollArea className="h-full" type="auto">
             <SheetHeader>Transactions Configuration</SheetHeader>
             <AddCategoryAccordion />
-            <DeletedTransactionsAccordion
-              deletedTransactions={getDeletedTransactions(props.transactions)}
-            />
+            <DeletedTransactionsAccordion />
           </ScrollArea>
         </SheetContent>
       </Sheet>

@@ -6,14 +6,43 @@ import {
 } from '@/components/ui/accordion';
 import { type Transaction } from '@/types/transaction';
 import DeletedTransactionCard from './deleted-transaction-card';
+import React from 'react';
+import { AuthContext } from '@/components/auth-provider';
+import { useQuery } from '@tanstack/react-query';
+import { AxiosResponse } from 'axios';
+import { getDeletedTransactions } from '@/lib/transactions';
+import { Skeleton } from '@/components/ui/skeleton';
 
-interface DeletedTransactionsAccordionProps {
-  deletedTransactions: Transaction[];
-}
+const DeletedTransactionsAccordion = (): JSX.Element => {
+  const { request } = React.useContext<any>(AuthContext);
 
-const DeletedTransactionsAccordion = (
-  props: DeletedTransactionsAccordionProps
-): JSX.Element => {
+  const transactionsQuery = useQuery({
+    queryKey: ['transactions', { getHidden: true }],
+    queryFn: async (): Promise<Transaction[]> => {
+      const res: AxiosResponse = await request({
+        url: '/api/transaction',
+        method: 'GET',
+        params: { getHidden: true },
+      });
+
+      if (res.status == 200) {
+        return res.data;
+      }
+
+      return [];
+    },
+  });
+
+  const deletedTransactions = getDeletedTransactions(
+    (transactionsQuery.data ?? []).sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    )
+  );
+
+  if (transactionsQuery.isPending) {
+    return <Skeleton className="h-14 w-full" />;
+  }
+
   return (
     <div className="px-3">
       <Accordion
@@ -27,8 +56,8 @@ const DeletedTransactionsAccordion = (
             <span>Deleted Transactions</span>
           </AccordionTrigger>
           <AccordionContent className="space-y-2">
-            {props.deletedTransactions.length !== 0 ? (
-              props.deletedTransactions.map((deletedTransaction: Transaction) => (
+            {deletedTransactions.length !== 0 ? (
+              deletedTransactions.map((deletedTransaction: Transaction) => (
                 <DeletedTransactionCard
                   key={deletedTransaction.id}
                   deletedTransaction={deletedTransaction}
