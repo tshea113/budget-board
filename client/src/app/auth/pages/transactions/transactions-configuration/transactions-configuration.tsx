@@ -11,6 +11,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import DeletedTransactionsAccordion from './deleted-transactions-accordion';
 import AddCategoryAccordion from './custom-categories/custom-category-accordion';
 import { SettingsIcon } from 'lucide-react';
+import { filterDeletedTransactions } from '@/lib/transactions';
 
 interface TransactionsConfigurationProps {
   className?: string;
@@ -33,7 +34,9 @@ const TransactionsConfiguration = (
           <ScrollArea className="h-full" type="auto">
             <SheetHeader>Transactions Configuration</SheetHeader>
             <AddCategoryAccordion />
-            <DeletedTransactionsAccordion deletedTransactions={props.transactions} />
+            <DeletedTransactionsAccordion
+              deletedTransactions={filterDeletedTransactions(props.transactions)}
+            />
           </ScrollArea>
         </SheetContent>
       </Sheet>

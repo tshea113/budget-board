@@ -6,6 +6,7 @@ interface EditableMerchantCellProps {
   transaction: Transaction;
   isSelected: boolean;
   editCell: ((newTransaction: Transaction) => void) | undefined;
+  textClassName?: string;
 }
 
 const EditableMerchantCell = (props: EditableMerchantCellProps): JSX.Element => {
@@ -38,7 +39,7 @@ const EditableMerchantCell = (props: EditableMerchantCellProps): JSX.Element => 
           type="text"
         />
       ) : (
-        <div className="text-wrap text-left">{merchantDisplayValue}</div>
+        <span className={props.textClassName}>{merchantDisplayValue}</span>
       )}
     </div>
   );

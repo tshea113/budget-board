@@ -10,7 +10,7 @@ import { ICategory } from '@/types/category';
 export const filterVisibleTransactions = (transactions: Transaction[]): Transaction[] =>
   transactions.filter((t: Transaction) => t.deleted === null);
 
-export const filterInvisibleTransactions = (transactions: Transaction[]): Transaction[] =>
+export const filterDeletedTransactions = (transactions: Transaction[]): Transaction[] =>
   transactions.filter((t: Transaction) => t.deleted !== null);
 
 export const filterTransactionsByCategory = (
@@ -52,7 +52,8 @@ export const getFilteredTransactions = (
   filters: Filters,
   transactionCategories: ICategory[]
 ): Transaction[] => {
-  let filteredTransactions = transactions;
+  // We don't want to include deleted transactions.
+  let filteredTransactions = filterVisibleTransactions(transactions);
   if (filters.accounts.length > 0) {
     filteredTransactions = filteredTransactions.filter((t) =>
       filters.accounts.some((f) => areStringsEqual(f, t.accountID))

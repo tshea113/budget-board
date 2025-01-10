@@ -35,20 +35,17 @@ const DeletedTransactionCard = (props: DeletedTransactionCardProps): JSX.Element
   });
 
   return (
-    <Card
-      key={props.deletedTransaction.id}
-      className="grid grid-cols-2 grid-rows-2 place-items-center p-2 md:grid-cols-3 md:grid-rows-1"
-    >
-      <span className="col-span-2 justify-self-start md:col-span-1">
-        {props.deletedTransaction.merchantName}
-      </span>
-      <span className="col-span-1">
-        {getDaysSinceDate(props.deletedTransaction.deleted) + ' days since deleted'}
-      </span>
-      <div className="col-span-1 justify-self-end md:place-self-center">
+    <Card key={props.deletedTransaction.id} className="flex flex-row">
+      <div className="flex flex-col gap-2 p-1">
+        <span className="text-sm">{props.deletedTransaction.merchantName}</span>
+        <span className="text-xs text-muted-foreground">
+          {getDaysSinceDate(props.deletedTransaction.deleted) + ' days since deleted'}
+        </span>
+      </div>
+      <div className="">
         <ResponsiveButton
           loading={doRestoreTransaction.isPending}
-          className="h-8 w-8 p-0"
+          className="h-full w-8 p-0"
           onClick={() => {
             doRestoreTransaction.mutate(props.deletedTransaction.id);
           }}

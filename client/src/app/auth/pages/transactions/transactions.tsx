@@ -67,7 +67,7 @@ const Transactions = (): JSX.Element => {
   return (
     <div className="flex w-full flex-col items-center gap-4">
       <TransactionsHeader
-        transactions={filteredTransactions}
+        transactions={transactionsQuery.data ?? []}
         sort={sort}
         setSort={setSort}
         sortDirection={sortDirection}
