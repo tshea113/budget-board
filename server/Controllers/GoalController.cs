@@ -85,7 +85,7 @@ public class GoalController : ControllerBase
                 UserID = user.Id,
             };
 
-            if (newGoal.InitialAmount == null)
+            if (newGoal.InitialAmount.HasValue)
             {
                 // The frontend will set the initial balance if we don't want to include existing balances
                 // in the goal.
@@ -93,7 +93,7 @@ public class GoalController : ControllerBase
             }
             else
             {
-                goal.InitialAmount = newGoal.InitialAmount;
+                goal.InitialAmount = newGoal.InitialAmount!.Value;
             }
 
             user.Goals.Add(goal);

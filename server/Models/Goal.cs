@@ -55,7 +55,7 @@ public class GoalResponse
         Name = goal.Name;
         CompleteDate = goal.CompleteDate ?? DateTime.UnixEpoch;
         Amount = goal.Amount;
-        InitialAmount = goal.InitialAmount ?? 0;
+        InitialAmount = goal.InitialAmount;
         MonthlyContribution = goal.MonthlyContribution ?? 0;
         Accounts = goal.Accounts.Select(a => new AccountResponse(a)).ToList();
         UserID = goal.UserID;
