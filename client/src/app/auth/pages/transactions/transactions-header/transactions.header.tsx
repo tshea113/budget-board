@@ -1,5 +1,5 @@
 import TransactionsConfiguration from '../transactions-configuration/transactions-configuration';
-import { Filters, Transaction } from '@/types/transaction';
+import { Filters } from '@/types/transaction';
 import { SortDirection } from './sort-button';
 import SortByMenu, { Sorts } from './sort-by-menu';
 import { Button } from '@/components/ui/button';
@@ -9,7 +9,6 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 
 interface TransactionsHeaderProps {
-  transactions: Transaction[];
   sort: Sorts;
   setSort: (newSort: Sorts) => void;
   sortDirection: SortDirection;
@@ -48,11 +47,7 @@ const TransactionsHeader = (props: TransactionsHeaderProps): JSX.Element => {
             <span>Filter</span>
             <FilterIcon className="h-4 w-4" />
           </Button>
-          <TransactionsConfiguration
-            transactions={props.transactions.sort(
-              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-            )}
-          />
+          <TransactionsConfiguration />
         </div>
       </div>
       <div className="flex flex-row justify-end">
