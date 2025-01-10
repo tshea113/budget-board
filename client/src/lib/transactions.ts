@@ -7,13 +7,13 @@ import { getIsParentCategory } from './category';
 import { areStringsEqual, getStandardDate } from './utils';
 import { ICategory } from '@/types/category';
 
-export const filterVisibleTransactions = (transactions: Transaction[]): Transaction[] =>
-  transactions.filter((t: Transaction) => t.deleted === null);
-
-export const filterInvisibleTransactions = (transactions: Transaction[]): Transaction[] =>
-  transactions.filter((t: Transaction) => t.deleted !== null);
-
-export const filterTransactionsByCategory = (
+/**
+ * Filters transactions by the provided category value
+ * @param transactions The transactions to filter
+ * @param categoryValue The value to filter transactions by
+ * @returns The filtered transactions
+ */
+export const getTransactionsByCategory = (
   transactions: Transaction[],
   categoryValue: string
 ) =>
@@ -22,23 +22,30 @@ export const filterTransactionsByCategory = (
   );
 
 /**
- * Filters out the transactions with the 'Hide From Budgets' transaction category
+ * Filters out any deleted transactions.
+ * @param transactions A list of transactions
+ * @returns A list of transactions that are not deleted
+ */
+export const getVisibleTransactions = (transactions: Transaction[]): Transaction[] =>
+  transactions.filter((t: Transaction) => t.deleted === null);
+
+/**
+ * Filters out any transactions that are not deleted.
+ * @param transactions A list of transactions
+ * @returns A list of deleted transactions
+ */
+export const getDeletedTransactions = (transactions: Transaction[]): Transaction[] =>
+  transactions.filter((t: Transaction) => t.deleted !== null);
+
+/**
+ * Filters out the transactions that are delete or have the 'Hide From Budgets' transaction category
  * @param transactions Transactions to filter
  * @returns Filtered list of transactions
  */
 export const filterHiddenTransactions = (transactions: Transaction[]) =>
-  transactions.filter(
+  getVisibleTransactions(transactions).filter(
     (t) => !areStringsEqual(t.category ?? '', hiddenTransactionCategory)
   );
-
-export const formatDate = (date: Date): string => {
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  };
-  return new Date(date).toLocaleDateString([], options);
-};
 
 /**
  * Filters transactions based on the provided filters
@@ -52,7 +59,8 @@ export const getFilteredTransactions = (
   filters: Filters,
   transactionCategories: ICategory[]
 ): Transaction[] => {
-  let filteredTransactions = transactions;
+  // We don't want to include deleted transactions.
+  let filteredTransactions = getVisibleTransactions(transactions);
   if (filters.accounts.length > 0) {
     filteredTransactions = filteredTransactions.filter((t) =>
       filters.accounts.some((f) => areStringsEqual(f, t.accountID))

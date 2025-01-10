@@ -9,7 +9,6 @@ import {
 } from '@/lib/goals';
 import { convertNumberToCurrency, cn, getProgress } from '@/lib/utils';
 import { IGoalResponse } from '@/types/goal';
-import { TrashIcon } from '@radix-ui/react-icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import GoalDetails from './goal-details';
@@ -23,6 +22,7 @@ import EditableGoalTargetDateCell from './cells/editable-goal-target-date-cell';
 import EditableGoalMonthlyAmountCell from './cells/editable-goal-monthly-amount-cell';
 import LoadingIcon from '@/components/loading-icon';
 import { toast } from 'sonner';
+import { TrashIcon } from 'lucide-react';
 
 interface GoalCardProps {
   goal: IGoalResponse;
@@ -191,10 +191,10 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
         </div>
       </div>
       {isSelected && (
-        <div className="items-center justify-center">
+        <div>
           <ResponsiveButton
             variant="destructive"
-            className="h-full"
+            className="h-full w-11 p-0"
             onClick={(e: any) => {
               e.preventDefault();
               e.stopPropagation();
@@ -202,7 +202,7 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
             }}
             loading={doDeleteGoal.isPending}
           >
-            <TrashIcon />
+            <TrashIcon className="h-4 w-4" />
           </ResponsiveButton>
         </div>
       )}

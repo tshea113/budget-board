@@ -11,6 +11,7 @@ interface EditableCategoryCellProps {
   transaction: Transaction;
   isSelected: boolean;
   editCell: (newTransaction: Transaction) => void;
+  textClassName?: string;
 }
 
 const EditableCategoryCell = (props: EditableCategoryCellProps): JSX.Element => {
@@ -86,7 +87,7 @@ const EditableCategoryCell = (props: EditableCategoryCellProps): JSX.Element => 
           categories={transactionCategoriesWithCustom}
         />
       ) : (
-        <span>
+        <span className={props.textClassName}>
           {getFormattedCategoryValue(
             categoryDisplayValue,
             transactionCategoriesWithCustom

@@ -1,4 +1,3 @@
-import { filterInvisibleTransactions } from '@/lib/transactions';
 import TransactionsConfiguration from '../transactions-configuration/transactions-configuration';
 import { Filters, Transaction } from '@/types/transaction';
 import { SortDirection } from './sort-button';
@@ -50,7 +49,9 @@ const TransactionsHeader = (props: TransactionsHeaderProps): JSX.Element => {
             <FilterIcon className="h-4 w-4" />
           </Button>
           <TransactionsConfiguration
-            transactions={filterInvisibleTransactions(props.transactions)}
+            transactions={props.transactions.sort(
+              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+            )}
           />
         </div>
       </div>
