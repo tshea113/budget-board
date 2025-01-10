@@ -36,7 +36,7 @@ const DeletedTransactionCard = (props: DeletedTransactionCardProps): JSX.Element
 
   return (
     <Card key={props.deletedTransaction.id} className="flex flex-row">
-      <div className="flex flex-col gap-2 p-1">
+      <div className="flex grow flex-col gap-2 p-1">
         <span className="text-sm">{props.deletedTransaction.merchantName}</span>
         <span className="text-xs text-muted-foreground">
           {getDaysSinceDate(props.deletedTransaction.deleted) + ' days since deleted'}
