@@ -55,7 +55,7 @@ const GoalCards = (props: GoalCardsProps): JSX.Element => {
   return (
     <>
       {(goalsQuery.data ?? []).map((goal: IGoalResponse) => (
-        <GoalCard key={goal.id} goal={goal} />
+        <GoalCard key={goal.id} goal={goal} includeInterest={props.includeInterest} />
       ))}
     </>
   );

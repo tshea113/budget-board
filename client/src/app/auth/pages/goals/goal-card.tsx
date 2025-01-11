@@ -26,6 +26,7 @@ import { TrashIcon } from 'lucide-react';
 
 interface GoalCardProps {
   goal: IGoalResponse;
+  includeInterest: boolean;
 }
 
 const GoalCard = (props: GoalCardProps): JSX.Element => {
@@ -76,7 +77,9 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
         params: { guid: id },
       }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['goals'] });
+      await queryClient.invalidateQueries({
+        queryKey: ['goals', { includeInterest: props.includeInterest }],
+      });
     },
   });
 
@@ -88,22 +91,33 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
         data: newGoal,
       }),
     onMutate: async (variables: IGoalResponse) => {
-      await queryClient.cancelQueries({ queryKey: ['goals'] });
+      await queryClient.cancelQueries({
+        queryKey: ['goals', { includeInterest: props.includeInterest }],
+      });
 
-      const previousGoals: IGoalResponse[] = queryClient.getQueryData(['goals']) ?? [];
+      const previousGoals: IGoalResponse[] =
+        queryClient.getQueryData(['goals', { includeInterest: props.includeInterest }]) ??
+        [];
 
-      queryClient.setQueryData(['goals'], (oldGoals: IGoalResponse[]) =>
-        oldGoals.map((oldGoal) => (oldGoal.id === variables.id ? variables : oldGoal))
+      queryClient.setQueryData(
+        ['goals', { includeInterest: props.includeInterest }],
+        (oldGoals: IGoalResponse[]) =>
+          oldGoals?.map((oldGoal) => (oldGoal.id === variables.id ? variables : oldGoal))
       );
 
       return { previousGoals };
     },
     onError: (error: AxiosError, _variables: IGoalResponse, context) => {
-      queryClient.setQueryData(['goals'], context?.previousGoals ?? []);
+      queryClient.setQueryData(
+        ['goals', { includeInterest: props.includeInterest }],
+        context?.previousGoals ?? []
+      );
       toast.error(translateAxiosError(error));
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['goals'] });
+      queryClient.invalidateQueries({
+        queryKey: ['goals', { includeInterest: props.includeInterest }],
+      });
     },
   });
 

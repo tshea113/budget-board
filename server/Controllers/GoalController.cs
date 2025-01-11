@@ -39,7 +39,11 @@ public class GoalController : ControllerBase
                 var goalResponse = new GoalResponse(goal)
                 {
                     CompleteDate = GoalHelper.EstimateGoalCompleteDate(goal, includeInterest),
+                    // Have to manually set this, since we override the CompleteDate in the constructor.
+                    IsCompleteDateEditable = goal.CompleteDate != null,
                     MonthlyContribution = GoalHelper.EstimateGoalMonthlyContribution(goal, includeInterest),
+                    // Have to manually set this, since we override the MonthlyContribution in the constructor.
+                    IsMonthlyContributionEditable = goal.MonthlyContribution != null,
                     // This is a very shakey calculation, so only include it if requested.
                     // For now, we will just apply this to loans.
                     // The interest rate is estimated by month, so need to calculate the APR.
@@ -125,8 +129,8 @@ public class GoalController : ControllerBase
 
             goal.Name = editedGoal.Name;
             goal.Amount = editedGoal.Amount;
-            goal.CompleteDate = editedGoal.CompleteDate;
-            goal.MonthlyContribution = editedGoal.MonthlyContribution;
+            goal.CompleteDate = editedGoal.IsCompleteDateEditable ? editedGoal.CompleteDate : goal.CompleteDate;
+            goal.MonthlyContribution = editedGoal.IsMonthlyContributionEditable ? editedGoal.MonthlyContribution : goal.MonthlyContribution;
 
             await _userDataContext.SaveChangesAsync();
 

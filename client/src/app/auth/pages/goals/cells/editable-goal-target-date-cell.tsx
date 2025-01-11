@@ -11,7 +11,7 @@ interface EditableGoalTargetDateCellProps {
 const EditableGoalTargetDateCell = (
   props: EditableGoalTargetDateCellProps
 ): JSX.Element => {
-  const [goalTargetDateValue, setGoalTargetDateValue] = React.useState<Date | null>(
+  const [goalTargetDateValue, setGoalTargetDateValue] = React.useState<Date>(
     props.goal.completeDate
   );
 
@@ -28,7 +28,7 @@ const EditableGoalTargetDateCell = (
 
   return (
     <>
-      {props.isSelected && goalTargetDateValue ? (
+      {props.isSelected && props.goal.isCompleteDateEditable ? (
         <DatePicker className="h-8" onDayClick={onDatePick} value={goalTargetDateValue} />
       ) : (
         <span className="font-medium tracking-tight">

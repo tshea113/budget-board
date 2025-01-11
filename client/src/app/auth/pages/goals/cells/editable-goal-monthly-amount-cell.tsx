@@ -34,9 +34,9 @@ const EditableGoalMonthlyAmountCell = (
 
   return (
     <>
-      {props.isSelected ? (
+      {props.isSelected && props.goal.isMonthlyContributionEditable ? (
         <Input
-          className="ml-1 h-7 w-[85px] text-center text-lg"
+          className="ml-1 h-7 w-[65px] p-0 text-center text-lg"
           onClick={(e) => {
             e.stopPropagation();
           }}
