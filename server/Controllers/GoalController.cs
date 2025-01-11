@@ -24,14 +24,36 @@ public class GoalController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get(bool includeInterest = false)
     {
         try
         {
             var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
             if (user == null) return Unauthorized("You are not authorized to access this content.");
 
-            return Ok(user.Goals.Select(g => new GoalResponse(g)));
+            var goalsResponse = new List<GoalResponse>();
+
+            var goals = user.Goals.ToList();
+            foreach (var goal in goals)
+            {
+                var goalResponse = new GoalResponse(goal)
+                {
+                    CompleteDate = GoalHelper.EstimateGoalCompleteDate(goal, includeInterest),
+                    // Have to manually set this, since we override the CompleteDate in the constructor.
+                    IsCompleteDateEditable = goal.CompleteDate != null,
+                    MonthlyContribution = GoalHelper.EstimateGoalMonthlyContribution(goal, includeInterest),
+                    // Have to manually set this, since we override the MonthlyContribution in the constructor.
+                    IsMonthlyContributionEditable = goal.MonthlyContribution != null,
+                    // This is a very shakey calculation, so only include it if requested.
+                    // For now, we will just apply this to loans.
+                    // The interest rate is estimated by month, so need to calculate the APR.
+                    EstimatedInterestRate = (includeInterest && goal.Amount == 0) ? GoalHelper.EstimateInterestRate(goal) * 12 : null
+                };
+
+                goalsResponse.Add(goalResponse);
+            }
+
+            return Ok(goalsResponse);
         }
         catch (Exception ex)
         {
@@ -71,7 +93,7 @@ public class GoalController : ControllerBase
                 UserID = user.Id,
             };
 
-            if (newGoal.InitialAmount == null)
+            if (!newGoal.InitialAmount.HasValue)
             {
                 // The frontend will set the initial balance if we don't want to include existing balances
                 // in the goal.
@@ -79,7 +101,7 @@ public class GoalController : ControllerBase
             }
             else
             {
-                goal.InitialAmount = newGoal.InitialAmount;
+                goal.InitialAmount = newGoal.InitialAmount!.Value;
             }
 
             user.Goals.Add(goal);
@@ -107,8 +129,8 @@ public class GoalController : ControllerBase
 
             goal.Name = editedGoal.Name;
             goal.Amount = editedGoal.Amount;
-            goal.CompleteDate = editedGoal.CompleteDate;
-            goal.MonthlyContribution = editedGoal.MonthlyContribution;
+            goal.CompleteDate = editedGoal.IsCompleteDateEditable ? editedGoal.CompleteDate : goal.CompleteDate;
+            goal.MonthlyContribution = editedGoal.IsMonthlyContributionEditable ? editedGoal.MonthlyContribution : goal.MonthlyContribution;
 
             await _userDataContext.SaveChangesAsync();
 

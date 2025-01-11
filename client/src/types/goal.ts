@@ -3,10 +3,13 @@ import { Account } from './account';
 export interface IGoalResponse {
   id: string;
   name: string;
-  completeDate: Date | null;
+  completeDate: Date;
+  isCompleteDateEditable: boolean;
   amount: number;
   initialAmount: number;
-  monthlyContribution: number | null;
+  monthlyContribution: number;
+  isMonthlyContributionEditable: boolean;
+  estimatedInterestRate: number | null;
   accounts: Account[];
   userID: string;
 }

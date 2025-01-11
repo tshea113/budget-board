@@ -1,5 +1,4 @@
 import DatePicker from '@/components/date-picker';
-import { calculateCompleteDate } from '@/lib/goals';
 import { IGoalResponse } from '@/types/goal';
 import React from 'react';
 
@@ -12,7 +11,7 @@ interface EditableGoalTargetDateCellProps {
 const EditableGoalTargetDateCell = (
   props: EditableGoalTargetDateCellProps
 ): JSX.Element => {
-  const [goalTargetDateValue, setGoalTargetDateValue] = React.useState<Date | null>(
+  const [goalTargetDateValue, setGoalTargetDateValue] = React.useState<Date>(
     props.goal.completeDate
   );
 
@@ -29,10 +28,15 @@ const EditableGoalTargetDateCell = (
 
   return (
     <>
-      {props.isSelected && goalTargetDateValue ? (
+      {props.isSelected && props.goal.isCompleteDateEditable ? (
         <DatePicker className="h-8" onDayClick={onDatePick} value={goalTargetDateValue} />
       ) : (
-        calculateCompleteDate(props.goal)
+        <span className="font-medium tracking-tight">
+          {new Date(props.goal.completeDate).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+          })}
+        </span>
       )}
     </>
   );

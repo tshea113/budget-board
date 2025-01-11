@@ -1,5 +1,4 @@
 import { Input } from '@/components/ui/input';
-import { getMonthlyContributionTotal } from '@/lib/goals';
 import { convertNumberToCurrency } from '@/lib/utils';
 import { IGoalResponse } from '@/types/goal';
 import React from 'react';
@@ -35,9 +34,9 @@ const EditableGoalMonthlyAmountCell = (
 
   return (
     <>
-      {props.isSelected && props.goal.monthlyContribution ? (
+      {props.isSelected && props.goal.isMonthlyContributionEditable ? (
         <Input
-          className="ml-1 h-7 w-[85px] text-center text-lg"
+          className="ml-1 h-7 w-[65px] p-0 text-center text-lg"
           onClick={(e) => {
             e.stopPropagation();
           }}
@@ -47,7 +46,7 @@ const EditableGoalMonthlyAmountCell = (
         />
       ) : (
         <span className="select-none font-semibold">
-          {convertNumberToCurrency(getMonthlyContributionTotal(props.goal))}
+          {convertNumberToCurrency(props.goal.monthlyContribution)}
         </span>
       )}
     </>
