@@ -3,7 +3,7 @@ import { Transaction, TransactionCardType } from '@/types/transaction';
 import { AxiosResponse } from 'axios';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
-import { getTransactionsByCategory } from '@/lib/transactions';
+import { getTransactionsByCategory, getVisibleTransactions } from '@/lib/transactions';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import PageIterator from './page-iterator';
 import TransactionCard from '../../transactions/transaction-card';
@@ -31,7 +31,8 @@ const UncategorizedTransactionsCard = (): JSX.Element => {
   });
 
   const filteredTransactions = React.useMemo(
-    () => getTransactionsByCategory(transactionsQuery.data ?? [], ''),
+    () =>
+      getVisibleTransactions(getTransactionsByCategory(transactionsQuery.data ?? [], '')),
     [transactionsQuery]
   );
 
