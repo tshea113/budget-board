@@ -23,6 +23,7 @@ import EditableGoalMonthlyAmountCell from './cells/editable-goal-monthly-amount-
 import LoadingIcon from '@/components/loading-icon';
 import { toast } from 'sonner';
 import { TrashIcon } from 'lucide-react';
+import { getVisibleTransactions } from '@/lib/transactions';
 
 interface GoalCardProps {
   goal: IGoalResponse;
@@ -123,7 +124,7 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
 
   const goalMonthlyContributionAmount = sumTransactionsForGoalForMonth(
     props.goal,
-    transactionsForMonthQuery.data ?? []
+    getVisibleTransactions(transactionsForMonthQuery.data ?? [])
   );
 
   return (
