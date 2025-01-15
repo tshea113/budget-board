@@ -108,7 +108,11 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
 
       return { previousGoals };
     },
-    onError: (error: AxiosError, _variables: IGoalResponse, context) => {
+    onError: (
+      error: AxiosError,
+      _variables: IGoalResponse,
+      context: { previousGoals: any }
+    ) => {
       queryClient.setQueryData(
         ['goals', { includeInterest: props.includeInterest }],
         context?.previousGoals ?? []
