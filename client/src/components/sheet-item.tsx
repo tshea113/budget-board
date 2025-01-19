@@ -1,4 +1,4 @@
-import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from './ui/sheet';
 import { DropdownMenuItem } from './ui/dropdown-menu';
 
 interface SheetItemProps {
@@ -23,6 +23,7 @@ const SheetItem = (props: SheetItemProps): JSX.Element => {
         </DropdownMenuItem>
       </SheetTrigger>
       <SheetContent className="w-[800px]" side={props.side ?? undefined}>
+        <SheetTitle className="hidden" />
         {props.children}
       </SheetContent>
     </Sheet>
