@@ -26,7 +26,7 @@ const TransactionsConfiguration = (
             <SettingsIcon className="h-5 w-5" />
           </Button>
         </SheetTrigger>
-        <SheetTitle hidden />
+        <SheetTitle className="hidden" />
         <SheetContent className="w-[400px] sm:max-w-[400px]" side="right">
           <ScrollArea className="h-full" type="auto">
             <SheetHeader>Transactions Configuration</SheetHeader>

@@ -68,7 +68,7 @@ const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element =
           <SettingsIcon className="h-5 w-5" />
         </Button>
       </SheetTrigger>
-      <SheetTitle hidden />
+      <SheetTitle className="hidden" />
       <SheetContent side="top" className="flex h-full w-full flex-row justify-center">
         <div className="w-full gap-3 pt-2 2xl:max-w-screen-2xl">
           <ScrollArea className="h-full pr-4" type="auto">
