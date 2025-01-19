@@ -12,7 +12,7 @@ const DarkModeToggle = (): JSX.Element => {
 
   return (
     <div className="flex flex-col gap-2 p-3">
-      <span className="text-lg font-bold tracking-tight">Theme</span>
+      <span className="text-lg font-semibold tracking-tight">Theme</span>
       <Select onValueChange={setTheme} defaultValue={theme}>
         <SelectTrigger>
           <SelectValue placeholder="Select a theme" />

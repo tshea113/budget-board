@@ -72,7 +72,9 @@ const AccountCard = (): JSX.Element => {
   return (
     <Card className="flex flex-col">
       <div className="flex flex-row items-center p-2">
-        <span className="w-full grow text-2xl font-bold tracking-tight">Accounts</span>
+        <span className="w-full grow text-2xl font-semibold tracking-tight">
+          Accounts
+        </span>
         <AccountsConfiguration
           institutions={institutionQuery.data ?? []}
           accounts={accountsQuery.data ?? []}
