@@ -1,4 +1,8 @@
-# Budget Board
+<div align="center" width="100%">
+  <img src="img/logo.svg" alt="Budget Board" height="100" />
+</div>
+
+---
 
 [![Build and Publish](https://github.com/tshea113/budget-board/actions/workflows/docker-image-ci-build.yml/badge.svg)](https://github.com/tshea113/budget-board/actions/workflows/docker-image-ci-build.yml)
 ![GitHub Release](https://img.shields.io/github/v/release/tshea113/budget-board)

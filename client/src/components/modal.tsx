@@ -17,7 +17,7 @@ const Modal = ({ button, children }: { button: string; children: any }): JSX.Ele
         <DialogTrigger asChild>
           <Button>{button}</Button>
         </DialogTrigger>
-        <DialogTitle hidden />
+        <DialogTitle className="hidden" />
         <DialogContent aria-describedby="">{children}</DialogContent>
       </Dialog>
     </ModalProvider>

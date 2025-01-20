@@ -50,7 +50,7 @@ const NetWorthCard = (): JSX.Element => {
 
   return (
     <Card className="flex flex-col">
-      <span className="p-2 text-2xl font-bold tracking-tight">Net Worth</span>
+      <span className="p-2 text-2xl font-semibold tracking-tight">Net Worth</span>
       <Separator />
       <div className="flex flex-col gap-2 p-2">
         <div className="flex flex-col gap-1">

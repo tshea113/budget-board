@@ -24,7 +24,7 @@
     --success-foreground: 0 0% 100%;
     --warning: 35 100% 51%;
     --warning-foreground: 0 0% 100%;
-    --border: 204 12% 74%;
+    --border: 204 12% 84%;
     --input: 216 33% 94%;
     --ring: 204 90% 60%;
     --radius: 0.3rem;
@@ -62,8 +62,8 @@
     --destructive-foreground: 240 9% 89%;
     --success: 118 49% 48%;
     --success-foreground: 240 9% 89%;
-    --border: 233 6% 24%;
-    --input: 233 6% 31%;
+    --border: 233 6% 28%;
+    --input: 233 6% 16%;
     --ring: 224.3 76.3% 48%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;

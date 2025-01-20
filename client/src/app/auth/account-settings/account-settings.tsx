@@ -7,7 +7,7 @@ const AccountSettings = (): JSX.Element => {
   return (
     <div className="flex h-full flex-col gap-2">
       <div className="flex flex-col gap-1">
-        <span className="text-xl font-bold tracking-tight">Account Settings</span>
+        <span className="text-xl font-semibold tracking-tight">Account Settings</span>
         <span className="text-sm text-gray-500">Make changes to your account here.</span>
       </div>
       <ScrollArea className="h-full pr-3" type="auto">

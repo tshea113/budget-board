@@ -90,7 +90,7 @@ const ResetPassword = (): JSX.Element => {
 
   return (
     <Card className="flex flex-col gap-2 p-3">
-      <span className="text-lg font-bold tracking-tight">Reset Password</span>
+      <span className="text-lg font-semibold tracking-tight">Reset Password</span>
       <Form {...form}>
         <form
           // eslint-disable-next-line @typescript-eslint/no-misused-promises

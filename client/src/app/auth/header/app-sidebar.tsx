@@ -186,7 +186,7 @@ const AppSidebar = (props: AppSidebarProps): JSX.Element => {
                 </div>
               </SidebarMenuButton>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="start" alignOffset={20} side="top">
               <SheetItem
                 triggerChildren={
                   <div className="flex flex-row items-center gap-2">

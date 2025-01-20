@@ -1,3 +1,4 @@
+import { useTheme } from '@/components/theme-provider';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -173,3 +174,14 @@ export const getUniqueDatesInRange = (
  */
 export const getUniqueYears = (dates: Date[]): number[] =>
   Array.from(new Set(dates.map((date) => date.getFullYear())));
+
+/**
+ * Gets whether the current theme is dark mode.
+ * @returns A boolean indicating whether the current theme is dark mode.
+ */
+export const getIsDarkMode = (): boolean => {
+  const { theme } = useTheme();
+  if (theme === 'dark') return true;
+  else if (theme === 'light') return false;
+  else return window.matchMedia('(prefers-color-scheme: dark)').matches;
+};

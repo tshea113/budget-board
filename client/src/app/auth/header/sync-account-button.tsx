@@ -8,7 +8,11 @@ import { AxiosResponse, type AxiosError } from 'axios';
 import React from 'react';
 import { toast } from 'sonner';
 
-const SyncAccountButton = (): JSX.Element => {
+interface SyncAccountButtonProps {
+  variant?: 'default' | 'outline';
+}
+
+const SyncAccountButton = (props: SyncAccountButtonProps): JSX.Element => {
   const { request } = React.useContext<any>(AuthContext);
 
   const queryClient = useQueryClient();
@@ -34,6 +38,7 @@ const SyncAccountButton = (): JSX.Element => {
 
   return (
     <Button
+      variant={props.variant ?? 'default'}
       onClick={(e) => {
         e.preventDefault();
         doSyncMutation.mutate();

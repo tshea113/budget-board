@@ -15,7 +15,7 @@ const AddButtonSheet = ({ children }: AddButtonProps): JSX.Element => {
           <PlusIcon></PlusIcon>
         </Button>
       </SheetTrigger>
-      <SheetTitle hidden />
+      <SheetTitle className="hidden" />
       <SheetContent
         side="top"
         aria-describedby={undefined}

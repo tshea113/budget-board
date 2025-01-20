@@ -116,7 +116,9 @@ const SpendingTrendsCard = (): JSX.Element => {
   return (
     <Card className="flex w-full flex-col bg-card text-card-foreground">
       <div className="flex flex-row items-center p-2">
-        <span className="w-1/2 text-2xl font-bold tracking-tight">Spending Trends</span>
+        <span className="w-1/2 text-2xl font-semibold tracking-tight">
+          Spending Trends
+        </span>
         <span className="w-1/2 text-right font-semibold tracking-tight">
           You have spent {getSpendingComparisonString()} last month.
         </span>
