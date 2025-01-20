@@ -42,6 +42,7 @@ import SheetItem from '@/components/sheet-item';
 import { Pages } from '../pages/page-content';
 import AccountSettings from '../account-settings/account-settings';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import SyncAccountButton from './sync-account-button';
 
 const menuItems = [
   {
@@ -186,7 +187,7 @@ const AppSidebar = (props: AppSidebarProps): JSX.Element => {
                 </div>
               </SidebarMenuButton>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="start" alignOffset={20} side="top">
               <SheetItem
                 triggerChildren={
                   <div className="flex flex-row items-center gap-2">
