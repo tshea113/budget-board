@@ -7,30 +7,37 @@
 [![Build and Publish](https://github.com/tshea113/budget-board/actions/workflows/docker-image-ci-build.yml/badge.svg)](https://github.com/tshea113/budget-board/actions/workflows/docker-image-ci-build.yml)
 ![GitHub Release](https://img.shields.io/github/v/release/tshea113/budget-board)
 
-A simple and focused app for monthly budgeting and tracking financial goals
+A simple app for tracking monthly spending and working towards financial goals.
 
 > [!WARNING]
 > This project is in development!
 > Expect breaking changes until v1.0 is released.
 
-<img width="100%" alt="dash" src="img/dash.png" />
-<img width="100%" alt="dash" src="img/budgets.png" />
-<img width="100%" alt="dash" src="img/transactions.png" />
-<img width="100%" alt="dash" src="img/goals.png" />
-
 ## About The Project
 
-I created this app as a replacement for the now shut down app Mint.
+I created this app to be a self-hosted alternative to the now-shut-down personal finance app Mint.
 
-It's mostly for my personal use, and such I've ported over most of the features I found most useful.
-I'm working towards making this something others can use too, so give it a try!
-Still, this is a side project, so development will probably be sporadic.
+### Features
+
+- Automatically sync your bank account data with [SimpleFIN](https://www.simplefin.org/)
+- Dashboard to view account data at a glance
+- Organize transactions into categories and subcategories
+- Create monthly budgets for categories and subcategories
+- Create and track goals for savings/loan payoff
+- Graphs to view trends over time (Spending, Assets, Liabilities, Net Worth, and more)
+
+### Bugs and Feature Requests
 
 Feel free to open an issue if you notice any bugs or have any feature requests!
 
-### Configuration
+### Screenshots
 
-#### Setting up Docker Compose
+<img width="80%" alt="dash" src="img/budget-board-dashboard.png" />
+<img width="80%" alt="dash" src="img/budget-board-budgets.png" />
+
+## Configuration
+
+### Setting up Docker Compose
 
 This project is deployed using Docker Compose.
 
