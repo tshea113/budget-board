@@ -42,7 +42,6 @@ import SheetItem from '@/components/sheet-item';
 import { Pages } from '../pages/page-content';
 import AccountSettings from '../account-settings/account-settings';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import SyncAccountButton from './sync-account-button';
 
 const menuItems = [
   {
