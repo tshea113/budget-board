@@ -4,6 +4,8 @@ import React from 'react';
 import ResetPassword from './reset-password';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import BudgetBoardLogo from '@/assets/budget-board-logo';
+import { getIsDarkMode } from '@/lib/utils';
 
 export enum LoginCardState {
   Login,
@@ -32,12 +34,10 @@ const Welcome = (): JSX.Element => {
 
   return (
     <div className="flex h-screen flex-col place-content-center items-center gap-8 p-2">
-      <div className="text-center">
+      <div className="flex flex-col items-center gap-2 text-center">
         <h3 className="text-2xl tracking-tight">Welcome to</h3>
-        <h1 className="text-4xl font-bold sm:text-6xl">Budget Board</h1>
-        <p className="mt-6 text-lg leading-8">
-          A simple app for managing monthly budgets.
-        </p>
+        <BudgetBoardLogo height={80} darkMode={getIsDarkMode()} />
+        <p className="text-lg">A simple app for managing monthly budgets.</p>
       </div>
       <Card className="w-full max-w-md p-2">{getCardState()}</Card>
       {loginCardState !== LoginCardState.Register && (
