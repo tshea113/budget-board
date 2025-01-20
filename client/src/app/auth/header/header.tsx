@@ -17,7 +17,7 @@ const Header = (): JSX.Element => {
       )}
       <BudgetBoardLogo height={50} darkMode={getIsDarkMode()} />
       <div className="grow" />
-      <SyncAccountButton />
+      <SyncAccountButton variant="outline" />
     </div>
   );
 };
