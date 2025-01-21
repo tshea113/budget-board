@@ -36,7 +36,7 @@ const Welcome = (): JSX.Element => {
     <div className="flex h-screen flex-col place-content-center items-center gap-8 p-2">
       <div className="flex flex-col items-center gap-2 text-center">
         <h3 className="text-2xl tracking-tight">Welcome to</h3>
-        <BudgetBoardLogo height={80} darkMode={getIsDarkMode()} />
+        <BudgetBoardLogo width={340} darkMode={getIsDarkMode()} />
         <p className="text-lg">A simple app for managing monthly budgets.</p>
       </div>
       <Card className="w-full max-w-md p-2">{getCardState()}</Card>

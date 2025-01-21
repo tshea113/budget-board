@@ -1,16 +1,25 @@
-interface BudgetBoardLogoProps {
-  height: number;
+interface BudgetBoardLogoPropsBase {
   darkMode?: boolean;
 }
 
-const BudgetBoardLogo = (props: BudgetBoardLogoProps): JSX.Element => {
+interface BudgetBoardLogoPropsWidth extends BudgetBoardLogoPropsBase {
+  width: number;
+}
+
+interface BudgetBoardLogoPropsHeight extends BudgetBoardLogoPropsBase {
+  height: number;
+}
+
+const BudgetBoardLogo = (
+  props: BudgetBoardLogoPropsHeight | BudgetBoardLogoPropsWidth
+): JSX.Element => {
   return (
     <svg
       version="1.1"
       id="svg3"
       viewBox="0 0 220 38"
-      width={(props.height * 220) / 38}
-      height={props.height}
+      width={'width' in props ? props.width : (props.height * 220) / 38}
+      height={'height' in props ? props.height : (props.width * 38) / 220}
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs id="defs3">
