@@ -51,6 +51,22 @@ const BudgetTotalCard = (props: BudgetTotalCardProps): JSX.Element => {
     );
   }
 
+  const incomeBudgetsTotal = sumBudgetAmounts(
+    getBudgetsForGroup(
+      props.budgetData,
+      BudgetGroup.Income,
+      transactionCategoriesWithCustom
+    )
+  );
+
+  const spendingBudgetsTotal = sumBudgetAmounts(
+    getBudgetsForGroup(
+      props.budgetData,
+      BudgetGroup.Spending,
+      transactionCategoriesWithCustom
+    )
+  );
+
   return (
     <Card className="space-y-2 p-2">
       <div className="text-xl font-semibold tracking-tight">Your Budget</div>
@@ -60,13 +76,7 @@ const BudgetTotalCard = (props: BudgetTotalCardProps): JSX.Element => {
         amount={sumTransactionAmounts(
           props.transactionData.filter((t) => areStringsEqual(t.category ?? '', 'Income'))
         )}
-        total={sumBudgetAmounts(
-          getBudgetsForGroup(
-            props.budgetData,
-            BudgetGroup.Income,
-            transactionCategoriesWithCustom
-          )
-        )}
+        total={incomeBudgetsTotal}
         isIncome={true}
       />
       <BudgetTotal
@@ -76,19 +86,14 @@ const BudgetTotalCard = (props: BudgetTotalCardProps): JSX.Element => {
             (t) => !areStringsEqual(t.category ?? '', 'Income')
           )
         )}
-        total={sumBudgetAmounts(
-          getBudgetsForGroup(
-            props.budgetData,
-            BudgetGroup.Spending,
-            transactionCategoriesWithCustom
-          )
-        )}
+        total={spendingBudgetsTotal}
         isIncome={false}
       />
       <Separator className="my-2" />
       <BudgetTotal
         label={'Remaining'}
         amount={sumTransactionAmounts(props.transactionData)}
+        total={incomeBudgetsTotal - spendingBudgetsTotal}
         isIncome={true}
       />
     </Card>
