@@ -15,7 +15,7 @@ const Header = (): JSX.Element => {
           <MenuIcon />
         </SidebarTrigger>
       )}
-      <BudgetBoardLogo height={50} darkMode={getIsDarkMode()} />
+      <BudgetBoardLogo width={260} darkMode={getIsDarkMode()} />
       <div className="grow" />
       <SyncAccountButton variant="outline" />
     </div>
