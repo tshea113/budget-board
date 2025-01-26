@@ -30,7 +30,15 @@ export interface AccountIndexRequest {
   index: number;
 }
 
-export interface NewAccount extends Partial<Account> {}
+export interface AccountAddRequest {
+  syncId?: string;
+  name: string;
+  institutionID?: string;
+  type: string;
+  subtype: string;
+  hideTransactions: boolean;
+  hideAccount: boolean;
+}
 
 export const liabilityAccountTypes = ['Loan', 'Mortgage', 'Credit Card'];
 export const assetAccountTypes = ['Checking', 'Savings', 'Investment', 'Cash', 'Other'];

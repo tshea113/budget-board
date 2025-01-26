@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BudgetBoard-Database\BudgetBoard.Database.csproj" />
+    <ProjectReference Include="..\BudgetBoard.Database\BudgetBoard.Database.csproj" />
   </ItemGroup>
 
 </Project>
