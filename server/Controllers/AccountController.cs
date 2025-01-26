@@ -1,6 +1,7 @@
 ﻿using BudgetBoard.Database.Data;
 using BudgetBoard.Database.Models;
 using BudgetBoard.Models;
+using BudgetBoard.Service;
 using BudgetBoard.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -11,12 +12,14 @@ namespace BudgetBoard.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AccountController(UserDataContext context, UserManager<ApplicationUser> userManager, ILogger<AccountController> logger) : ControllerBase
+public class AccountController(UserDataContext context, UserManager<ApplicationUser> userManager, ILogger<AccountController> logger, AccountService accountService) : ControllerBase
 {
     private readonly ILogger<AccountController> _logger = logger;
 
     private readonly UserDataContext _userDataContext = context;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
+
+    private readonly AccountService _accountService = accountService;
 
     [HttpGet]
     [Authorize]
@@ -24,10 +27,8 @@ public class AccountController(UserDataContext context, UserManager<ApplicationU
     {
         try
         {
-            var user = await GetCurrentUser(_userManager.GetUserId(User) ?? string.Empty);
-            if (user == null) return Unauthorized("You are not authorized to access this content.");
-
-            return Ok(user.Accounts.Select(a => new AccountResponse(a)));
+            var accounts = await _accountService.GetAccounts(User);
+            return Ok(accounts.Select(a => new AccountResponse(a)));
         }
         catch (Exception ex)
         {
@@ -41,13 +42,8 @@ public class AccountController(UserDataContext context, UserManager<ApplicationU
     {
         try
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-            if (user == null) return Unauthorized("You are not authorized to access this content.");
-
-            var account = user.Accounts.First(a => a.ID == guid);
-            if (account == null) return NotFound();
-
-            return Ok(new AccountResponse(account));
+            var accounts = await _accountService.GetAccounts(User, guid);
+            return Ok(accounts.Select(a => new AccountResponse(a)));
         }
         catch (Exception ex)
         {
