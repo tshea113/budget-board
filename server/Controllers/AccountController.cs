@@ -11,19 +11,12 @@ namespace BudgetBoard.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AccountController : ControllerBase
+public class AccountController(UserDataContext context, UserManager<ApplicationUser> userManager, ILogger<AccountController> logger) : ControllerBase
 {
-    private readonly ILogger<AccountController> _logger;
+    private readonly ILogger<AccountController> _logger = logger;
 
-    private readonly UserDataContext _userDataContext;
-    private UserManager<ApplicationUser> _userManager;
-
-    public AccountController(UserDataContext context, UserManager<ApplicationUser> userManager, ILogger<AccountController> logger)
-    {
-        _userDataContext = context;
-        _userManager = userManager;
-        _logger = logger;
-    }
+    private readonly UserDataContext _userDataContext = context;
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
 
     [HttpGet]
     [Authorize]
