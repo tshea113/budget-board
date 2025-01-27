@@ -15,7 +15,38 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
     private readonly UserDataContext _userDataContext = userDataContext;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-    public async Task<IEnumerable<ITransactionResponse>> GetTransactionsAsync(ClaimsPrincipal user, int? year, int? month, bool getHidden, Guid guid = default)
+    public async Task CreateTransactionAsync(ClaimsPrincipal user, ITransactionCreateRequest transaction)
+    {
+        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
+        if (userData == null)
+        {
+            _logger.LogError("Attempt to access authorized content by unauthorized user.");
+            throw new Exception("You are not authorized to access this content.");
+        }
+
+        var account = userData.Accounts.FirstOrDefault(a => a.ID == transaction.AccountID);
+        if (account == null)
+        {
+            _logger.LogError("Attempt to add transaction to account that does not exist.");
+            throw new Exception("The account you are trying to add a transaction to does not exist.");
+        }
+
+        var newTransaction = new Transaction
+        {
+            Amount = transaction.Amount,
+            Date = transaction.Date,
+            Category = transaction.Category,
+            Subcategory = transaction.Subcategory,
+            MerchantName = transaction.MerchantName,
+            Source = TransactionSource.Manual.Value,
+            AccountID = transaction.AccountID
+        };
+
+        account.Transactions.Add(newTransaction);
+        await _userDataContext.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<ITransactionResponse>> ReadTransactionsAsync(ClaimsPrincipal user, int? year, int? month, bool getHidden, Guid guid = default)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)
@@ -60,7 +91,7 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         return transactions.Select(t => new TransactionResponse(t));
     }
 
-    public async Task AddTransactionAsync(ClaimsPrincipal user, ITransactionAddRequest transaction)
+    public async Task UpdateTransactionAsync(ClaimsPrincipal user, ITransactionUpdateRequest editedTransaction)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)
@@ -69,25 +100,21 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
             throw new Exception("You are not authorized to access this content.");
         }
 
-        var account = userData.Accounts.FirstOrDefault(a => a.ID == transaction.AccountID);
-        if (account == null)
+        var transaction = userData.Accounts
+            .SelectMany(t => t.Transactions)
+            .First(t => t.ID == editedTransaction.ID);
+        if (transaction == null)
         {
-            _logger.LogError("Attempt to add transaction to account that does not exist.");
-            throw new Exception("The account you are trying to add a transaction to does not exist.");
+            _logger.LogError("Attempt to edit transaction that does not exist.");
+            throw new Exception("The transaction you are trying to edit does not exist.");
         }
 
-        var newTransaction = new Transaction
-        {
-            Amount = transaction.Amount,
-            Date = transaction.Date,
-            Category = transaction.Category,
-            Subcategory = transaction.Subcategory,
-            MerchantName = transaction.MerchantName,
-            Source = TransactionSource.Manual.Value,
-            AccountID = transaction.AccountID
-        };
+        transaction.Amount = editedTransaction.Amount;
+        transaction.Date = editedTransaction.Date;
+        transaction.Category = editedTransaction.Category;
+        transaction.Subcategory = editedTransaction.Subcategory;
+        transaction.MerchantName = editedTransaction.MerchantName;
 
-        account.Transactions.Add(newTransaction);
         await _userDataContext.SaveChangesAsync();
     }
 
@@ -135,33 +162,6 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task EditTransactionAsync(ClaimsPrincipal user, ITransactionEditRequest editedTransaction)
-    {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
-        var transaction = userData.Accounts
-            .SelectMany(t => t.Transactions)
-            .First(t => t.ID == editedTransaction.ID);
-        if (transaction == null)
-        {
-            _logger.LogError("Attempt to edit transaction that does not exist.");
-            throw new Exception("The transaction you are trying to edit does not exist.");
-        }
-
-        transaction.Amount = editedTransaction.Amount;
-        transaction.Date = editedTransaction.Date;
-        transaction.Category = editedTransaction.Category;
-        transaction.Subcategory = editedTransaction.Subcategory;
-        transaction.MerchantName = editedTransaction.MerchantName;
-
-        await _userDataContext.SaveChangesAsync();
-    }
-
     private async Task<ApplicationUser?> GetCurrentUserAsync(string id)
     {
         try
@@ -171,9 +171,7 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
                 .ThenInclude(a => a.Transactions)
                 .AsSplitQuery()
                 .ToListAsync();
-            var user = users.Single(u => u.Id == new Guid(id));
-
-            return user;
+            return users.Single(u => u.Id == new Guid(id));
         }
         catch (Exception ex)
         {

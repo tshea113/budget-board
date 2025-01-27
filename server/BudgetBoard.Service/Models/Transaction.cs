@@ -16,7 +16,7 @@ public class TransactionSource
     }
 }
 
-public interface ITransactionAddRequest
+public interface ITransactionCreateRequest
 {
     public decimal Amount { get; set; }
     public DateTime Date { get; set; }
@@ -26,7 +26,7 @@ public interface ITransactionAddRequest
     public Guid AccountID { get; set; }
 }
 
-public class TransactionAddRequest : ITransactionAddRequest
+public class TransactionCreateRequest : ITransactionCreateRequest
 {
     public decimal Amount { get; set; }
     public DateTime Date { get; set; }
@@ -36,7 +36,7 @@ public class TransactionAddRequest : ITransactionAddRequest
     public Guid AccountID { get; set; }
 
     [JsonConstructor]
-    public TransactionAddRequest()
+    public TransactionCreateRequest()
     {
         Amount = 0.0M;
         Date = DateTime.MinValue;
@@ -47,7 +47,7 @@ public class TransactionAddRequest : ITransactionAddRequest
     }
 }
 
-public interface ITransactionEditRequest
+public interface ITransactionUpdateRequest
 {
     public Guid ID { get; set; }
     public decimal Amount { get; set; }
@@ -58,7 +58,7 @@ public interface ITransactionEditRequest
     public DateTime? Deleted { get; set; }
 }
 
-public class TransactionEditRequest : ITransactionEditRequest
+public class TransactionUpdateRequest : ITransactionUpdateRequest
 {
     public Guid ID { get; set; }
     public decimal Amount { get; set; }
@@ -69,7 +69,7 @@ public class TransactionEditRequest : ITransactionEditRequest
     public DateTime? Deleted { get; set; }
 
     [JsonConstructor]
-    public TransactionEditRequest()
+    public TransactionUpdateRequest()
     {
         ID = Guid.NewGuid();
         Amount = 0.0M;
@@ -78,25 +78,6 @@ public class TransactionEditRequest : ITransactionEditRequest
         Subcategory = null;
         MerchantName = null;
         Deleted = null;
-    }
-}
-
-public interface ITransactionIndexRequest
-{
-    public Guid ID { get; set; }
-    public int Index { get; set; }
-}
-
-public class TransactionIndexRequest : ITransactionIndexRequest
-{
-    public Guid ID { get; set; }
-    public int Index { get; set; }
-
-    [JsonConstructor]
-    public TransactionIndexRequest()
-    {
-        ID = Guid.NewGuid();
-        Index = 0;
     }
 }
 

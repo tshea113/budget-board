@@ -180,9 +180,7 @@ public class AccountService(ILogger<AccountService> logger, UserDataContext user
                 .ThenInclude(a => a.Balances)
                 .AsSplitQuery()
                 .ToListAsync();
-            var user = users.Single(u => u.Id == new Guid(id));
-
-            return user;
+            return users.Single(u => u.Id == new Guid(id));
         }
         catch (Exception ex)
         {
