@@ -144,7 +144,9 @@ if (!builder.Configuration.GetValue<bool>("DISABLE_AUTO_SYNC"))
     });
 }
 
+// Add the services
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 
 var app = builder.Build();
 
