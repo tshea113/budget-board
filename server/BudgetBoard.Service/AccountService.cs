@@ -46,7 +46,7 @@ public class AccountService(ILogger<AccountService> logger, UserDataContext user
         return userData.Accounts.Select(a => new AccountResponse(a));
     }
 
-    public async Task AddAccountAsync(ClaimsPrincipal user, AccountAddRequest account)
+    public async Task AddAccountAsync(ClaimsPrincipal user, IAccountAddRequest account)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)
@@ -120,7 +120,7 @@ public class AccountService(ILogger<AccountService> logger, UserDataContext user
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task EditAccountAsync(ClaimsPrincipal user, AccountEditRequest editedAccount)
+    public async Task EditAccountAsync(ClaimsPrincipal user, IAccountEditRequest editedAccount)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)
@@ -145,7 +145,7 @@ public class AccountService(ILogger<AccountService> logger, UserDataContext user
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task SetIndicesAsync(ClaimsPrincipal user, IEnumerable<AccountIndexRequest> orderedAccounts)
+    public async Task SetIndicesAsync(ClaimsPrincipal user, IEnumerable<IAccountIndexRequest> orderedAccounts)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)

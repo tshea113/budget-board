@@ -3,24 +3,17 @@ using System.Text.Json.Serialization;
 
 namespace BudgetBoard.Service.Types;
 
-
-public class AccountEditRequest
+public interface IAccountAddRequest
 {
-    public Guid ID { get; set; }
-    public required string Name { get; set; }
-    public string Type { get; set; } = "";
-    public string Subtype { get; set; } = "";
-    public bool HideTransactions { get; set; } = false;
-    public bool HideAccount { get; set; } = false;
+    public string? SyncID { get; set; }
+    public string Name { get; set; }
+    public Guid? InstitutionID { get; set; }
+    public string Type { get; set; }
+    public string Subtype { get; set; }
+    public bool HideTransactions { get; set; }
+    public bool HideAccount { get; set; }
 }
-
-public class AccountIndexRequest
-{
-    public Guid ID { get; set; }
-    public int Index { get; set; }
-}
-
-public class AccountAddRequest
+public class AccountAddRequest : IAccountAddRequest
 {
     public string? SyncID { get; set; }
     public string Name { get; set; } = "";
@@ -31,7 +24,53 @@ public class AccountAddRequest
     public bool HideAccount { get; set; } = false;
 }
 
-public class AccountResponse
+public interface IAccountEditRequest
+{
+    public Guid ID { get; set; }
+    public string Name { get; set; }
+    public string Type { get; set; }
+    public string Subtype { get; set; }
+    public bool HideTransactions { get; set; }
+    public bool HideAccount { get; set; }
+}
+public class AccountEditRequest : IAccountEditRequest
+{
+    public Guid ID { get; set; }
+    public required string Name { get; set; }
+    public string Type { get; set; } = "";
+    public string Subtype { get; set; } = "";
+    public bool HideTransactions { get; set; } = false;
+    public bool HideAccount { get; set; } = false;
+}
+
+public interface IAccountIndexRequest
+{
+    public Guid ID { get; set; }
+    public int Index { get; set; }
+}
+public class AccountIndexRequest : IAccountIndexRequest
+{
+    public Guid ID { get; set; }
+    public int Index { get; set; }
+}
+
+public interface IAccountResponse
+{
+    public Guid ID { get; set; }
+    public string? SyncID { get; set; }
+    public string Name { get; set; }
+    public Guid? InstitutionID { get; set; }
+    public string Type { get; set; }
+    public string Subtype { get; set; }
+    public decimal CurrentBalance { get; set; }
+    public DateTime? BalanceDate { get; set; }
+    public bool HideTransactions { get; set; }
+    public bool HideAccount { get; set; }
+    public DateTime? Deleted { get; set; }
+    public int Index { get; set; }
+    public Guid UserID { get; set; }
+}
+public class AccountResponse : IAccountResponse
 {
     public Guid ID { get; set; }
     public string? SyncID { get; set; }
