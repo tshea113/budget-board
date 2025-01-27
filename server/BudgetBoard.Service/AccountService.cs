@@ -15,7 +15,32 @@ public class AccountService(ILogger<AccountService> logger, UserDataContext user
     private readonly UserDataContext _userDataContext = userDataContext;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-    public async Task<IEnumerable<AccountResponse>> GetAccountsAsync(ClaimsPrincipal user, Guid guid = default)
+    public async Task CreateAccountAsync(ClaimsPrincipal user, IAccountCreateRequest account)
+    {
+        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
+        if (userData == null)
+        {
+            _logger.LogError("Attempt to access authorized content by unauthorized user.");
+            throw new Exception("You are not authorized to access this content.");
+        }
+
+        var newAccount = new Account
+        {
+            SyncID = account.SyncID,
+            Name = account.Name,
+            InstitutionID = account.InstitutionID,
+            Type = account.Type,
+            Subtype = account.Subtype,
+            HideTransactions = account.HideTransactions,
+            HideAccount = account.HideAccount,
+            UserID = userData.Id
+        };
+
+        userData.Accounts.Add(newAccount);
+        await _userDataContext.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<AccountResponse>> ReadAccountsAsync(ClaimsPrincipal user, Guid guid = default)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)
@@ -46,7 +71,7 @@ public class AccountService(ILogger<AccountService> logger, UserDataContext user
         return userData.Accounts.Select(a => new AccountResponse(a));
     }
 
-    public async Task AddAccountAsync(ClaimsPrincipal user, IAccountAddRequest account)
+    public async Task UpdateAccountAsync(ClaimsPrincipal user, IAccountUpdateRequest editedAccount)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)
@@ -55,19 +80,19 @@ public class AccountService(ILogger<AccountService> logger, UserDataContext user
             throw new Exception("You are not authorized to access this content.");
         }
 
-        var newAccount = new Account
+        var account = userData.Accounts.FirstOrDefault(a => a.ID == editedAccount.ID);
+        if (account == null)
         {
-            SyncID = account.SyncID,
-            Name = account.Name,
-            InstitutionID = account.InstitutionID,
-            Type = account.Type,
-            Subtype = account.Subtype,
-            HideTransactions = account.HideTransactions,
-            HideAccount = account.HideAccount,
-            UserID = userData.Id
-        };
+            _logger.LogError("Attempt to edit account that does not exist.");
+            throw new Exception("The account you are trying to edit does not exist.");
+        }
 
-        userData.Accounts.Add(newAccount);
+        account.Name = editedAccount.Name;
+        account.Type = editedAccount.Type;
+        account.Subtype = editedAccount.Subtype;
+        account.HideTransactions = editedAccount.HideTransactions;
+        account.HideAccount = editedAccount.HideAccount;
+
         await _userDataContext.SaveChangesAsync();
     }
 
@@ -120,32 +145,7 @@ public class AccountService(ILogger<AccountService> logger, UserDataContext user
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task EditAccountAsync(ClaimsPrincipal user, IAccountEditRequest editedAccount)
-    {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
-        var account = userData.Accounts.FirstOrDefault(a => a.ID == editedAccount.ID);
-        if (account == null)
-        {
-            _logger.LogError("Attempt to edit account that does not exist.");
-            throw new Exception("The account you are trying to edit does not exist.");
-        }
-
-        account.Name = editedAccount.Name;
-        account.Type = editedAccount.Type;
-        account.Subtype = editedAccount.Subtype;
-        account.HideTransactions = editedAccount.HideTransactions;
-        account.HideAccount = editedAccount.HideAccount;
-
-        await _userDataContext.SaveChangesAsync();
-    }
-
-    public async Task SetIndicesAsync(ClaimsPrincipal user, IEnumerable<IAccountIndexRequest> orderedAccounts)
+    public async Task OrderAccountsAsync(ClaimsPrincipal user, IEnumerable<IAccountIndexRequest> orderedAccounts)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)

@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace BudgetBoard.Service.Types;
 
-public interface IAccountAddRequest
+public interface IAccountCreateRequest
 {
     public string? SyncID { get; set; }
     public string Name { get; set; }
@@ -13,7 +13,7 @@ public interface IAccountAddRequest
     public bool HideTransactions { get; set; }
     public bool HideAccount { get; set; }
 }
-public class AccountAddRequest : IAccountAddRequest
+public class AccountCreateRequest : IAccountCreateRequest
 {
     public string? SyncID { get; set; }
     public string Name { get; set; } = "";
@@ -24,7 +24,7 @@ public class AccountAddRequest : IAccountAddRequest
     public bool HideAccount { get; set; } = false;
 }
 
-public interface IAccountEditRequest
+public interface IAccountUpdateRequest
 {
     public Guid ID { get; set; }
     public string Name { get; set; }
@@ -33,7 +33,7 @@ public interface IAccountEditRequest
     public bool HideTransactions { get; set; }
     public bool HideAccount { get; set; }
 }
-public class AccountEditRequest : IAccountEditRequest
+public class AccountUpdateRequest : IAccountUpdateRequest
 {
     public Guid ID { get; set; }
     public required string Name { get; set; }

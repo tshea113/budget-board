@@ -5,10 +5,10 @@ namespace BudgetBoard.Service.Interfaces;
 
 public interface IAccountService
 {
-    public Task<IEnumerable<AccountResponse>> GetAccountsAsync(ClaimsPrincipal user, Guid guid = default);
-    public Task AddAccountAsync(ClaimsPrincipal user, IAccountAddRequest account);
+    public Task CreateAccountAsync(ClaimsPrincipal user, IAccountCreateRequest account);
+    public Task<IEnumerable<IAccountResponse>> ReadAccountsAsync(ClaimsPrincipal user, Guid guid = default);
+    public Task UpdateAccountAsync(ClaimsPrincipal user, IAccountUpdateRequest editedAccount);
     public Task DeleteAccountAsync(ClaimsPrincipal user, Guid guid, bool deleteTransactions = false);
     public Task RestoreAccountAsync(ClaimsPrincipal user, Guid guid);
-    public Task EditAccountAsync(ClaimsPrincipal user, IAccountEditRequest editedAccount);
-    public Task SetIndicesAsync(ClaimsPrincipal user, IEnumerable<IAccountIndexRequest> orderedAccounts);
+    public Task OrderAccountsAsync(ClaimsPrincipal user, IEnumerable<IAccountIndexRequest> orderedAccounts);
 }

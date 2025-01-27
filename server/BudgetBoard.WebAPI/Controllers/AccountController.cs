@@ -13,13 +13,28 @@ public class AccountController(ILogger<AccountController> logger, IAccountServic
     private readonly ILogger<AccountController> _logger = logger;
     private readonly IAccountService _accountService = accountService;
 
-    [HttpGet]
+    [HttpPost]
     [Authorize]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Create([FromBody] AccountCreateRequest account)
     {
         try
         {
-            return Ok(await _accountService.GetAccountsAsync(User));
+            await _accountService.CreateAccountAsync(User, account);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
+        }
+    }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> Read()
+    {
+        try
+        {
+            return Ok(await _accountService.ReadAccountsAsync(User));
         }
         catch (Exception ex)
         {
@@ -29,11 +44,11 @@ public class AccountController(ILogger<AccountController> logger, IAccountServic
 
     [HttpGet("{guid}")]
     [Authorize]
-    public async Task<IActionResult> Get(Guid guid)
+    public async Task<IActionResult> Read(Guid guid)
     {
         try
         {
-            return Ok(await _accountService.GetAccountsAsync(User));
+            return Ok(await _accountService.ReadAccountsAsync(User, guid));
         }
         catch (Exception ex)
         {
@@ -41,13 +56,13 @@ public class AccountController(ILogger<AccountController> logger, IAccountServic
         }
     }
 
-    [HttpPost]
+    [HttpPut]
     [Authorize]
-    public async Task<IActionResult> Add([FromBody] AccountAddRequest account)
+    public async Task<IActionResult> Update([FromBody] AccountUpdateRequest editedAccount)
     {
         try
         {
-            await _accountService.AddAccountAsync(User, account);
+            await _accountService.UpdateAccountAsync(User, editedAccount);
             return Ok();
         }
         catch (Exception ex)
@@ -89,27 +104,12 @@ public class AccountController(ILogger<AccountController> logger, IAccountServic
 
     [HttpPut]
     [Authorize]
-    public async Task<IActionResult> Edit([FromBody] AccountEditRequest editedAccount)
-    {
-        try
-        {
-            await _accountService.EditAccountAsync(User, editedAccount);
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
-        }
-    }
-
-    [HttpPut]
-    [Authorize]
     [Route("[action]")]
-    public async Task<IActionResult> SetIndices([FromBody] List<AccountIndexRequest> accounts)
+    public async Task<IActionResult> Order([FromBody] List<AccountIndexRequest> accounts)
     {
         try
         {
-            await _accountService.SetIndicesAsync(User, accounts);
+            await _accountService.OrderAccountsAsync(User, accounts);
             return Ok();
         }
         catch (Exception ex)

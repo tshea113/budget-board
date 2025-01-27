@@ -19,7 +19,7 @@ namespace BudgetBoard.WebAPI.Controllers
         {
             try
             {
-                await _budgetService.CreateBudgetAsync(User, budgets);
+                await _budgetService.CreateBudgetsAsync(User, budgets);
                 return Ok();
             }
             catch (Exception ex)

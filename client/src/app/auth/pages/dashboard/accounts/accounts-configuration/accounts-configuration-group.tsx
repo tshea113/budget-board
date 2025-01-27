@@ -30,7 +30,7 @@ const AccountsConfigurationGroup = (props: AccountsConfigurationGroupProps) => {
   const doIndexAccounts = useMutation({
     mutationFn: async (accounts: AccountIndexRequest[]) =>
       await request({
-        url: '/api/account/setindices',
+        url: '/api/account/order',
         method: 'PUT',
         data: accounts,
       }),

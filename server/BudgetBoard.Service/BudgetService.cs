@@ -15,7 +15,7 @@ public class BudgetService(ILogger<IBudgetService> logger, UserDataContext userD
     private readonly UserDataContext _userDataContext = userDataContext;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-    public async Task CreateBudgetAsync(ClaimsPrincipal user, IEnumerable<IBudgetCreateRequest> budgets)
+    public async Task CreateBudgetsAsync(ClaimsPrincipal user, IEnumerable<IBudgetCreateRequest> budgets)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)
