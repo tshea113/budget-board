@@ -1,120 +1,40 @@
-﻿using BudgetBoard.Database.Data;
-using BudgetBoard.Database.Models;
-using BudgetBoard.WebAPI.Models;
+﻿using BudgetBoard.Service.Interfaces;
+using BudgetBoard.Service.Models;
 using BudgetBoard.WebAPI.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBoard.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BudgetController : ControllerBase
+    public class BudgetController(ILogger<BudgetController> logger, IBudgetService budgetService) : ControllerBase
     {
-        private readonly ILogger<BudgetController> _logger;
+        private readonly ILogger<BudgetController> _logger = logger;
+        private readonly IBudgetService _budgetService = budgetService;
 
-        private readonly UserDataContext _userDataContext;
-
-        public BudgetController(UserDataContext context, ILogger<BudgetController> logger)
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Create([FromBody] BudgetCreateRequest[] budgets)
         {
-            _userDataContext = context;
-            _logger = logger;
+            try
+            {
+                await _budgetService.CreateBudgetAsync(User, budgets);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return Helpers.BuildErrorResponse(_logger, ex.Message);
+            }
         }
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Get(DateTime date)
+        public async Task<IActionResult> Read(DateTime date)
         {
             try
             {
-                var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-                if (user == null) return Unauthorized("You are not authorized to access this content.");
-
-                var budgets = user.Budgets
-                    .Where(b => b.Date.Month == date.Month && b.Date.Year == date.Year);
-
-                return Ok(budgets.Select(b => new BudgetResponse(b)));
-            }
-            catch (Exception ex)
-            {
-                return Helpers.BuildErrorResponse(_logger, ex.Message);
-            }
-        }
-
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> Add([FromBody] AddBudgetRequest budget)
-        {
-            try
-            {
-                var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-                if (user == null) return Unauthorized("You are not authorized to access this content.");
-
-                // Do not allow duplicate categories in a given month
-                if (user.Budgets.Any((b) =>
-                    b.Date.Month == budget.Date.Month
-                    && b.Date.Year == budget.Date.Year
-                    && b.Category.Equals(budget.Category, StringComparison.CurrentCultureIgnoreCase)))
-                {
-                    return BadRequest("Budget category already exists for this month!");
-                }
-
-                Budget newBudget = new()
-                {
-                    Date = budget.Date,
-                    Category = budget.Category,
-                    Limit = budget.Limit,
-                    UserID = user.Id
-                };
-
-                user.Budgets.Add(newBudget);
-                await _userDataContext.SaveChangesAsync();
-
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return Helpers.BuildErrorResponse(_logger, ex.Message);
-            }
-        }
-
-        [HttpPost]
-        [Authorize]
-        [ActionName("AddMultiple")]
-        [Route("[action]")]
-        public async Task<IActionResult> Add([FromBody] AddBudgetRequest[] budgets)
-        {
-            try
-            {
-                var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-                if (user == null) return Unauthorized("You are not authorized to access this content.");
-
-                foreach (AddBudgetRequest budget in budgets)
-                {
-                    // Do not allow duplicate categories in a given month
-                    if (user.Budgets.Any((b) =>
-                        b.Date.Month == budget.Date.Month
-                        && b.Date.Year == budget.Date.Year
-                        && b.Category.Equals(budget.Category, StringComparison.CurrentCultureIgnoreCase)))
-                    {
-                        continue;
-                    }
-
-                    Budget newBudget = new()
-                    {
-                        Date = budget.Date,
-                        Category = budget.Category,
-                        Limit = budget.Limit,
-                        UserID = user.Id
-                    };
-
-                    user.Budgets.Add(newBudget);
-                }
-
-                await _userDataContext.SaveChangesAsync();
-
-                return Ok();
+                return Ok(await _budgetService.ReadBudgetsAsync(User, date));
             }
             catch (Exception ex)
             {
@@ -124,20 +44,11 @@ namespace BudgetBoard.WebAPI.Controllers
 
         [HttpPut]
         [Authorize]
-        public async Task<IActionResult> Edit([FromBody] BudgetResponse editBudget)
+        public async Task<IActionResult> Update([FromBody] IBudgetUpdateRequest editBudget)
         {
             try
             {
-                var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-                if (user == null) return Unauthorized("You are not authorized to access this content.");
-
-                Budget? budget = await _userDataContext.Budgets.FindAsync(editBudget.ID);
-                if (budget == null) return NotFound();
-
-                budget.Limit = editBudget.Limit;
-
-                await _userDataContext.SaveChangesAsync();
-
+                await _budgetService.UpdateBudgetAsync(User, editBudget);
                 return Ok();
             }
             catch (Exception ex)
@@ -148,42 +59,16 @@ namespace BudgetBoard.WebAPI.Controllers
 
         [HttpDelete]
         [Authorize]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid guid)
         {
             try
             {
-                var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-                if (user == null) return Unauthorized("You are not authorized to access this content.");
-
-                Budget? budget = await _userDataContext.Budgets.FindAsync(id);
-                if (budget == null) return NotFound();
-
-                _userDataContext.Entry(budget).State = EntityState.Deleted;
-                await _userDataContext.SaveChangesAsync();
-
+                await _budgetService.DeleteBudgetAsync(User, guid);
                 return Ok();
             }
             catch (Exception ex)
             {
                 return Helpers.BuildErrorResponse(_logger, ex.Message);
-            }
-        }
-
-        private async Task<ApplicationUser?> GetCurrentUser(string id)
-        {
-            try
-            {
-                var users = await _userDataContext.Users
-                    .Include(u => u.Budgets)
-                    .ToListAsync();
-                var user = users.Single(u => u.Id == new Guid(id));
-
-                return user;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return null;
             }
         }
     }

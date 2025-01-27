@@ -1,16 +1,22 @@
 ﻿using BudgetBoard.Database.Models;
 using System.Text.Json.Serialization;
 
-namespace BudgetBoard.WebAPI.Models;
+namespace BudgetBoard.Service.Models;
 
-public class AddBudgetRequest
+public interface IBudgetCreateRequest
+{
+    DateTime Date { get; set; }
+    string Category { get; set; }
+    decimal Limit { get; set; }
+}
+public class BudgetCreateRequest : IBudgetCreateRequest
 {
     public DateTime Date { get; set; }
     public string Category { get; set; }
     public decimal Limit { get; set; }
 
     [JsonConstructor]
-    public AddBudgetRequest()
+    public BudgetCreateRequest()
     {
         Date = DateTime.MinValue;
         Category = string.Empty;
@@ -18,7 +24,33 @@ public class AddBudgetRequest
     }
 }
 
-public class BudgetResponse
+public interface IBudgetUpdateRequest
+{
+    Guid ID { get; set; }
+    decimal Limit { get; set; }
+}
+public class BudgetUpdateRequest : IBudgetUpdateRequest
+{
+    public Guid ID { get; set; }
+    public decimal Limit { get; set; }
+
+    [JsonConstructor]
+    public BudgetUpdateRequest()
+    {
+        ID = Guid.NewGuid();
+        Limit = 0;
+    }
+}
+
+public interface IBudgetResponse
+{
+    Guid ID { get; set; }
+    DateTime Date { get; set; }
+    string Category { get; set; }
+    decimal Limit { get; set; }
+    Guid UserID { get; set; }
+}
+public class BudgetResponse : IBudgetResponse
 {
     public Guid ID { get; set; }
     public DateTime Date { get; set; }
