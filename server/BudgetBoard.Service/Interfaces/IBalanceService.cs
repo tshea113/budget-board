@@ -5,7 +5,7 @@ namespace BudgetBoard.Service.Interfaces;
 
 public interface IBalanceService
 {
-    Task CreateBalancesAsync(ClaimsPrincipal user, Guid accountId, IBalanceCreateRequest balance);
+    Task CreateBalancesAsync(ClaimsPrincipal user, IBalanceCreateRequest balance);
     Task<IEnumerable<IBalanceResponse>> ReadBalancesAsync(ClaimsPrincipal user, Guid accountId);
     Task UpdateBalanceAsync(ClaimsPrincipal user, IBalanceUpdateRequest updatedBalance);
     Task DeleteBalanceAsync(ClaimsPrincipal user, Guid guid);

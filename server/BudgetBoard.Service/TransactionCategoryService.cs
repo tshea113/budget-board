@@ -9,9 +9,9 @@ using System.Security.Claims;
 
 namespace BudgetBoard.Service;
 
-public class TransactionCategoryService(ILogger<IBudgetService> logger, UserDataContext userDataContext, UserManager<ApplicationUser> userManager) : ITransactionCategoryService
+public class TransactionCategoryService(ILogger<ITransactionCategoryService> logger, UserDataContext userDataContext, UserManager<ApplicationUser> userManager) : ITransactionCategoryService
 {
-    private readonly ILogger<IBudgetService> _logger = logger;
+    private readonly ILogger<ITransactionCategoryService> _logger = logger;
     private readonly UserDataContext _userDataContext = userDataContext;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
@@ -46,14 +46,7 @@ public class TransactionCategoryService(ILogger<IBudgetService> logger, UserData
 
         if (guid != default)
         {
-            var transactionCategoryID = new Guid();
-            if (!Guid.TryParse(guid.ToString(), out transactionCategoryID))
-            {
-                _logger.LogError("Attempt to access transaction category with invalid ID.");
-                throw new Exception("The transaction category ID you are trying to access is invalid.");
-            }
-
-            var transactionCategory = userData.TransactionCategories.FirstOrDefault(t => t.ID == transactionCategoryID);
+            var transactionCategory = userData.TransactionCategories.FirstOrDefault(t => t.ID == guid);
             if (transactionCategory == null)
             {
                 _logger.LogError("Attempt to access transaction that does not exist.");

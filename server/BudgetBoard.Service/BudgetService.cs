@@ -95,14 +95,7 @@ public class BudgetService(ILogger<IBudgetService> logger, UserDataContext userD
             throw new Exception("You are not authorized to access this content.");
         }
 
-        var budgetID = new Guid();
-        if (!Guid.TryParse(guid.ToString(), out budgetID))
-        {
-            _logger.LogError("Attempt to delete budget with invalid ID.");
-            throw new Exception("The budget ID you are trying to delete is invalid.");
-        }
-
-        var budget = userData.Budgets.SingleOrDefault(b => b.ID == budgetID);
+        var budget = userData.Budgets.SingleOrDefault(b => b.ID == guid);
         if (budget == null)
         {
             _logger.LogError("Attempt to update budget that does not exist.");

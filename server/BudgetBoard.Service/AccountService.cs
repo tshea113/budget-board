@@ -9,9 +9,9 @@ using System.Security.Claims;
 
 namespace BudgetBoard.Service;
 
-public class AccountService(ILogger<AccountService> logger, UserDataContext userDataContext, UserManager<ApplicationUser> userManager) : IAccountService
+public class AccountService(ILogger<IAccountService> logger, UserDataContext userDataContext, UserManager<ApplicationUser> userManager) : IAccountService
 {
-    private readonly ILogger<AccountService> _logger = logger;
+    private readonly ILogger<IAccountService> _logger = logger;
     private readonly UserDataContext _userDataContext = userDataContext;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
@@ -51,14 +51,7 @@ public class AccountService(ILogger<AccountService> logger, UserDataContext user
 
         if (guid != default)
         {
-            var accountId = new Guid();
-            if (!Guid.TryParse(guid.ToString(), out accountId))
-            {
-                _logger.LogError("Attempt to access account with invalid ID.");
-                throw new Exception("The account ID you are trying to access is invalid.");
-            }
-
-            var account = userData.Accounts.FirstOrDefault(a => a.ID == accountId);
+            var account = userData.Accounts.FirstOrDefault(a => a.ID == guid);
             if (account == null)
             {
                 _logger.LogError("Attempt to access account that does not exist.");

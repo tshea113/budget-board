@@ -71,14 +71,7 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
 
         if (guid != default)
         {
-            var transactionID = new Guid();
-            if (!Guid.TryParse(guid.ToString(), out transactionID))
-            {
-                _logger.LogError("Attempt to access transaction with invalid ID.");
-                throw new Exception("The transaction ID you are trying to access is invalid.");
-            }
-
-            var transaction = transactions.FirstOrDefault(t => t.ID == transactionID);
+            var transaction = transactions.FirstOrDefault(t => t.ID == guid);
             if (transaction == null)
             {
                 _logger.LogError("Attempt to access transaction that does not exist.");

@@ -15,7 +15,7 @@ public class BalanceService(ILogger<IBalanceService> logger, UserDataContext use
     private readonly UserDataContext _userDataContext = userDataContext;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-    public async Task CreateBalancesAsync(ClaimsPrincipal user, Guid accountId, IBalanceCreateRequest balance)
+    public async Task CreateBalancesAsync(ClaimsPrincipal user, IBalanceCreateRequest balance)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)
@@ -35,7 +35,7 @@ public class BalanceService(ILogger<IBalanceService> logger, UserDataContext use
         {
             DateTime = balance.DateTime,
             Amount = balance.Amount,
-            AccountID = accountId,
+            AccountID = balance.AccountID,
         };
 
         account.Balances.Add(newBalance);
