@@ -5,8 +5,8 @@ namespace BudgetBoard.Service.Interfaces;
 
 public interface IBudgetService
 {
-    public Task CreateBudgetsAsync(ClaimsPrincipal user, IEnumerable<IBudgetCreateRequest> budget);
-    public Task<IEnumerable<IBudgetResponse>> ReadBudgetsAsync(ClaimsPrincipal user, DateTime date);
-    public Task UpdateBudgetAsync(ClaimsPrincipal user, IBudgetUpdateRequest updatedBudget);
-    public Task DeleteBudgetAsync(ClaimsPrincipal user, Guid guid);
+    Task CreateBudgetsAsync(ClaimsPrincipal user, IEnumerable<IBudgetCreateRequest> budget);
+    Task<IEnumerable<IBudgetResponse>> ReadBudgetsAsync(ClaimsPrincipal user, DateTime date);
+    Task UpdateBudgetAsync(ClaimsPrincipal user, IBudgetUpdateRequest updatedBudget);
+    Task DeleteBudgetAsync(ClaimsPrincipal user, Guid guid);
 }
