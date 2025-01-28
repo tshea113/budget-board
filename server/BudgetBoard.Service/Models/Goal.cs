@@ -2,9 +2,18 @@
 using BudgetBoard.Service.Types;
 using System.Text.Json.Serialization;
 
-namespace BudgetBoard.WebAPI.Models;
+namespace BudgetBoard.Service.Models;
 
-public class GoalRequest
+public interface IGoalCreateRequest
+{
+    string Name { get; set; }
+    DateTime? CompleteDate { get; set; }
+    decimal Amount { get; set; }
+    decimal? InitialAmount { get; set; }
+    decimal? MonthlyContribution { get; set; }
+    ICollection<string> AccountIds { get; set; }
+}
+public class GoalCreateRequest : IGoalCreateRequest
 {
     public required string Name { get; set; }
     public DateTime? CompleteDate { get; set; }
@@ -14,7 +23,7 @@ public class GoalRequest
     public required ICollection<string> AccountIds { get; set; }
 
     [JsonConstructor]
-    public GoalRequest()
+    public GoalCreateRequest()
     {
         Name = string.Empty;
         CompleteDate = null;
@@ -26,7 +35,58 @@ public class GoalRequest
     }
 }
 
-public class GoalResponse
+public interface IGoalUpdateRequest
+{
+    Guid ID { get; set; }
+    string Name { get; set; }
+    DateTime? CompleteDate { get; set; }
+    bool IsCompleteDateEditable { get; set; }
+    decimal Amount { get; set; }
+    decimal? InitialAmount { get; set; }
+    decimal? MonthlyContribution { get; set; }
+    bool IsMonthlyContributionEditable { get; set; }
+    ICollection<string> AccountIds { get; set; }
+}
+public class GoalUpdateRequest : IGoalUpdateRequest
+{
+    public Guid ID { get; set; }
+    public string Name { get; set; }
+    public DateTime? CompleteDate { get; set; }
+    public bool IsCompleteDateEditable { get; set; }
+    public decimal Amount
+    { get; set; }
+    public decimal? InitialAmount { get; set; }
+    public decimal? MonthlyContribution { get; set; }
+    public bool IsMonthlyContributionEditable { get; set; }
+    public ICollection<string> AccountIds { get; set; }
+
+    [JsonConstructor]
+    public GoalUpdateRequest()
+    {
+        Name = string.Empty;
+        CompleteDate = null;
+        Amount = 0.0M;
+        InitialAmount = null;
+        MonthlyContribution = null;
+        AccountIds = [];
+    }
+}
+
+public interface IGoalResponse
+{
+    Guid ID { get; set; }
+    string Name { get; set; }
+    DateTime CompleteDate { get; set; }
+    bool IsCompleteDateEditable { get; set; }
+    decimal Amount { get; set; }
+    decimal InitialAmount { get; set; }
+    decimal MonthlyContribution { get; set; }
+    bool IsMonthlyContributionEditable { get; set; }
+    decimal? EstimatedInterestRate { get; set; }
+    ICollection<AccountResponse> Accounts { get; set; }
+    Guid UserID { get; set; }
+}
+public class GoalResponse : IGoalResponse
 {
     public Guid ID { get; set; }
     public string Name { get; set; }
