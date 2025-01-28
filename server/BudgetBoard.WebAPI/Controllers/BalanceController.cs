@@ -19,7 +19,7 @@ public class BalanceController(ILogger<BalanceController> logger, IBalanceServic
     {
         try
         {
-            await _balanceService.CreateBalancesAsync(User, balance.AccountID, balance);
+            await _balanceService.CreateBalancesAsync(User, balance);
             return Ok();
         }
         catch (Exception ex)
