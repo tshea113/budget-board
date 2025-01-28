@@ -1,39 +1,26 @@
-using BudgetBoard.Database.Data;
-using BudgetBoard.Database.Models;
-using BudgetBoard.WebAPI.Models;
+using BudgetBoard.Service.Interfaces;
+using BudgetBoard.Service.Models;
 using BudgetBoard.WebAPI.Utils;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBoard.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class BalanceController(UserDataContext context, UserManager<ApplicationUser> userManager, ILogger<BalanceController> logger) : ControllerBase
+public class BalanceController(ILogger<BalanceController> logger, IBalanceService balanceService) : ControllerBase
 {
     private readonly ILogger<BalanceController> _logger = logger;
+    private readonly IBalanceService _balanceService = balanceService;
 
-    private readonly UserDataContext _userDataContext = context;
-    private readonly UserManager<ApplicationUser> _userManager = userManager;
-
-    [HttpGet]
+    [HttpPost]
     [Authorize]
-    public async Task<IActionResult> Get(Guid accountId)
+    public async Task<IActionResult> Create([FromBody] BalanceCreateRequest balance)
     {
         try
         {
-            var user = await GetCurrentUser(_userManager.GetUserId(User) ?? string.Empty);
-            if (user == null) return Unauthorized("You are not authorized to access this content.");
-
-            var account = user.Accounts.FirstOrDefault(a => a.ID == accountId);
-            if (account == null)
-            {
-                return NotFound("Account not found.");
-            }
-
-            return Ok(account.Balances.Select(b => new BalanceResponse(b)));
+            await _balanceService.CreateBalancesAsync(User, balance.AccountID, balance);
+            return Ok();
         }
         catch (Exception ex)
         {
@@ -41,23 +28,47 @@ public class BalanceController(UserDataContext context, UserManager<ApplicationU
         }
     }
 
-    private async Task<ApplicationUser?> GetCurrentUser(string id)
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> Read(Guid accountId)
     {
         try
         {
-            var users = await _userDataContext.Users
-                .Include(u => u.Accounts)
-                .ThenInclude(a => a.Balances)
-                .AsSplitQuery()
-                .ToListAsync();
-            var user = users.Single(u => u.Id == new Guid(id));
-
-            return user;
+            return Ok(await _balanceService.ReadBalancesAsync(User, accountId));
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Message);
-            return null;
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
+        }
+    }
+
+    [HttpPut]
+    [Authorize]
+    public async Task<IActionResult> Update([FromBody] BalanceUpdateRequest updatedBalance)
+    {
+        try
+        {
+            await _balanceService.UpdateBalanceAsync(User, updatedBalance);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
+        }
+    }
+
+    [HttpDelete]
+    [Authorize]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        try
+        {
+            await _balanceService.DeleteBalanceAsync(User, id);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
         }
     }
 }

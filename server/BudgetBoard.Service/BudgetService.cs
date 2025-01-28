@@ -109,7 +109,7 @@ public class BudgetService(ILogger<IBudgetService> logger, UserDataContext userD
             throw new Exception("The budget you are trying to update does not exist.");
         }
 
-        _userDataContext.Entry(budget).State = EntityState.Deleted;
+        _userDataContext.Budgets.Remove(budget);
         await _userDataContext.SaveChangesAsync();
     }
 
