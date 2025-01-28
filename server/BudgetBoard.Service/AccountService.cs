@@ -40,7 +40,7 @@ public class AccountService(ILogger<AccountService> logger, UserDataContext user
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<AccountResponse>> ReadAccountsAsync(ClaimsPrincipal user, Guid guid = default)
+    public async Task<IEnumerable<IAccountResponse>> ReadAccountsAsync(ClaimsPrincipal user, Guid guid = default)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)
