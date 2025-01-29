@@ -1,40 +1,40 @@
-﻿using BudgetBoard.Database.Data;
-using BudgetBoard.Database.Models;
-using BudgetBoard.WebAPI.Models;
+﻿using BudgetBoard.Service.Interfaces;
+using BudgetBoard.Service.Models;
 using BudgetBoard.WebAPI.Utils;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBoard.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class InstitutionController : ControllerBase
+public class InstitutionController(ILogger<InstitutionController> logger, IInstitutionService institutionService) : ControllerBase
 {
-    private readonly ILogger<InstitutionController> _logger;
+    private readonly ILogger<InstitutionController> _logger = logger;
+    private readonly IInstitutionService _institutionService = institutionService;
 
-    private readonly UserDataContext _userDataContext;
-    private UserManager<ApplicationUser> _userManager;
-
-    public InstitutionController(UserDataContext context, UserManager<ApplicationUser> userManager, ILogger<InstitutionController> logger)
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> Create([FromBody] IInstitutionCreateRequest createdInstitution)
     {
-        _userDataContext = context;
-        _userManager = userManager;
-        _logger = logger;
+        try
+        {
+            await _institutionService.CreateInstitution(User, createdInstitution);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return Helpers.BuildErrorResponse(_logger, ex.Message);
+        }
     }
 
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Read()
     {
         try
         {
-            var user = await GetCurrentUser(_userManager.GetUserId(User) ?? string.Empty);
-            if (user == null) return Unauthorized("You are not authorized to access this content.");
-
-            return Ok(user.Institutions.Select(i => new InstitutionResponse(i)));
+            return Ok(await _institutionService.ReadInstitutions(User));
         }
         catch (Exception ex)
         {
@@ -44,17 +44,11 @@ public class InstitutionController : ControllerBase
 
     [HttpGet("{guid}")]
     [Authorize]
-    public async Task<IActionResult> Get(Guid guid)
+    public async Task<IActionResult> Read(Guid guid)
     {
         try
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-            if (user == null) return Unauthorized("You are not authorized to access this content.");
-
-            var institution = user.Institutions.First(a => a.ID == guid);
-            if (institution == null) return NotFound();
-
-            return Ok(new InstitutionResponse(institution));
+            return Ok(await _institutionService.ReadInstitutions(User, guid));
         }
         catch (Exception ex)
         {
@@ -62,18 +56,13 @@ public class InstitutionController : ControllerBase
         }
     }
 
-    [HttpPost]
+    [HttpPut]
     [Authorize]
-    public async Task<IActionResult> Add([FromBody] Institution institution)
+    public async Task<IActionResult> Update([FromBody] IInstitutionUpdateRequest updatedInstitution)
     {
         try
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-            if (user == null) return Unauthorized("You are not authorized to access this content.");
-
-            user.Institutions.Add(institution);
-            await _userDataContext.SaveChangesAsync();
-
+            await _institutionService.UpdateInstitution(User, updatedInstitution);
             return Ok();
         }
         catch (Exception ex)
@@ -88,38 +77,7 @@ public class InstitutionController : ControllerBase
     {
         try
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-            if (user == null) return Unauthorized("You are not authorized to access this content.");
-
-            var institution = user.Institutions.Single(i => i.ID == guid);
-            if (institution == null) return Unauthorized("You are not authorized to access this content.");
-
-            _userDataContext.Entry(institution).State = EntityState.Deleted;
-            await _userDataContext.SaveChangesAsync();
-
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
-        }
-    }
-
-    [HttpPut]
-    [Authorize]
-    public async Task<IActionResult> Edit([FromBody] Institution newInstitution)
-    {
-        try
-        {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-            if (user == null) return Unauthorized("You are not authorized to access this content.");
-
-            Institution? institution = user.Institutions.Single(i => i.ID == newInstitution.ID);
-            if (institution == null) return Unauthorized("You are not authorized to access this content.");
-
-            institution.Index = newInstitution.Index;
-            await _userDataContext.SaveChangesAsync();
-
+            await _institutionService.DeleteInstitution(User, guid, deleteTransactions);
             return Ok();
         }
         catch (Exception ex)
@@ -135,42 +93,12 @@ public class InstitutionController : ControllerBase
     {
         try
         {
-            var user = await GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-            if (user == null) return Unauthorized("You are not authorized to access this content.");
-
-            foreach (var institution in institutions)
-            {
-                var inst = user.Institutions.Single(i => i.ID == institution.ID);
-                if (inst == null) return Unauthorized("You are not authorized to access this content.");
-
-                inst.Index = institution.Index;
-            }
-
-            await _userDataContext.SaveChangesAsync();
-
+            await _institutionService.OrderInstitutions(User, institutions);
             return Ok();
         }
         catch (Exception ex)
         {
             return Helpers.BuildErrorResponse(_logger, ex.Message);
-        }
-    }
-
-    private async Task<ApplicationUser?> GetCurrentUser(string id)
-    {
-        try
-        {
-            var users = await _userDataContext.Users
-                .Include(u => u.Institutions)
-                .ToListAsync();
-            var user = users.Single(u => u.Id == new Guid(id));
-
-            return user;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message);
-            return null;
         }
     }
 }
