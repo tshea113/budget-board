@@ -13,13 +13,13 @@ public interface IAccountCreateRequest
     public bool HideTransactions { get; set; }
     public bool HideAccount { get; set; }
 }
-public class AccountCreateRequest : IAccountCreateRequest
+public class AccountCreateRequest() : IAccountCreateRequest
 {
     public string? SyncID { get; set; }
-    public string Name { get; set; } = "";
+    public string Name { get; set; } = string.Empty;
     public Guid? InstitutionID { get; set; }
-    public string Type { get; set; } = "";
-    public string Subtype { get; set; } = "";
+    public string Type { get; set; } = string.Empty;
+    public string Subtype { get; set; } = string.Empty;
     public bool HideTransactions { get; set; } = false;
     public bool HideAccount { get; set; } = false;
 }
@@ -33,14 +33,24 @@ public interface IAccountUpdateRequest
     public bool HideTransactions { get; set; }
     public bool HideAccount { get; set; }
 }
-public class AccountUpdateRequest : IAccountUpdateRequest
+public class AccountUpdateRequest() : IAccountUpdateRequest
 {
-    public Guid ID { get; set; }
-    public required string Name { get; set; }
-    public string Type { get; set; } = "";
-    public string Subtype { get; set; } = "";
+    public Guid ID { get; set; } = Guid.NewGuid();
+    public string Name { get; set; } = string.Empty;
+    public string Type { get; set; } = string.Empty;
+    public string Subtype { get; set; } = string.Empty;
     public bool HideTransactions { get; set; } = false;
     public bool HideAccount { get; set; } = false;
+
+    public AccountUpdateRequest(Account account) : this()
+    {
+        ID = account.ID;
+        Name = account.Name;
+        Type = account.Type;
+        Subtype = account.Subtype;
+        HideTransactions = account.HideTransactions;
+        HideAccount = account.HideAccount;
+    }
 }
 
 public interface IAccountIndexRequest
