@@ -19,7 +19,7 @@ public class InstitutionController(ILogger<InstitutionController> logger, IInsti
     {
         try
         {
-            await _institutionService.CreateInstitution(User, createdInstitution);
+            await _institutionService.CreateInstitutionAsync(User, createdInstitution);
             return Ok();
         }
         catch (Exception ex)
@@ -34,7 +34,7 @@ public class InstitutionController(ILogger<InstitutionController> logger, IInsti
     {
         try
         {
-            return Ok(await _institutionService.ReadInstitutions(User));
+            return Ok(await _institutionService.ReadInstitutionsAsync(User));
         }
         catch (Exception ex)
         {
@@ -48,7 +48,7 @@ public class InstitutionController(ILogger<InstitutionController> logger, IInsti
     {
         try
         {
-            return Ok(await _institutionService.ReadInstitutions(User, guid));
+            return Ok(await _institutionService.ReadInstitutionsAsync(User, guid));
         }
         catch (Exception ex)
         {
@@ -62,7 +62,7 @@ public class InstitutionController(ILogger<InstitutionController> logger, IInsti
     {
         try
         {
-            await _institutionService.UpdateInstitution(User, updatedInstitution);
+            await _institutionService.UpdateInstitutionAsync(User, updatedInstitution);
             return Ok();
         }
         catch (Exception ex)
@@ -77,7 +77,7 @@ public class InstitutionController(ILogger<InstitutionController> logger, IInsti
     {
         try
         {
-            await _institutionService.DeleteInstitution(User, guid, deleteTransactions);
+            await _institutionService.DeleteInstitutionAsync(User, guid, deleteTransactions);
             return Ok();
         }
         catch (Exception ex)
@@ -93,7 +93,7 @@ public class InstitutionController(ILogger<InstitutionController> logger, IInsti
     {
         try
         {
-            await _institutionService.OrderInstitutions(User, institutions);
+            await _institutionService.OrderInstitutionsAsync(User, institutions);
             return Ok();
         }
         catch (Exception ex)
