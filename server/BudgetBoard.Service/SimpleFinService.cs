@@ -110,24 +110,10 @@ public class SimpleFinService(
         await _applicationUserService.UpdateApplicationUserAsync(userData, new ApplicationUserUpdateRequest
         {
             AccessToken = userData.AccessToken,
-            LastSync = DateTime.Now,
+            LastSync = DateTime.Now.ToUniversalTime(),
         });
 
         return simpleFinData.Errors;
-    }
-
-    public async Task UpdateTokenAsync(IApplicationUser userData, string accessToken)
-    {
-        var response = await ReadAccessToken(accessToken);
-        if (response.IsSuccessStatusCode)
-        {
-            userData.AccessToken = await response.Content.ReadAsStringAsync();
-            await _userDataContext.SaveChangesAsync();
-        }
-        else
-        {
-            throw new Exception("Failed to update SimpleFin token.");
-        }
     }
 
     private async Task<ApplicationUser?> GetCurrentUserAsync(string id)
@@ -284,7 +270,6 @@ public class SimpleFinService(
                     AccountID = foundAccount.ID,
                 };
 
-                // TODO
                 await _balanceService.CreateBalancesAsync(userData, newBalance);
             }
         }

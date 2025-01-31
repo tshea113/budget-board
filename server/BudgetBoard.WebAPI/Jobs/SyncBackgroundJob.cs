@@ -56,7 +56,7 @@ public class SyncBackgroundJob(ILogger<SyncBackgroundJob> logger, UserDataContex
                 await _applicationUserService.UpdateApplicationUserAsync(user, new ApplicationUserUpdateRequest
                 {
                     AccessToken = user.AccessToken,
-                    LastSync = DateTime.Now
+                    LastSync = DateTime.Now.ToUniversalTime()
                 });
 
                 _logger.LogInformation("Sync successful for {user}", user.Email);

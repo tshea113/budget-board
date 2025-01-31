@@ -26,20 +26,4 @@ public class SimpleFinController(ILogger<SimpleFinController> logger, ISimpleFin
             return Helpers.BuildErrorResponse(_logger, ex.Message);
         }
     }
-
-    [HttpPost]
-    [Authorize]
-    public async Task<IActionResult> UpdateToken(string newToken)
-    {
-        try
-        {
-            var userData = await _simpleFinService.GetUserData(User);
-            await _simpleFinService.UpdateTokenAsync(userData, newToken);
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
-        }
-    }
 }

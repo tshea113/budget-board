@@ -22,13 +22,13 @@ public class SimpleFinData() : ISimpleFinData
 public interface ISimpleFinOrganization
 {
     string? Domain { get; set; }
+    [JsonPropertyName("sfin-url")]
     string SimpleFinUrl { get; set; }
     string? Name { get; set; }
 }
 public class SimpleFinOrganization() : ISimpleFinOrganization
 {
     public string? Domain { get; set; }
-    [JsonPropertyName("sfin-url")]
     public string SimpleFinUrl { get; set; } = string.Empty;
     public string? Name { get; set; }
 }
@@ -39,6 +39,7 @@ public interface ISimpleFinTransaction
     int Posted { get; set; }
     string Amount { get; set; }
     string Description { get; set; }
+    [JsonPropertyName("transacted_at")]
     int TransactedAt { get; set; }
     bool Pending { get; set; }
 }
@@ -48,7 +49,6 @@ public class SimpleFinTransaction() : ISimpleFinTransaction
     public int Posted { get; set; }
     public string Amount { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    [JsonPropertyName("transacted_at")]
     public int TransactedAt { get; set; }
     public bool Pending { get; set; }
 }
@@ -60,7 +60,9 @@ public interface ISimpleFinAccount
     string Name { get; set; }
     string Currency { get; set; }
     string Balance { get; set; }
+    [JsonPropertyName("available-balance")]
     string? AvailableBalance { get; set; }
+    [JsonPropertyName("balance-date")]
     int BalanceDate { get; set; }
     IEnumerable<ISimpleFinTransaction> Transactions { get; set; }
 }
@@ -71,9 +73,7 @@ public class SimpleFinAccount : ISimpleFinAccount
     public string Name { get; set; }
     public string Currency { get; set; }
     public string Balance { get; set; }
-    [JsonPropertyName("available-balance")]
     public string? AvailableBalance { get; set; }
-    [JsonPropertyName("balance-date")]
     public int BalanceDate { get; set; }
     public IEnumerable<ISimpleFinTransaction> Transactions { get; set; }
 

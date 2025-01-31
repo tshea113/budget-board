@@ -6,6 +6,7 @@ namespace BudgetBoard.Service.Interfaces;
 
 public interface IApplicationUserService
 {
-    Task<IApplicationUser> ReadUserAsync(ClaimsPrincipal user);
+    Task<IApplicationUser> GetUserData(ClaimsPrincipal user);
+    Task<IApplicationUserResponse> ReadApplicationUserAsync(ClaimsPrincipal user);
     Task UpdateApplicationUserAsync(IApplicationUser userData, IApplicationUserUpdateRequest user);
 }

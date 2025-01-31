@@ -9,14 +9,24 @@ using System.Security.Claims;
 
 namespace BudgetBoard.Service;
 
-public class ApplicationUserService(ILogger<IApplicationUserService> logger, UserDataContext userDataContext, UserManager<ApplicationUser> userManager, ISimpleFinService simpleFinService) : IApplicationUserService
+public class ApplicationUserService(ILogger<IApplicationUserService> logger, UserDataContext userDataContext, UserManager<ApplicationUser> userManager) : IApplicationUserService
 {
     private readonly ILogger<IApplicationUserService> _logger = logger;
     private readonly UserDataContext _userDataContext = userDataContext;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
-    private readonly ISimpleFinService _simpleFinService = simpleFinService;
 
-    public async Task<IApplicationUserResponse> ReadUserAsync(ClaimsPrincipal user)
+    public async Task<IApplicationUser> GetUserData(ClaimsPrincipal user)
+    {
+        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
+        if (userData == null)
+        {
+            _logger.LogError("Attempt to access authorized content by unauthorized user.");
+            throw new Exception("You are not authorized to access this content.");
+        }
+
+        return userData;
+    }
+    public async Task<IApplicationUserResponse> ReadApplicationUserAsync(ClaimsPrincipal user)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)
@@ -37,9 +47,9 @@ public class ApplicationUserService(ILogger<IApplicationUserService> logger, Use
             throw new Exception("You are not authorized to update this user.");
         }
 
-        await _simpleFinService.UpdateTokenAsync(userData, user.AccessToken);
-
-        currentUser.LastSync = DateTime.Now;
+        // We are assuming that the access token is valid.
+        currentUser.AccessToken = user.AccessToken;
+        currentUser.LastSync = user.LastSync;
 
         await _userDataContext.SaveChangesAsync();
     }

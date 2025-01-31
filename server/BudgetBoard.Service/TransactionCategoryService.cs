@@ -39,7 +39,7 @@ public class TransactionCategoryService(ILogger<ITransactionCategoryService> log
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<ICategoryResponse>> ReadTransactionCategoriesAsync(IApplicationUser userData, Guid guid = default)
+    public IEnumerable<ICategoryResponse> ReadTransactionCategoriesAsync(IApplicationUser userData, Guid guid = default)
     {
         if (guid != default)
         {

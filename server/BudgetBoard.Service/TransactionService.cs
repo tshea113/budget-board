@@ -51,7 +51,7 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<ITransactionResponse>> ReadTransactionsAsync(IApplicationUser userData, int? year, int? month, bool getHidden, Guid guid = default)
+    public IEnumerable<ITransactionResponse> ReadTransactionsAsync(IApplicationUser userData, int? year, int? month, bool getHidden, Guid guid = default)
     {
         var transactions = userData.Accounts
                 .SelectMany(t => t.Transactions)

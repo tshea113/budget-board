@@ -27,7 +27,7 @@ public class ApplicationUserController(ILogger<ApplicationUserController> logger
     {
         try
         {
-            return Ok(await _applicationUserService.ReadUserAsync(User));
+            return Ok(await _applicationUserService.ReadApplicationUserAsync(User));
         }
         catch (Exception ex)
         {
@@ -41,7 +41,7 @@ public class ApplicationUserController(ILogger<ApplicationUserController> logger
     {
         try
         {
-            var userData = await _applicationUserService.ReadUserAsync(User);
+            var userData = await _applicationUserService.GetUserData(User);
             await _applicationUserService.UpdateApplicationUserAsync(userData, newUser);
             return Ok();
         }

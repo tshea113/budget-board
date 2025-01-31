@@ -51,7 +51,7 @@ public class AccountController(ILogger<AccountController> logger, IAccountServic
         try
         {
             var userData = await _accountService.GetUserData(User);
-            return Ok(await _accountService.ReadAccountsAsync(userData, guid));
+            return Ok(_accountService.ReadAccountsAsync(userData, guid));
         }
         catch (Exception ex)
         {
