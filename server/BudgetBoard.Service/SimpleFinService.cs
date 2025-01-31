@@ -22,7 +22,8 @@ public class SimpleFinService(
     IAccountService accountService,
     IInstitutionService institutionService,
     ITransactionService transactionService,
-    IBalanceService balanceService) : ISimpleFinService
+    IBalanceService balanceService,
+    IApplicationUserService applicationUserService) : ISimpleFinService
 {
     public const long UNIX_MONTH = 2629743;
     public const long UNIX_WEEK = 604800;
@@ -66,6 +67,7 @@ public class SimpleFinService(
     private readonly IInstitutionService _institutionService = institutionService;
     private readonly ITransactionService _transactionService = transactionService;
     private readonly IBalanceService _balanceService = balanceService;
+    private readonly IApplicationUserService _applicationUserService = applicationUserService;
 
     public async Task<IApplicationUser> GetUserData(ClaimsPrincipal user)
     {
@@ -105,14 +107,18 @@ public class SimpleFinService(
         await SyncInstitutionsAsync(userData, simpleFinData.Accounts);
         await SyncAccountsAsync(userData, simpleFinData.Accounts);
 
-        // TODO: Update user last sync date
+        await _applicationUserService.UpdateApplicationUserAsync(userData, new ApplicationUserUpdateRequest
+        {
+            AccessToken = userData.AccessToken,
+            LastSync = DateTime.Now,
+        });
 
         return simpleFinData.Errors;
     }
 
     public async Task UpdateTokenAsync(IApplicationUser userData, string accessToken)
     {
-        var response = await GetAccessToken(accessToken);
+        var response = await ReadAccessToken(accessToken);
         if (response.IsSuccessStatusCode)
         {
             userData.AccessToken = await response.Content.ReadAsStringAsync();
@@ -284,7 +290,7 @@ public class SimpleFinService(
         }
     }
 
-    public async Task<HttpResponseMessage> GetAccessToken(string setupToken)
+    public async Task<HttpResponseMessage> ReadAccessToken(string setupToken)
     {
         // SimpleFin tokens are Base64-encoded URLs on which a POST request will
         // return the access URL for getting bank data.

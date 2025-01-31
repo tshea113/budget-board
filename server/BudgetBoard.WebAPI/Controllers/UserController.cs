@@ -1,43 +1,33 @@
 ﻿using BudgetBoard.Database.Data;
-using BudgetBoard.Database.Models;
-using BudgetBoard.WebAPI.Models;
+using BudgetBoard.Service.Interfaces;
+using BudgetBoard.Service.Models;
 using BudgetBoard.WebAPI.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetBoard.WebAPI.Controllers;
 
-public class UserConstants
+public class ApplicationUserConstants
 {
     public const string UserType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
 }
 
 [Route("api/[controller]")]
 [ApiController]
-public class UserController : ControllerBase
+public class ApplicationUserController(ILogger<ApplicationUserController> logger, UserDataContext context, IApplicationUserService applicationUserService, ISimpleFinService simpleFinService) : ControllerBase
 {
-    private readonly ILogger<UserController> _logger;
-
-    private readonly UserDataContext _userDataContext;
-    private SimpleFinHandler _simpleFinHandler;
-
-    public UserController(UserDataContext context, IHttpClientFactory clientFactory, ILogger<UserController> logger)
-    {
-        _userDataContext = context;
-        _simpleFinHandler = new SimpleFinHandler(_userDataContext, clientFactory);
-        _logger = logger;
-    }
+    private readonly ILogger<ApplicationUserController> _logger = logger;
+    private readonly UserDataContext _userDataContext = context;
+    private readonly IApplicationUserService _applicationUserService = applicationUserService;
+    private readonly ISimpleFinService _simpleFinService = simpleFinService;
 
     [HttpGet]
     [Authorize]
-    public IActionResult GetUser()
+    public async Task<IActionResult> Read()
     {
         try
         {
-            var user = GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-            if (user == null) return Unauthorized("You are not authorized to access this content.");
-
-            return Ok(new UserResponse(user));
+            return Ok(await _applicationUserService.ReadUserAsync(User));
         }
         catch (Exception ex)
         {
@@ -47,24 +37,12 @@ public class UserController : ControllerBase
 
     [HttpPut]
     [Authorize]
-    public async Task<IActionResult> EditUser([FromBody] ApplicationUser newUser)
+    public async Task<IActionResult> Update([FromBody] IApplicationUserUpdateRequest newUser)
     {
         try
         {
-            var user = GetCurrentUser(User.Claims.Single(c => c.Type == UserConstants.UserType).Value);
-            if (user == null) return Unauthorized("You are not authorized to access this content.");
-
-            var response = await _simpleFinHandler.GetAccessToken(newUser.AccessToken);
-            if (response.IsSuccessStatusCode)
-            {
-                user.AccessToken = await response.Content.ReadAsStringAsync();
-                await _userDataContext.SaveChangesAsync();
-            }
-            else
-            {
-                return BadRequest("There was an error validating the setup token.");
-            }
-
+            var userData = await _applicationUserService.ReadUserAsync(User);
+            await _applicationUserService.UpdateApplicationUserAsync(userData, newUser);
             return Ok();
         }
         catch (Exception ex)
@@ -75,30 +53,5 @@ public class UserController : ControllerBase
 
     [HttpGet]
     [Route("[action]")]
-    public IActionResult IsSignedIn()
-    {
-        if (HttpContext.User?.Identity?.IsAuthenticated ?? false)
-        {
-            return Ok(true);
-        }
-        else
-        {
-            return Ok(false);
-        }
-    }
-
-    private ApplicationUser? GetCurrentUser(string id)
-    {
-        try
-        {
-            var user = _userDataContext.Users.Single(u => u.Id == new Guid(id));
-
-            return user;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message);
-            return null;
-        }
-    }
+    public IActionResult IsSignedIn() => Ok(HttpContext.User?.Identity?.IsAuthenticated ?? false);
 }

@@ -1,4 +1,6 @@
 ﻿using BudgetBoard.Database.Data;
+using BudgetBoard.Service.Interfaces;
+using BudgetBoard.Service.Models;
 using BudgetBoard.WebAPI.Utils;
 using Microsoft.EntityFrameworkCore;
 using Quartz;
@@ -6,18 +8,12 @@ using Quartz;
 namespace BudgetBoard.WebAPI.Jobs;
 
 [DisallowConcurrentExecution]
-public class SyncBackgroundJob : IJob
+public class SyncBackgroundJob(ILogger<SyncBackgroundJob> logger, UserDataContext userDataContext, ISimpleFinService simpleFinService, IApplicationUserService applicationUserService) : IJob
 {
-    private readonly ILogger _logger;
-    private readonly UserDataContext _userDataContext;
-    private readonly SimpleFinHandler _simpleFinHandler;
-
-    public SyncBackgroundJob(ILogger<SyncBackgroundJob> logger, UserDataContext userDataContext, IHttpClientFactory clientFactory)
-    {
-        _logger = logger;
-        _userDataContext = userDataContext;
-        _simpleFinHandler = new SimpleFinHandler(_userDataContext, clientFactory);
-    }
+    private readonly ILogger _logger = logger;
+    private readonly UserDataContext _userDataContext = userDataContext;
+    private readonly ISimpleFinService _simpleFinService = simpleFinService;
+    private readonly IApplicationUserService _applicationUserService = applicationUserService;
 
     public async Task Execute(IJobExecutionContext context)
     {
@@ -55,17 +51,13 @@ public class SyncBackgroundJob : IJob
                     startDate = Math.Min(oneMonthAgo, lastSyncWithBuffer);
                 }
 
-                var simpleFinData = await _simpleFinHandler.GetAccountData(user.AccessToken, startDate);
-                if (simpleFinData == null)
+                await _simpleFinService.SyncAsync(user);
+
+                await _applicationUserService.UpdateApplicationUserAsync(user, new ApplicationUserUpdateRequest
                 {
-                    continue;
-                }
-
-                await _simpleFinHandler.SyncAccountsAsync(user, simpleFinData.Accounts);
-                await _simpleFinHandler.SyncTransactionsAsync(user, simpleFinData.Accounts);
-                await _simpleFinHandler.SyncBalancesAsync(user, simpleFinData.Accounts);
-
-                await UserHandler.UpdateLastSyncAsync(user, _userDataContext);
+                    AccessToken = user.AccessToken,
+                    LastSync = DateTime.Now
+                });
 
                 _logger.LogInformation("Sync successful for {user}", user.Email);
             }
