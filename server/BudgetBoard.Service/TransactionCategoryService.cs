@@ -15,7 +15,7 @@ public class TransactionCategoryService(ILogger<ITransactionCategoryService> log
     private readonly UserDataContext _userDataContext = userDataContext;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-    public async Task CreateTransactionCategoryAsync(ClaimsPrincipal user, ICategoryCreateRequest request)
+    public async Task<IApplicationUser> GetUserData(ClaimsPrincipal user)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)
@@ -24,6 +24,10 @@ public class TransactionCategoryService(ILogger<ITransactionCategoryService> log
             throw new Exception("You are not authorized to access this content.");
         }
 
+        return userData;
+    }
+    public async Task CreateTransactionCategoryAsync(IApplicationUser userData, ICategoryCreateRequest request)
+    {
         var newCategory = new Category
         {
             Value = request.Value,
@@ -35,15 +39,8 @@ public class TransactionCategoryService(ILogger<ITransactionCategoryService> log
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<ICategoryResponse>> ReadTransactionCategoriesAsync(ClaimsPrincipal user, Guid guid = default)
+    public async Task<IEnumerable<ICategoryResponse>> ReadTransactionCategoriesAsync(IApplicationUser userData, Guid guid = default)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         if (guid != default)
         {
             var transactionCategory = userData.TransactionCategories.FirstOrDefault(t => t.ID == guid);
@@ -59,15 +56,8 @@ public class TransactionCategoryService(ILogger<ITransactionCategoryService> log
         return userData.TransactionCategories.Select(c => new CategoryResponse(c));
     }
 
-    public async Task UpdateTransactionCategoryAsync(ClaimsPrincipal user, ICategoryUpdateRequest updatedCategory)
+    public async Task UpdateTransactionCategoryAsync(IApplicationUser userData, ICategoryUpdateRequest updatedCategory)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var transactionCategory = userData.TransactionCategories.FirstOrDefault(t => t.ID == updatedCategory.ID);
         if (transactionCategory == null)
         {
@@ -81,15 +71,8 @@ public class TransactionCategoryService(ILogger<ITransactionCategoryService> log
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task DeleteTransactionCategoryAsync(ClaimsPrincipal user, Guid guid)
+    public async Task DeleteTransactionCategoryAsync(IApplicationUser userData, Guid guid)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var transactionCategory = userData.TransactionCategories.FirstOrDefault(t => t.ID == guid);
         if (transactionCategory == null)
         {

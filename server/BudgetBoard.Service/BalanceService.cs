@@ -15,7 +15,7 @@ public class BalanceService(ILogger<IBalanceService> logger, UserDataContext use
     private readonly UserDataContext _userDataContext = userDataContext;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-    public async Task CreateBalancesAsync(ClaimsPrincipal user, IBalanceCreateRequest balance)
+    public async Task<IApplicationUser> GetUserData(ClaimsPrincipal user)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)
@@ -23,7 +23,11 @@ public class BalanceService(ILogger<IBalanceService> logger, UserDataContext use
             _logger.LogError("Attempt to access authorized content by unauthorized user.");
             throw new Exception("You are not authorized to access this content.");
         }
+        return userData;
+    }
 
+    public async Task CreateBalancesAsync(IApplicationUser userData, IBalanceCreateRequest balance)
+    {
         var account = userData.Accounts.FirstOrDefault(a => a.ID == balance.AccountID);
         if (account == null)
         {
@@ -42,15 +46,8 @@ public class BalanceService(ILogger<IBalanceService> logger, UserDataContext use
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<IBalanceResponse>> ReadBalancesAsync(ClaimsPrincipal user, Guid accountId)
+    public IEnumerable<IBalanceResponse> ReadBalancesAsync(IApplicationUser userData, Guid accountId)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var account = userData.Accounts.FirstOrDefault(a => a.ID == accountId);
         if (account == null)
         {
@@ -61,15 +58,8 @@ public class BalanceService(ILogger<IBalanceService> logger, UserDataContext use
         return account.Balances.Select(b => new BalanceResponse(b));
     }
 
-    public async Task UpdateBalanceAsync(ClaimsPrincipal user, IBalanceUpdateRequest updatedBalance)
+    public async Task UpdateBalanceAsync(IApplicationUser userData, IBalanceUpdateRequest updatedBalance)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var balance = userData.Accounts.SelectMany(a => a.Balances).FirstOrDefault(b => b.ID == updatedBalance.ID);
         if (balance == null)
         {
@@ -83,15 +73,8 @@ public class BalanceService(ILogger<IBalanceService> logger, UserDataContext use
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task DeleteBalanceAsync(ClaimsPrincipal user, Guid balanceId)
+    public async Task DeleteBalanceAsync(IApplicationUser userData, Guid balanceId)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var balance = userData.Accounts.SelectMany(a => a.Balances).FirstOrDefault(b => b.ID == balanceId);
         if (balance == null)
         {

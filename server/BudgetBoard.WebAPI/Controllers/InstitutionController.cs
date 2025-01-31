@@ -19,7 +19,8 @@ public class InstitutionController(ILogger<InstitutionController> logger, IInsti
     {
         try
         {
-            await _institutionService.CreateInstitutionAsync(User, createdInstitution);
+            var userData = await _institutionService.GetUserData(User);
+            await _institutionService.CreateInstitutionAsync(userData, createdInstitution);
             return Ok();
         }
         catch (Exception ex)
@@ -34,7 +35,8 @@ public class InstitutionController(ILogger<InstitutionController> logger, IInsti
     {
         try
         {
-            return Ok(await _institutionService.ReadInstitutionsAsync(User));
+            var userData = await _institutionService.GetUserData(User);
+            return Ok(_institutionService.ReadInstitutionsAsync(userData));
         }
         catch (Exception ex)
         {
@@ -48,7 +50,8 @@ public class InstitutionController(ILogger<InstitutionController> logger, IInsti
     {
         try
         {
-            return Ok(await _institutionService.ReadInstitutionsAsync(User, guid));
+            var userData = await _institutionService.GetUserData(User);
+            return Ok(_institutionService.ReadInstitutionsAsync(userData, guid));
         }
         catch (Exception ex)
         {
@@ -62,7 +65,8 @@ public class InstitutionController(ILogger<InstitutionController> logger, IInsti
     {
         try
         {
-            await _institutionService.UpdateInstitutionAsync(User, updatedInstitution);
+            var userData = await _institutionService.GetUserData(User);
+            await _institutionService.UpdateInstitutionAsync(userData, updatedInstitution);
             return Ok();
         }
         catch (Exception ex)
@@ -77,7 +81,8 @@ public class InstitutionController(ILogger<InstitutionController> logger, IInsti
     {
         try
         {
-            await _institutionService.DeleteInstitutionAsync(User, guid, deleteTransactions);
+            var userData = await _institutionService.GetUserData(User);
+            await _institutionService.DeleteInstitutionAsync(userData, guid, deleteTransactions);
             return Ok();
         }
         catch (Exception ex)
@@ -93,7 +98,8 @@ public class InstitutionController(ILogger<InstitutionController> logger, IInsti
     {
         try
         {
-            await _institutionService.OrderInstitutionsAsync(User, institutions);
+            var userData = await _institutionService.GetUserData(User);
+            await _institutionService.OrderInstitutionsAsync(userData, institutions);
             return Ok();
         }
         catch (Exception ex)

@@ -67,7 +67,7 @@ public class SimpleFinService(
     private readonly ITransactionService _transactionService = transactionService;
     private readonly IBalanceService _balanceService = balanceService;
 
-    public async Task<IEnumerable<string>> SyncAsync(ClaimsPrincipal user)
+    public async Task<IApplicationUser> GetUserData(ClaimsPrincipal user)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)
@@ -76,6 +76,11 @@ public class SimpleFinService(
             throw new Exception("You are not authorized to access this content.");
         }
 
+        return userData;
+    }
+
+    public async Task<IEnumerable<string>> SyncAsync(IApplicationUser userData)
+    {
         long startDate;
         if (userData.LastSync == DateTime.MinValue)
         {
@@ -97,23 +102,16 @@ public class SimpleFinService(
             throw new Exception("SimpleFin data not found.");
         }
 
-        await SyncInstitutionsAsync(user, simpleFinData.Accounts);
-        await SyncAccountsAsync(user, simpleFinData.Accounts);
+        await SyncInstitutionsAsync(userData, simpleFinData.Accounts);
+        await SyncAccountsAsync(userData, simpleFinData.Accounts);
 
         // TODO: Update user last sync date
 
         return simpleFinData.Errors;
     }
 
-    public async Task UpdateTokenAsync(ClaimsPrincipal user, string accessToken)
+    public async Task UpdateTokenAsync(IApplicationUser userData, string accessToken)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var response = await GetAccessToken(accessToken);
         if (response.IsSuccessStatusCode)
         {
@@ -176,15 +174,8 @@ public class SimpleFinService(
         return JsonSerializer.Deserialize<ISimpleFinAccountData>(jsonString, s_readOptions) ?? new SimpleFinAccountData();
     }
 
-    private async Task SyncInstitutionsAsync(ClaimsPrincipal user, IEnumerable<ISimpleFinAccount> accountsData)
+    private async Task SyncInstitutionsAsync(IApplicationUser userData, IEnumerable<ISimpleFinAccount> accountsData)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var institutions = accountsData.Select(a => a.Org).Distinct();
         foreach (var institution in institutions)
         {
@@ -197,19 +188,12 @@ public class SimpleFinService(
                 UserID = userData.Id,
             };
 
-            await _institutionService.CreateInstitutionAsync(user, newInstitution);
+            await _institutionService.CreateInstitutionAsync(userData, newInstitution);
         }
     }
 
-    private async Task SyncAccountsAsync(ClaimsPrincipal user, IEnumerable<ISimpleFinAccount> accountsData)
+    private async Task SyncAccountsAsync(IApplicationUser userData, IEnumerable<ISimpleFinAccount> accountsData)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         foreach (var accountData in accountsData)
         {
             var institutionId = userData.Institutions.FirstOrDefault(institution => institution.Name == accountData.Org.Name)?.ID;
@@ -229,24 +213,17 @@ public class SimpleFinService(
                     InstitutionID = institutionId,
                 };
 
-                await _accountService.CreateAccountAsync(user, newAccount);
+                await _accountService.CreateAccountAsync(userData, newAccount);
             }
 
-            await SyncTransactionsAsync(user, accountData.Id, accountData.Transactions);
-            await SyncBalancesAsync(user, accountData.Id, accountData);
+            await SyncTransactionsAsync(userData, accountData.Id, accountData.Transactions);
+            await SyncBalancesAsync(userData, accountData.Id, accountData);
         }
     }
 
-    private async Task SyncTransactionsAsync(ClaimsPrincipal user, string syncId, IEnumerable<ISimpleFinTransaction> transactionsData)
+    private async Task SyncTransactionsAsync(IApplicationUser userData, string syncId, IEnumerable<ISimpleFinTransaction> transactionsData)
     {
         if (!transactionsData.Any()) return;
-
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
 
         var userAccount = userData.Accounts.FirstOrDefault(a => (a.SyncID ?? string.Empty).Equals(syncId));
         var userTransactions = userAccount?.Transactions.OrderByDescending(t => t.Date).ToList();
@@ -273,21 +250,14 @@ public class SimpleFinService(
                         AccountID = userAccount.ID,
                     };
 
-                    await _transactionService.CreateTransactionAsync(user, newTransaction);
+                    await _transactionService.CreateTransactionAsync(userData, newTransaction);
                 }
             }
         }
     }
 
-    private async Task SyncBalancesAsync(ClaimsPrincipal user, string syncId, ISimpleFinAccount accountData)
+    private async Task SyncBalancesAsync(IApplicationUser userData, string syncId, ISimpleFinAccount accountData)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var foundAccount = userData.Accounts.SingleOrDefault(a => a.SyncID == syncId);
 
         // User account should never be null here, but let's not make a bad problem worse.
@@ -308,7 +278,8 @@ public class SimpleFinService(
                     AccountID = foundAccount.ID,
                 };
 
-                await _balanceService.CreateBalancesAsync(user, newBalance);
+                // TODO
+                await _balanceService.CreateBalancesAsync(userData, newBalance);
             }
         }
     }

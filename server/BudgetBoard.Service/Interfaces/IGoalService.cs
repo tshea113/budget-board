@@ -1,12 +1,14 @@
-﻿using BudgetBoard.Service.Models;
+﻿using BudgetBoard.Database.Models;
+using BudgetBoard.Service.Models;
 using System.Security.Claims;
 
 namespace BudgetBoard.Service.Interfaces;
 
 public interface IGoalService
 {
-    Task CreateGoalAsync(ClaimsPrincipal user, IGoalCreateRequest request);
-    Task<IEnumerable<IGoalResponse>> ReadGoalsAsync(ClaimsPrincipal user, bool includeInterest);
-    Task UpdateGoalAsync(ClaimsPrincipal user, IGoalUpdateRequest request);
-    Task DeleteGoalAsync(ClaimsPrincipal user, Guid guid);
+    Task<IApplicationUser> GetUserData(ClaimsPrincipal user);
+    Task CreateGoalAsync(IApplicationUser userData, IGoalCreateRequest request);
+    IEnumerable<IGoalResponse> ReadGoalsAsync(IApplicationUser userData, bool includeInterest);
+    Task UpdateGoalAsync(IApplicationUser userData, IGoalUpdateRequest request);
+    Task DeleteGoalAsync(IApplicationUser userData, Guid guid);
 }

@@ -19,7 +19,8 @@ namespace BudgetBoard.WebAPI.Controllers
         {
             try
             {
-                await _budgetService.CreateBudgetsAsync(User, budgets);
+                var userData = await _budgetService.GetUserData(User);
+                await _budgetService.CreateBudgetsAsync(userData, budgets);
                 return Ok();
             }
             catch (Exception ex)
@@ -34,7 +35,8 @@ namespace BudgetBoard.WebAPI.Controllers
         {
             try
             {
-                return Ok(await _budgetService.ReadBudgetsAsync(User, date));
+                var userData = await _budgetService.GetUserData(User);
+                return Ok(_budgetService.ReadBudgetsAsync(userData, date));
             }
             catch (Exception ex)
             {
@@ -48,7 +50,8 @@ namespace BudgetBoard.WebAPI.Controllers
         {
             try
             {
-                await _budgetService.UpdateBudgetAsync(User, editBudget);
+                var userData = await _budgetService.GetUserData(User);
+                await _budgetService.UpdateBudgetAsync(userData, editBudget);
                 return Ok();
             }
             catch (Exception ex)
@@ -63,7 +66,8 @@ namespace BudgetBoard.WebAPI.Controllers
         {
             try
             {
-                await _budgetService.DeleteBudgetAsync(User, guid);
+                var userData = await _budgetService.GetUserData(User);
+                await _budgetService.DeleteBudgetAsync(userData, guid);
                 return Ok();
             }
             catch (Exception ex)

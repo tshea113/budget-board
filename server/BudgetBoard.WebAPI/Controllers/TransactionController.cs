@@ -19,7 +19,8 @@ public class TransactionController(ILogger<TransactionController> logger, ITrans
     {
         try
         {
-            await _transactionService.CreateTransactionAsync(User, transaction);
+            var userData = await _transactionService.GetUserData(User);
+            await _transactionService.CreateTransactionAsync(userData, transaction);
             return Ok();
         }
         catch (Exception ex)
@@ -35,7 +36,8 @@ public class TransactionController(ILogger<TransactionController> logger, ITrans
 
         try
         {
-            return Ok(await _transactionService.ReadTransactionsAsync(User, year, month, getHidden));
+            var userData = await _transactionService.GetUserData(User);
+            return Ok(_transactionService.ReadTransactionsAsync(userData, year, month, getHidden));
         }
         catch (Exception ex)
         {
@@ -49,7 +51,8 @@ public class TransactionController(ILogger<TransactionController> logger, ITrans
     {
         try
         {
-            return Ok(await _transactionService.ReadTransactionsAsync(User, null, null, false, guid));
+            var userData = await _transactionService.GetUserData(User);
+            return Ok(_transactionService.ReadTransactionsAsync(userData, null, null, false, guid));
         }
         catch (Exception ex)
         {
@@ -63,7 +66,8 @@ public class TransactionController(ILogger<TransactionController> logger, ITrans
     {
         try
         {
-            await _transactionService.UpdateTransactionAsync(User, newTransaction);
+            var userData = await _transactionService.GetUserData(User);
+            await _transactionService.UpdateTransactionAsync(userData, newTransaction);
             return Ok();
         }
         catch (Exception ex)
@@ -78,7 +82,8 @@ public class TransactionController(ILogger<TransactionController> logger, ITrans
     {
         try
         {
-            await _transactionService.DeleteTransactionAsync(User, guid);
+            var userData = await _transactionService.GetUserData(User);
+            await _transactionService.DeleteTransactionAsync(userData, guid);
             return Ok();
         }
 
@@ -95,7 +100,8 @@ public class TransactionController(ILogger<TransactionController> logger, ITrans
     {
         try
         {
-            await _transactionService.RestoreTransactionAsync(User, guid);
+            var userData = await _transactionService.GetUserData(User);
+            await _transactionService.RestoreTransactionAsync(userData, guid);
             return Ok();
         }
         catch (Exception ex)

@@ -1,13 +1,15 @@
-﻿using BudgetBoard.Service.Models;
+﻿using BudgetBoard.Database.Models;
+using BudgetBoard.Service.Models;
 using System.Security.Claims;
 
 namespace BudgetBoard.Service.Interfaces;
 
 public interface IInstitutionService
 {
-    Task CreateInstitutionAsync(ClaimsPrincipal user, IInstitutionCreateRequest request);
-    Task<IEnumerable<IInstitutionResponse>> ReadInstitutionsAsync(ClaimsPrincipal user, Guid guid = default);
-    Task UpdateInstitutionAsync(ClaimsPrincipal user, IInstitutionUpdateRequest request);
-    Task DeleteInstitutionAsync(ClaimsPrincipal user, Guid id, bool deleteTransactions);
-    Task OrderInstitutionsAsync(ClaimsPrincipal user, IEnumerable<IInstitutionIndexRequest> orderedInstitutions);
+    Task<IApplicationUser> GetUserData(ClaimsPrincipal user);
+    Task CreateInstitutionAsync(IApplicationUser userData, IInstitutionCreateRequest request);
+    IEnumerable<IInstitutionResponse> ReadInstitutionsAsync(IApplicationUser userData, Guid guid = default);
+    Task UpdateInstitutionAsync(IApplicationUser userData, IInstitutionUpdateRequest request);
+    Task DeleteInstitutionAsync(IApplicationUser userData, Guid id, bool deleteTransactions);
+    Task OrderInstitutionsAsync(IApplicationUser userData, IEnumerable<IInstitutionIndexRequest> orderedInstitutions);
 }

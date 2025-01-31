@@ -19,7 +19,8 @@ public class AccountController(ILogger<AccountController> logger, IAccountServic
     {
         try
         {
-            await _accountService.CreateAccountAsync(User, account);
+            var userData = await _accountService.GetUserData(User);
+            await _accountService.CreateAccountAsync(userData, account);
             return Ok();
         }
         catch (Exception ex)
@@ -34,7 +35,8 @@ public class AccountController(ILogger<AccountController> logger, IAccountServic
     {
         try
         {
-            return Ok(await _accountService.ReadAccountsAsync(User));
+            var userData = await _accountService.GetUserData(User);
+            return Ok(_accountService.ReadAccountsAsync(userData));
         }
         catch (Exception ex)
         {
@@ -48,7 +50,8 @@ public class AccountController(ILogger<AccountController> logger, IAccountServic
     {
         try
         {
-            return Ok(await _accountService.ReadAccountsAsync(User, guid));
+            var userData = await _accountService.GetUserData(User);
+            return Ok(await _accountService.ReadAccountsAsync(userData, guid));
         }
         catch (Exception ex)
         {
@@ -62,7 +65,8 @@ public class AccountController(ILogger<AccountController> logger, IAccountServic
     {
         try
         {
-            await _accountService.UpdateAccountAsync(User, editedAccount);
+            var userData = await _accountService.GetUserData(User);
+            await _accountService.UpdateAccountAsync(userData, editedAccount);
             return Ok();
         }
         catch (Exception ex)
@@ -77,7 +81,8 @@ public class AccountController(ILogger<AccountController> logger, IAccountServic
     {
         try
         {
-            await _accountService.DeleteAccountAsync(User, guid, deleteTransactions);
+            var userData = await _accountService.GetUserData(User);
+            await _accountService.DeleteAccountAsync(userData, guid, deleteTransactions);
             return Ok();
         }
         catch (Exception ex)
@@ -93,7 +98,8 @@ public class AccountController(ILogger<AccountController> logger, IAccountServic
     {
         try
         {
-            await _accountService.RestoreAccountAsync(User, guid);
+            var userData = await _accountService.GetUserData(User);
+            await _accountService.RestoreAccountAsync(userData, guid);
             return Ok();
         }
         catch (Exception ex)
@@ -109,7 +115,8 @@ public class AccountController(ILogger<AccountController> logger, IAccountServic
     {
         try
         {
-            await _accountService.OrderAccountsAsync(User, accounts);
+            var userData = await _accountService.GetUserData(User);
+            await _accountService.OrderAccountsAsync(userData, accounts);
             return Ok();
         }
         catch (Exception ex)

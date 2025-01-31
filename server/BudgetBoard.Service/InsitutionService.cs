@@ -14,7 +14,8 @@ public class InstitutionService(ILogger<IInstitutionService> logger, UserDataCon
     private readonly UserDataContext _userDataContext = userDataContext;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-    public async Task CreateInstitutionAsync(ClaimsPrincipal user, IInstitutionCreateRequest request)
+
+    public async Task<IApplicationUser> GetUserData(ClaimsPrincipal user)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)
@@ -23,6 +24,10 @@ public class InstitutionService(ILogger<IInstitutionService> logger, UserDataCon
             throw new Exception("You are not authorized to access this content.");
         }
 
+        return userData;
+    }
+    public async Task CreateInstitutionAsync(IApplicationUser userData, IInstitutionCreateRequest request)
+    {
         var institution = new Institution
         {
             Name = request.Name,
@@ -34,15 +39,8 @@ public class InstitutionService(ILogger<IInstitutionService> logger, UserDataCon
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<IInstitutionResponse>> ReadInstitutionsAsync(ClaimsPrincipal user, Guid guid = default)
+    public IEnumerable<IInstitutionResponse> ReadInstitutionsAsync(IApplicationUser userData, Guid guid = default)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         if (guid != default)
         {
             return [new InstitutionResponse(userData.Institutions.Single(i => i.ID == guid))];
@@ -51,15 +49,8 @@ public class InstitutionService(ILogger<IInstitutionService> logger, UserDataCon
         return userData.Institutions.Select(i => new InstitutionResponse(i));
     }
 
-    public async Task UpdateInstitutionAsync(ClaimsPrincipal user, IInstitutionUpdateRequest request)
+    public async Task UpdateInstitutionAsync(IApplicationUser userData, IInstitutionUpdateRequest request)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var institution = userData.Institutions.Single(i => i.ID == request.ID);
         if (institution == null)
         {
@@ -74,15 +65,8 @@ public class InstitutionService(ILogger<IInstitutionService> logger, UserDataCon
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task DeleteInstitutionAsync(ClaimsPrincipal user, Guid id, bool deleteTransactions)
+    public async Task DeleteInstitutionAsync(IApplicationUser userData, Guid id, bool deleteTransactions)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var institution = userData.Institutions.Single(i => i.ID == id);
         if (institution == null)
         {
@@ -102,15 +86,8 @@ public class InstitutionService(ILogger<IInstitutionService> logger, UserDataCon
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task OrderInstitutionsAsync(ClaimsPrincipal user, IEnumerable<IInstitutionIndexRequest> orderedInstitutions)
+    public async Task OrderInstitutionsAsync(IApplicationUser userData, IEnumerable<IInstitutionIndexRequest> orderedInstitutions)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         foreach (var institution in orderedInstitutions)
         {
             var inst = userData.Institutions.Single(i => i.ID == institution.ID);

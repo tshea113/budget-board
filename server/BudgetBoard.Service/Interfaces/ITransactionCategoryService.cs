@@ -1,12 +1,14 @@
-﻿using BudgetBoard.Service.Models;
+﻿using BudgetBoard.Database.Models;
+using BudgetBoard.Service.Models;
 using System.Security.Claims;
 
 namespace BudgetBoard.Service.Interfaces;
 
 public interface ITransactionCategoryService
 {
-    Task CreateTransactionCategoryAsync(ClaimsPrincipal user, ICategoryCreateRequest request);
-    Task<IEnumerable<ICategoryResponse>> ReadTransactionCategoriesAsync(ClaimsPrincipal user, Guid guid = default);
-    Task UpdateTransactionCategoryAsync(ClaimsPrincipal user, ICategoryUpdateRequest request);
-    Task DeleteTransactionCategoryAsync(ClaimsPrincipal user, Guid guid);
+    Task<IApplicationUser> GetUserData(ClaimsPrincipal user);
+    Task CreateTransactionCategoryAsync(IApplicationUser userData, ICategoryCreateRequest request);
+    IEnumerable<ICategoryResponse> ReadTransactionCategoriesAsync(IApplicationUser userData, Guid guid = default);
+    Task UpdateTransactionCategoryAsync(IApplicationUser userData, ICategoryUpdateRequest request);
+    Task DeleteTransactionCategoryAsync(IApplicationUser userData, Guid guid);
 }

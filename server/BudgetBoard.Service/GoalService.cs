@@ -15,7 +15,7 @@ public class GoalService(ILogger<IGoalService> logger, UserDataContext userDataC
     private readonly UserDataContext _userDataContext = userDataContext;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-    public async Task CreateGoalAsync(ClaimsPrincipal user, IGoalCreateRequest createdGoal)
+    public async Task<IApplicationUser> GetUserData(ClaimsPrincipal user)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)
@@ -24,6 +24,10 @@ public class GoalService(ILogger<IGoalService> logger, UserDataContext userDataC
             throw new Exception("You are not authorized to access this content.");
         }
 
+        return userData;
+    }
+    public async Task CreateGoalAsync(IApplicationUser userData, IGoalCreateRequest createdGoal)
+    {
         decimal runningBalance = 0.0M;
         var accounts = new List<Account>();
         foreach (var accountId in createdGoal.AccountIds)
@@ -61,15 +65,8 @@ public class GoalService(ILogger<IGoalService> logger, UserDataContext userDataC
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<IGoalResponse>> ReadGoalsAsync(ClaimsPrincipal user, bool includeInterest)
+    public IEnumerable<IGoalResponse> ReadGoalsAsync(IApplicationUser userData, bool includeInterest)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var goalsResponse = new List<IGoalResponse>();
         var goals = userData.Goals.ToList();
         foreach (var goal in goals)
@@ -94,15 +91,8 @@ public class GoalService(ILogger<IGoalService> logger, UserDataContext userDataC
         return goalsResponse;
     }
 
-    public async Task UpdateGoalAsync(ClaimsPrincipal user, IGoalUpdateRequest updatedGoal)
+    public async Task UpdateGoalAsync(IApplicationUser userData, IGoalUpdateRequest updatedGoal)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var goal = userData.Goals.FirstOrDefault(g => g.ID == updatedGoal.ID);
         if (goal == null)
         {
@@ -119,15 +109,8 @@ public class GoalService(ILogger<IGoalService> logger, UserDataContext userDataC
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task DeleteGoalAsync(ClaimsPrincipal user, Guid guid)
+    public async Task DeleteGoalAsync(IApplicationUser userData, Guid guid)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var goal = userData.Goals.FirstOrDefault(g => g.ID == guid);
         if (goal == null)
         {

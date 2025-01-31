@@ -15,7 +15,7 @@ public class BudgetService(ILogger<IBudgetService> logger, UserDataContext userD
     private readonly UserDataContext _userDataContext = userDataContext;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-    public async Task CreateBudgetsAsync(ClaimsPrincipal user, IEnumerable<IBudgetCreateRequest> budgets)
+    public async Task<IApplicationUser> GetUserData(ClaimsPrincipal user)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)
@@ -24,6 +24,10 @@ public class BudgetService(ILogger<IBudgetService> logger, UserDataContext userD
             throw new Exception("You are not authorized to access this content.");
         }
 
+        return userData;
+    }
+    public async Task CreateBudgetsAsync(IApplicationUser userData, IEnumerable<IBudgetCreateRequest> budgets)
+    {
         foreach (var budget in budgets)
         {
             // Do not allow duplicate categories in a given month
@@ -50,30 +54,16 @@ public class BudgetService(ILogger<IBudgetService> logger, UserDataContext userD
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<IBudgetResponse>> ReadBudgetsAsync(ClaimsPrincipal user, DateTime date)
+    public IEnumerable<IBudgetResponse> ReadBudgetsAsync(IApplicationUser userData, DateTime date)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var budgets = userData.Budgets
         .Where(b => b.Date.Month == date.Month && b.Date.Year == date.Year);
 
         return budgets.Select(b => new BudgetResponse(b));
     }
 
-    public async Task UpdateBudgetAsync(ClaimsPrincipal user, IBudgetUpdateRequest updatedBudget)
+    public async Task UpdateBudgetAsync(IApplicationUser userData, IBudgetUpdateRequest updatedBudget)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var budget = userData.Budgets.SingleOrDefault(b => b.ID == updatedBudget.ID);
         if (budget == null)
         {
@@ -86,15 +76,8 @@ public class BudgetService(ILogger<IBudgetService> logger, UserDataContext userD
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task DeleteBudgetAsync(ClaimsPrincipal user, Guid guid)
+    public async Task DeleteBudgetAsync(IApplicationUser userData, Guid guid)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var budget = userData.Budgets.SingleOrDefault(b => b.ID == guid);
         if (budget == null)
         {

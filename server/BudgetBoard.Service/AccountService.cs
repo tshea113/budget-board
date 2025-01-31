@@ -15,7 +15,7 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
     private readonly UserDataContext _userDataContext = userDataContext;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-    public async Task CreateAccountAsync(ClaimsPrincipal user, IAccountCreateRequest account)
+    public async Task<IApplicationUser> GetUserData(ClaimsPrincipal user)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)
@@ -23,7 +23,11 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
             _logger.LogError("Attempt to access authorized content by unauthorized user.");
             throw new Exception("You are not authorized to access this content.");
         }
+        return userData;
+    }
 
+    public async Task CreateAccountAsync(IApplicationUser userData, IAccountCreateRequest account)
+    {
         var newAccount = new Account
         {
             SyncID = account.SyncID,
@@ -40,15 +44,8 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<IAccountResponse>> ReadAccountsAsync(ClaimsPrincipal user, Guid guid = default)
+    public IEnumerable<IAccountResponse> ReadAccountsAsync(IApplicationUser userData, Guid guid = default)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         if (guid != default)
         {
             var account = userData.Accounts.FirstOrDefault(a => a.ID == guid);
@@ -64,15 +61,8 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
         return userData.Accounts.Select(a => new AccountResponse(a));
     }
 
-    public async Task UpdateAccountAsync(ClaimsPrincipal user, IAccountUpdateRequest editedAccount)
+    public async Task UpdateAccountAsync(IApplicationUser userData, IAccountUpdateRequest editedAccount)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var account = userData.Accounts.FirstOrDefault(a => a.ID == editedAccount.ID);
         if (account == null)
         {
@@ -89,15 +79,8 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task DeleteAccountAsync(ClaimsPrincipal user, Guid guid, bool deleteTransactions = false)
+    public async Task DeleteAccountAsync(IApplicationUser userData, Guid guid, bool deleteTransactions = false)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var account = userData.Accounts.FirstOrDefault(a => a.ID == guid);
         if (account == null)
         {
@@ -118,15 +101,8 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task RestoreAccountAsync(ClaimsPrincipal user, Guid guid)
+    public async Task RestoreAccountAsync(IApplicationUser userData, Guid guid)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var account = userData.Accounts.FirstOrDefault(a => a.ID == guid);
         if (account == null)
         {
@@ -138,15 +114,8 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task OrderAccountsAsync(ClaimsPrincipal user, IEnumerable<IAccountIndexRequest> orderedAccounts)
+    public async Task OrderAccountsAsync(IApplicationUser userData, IEnumerable<IAccountIndexRequest> orderedAccounts)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         foreach (var orderedAccount in orderedAccounts)
         {
             var account = userData.Accounts.FirstOrDefault(a => a.ID == orderedAccount.ID);

@@ -19,7 +19,8 @@ public class BalanceController(ILogger<BalanceController> logger, IBalanceServic
     {
         try
         {
-            await _balanceService.CreateBalancesAsync(User, balance);
+            var userData = await _balanceService.GetUserData(User);
+            await _balanceService.CreateBalancesAsync(userData, balance);
             return Ok();
         }
         catch (Exception ex)
@@ -34,7 +35,8 @@ public class BalanceController(ILogger<BalanceController> logger, IBalanceServic
     {
         try
         {
-            return Ok(await _balanceService.ReadBalancesAsync(User, accountId));
+            var userData = await _balanceService.GetUserData(User);
+            return Ok(_balanceService.ReadBalancesAsync(userData, accountId));
         }
         catch (Exception ex)
         {
@@ -48,7 +50,8 @@ public class BalanceController(ILogger<BalanceController> logger, IBalanceServic
     {
         try
         {
-            await _balanceService.UpdateBalanceAsync(User, updatedBalance);
+            var userData = await _balanceService.GetUserData(User);
+            await _balanceService.UpdateBalanceAsync(userData, updatedBalance);
             return Ok();
         }
         catch (Exception ex)
@@ -63,7 +66,8 @@ public class BalanceController(ILogger<BalanceController> logger, IBalanceServic
     {
         try
         {
-            await _balanceService.DeleteBalanceAsync(User, id);
+            var userData = await _balanceService.GetUserData(User);
+            await _balanceService.DeleteBalanceAsync(userData, id);
             return Ok();
         }
         catch (Exception ex)

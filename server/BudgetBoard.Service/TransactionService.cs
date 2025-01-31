@@ -15,7 +15,7 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
     private readonly UserDataContext _userDataContext = userDataContext;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-    public async Task CreateTransactionAsync(ClaimsPrincipal user, ITransactionCreateRequest transaction)
+    public async Task<IApplicationUser> GetUserData(ClaimsPrincipal user)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)
@@ -24,6 +24,10 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
             throw new Exception("You are not authorized to access this content.");
         }
 
+        return userData;
+    }
+    public async Task CreateTransactionAsync(IApplicationUser userData, ITransactionCreateRequest transaction)
+    {
         var account = userData.Accounts.FirstOrDefault(a => a.ID == transaction.AccountID);
         if (account == null)
         {
@@ -47,15 +51,8 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<ITransactionResponse>> ReadTransactionsAsync(ClaimsPrincipal user, int? year, int? month, bool getHidden, Guid guid = default)
+    public async Task<IEnumerable<ITransactionResponse>> ReadTransactionsAsync(IApplicationUser userData, int? year, int? month, bool getHidden, Guid guid = default)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var transactions = userData.Accounts
                 .SelectMany(t => t.Transactions)
                 .Where(t => getHidden || !(t.Account?.HideTransactions ?? false));
@@ -85,15 +82,8 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         return transactions.Select(t => new TransactionResponse(t));
     }
 
-    public async Task UpdateTransactionAsync(ClaimsPrincipal user, ITransactionUpdateRequest editedTransaction)
+    public async Task UpdateTransactionAsync(IApplicationUser userData, ITransactionUpdateRequest editedTransaction)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var transaction = userData.Accounts
             .SelectMany(t => t.Transactions)
             .First(t => t.ID == editedTransaction.ID);
@@ -112,15 +102,8 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task DeleteTransactionAsync(ClaimsPrincipal user, Guid guid)
+    public async Task DeleteTransactionAsync(IApplicationUser userData, Guid guid)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var transaction = userData.Accounts
             .SelectMany(t => t.Transactions)
             .First(t => t.ID == guid);
@@ -134,15 +117,8 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task RestoreTransactionAsync(ClaimsPrincipal user, Guid guid)
+    public async Task RestoreTransactionAsync(IApplicationUser userData, Guid guid)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
         var transaction = userData.Accounts
             .SelectMany(t => t.Transactions)
             .First(t => t.ID == guid);

@@ -19,7 +19,8 @@ public class TransactionCategoryController(ILogger<TransactionCategoryController
     {
         try
         {
-            await _transactionCategoryService.CreateTransactionCategoryAsync(User, category);
+            var userData = await _transactionCategoryService.GetUserData(User);
+            await _transactionCategoryService.CreateTransactionCategoryAsync(userData, category);
             return Ok();
         }
         catch (Exception ex)
@@ -34,7 +35,8 @@ public class TransactionCategoryController(ILogger<TransactionCategoryController
     {
         try
         {
-            return Ok(await _transactionCategoryService.ReadTransactionCategoriesAsync(User));
+            var userData = await _transactionCategoryService.GetUserData(User);
+            return Ok(_transactionCategoryService.ReadTransactionCategoriesAsync(userData));
         }
         catch (Exception ex)
         {
@@ -48,7 +50,8 @@ public class TransactionCategoryController(ILogger<TransactionCategoryController
     {
         try
         {
-            await _transactionCategoryService.UpdateTransactionCategoryAsync(User, category);
+            var userData = await _transactionCategoryService.GetUserData(User);
+            await _transactionCategoryService.UpdateTransactionCategoryAsync(userData, category);
             return Ok();
         }
         catch (Exception ex)
@@ -63,7 +66,8 @@ public class TransactionCategoryController(ILogger<TransactionCategoryController
     {
         try
         {
-            await _transactionCategoryService.DeleteTransactionCategoryAsync(User, guid);
+            var userData = await _transactionCategoryService.GetUserData(User);
+            await _transactionCategoryService.DeleteTransactionCategoryAsync(userData, guid);
             return Ok();
         }
         catch (Exception ex)

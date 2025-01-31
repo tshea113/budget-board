@@ -18,7 +18,8 @@ public class SimpleFinController(ILogger<SimpleFinController> logger, ISimpleFin
     {
         try
         {
-            return Ok(await _simpleFinService.SyncAsync(User));
+            var userData = await _simpleFinService.GetUserData(User);
+            return Ok(await _simpleFinService.SyncAsync(userData));
         }
         catch (Exception ex)
         {
@@ -32,7 +33,8 @@ public class SimpleFinController(ILogger<SimpleFinController> logger, ISimpleFin
     {
         try
         {
-            await _simpleFinService.UpdateTokenAsync(User, newToken);
+            var userData = await _simpleFinService.GetUserData(User);
+            await _simpleFinService.UpdateTokenAsync(userData, newToken);
             return Ok();
         }
         catch (Exception ex)

@@ -19,7 +19,8 @@ public class GoalController(ILogger<GoalController> logger, IGoalService goalSer
     {
         try
         {
-            await _goalService.CreateGoalAsync(User, newGoal);
+            var userData = await _goalService.GetUserData(User);
+            await _goalService.CreateGoalAsync(userData, newGoal);
             return Ok();
         }
         catch (Exception ex)
@@ -34,7 +35,8 @@ public class GoalController(ILogger<GoalController> logger, IGoalService goalSer
     {
         try
         {
-            return Ok(await _goalService.ReadGoalsAsync(User, includeInterest));
+            var userData = await _goalService.GetUserData(User);
+            return Ok(_goalService.ReadGoalsAsync(userData, includeInterest));
         }
         catch (Exception ex)
         {
@@ -48,7 +50,8 @@ public class GoalController(ILogger<GoalController> logger, IGoalService goalSer
     {
         try
         {
-            await _goalService.UpdateGoalAsync(User, editedGoal);
+            var userData = await _goalService.GetUserData(User);
+            await _goalService.UpdateGoalAsync(userData, editedGoal);
             return Ok();
         }
         catch (Exception ex)
@@ -63,7 +66,8 @@ public class GoalController(ILogger<GoalController> logger, IGoalService goalSer
     {
         try
         {
-            await _goalService.DeleteGoalAsync(User, guid);
+            var userData = await _goalService.GetUserData(User);
+            await _goalService.DeleteGoalAsync(userData, guid);
             return Ok();
         }
         catch (Exception ex)
