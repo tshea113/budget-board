@@ -14,7 +14,7 @@ public class InstitutionService(ILogger<IInstitutionService> logger, UserDataCon
     private readonly UserDataContext _userDataContext = userDataContext;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-    public async Task CreateInstitution(ClaimsPrincipal user, IInstitutionCreateRequest request)
+    public async Task CreateInstitutionAsync(ClaimsPrincipal user, IInstitutionCreateRequest request)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)
@@ -34,7 +34,7 @@ public class InstitutionService(ILogger<IInstitutionService> logger, UserDataCon
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<IInstitutionResponse>> ReadInstitutions(ClaimsPrincipal user, Guid guid = default)
+    public async Task<IEnumerable<IInstitutionResponse>> ReadInstitutionsAsync(ClaimsPrincipal user, Guid guid = default)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)
@@ -51,7 +51,7 @@ public class InstitutionService(ILogger<IInstitutionService> logger, UserDataCon
         return userData.Institutions.Select(i => new InstitutionResponse(i));
     }
 
-    public async Task UpdateInstitution(ClaimsPrincipal user, IInstitutionUpdateRequest request)
+    public async Task UpdateInstitutionAsync(ClaimsPrincipal user, IInstitutionUpdateRequest request)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)
@@ -74,7 +74,7 @@ public class InstitutionService(ILogger<IInstitutionService> logger, UserDataCon
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task DeleteInstitution(ClaimsPrincipal user, Guid id, bool deleteTransactions)
+    public async Task DeleteInstitutionAsync(ClaimsPrincipal user, Guid id, bool deleteTransactions)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)
@@ -102,7 +102,7 @@ public class InstitutionService(ILogger<IInstitutionService> logger, UserDataCon
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task OrderInstitutions(ClaimsPrincipal user, IEnumerable<IInstitutionIndexRequest> orderedInstitutions)
+    public async Task OrderInstitutionsAsync(ClaimsPrincipal user, IEnumerable<IInstitutionIndexRequest> orderedInstitutions)
     {
         var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
         if (userData == null)

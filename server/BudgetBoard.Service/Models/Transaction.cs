@@ -10,52 +10,58 @@ public class TransactionSource
     public string Value { get; set; }
 
     public static TransactionSource Manual { get { return new TransactionSource("Manual"); } }
-    public static TransactionSource SimpleFIN
+    public static TransactionSource SimpleFin
     {
-        get { return new TransactionSource("SimpleFIN"); }
+        get { return new TransactionSource("SimpleFin"); }
     }
 }
 
 public interface ITransactionCreateRequest
 {
-    public decimal Amount { get; set; }
-    public DateTime Date { get; set; }
-    public string? Category { get; set; }
-    public string? Subcategory { get; set; }
-    public string? MerchantName { get; set; }
-    public Guid AccountID { get; set; }
+    string? SyncID { get; set; }
+    decimal Amount { get; set; }
+    DateTime Date { get; set; }
+    string? Category { get; set; }
+    string? Subcategory { get; set; }
+    string? MerchantName { get; set; }
+    string? Source { get; set; }
+    Guid AccountID { get; set; }
 }
 
 public class TransactionCreateRequest : ITransactionCreateRequest
 {
+    public string? SyncID { get; set; }
     public decimal Amount { get; set; }
     public DateTime Date { get; set; }
     public string? Category { get; set; }
     public string? Subcategory { get; set; }
     public string? MerchantName { get; set; }
+    public string? Source { get; set; }
     public Guid AccountID { get; set; }
 
     [JsonConstructor]
     public TransactionCreateRequest()
     {
+        SyncID = null;
         Amount = 0.0M;
         Date = DateTime.MinValue;
         Category = null;
         Subcategory = null;
         MerchantName = null;
+        Source = string.Empty;
         AccountID = Guid.NewGuid();
     }
 }
 
 public interface ITransactionUpdateRequest
 {
-    public Guid ID { get; set; }
-    public decimal Amount { get; set; }
-    public DateTime Date { get; set; }
-    public string? Category { get; set; }
-    public string? Subcategory { get; set; }
-    public string? MerchantName { get; set; }
-    public DateTime? Deleted { get; set; }
+    Guid ID { get; set; }
+    decimal Amount { get; set; }
+    DateTime Date { get; set; }
+    string? Category { get; set; }
+    string? Subcategory { get; set; }
+    string? MerchantName { get; set; }
+    DateTime? Deleted { get; set; }
 }
 
 public class TransactionUpdateRequest : ITransactionUpdateRequest
@@ -83,17 +89,17 @@ public class TransactionUpdateRequest : ITransactionUpdateRequest
 
 public interface ITransactionResponse
 {
-    public Guid ID { get; set; }
-    public string? SyncID { get; set; }
-    public decimal Amount { get; set; }
-    public DateTime Date { get; set; }
-    public string? Category { get; set; }
-    public string? Subcategory { get; set; }
-    public string? MerchantName { get; set; }
-    public bool Pending { get; set; }
-    public DateTime? Deleted { get; set; }
-    public string Source { get; set; }
-    public Guid AccountID { get; set; }
+    Guid ID { get; set; }
+    string? SyncID { get; set; }
+    decimal Amount { get; set; }
+    DateTime Date { get; set; }
+    string? Category { get; set; }
+    string? Subcategory { get; set; }
+    string? MerchantName { get; set; }
+    bool Pending { get; set; }
+    DateTime? Deleted { get; set; }
+    string Source { get; set; }
+    Guid AccountID { get; set; }
 }
 
 public class TransactionResponse : ITransactionResponse

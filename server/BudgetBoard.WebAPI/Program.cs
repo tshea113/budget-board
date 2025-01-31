@@ -152,6 +152,7 @@ builder.Services.AddScoped<IBalanceService, BalanceService>();
 builder.Services.AddScoped<ITransactionCategoryService, TransactionCategoryService>();
 builder.Services.AddScoped<IGoalService, GoalService>();
 builder.Services.AddScoped<IInstitutionService, InstitutionService>();
+builder.Services.AddScoped<ISimpleFinService, SimpleFinService>();
 
 var app = builder.Build();
 

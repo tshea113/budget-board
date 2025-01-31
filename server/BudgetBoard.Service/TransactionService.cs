@@ -33,12 +33,13 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
 
         var newTransaction = new Transaction
         {
+            SyncID = transaction.SyncID,
             Amount = transaction.Amount,
             Date = transaction.Date,
             Category = transaction.Category,
             Subcategory = transaction.Subcategory,
             MerchantName = transaction.MerchantName,
-            Source = TransactionSource.Manual.Value,
+            Source = transaction.Source ?? TransactionSource.Manual.Value,
             AccountID = transaction.AccountID
         };
 
