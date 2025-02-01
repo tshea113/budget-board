@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import BudgetTotal from './budget-total';
-import { type BudgetResponse } from '@/types/budget';
+import { IBudget } from '@/types/budget';
 import { BudgetGroup, getBudgetsForGroup, sumBudgetAmounts } from '@/lib/budgets';
 import { defaultTransactionCategories, type Transaction } from '@/types/transaction';
 import { areStringsEqual } from '@/lib/utils';
@@ -13,7 +13,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ICategoryResponse } from '@/types/category';
 
 interface BudgetTotalCardProps {
-  budgetData: BudgetResponse[];
+  budgetData: IBudget[];
   transactionData: Transaction[];
   isPending: boolean;
 }

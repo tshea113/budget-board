@@ -8,7 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { getFormattedCategoryValue } from '@/lib/category';
 import { translateAxiosError } from '@/lib/requests';
 import { convertNumberToCurrency } from '@/lib/utils';
-import { NewBudgetRequest } from '@/types/budget';
+import { IBudgetCreateRequest } from '@/types/budget';
 import { ICategoryResponse } from '@/types/category';
 import { defaultTransactionCategories } from '@/types/transaction';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -46,7 +46,7 @@ const UnbudgetCard = (props: UnbudgetCardProps): JSX.Element => {
 
   const queryClient = useQueryClient();
   const doAddBudget = useMutation({
-    mutationFn: async (newBudget: NewBudgetRequest) =>
+    mutationFn: async (newBudget: IBudgetCreateRequest) =>
       await request({
         url: '/api/budget',
         method: 'POST',

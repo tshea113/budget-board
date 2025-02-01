@@ -4,7 +4,7 @@ import {
   buildTimeToMonthlyTotalsMap,
   getBudgetsForGroup,
 } from '@/lib/budgets';
-import { type BudgetResponse } from '@/types/budget';
+import { IBudget } from '@/types/budget';
 import BudgetTotalCard from './budget-total-card';
 import { initCurrentMonth } from '@/lib/utils';
 import { defaultTransactionCategories, type Transaction } from '@/types/transaction';
@@ -25,7 +25,7 @@ const Budgets = (): JSX.Element => {
   const budgetsQuery = useQueries({
     queries: selectedDates.map((date: Date) => ({
       queryKey: ['budgets', date],
-      queryFn: async (): Promise<BudgetResponse[]> => {
+      queryFn: async (): Promise<IBudget[]> => {
         const res: AxiosResponse = await request({
           url: '/api/budget',
           method: 'GET',

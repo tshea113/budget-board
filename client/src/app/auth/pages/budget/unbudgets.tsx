@@ -4,7 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { BudgetResponse } from '@/types/budget';
+import { IBudget } from '@/types/budget';
 import { defaultTransactionCategories, Transaction } from '@/types/transaction';
 import UnbudgetCard from './unbudget-card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -17,7 +17,7 @@ import { ICategoryResponse } from '@/types/category';
 
 interface UnbudgetProps {
   transactions: Transaction[];
-  budgets: BudgetResponse[];
+  budgets: IBudget[];
   selectedDates: Date[];
   isPending: boolean;
 }
