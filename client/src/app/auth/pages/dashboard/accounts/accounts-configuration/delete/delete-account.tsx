@@ -28,7 +28,7 @@ const DeleteAccount = (props: DeleteAccountProps): JSX.Element => {
         params: { guid: props.accountId, deleteTransactions },
       }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['accounts'] });
+      await queryClient.refetchQueries({ queryKey: ['accounts'] });
     },
     onError: (error: AxiosError) => {
       toast.error(translateAxiosError(error));

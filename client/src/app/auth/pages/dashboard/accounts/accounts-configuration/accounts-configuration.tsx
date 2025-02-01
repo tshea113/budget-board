@@ -90,7 +90,7 @@ const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element =
               </div>
               <AccountsConfigurationGroups
                 sortedInstitutions={sortedInstitutions}
-                accounts={props.accounts}
+                accounts={props.accounts.filter((a: IAccount) => a.deleted === null)}
                 setSortedInstitutions={setSortedInstitutions}
                 isReorder={isReorder}
               />

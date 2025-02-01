@@ -26,7 +26,7 @@ const DeletedAccountCard = (props: DeletedAccountCardProps): JSX.Element => {
         params: { guid: id },
       }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['accounts'] });
+      await queryClient.refetchQueries({ queryKey: ['accounts'] });
     },
     onError: (error: AxiosError) => {
       toast.error(translateAxiosError(error));

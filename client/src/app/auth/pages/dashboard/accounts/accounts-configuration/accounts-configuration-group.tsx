@@ -53,6 +53,10 @@ const AccountsConfigurationGroup = (props: AccountsConfigurationGroupProps) => {
     }
   }, [props.isReorder]);
 
+  React.useEffect(() => {
+    setSortedAccounts(props.accounts.sort((a, b) => a.index - b.index));
+  }, [props.accounts]);
+
   return (
     <Card className="flex flex-row items-center gap-2 border-2 bg-background p-2">
       <div className="shrink-0 self-stretch">
