@@ -8,13 +8,14 @@ interface InstitutionItemsProps {
 }
 
 const InstitutionItems = (props: InstitutionItemsProps): JSX.Element => {
+  console.log(props.accounts);
   return (
     <div className="flex flex-col gap-4">
       {props.institutions.map((institution: Institution) => (
         <InstitutionItem
           key={institution.id}
           institution={institution}
-          accounts={props.accounts.filter((a) => a.institutionId === institution.id)}
+          accounts={props.accounts.filter((a) => a.institutionID === institution.id)}
         />
       ))}
     </div>

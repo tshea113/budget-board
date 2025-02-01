@@ -10,8 +10,8 @@ export const groupAccountsByInstitution = (
 ): Map<string, IAccount[]> =>
   accounts.reduce(
     (accountMap: Map<string, IAccount[]>, item: IAccount) =>
-      accountMap.set(item.institutionId, [
-        ...(accountMap.get(item.institutionId) || []),
+      accountMap.set(item.institutionID, [
+        ...(accountMap.get(item.institutionID) || []),
         item,
       ]),
     new Map<string, IAccount[]>()

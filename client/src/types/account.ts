@@ -28,7 +28,7 @@ export interface IAccount {
   id: string;
   syncId: string;
   name: string;
-  institutionId: string;
+  institutionID: string;
   type: string;
   subtype: string;
   currentBalance: number;
@@ -37,7 +37,7 @@ export interface IAccount {
   hideAccount: boolean;
   deleted: Date;
   index: number;
-  userId: string;
+  userID: string;
 }
 
 export const liabilityAccountTypes = ['Loan', 'Mortgage', 'Credit Card'];

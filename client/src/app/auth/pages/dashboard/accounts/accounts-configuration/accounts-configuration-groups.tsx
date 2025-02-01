@@ -36,7 +36,7 @@ const AccountsConfigurationGroups = (props: AccountsConfigurationGroupsProps) =>
               <AccountsConfigurationGroup
                 institution={institution}
                 accounts={props.accounts.filter(
-                  (a) => a.institutionId === institution.id
+                  (a) => a.institutionID === institution.id
                 )}
                 updateInstitution={updateInstitution}
                 isReorder={props.isReorder}
