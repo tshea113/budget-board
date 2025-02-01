@@ -24,7 +24,7 @@ const AddCategoryAccordion = (): JSX.Element => {
       });
 
       if (res.status === 200) {
-        return res.data;
+        return res.data as ICategoryResponse[];
       }
 
       return undefined;
@@ -45,7 +45,7 @@ const AddCategoryAccordion = (): JSX.Element => {
                 <CustomCategoryHeader />
                 {transactionCategoriesQuery.isPending ? (
                   <Skeleton className="h-[42px] w-full" />
-                ) : transactionCategoriesQuery.data?.length > 0 ? (
+                ) : (transactionCategoriesQuery.data ?? []).length > 0 ? (
                   transactionCategoriesQuery.data?.map((category: ICategoryResponse) => (
                     <CustomCategoryCard key={category.id} category={category} />
                   ))

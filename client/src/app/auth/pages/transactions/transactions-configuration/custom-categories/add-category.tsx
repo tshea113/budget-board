@@ -5,7 +5,7 @@ import { translateAxiosError } from '@/lib/requests';
 import { AxiosError } from 'axios';
 import { AuthContext } from '@/components/auth-provider';
 import React from 'react';
-import { ICategory, ICategoryResponse } from '@/types/category';
+import { ICategoryCreateRequest, ICategoryResponse } from '@/types/category';
 import { toast } from 'sonner';
 import CategoryInput from '@/components/category-input';
 import { defaultTransactionCategories } from '@/types/transaction';
@@ -37,7 +37,7 @@ const AddCategory = (): JSX.Element => {
 
   const queryClient = useQueryClient();
   const doAddCategory = useMutation({
-    mutationFn: async (category: ICategory) =>
+    mutationFn: async (category: ICategoryCreateRequest) =>
       await request({
         url: '/api/transactionCategory',
         method: 'POST',
@@ -51,7 +51,7 @@ const AddCategory = (): JSX.Element => {
   });
 
   const submitBudget = (): any => {
-    const newCategory: ICategory = {
+    const newCategory: ICategoryCreateRequest = {
       value: newCategoryName,
       parent: newCategoryParent,
     };
