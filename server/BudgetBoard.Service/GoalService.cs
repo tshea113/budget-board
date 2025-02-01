@@ -101,7 +101,6 @@ public class GoalService(ILogger<IGoalService> logger, UserDataContext userDataC
         }
 
         goal.Name = updatedGoal.Name;
-        goal.CompleteDate = updatedGoal.CompleteDate;
         goal.Amount = updatedGoal.Amount;
         goal.CompleteDate = updatedGoal.IsCompleteDateEditable ? updatedGoal.CompleteDate : goal.CompleteDate;
         goal.MonthlyContribution = updatedGoal.IsMonthlyContributionEditable ? updatedGoal.MonthlyContribution : goal.MonthlyContribution;
