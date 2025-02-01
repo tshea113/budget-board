@@ -46,7 +46,7 @@ namespace BudgetBoard.WebAPI.Controllers
 
         [HttpPut]
         [Authorize]
-        public async Task<IActionResult> Update([FromBody] IBudgetUpdateRequest editBudget)
+        public async Task<IActionResult> Update([FromBody] BudgetUpdateRequest editBudget)
         {
             try
             {
