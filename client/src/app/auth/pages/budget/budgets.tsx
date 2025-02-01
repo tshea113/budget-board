@@ -32,8 +32,8 @@ const Budgets = (): JSX.Element => {
           params: { date },
         });
 
-        if (res.status == 200) {
-          return res.data;
+        if (res.status === 200) {
+          return res.data as IBudget[];
         }
 
         return [];
