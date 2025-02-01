@@ -9,21 +9,21 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { Skeleton } from '@/components/ui/skeleton';
 import { translateAxiosError } from '@/lib/requests';
 import { toast } from 'sonner';
-import { Institution } from '@/types/institution';
+import { IInstitution } from '@/types/institution';
 import { IAccount } from '@/types/account';
 
 const AccountCard = (): JSX.Element => {
   const { request } = React.useContext<any>(AuthContext);
   const institutionQuery = useQuery({
     queryKey: ['institutions'],
-    queryFn: async (): Promise<Institution[]> => {
+    queryFn: async (): Promise<IInstitution[]> => {
       const res: AxiosResponse = await request({
         url: '/api/institution',
         method: 'GET',
       });
 
-      if (res.status == 200) {
-        return res.data;
+      if (res.status === 200) {
+        return res.data as IInstitution[];
       }
 
       return [];

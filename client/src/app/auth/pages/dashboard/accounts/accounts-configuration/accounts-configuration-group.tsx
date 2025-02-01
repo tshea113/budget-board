@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card';
 import { GripVertical } from 'lucide-react';
 import AccountsConfigurationCards from './accounts-configuration-cards';
 import { Separator } from '@/components/ui/separator';
-import { Institution } from '@/types/institution';
+import { IInstitution } from '@/types/institution';
 import { IAccount, IAccountIndexRequest } from '@/types/account';
 import React from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -14,9 +14,9 @@ import { toast } from 'sonner';
 import LoadingIcon from '@/components/loading-icon';
 
 interface AccountsConfigurationGroupProps {
-  institution: Institution;
+  institution: IInstitution;
   accounts: IAccount[];
-  updateInstitution: (institution: Institution) => void;
+  updateInstitution: (institution: IInstitution) => void;
   isReorder: boolean;
 }
 

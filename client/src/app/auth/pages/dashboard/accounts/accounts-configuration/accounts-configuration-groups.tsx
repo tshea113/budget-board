@@ -1,18 +1,18 @@
 import React from 'react';
 import { Sortable, SortableItem } from '@/components/sortable';
 import AccountsConfigurationGroup from './accounts-configuration-group';
-import { Institution } from '@/types/institution';
+import { IInstitution } from '@/types/institution';
 import { IAccount } from '@/types/account';
 
 interface AccountsConfigurationGroupsProps {
-  sortedInstitutions: Institution[];
+  sortedInstitutions: IInstitution[];
   accounts: IAccount[];
-  setSortedInstitutions: React.Dispatch<React.SetStateAction<Institution[]>>;
+  setSortedInstitutions: React.Dispatch<React.SetStateAction<IInstitution[]>>;
   isReorder: boolean;
 }
 
 const AccountsConfigurationGroups = (props: AccountsConfigurationGroupsProps) => {
-  const updateInstitution = (institution: Institution) => {
+  const updateInstitution = (institution: IInstitution) => {
     const newInstitutions = props.sortedInstitutions.map((i) =>
       i.id === institution.id ? institution : i
     );
@@ -31,7 +31,7 @@ const AccountsConfigurationGroups = (props: AccountsConfigurationGroupsProps) =>
         }}
       >
         <div className="flex flex-col gap-2">
-          {props.sortedInstitutions.map((institution: Institution) => (
+          {props.sortedInstitutions.map((institution: IInstitution) => (
             <SortableItem value={institution.id} key={institution.id}>
               <AccountsConfigurationGroup
                 institution={institution}

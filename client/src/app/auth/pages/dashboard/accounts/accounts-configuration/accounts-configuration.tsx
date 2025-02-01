@@ -12,7 +12,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import React from 'react';
 import AccountsConfigurationGroups from './accounts-configuration-groups';
-import { Institution, InstitutionIndexRequest } from '@/types/institution';
+import { IInstitution, InstitutionIndexRequest } from '@/types/institution';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AuthContext } from '@/components/auth-provider';
 import { AxiosError } from 'axios';
@@ -22,12 +22,12 @@ import ResponsiveButton from '@/components/responsive-button';
 import { SettingsIcon } from 'lucide-react';
 
 interface AccountsConfigurationProps {
-  institutions: Institution[];
+  institutions: IInstitution[];
   accounts: IAccount[];
 }
 
 const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element => {
-  const [sortedInstitutions, setSortedInstitutions] = React.useState<Institution[]>(
+  const [sortedInstitutions, setSortedInstitutions] = React.useState<IInstitution[]>(
     props.institutions.sort((a, b) => a.index - b.index)
   );
   const [isReorder, setIsReorder] = React.useState(false);

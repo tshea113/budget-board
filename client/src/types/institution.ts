@@ -1,4 +1,4 @@
-export interface Institution {
+export interface IInstitution {
   id: string;
   name: string;
   index: number;

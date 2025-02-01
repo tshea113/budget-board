@@ -2,10 +2,10 @@ import AccountItem from './account-item';
 import { Card } from '@/components/ui/card';
 import { filterVisibleAccounts } from '@/lib/accounts';
 import { IAccount } from '@/types/account';
-import { Institution } from '@/types/institution';
+import { IInstitution } from '@/types/institution';
 
 interface InstitutionItemProps {
-  institution: Institution;
+  institution: IInstitution;
   accounts: IAccount[];
 }
 
