@@ -26,6 +26,8 @@ const DeletedAccountCard = (props: DeletedAccountCardProps): JSX.Element => {
         params: { guid: id },
       }),
     onSuccess: async () => {
+      // Refetch the accounts and institutions queries immediatly after the account is restored
+      await queryClient.refetchQueries({ queryKey: ['institutions'] });
       await queryClient.refetchQueries({ queryKey: ['accounts'] });
     },
     onError: (error: AxiosError) => {

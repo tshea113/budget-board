@@ -6,11 +6,10 @@ import { IInstitution } from '@/types/institution';
 
 interface InstitutionItemProps {
   institution: IInstitution;
-  accounts: IAccount[];
 }
 
 const InstitutionItem = (props: InstitutionItemProps): JSX.Element => {
-  const sortedFilteredAccounts = filterVisibleAccounts(props.accounts).sort(
+  const sortedFilteredAccounts = filterVisibleAccounts(props.institution.accounts).sort(
     (a, b) => a.index - b.index
   );
 

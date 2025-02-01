@@ -109,6 +109,8 @@ public class InstitutionService(ILogger<IInstitutionService> logger, UserDataCon
         {
             var users = await _userDataContext.Users
                 .Include(u => u.Institutions)
+                .ThenInclude(i => i.Accounts)
+                .ThenInclude(a => a.Balances)
                 .ToListAsync();
             return users.Single(u => u.Id == new Guid(id));
         }

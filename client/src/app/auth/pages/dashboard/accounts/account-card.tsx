@@ -82,10 +82,7 @@ const AccountCard = (): JSX.Element => {
       </div>
       <Separator />
       <div className="p-2">
-        <InstitutionItems
-          institutions={institutionQuery.data ?? []}
-          accounts={accountsQuery.data ?? []}
-        />
+        <InstitutionItems institutions={institutionQuery.data ?? []} />
       </div>
     </Card>
   );

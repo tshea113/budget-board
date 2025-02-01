@@ -61,6 +61,10 @@ const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element =
     setIsReorder(!isReorder);
   };
 
+  React.useEffect(() => {
+    setSortedInstitutions(props.institutions.sort((a, b) => a.index - b.index));
+  }, [props.institutions]);
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -90,7 +94,6 @@ const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element =
               </div>
               <AccountsConfigurationGroups
                 sortedInstitutions={sortedInstitutions}
-                accounts={props.accounts.filter((a: IAccount) => a.deleted === null)}
                 setSortedInstitutions={setSortedInstitutions}
                 isReorder={isReorder}
               />

@@ -15,14 +15,15 @@ import LoadingIcon from '@/components/loading-icon';
 
 interface AccountsConfigurationGroupProps {
   institution: IInstitution;
-  accounts: IAccount[];
   updateInstitution: (institution: IInstitution) => void;
   isReorder: boolean;
 }
 
 const AccountsConfigurationGroup = (props: AccountsConfigurationGroupProps) => {
   const [sortedAccounts, setSortedAccounts] = React.useState<IAccount[]>(
-    props.accounts.sort((a, b) => a.index - b.index)
+    props.institution.accounts
+      .filter((a) => a.deleted === null)
+      .sort((a, b) => a.index - b.index)
   );
 
   const { request } = React.useContext<any>(AuthContext);
@@ -54,8 +55,12 @@ const AccountsConfigurationGroup = (props: AccountsConfigurationGroupProps) => {
   }, [props.isReorder]);
 
   React.useEffect(() => {
-    setSortedAccounts(props.accounts.sort((a, b) => a.index - b.index));
-  }, [props.accounts]);
+    setSortedAccounts(
+      props.institution.accounts
+        .filter((a) => a.deleted === null)
+        .sort((a, b) => a.index - b.index)
+    );
+  }, [props.institution.accounts]);
 
   return (
     <Card className="flex flex-row items-center gap-2 border-2 bg-background p-2">

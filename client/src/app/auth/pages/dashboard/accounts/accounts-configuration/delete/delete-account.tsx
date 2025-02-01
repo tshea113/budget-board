@@ -28,6 +28,8 @@ const DeleteAccount = (props: DeleteAccountProps): JSX.Element => {
         params: { guid: props.accountId, deleteTransactions },
       }),
     onSuccess: async () => {
+      // Refetch the accounts and institutions queries immediatly after the account is deleted
+      await queryClient.refetchQueries({ queryKey: ['institutions'] });
       await queryClient.refetchQueries({ queryKey: ['accounts'] });
     },
     onError: (error: AxiosError) => {
