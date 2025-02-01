@@ -11,7 +11,7 @@ public interface IGoalCreateRequest
     decimal Amount { get; set; }
     decimal? InitialAmount { get; set; }
     decimal? MonthlyContribution { get; set; }
-    ICollection<string> AccountIds { get; set; }
+    IEnumerable<Guid> AccountIds { get; set; }
 }
 public class GoalCreateRequest : IGoalCreateRequest
 {
@@ -20,7 +20,7 @@ public class GoalCreateRequest : IGoalCreateRequest
     public required decimal Amount { get; set; }
     public decimal? InitialAmount { get; set; }
     public decimal? MonthlyContribution { get; set; }
-    public required ICollection<string> AccountIds { get; set; }
+    public required IEnumerable<Guid> AccountIds { get; set; }
 
     [JsonConstructor]
     public GoalCreateRequest()
@@ -45,7 +45,7 @@ public interface IGoalUpdateRequest
     decimal? InitialAmount { get; set; }
     decimal? MonthlyContribution { get; set; }
     bool IsMonthlyContributionEditable { get; set; }
-    ICollection<string> AccountIds { get; set; }
+    IEnumerable<string> AccountIds { get; set; }
 }
 public class GoalUpdateRequest : IGoalUpdateRequest
 {
@@ -58,7 +58,7 @@ public class GoalUpdateRequest : IGoalUpdateRequest
     public decimal? InitialAmount { get; set; }
     public decimal? MonthlyContribution { get; set; }
     public bool IsMonthlyContributionEditable { get; set; }
-    public ICollection<string> AccountIds { get; set; }
+    public IEnumerable<string> AccountIds { get; set; }
 
     [JsonConstructor]
     public GoalUpdateRequest()
@@ -83,7 +83,7 @@ public interface IGoalResponse
     decimal MonthlyContribution { get; set; }
     bool IsMonthlyContributionEditable { get; set; }
     decimal? EstimatedInterestRate { get; set; }
-    ICollection<AccountResponse> Accounts { get; set; }
+    IEnumerable<IAccountResponse> Accounts { get; set; }
     Guid UserID { get; set; }
 }
 public class GoalResponse : IGoalResponse
@@ -97,7 +97,7 @@ public class GoalResponse : IGoalResponse
     public decimal MonthlyContribution { get; set; }
     public bool IsMonthlyContributionEditable { get; set; }
     public decimal? EstimatedInterestRate { get; set; }
-    public ICollection<AccountResponse> Accounts { get; set; }
+    public IEnumerable<IAccountResponse> Accounts { get; set; }
     public Guid UserID { get; set; }
 
     [JsonConstructor]
@@ -127,7 +127,7 @@ public class GoalResponse : IGoalResponse
         MonthlyContribution = goal.MonthlyContribution ?? 0;
         IsMonthlyContributionEditable = goal.MonthlyContribution != null;
         EstimatedInterestRate = null;
-        Accounts = goal.Accounts.Select(a => new AccountResponse(a)).ToList();
+        Accounts = goal.Accounts.Select(a => new AccountResponse(a));
         UserID = goal.UserID;
     }
 }

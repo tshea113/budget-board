@@ -32,7 +32,7 @@ public class GoalService(ILogger<IGoalService> logger, UserDataContext userDataC
         var accounts = new List<Account>();
         foreach (var accountId in createdGoal.AccountIds)
         {
-            var account = userData.Accounts.FirstOrDefault((a) => a.ID == new Guid(accountId));
+            var account = userData.Accounts.FirstOrDefault((a) => a.ID == accountId);
             if (account != null)
             {
                 runningBalance += account.Balances.OrderByDescending(b => b.DateTime).FirstOrDefault()?.Amount ?? 0;

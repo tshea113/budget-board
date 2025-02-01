@@ -24,8 +24,8 @@ const GoalCards = (props: GoalCardsProps): JSX.Element => {
         },
       });
 
-      if (res.status == 200) {
-        return res.data;
+      if (res.status === 200) {
+        return res.data as IGoalResponse[];
       }
 
       return [];
