@@ -14,7 +14,7 @@ import {
   sumTooltipValues,
 } from '@/lib/chart';
 import { convertNumberToCurrency, getDateFromMonthsAgo } from '@/lib/utils';
-import { Account } from '@/types/account';
+import { IAccount } from '@/types/account';
 import { IBalance } from '@/types/balance';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
@@ -58,7 +58,7 @@ const LiabilitiesGraph = (): JSX.Element => {
 
   const accountsQuery = useQuery({
     queryKey: ['accounts'],
-    queryFn: async (): Promise<Account[]> => {
+    queryFn: async (): Promise<IAccount[]> => {
       const res: AxiosResponse = await request({
         url: '/api/account',
         method: 'GET',

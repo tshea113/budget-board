@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import { Account } from '@/types/account';
+import { IAccount } from '@/types/account';
 import { IGoalResponse } from '@/types/goal';
 
 interface GoalDetailsProps {
@@ -28,7 +28,7 @@ const GoalDetails = (props: GoalDetailsProps): JSX.Element => {
           <div className="flex flex-col gap-2">
             <div className="flex flex-col">
               <span className="pb-1 text-base font-semibold">Accounts</span>
-              {props.goal.accounts.map((account: Account) => (
+              {props.goal.accounts.map((account: IAccount) => (
                 <span key={account.id} className="text-sm">
                   {account.name}
                 </span>

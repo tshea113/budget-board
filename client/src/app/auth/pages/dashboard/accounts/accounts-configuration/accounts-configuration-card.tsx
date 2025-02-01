@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { translateAxiosError } from '@/lib/requests';
-import { accountCategories, AccountEditRequest, type Account } from '@/types/account';
+import { accountCategories, IAccount, IAccountUpdateRequest } from '@/types/account';
 import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
@@ -18,7 +18,7 @@ import { SortableDragHandle } from '@/components/sortable';
 import { GripVertical } from 'lucide-react';
 
 interface AccountsConfigurationCardProps {
-  account: Account;
+  account: IAccount;
   isReorder: boolean;
 }
 
@@ -44,7 +44,7 @@ const AccountsConfigurationCard = (
 
   const doUpdateAccount = useMutation({
     mutationFn: async () => {
-      const editedAccount: AccountEditRequest = {
+      const editedAccount: IAccountUpdateRequest = {
         id: props.account.id,
         name: accountNameValue,
         type: accountTypeValue,

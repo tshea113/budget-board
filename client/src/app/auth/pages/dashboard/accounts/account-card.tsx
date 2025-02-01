@@ -10,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { translateAxiosError } from '@/lib/requests';
 import { toast } from 'sonner';
 import { Institution } from '@/types/institution';
-import { Account } from '@/types/account';
+import { IAccount } from '@/types/account';
 
 const AccountCard = (): JSX.Element => {
   const { request } = React.useContext<any>(AuthContext);
@@ -32,7 +32,7 @@ const AccountCard = (): JSX.Element => {
 
   const accountsQuery = useQuery({
     queryKey: ['accounts'],
-    queryFn: async (): Promise<Account[]> => {
+    queryFn: async (): Promise<IAccount[]> => {
       const res: AxiosResponse = await request({
         url: '/api/account',
         method: 'GET',

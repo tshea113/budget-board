@@ -1,10 +1,10 @@
-import { Account } from '@/types/account';
+import { IAccount } from '@/types/account';
 import AccountsConfigurationCard from './accounts-configuration-card';
 import { Sortable, SortableItem } from '@/components/sortable';
 
 interface AccountsConfigurationCardsProps {
-  accounts: Account[];
-  updateAccounts: (accounts: Account[]) => void;
+  accounts: IAccount[];
+  updateAccounts: (accounts: IAccount[]) => void;
   isReorder: boolean;
 }
 
@@ -32,7 +32,7 @@ const AccountsConfigurationCards = (
         }}
       >
         <div className="flex flex-col space-y-2">
-          {props.accounts.map((account: Account) => (
+          {props.accounts.map((account: IAccount) => (
             <SortableItem value={account.id} key={account.id}>
               <AccountsConfigurationCard
                 key={account.id}

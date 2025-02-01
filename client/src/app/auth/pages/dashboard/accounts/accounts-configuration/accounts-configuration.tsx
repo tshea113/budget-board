@@ -6,7 +6,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { type Account } from '@/types/account';
+import { IAccount } from '@/types/account';
 import DeletedAccountsCards from './delete/deleted-accounts-cards';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
@@ -23,7 +23,7 @@ import { SettingsIcon } from 'lucide-react';
 
 interface AccountsConfigurationProps {
   institutions: Institution[];
-  accounts: Account[];
+  accounts: IAccount[];
 }
 
 const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element => {
@@ -96,7 +96,7 @@ const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element =
               />
               <DeletedAccountsCards
                 deletedAccounts={props.accounts.filter(
-                  (a: Account) => a.deleted !== null
+                  (a: IAccount) => a.deleted !== null
                 )}
               />
             </div>

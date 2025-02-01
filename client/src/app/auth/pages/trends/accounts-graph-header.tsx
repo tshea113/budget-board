@@ -3,7 +3,7 @@ import { AuthContext } from '@/components/auth-provider';
 import { DateRange } from 'react-day-picker';
 import DatePickerWithRange from '@/components/date-range-picker';
 import { Button } from '@/components/ui/button';
-import { Account } from '@/types/account';
+import { IAccount } from '@/types/account';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import React from 'react';
@@ -20,7 +20,7 @@ const AccountsGraphHeader = (props: AccountsGraphHeaderProps): JSX.Element => {
   const { request } = React.useContext<any>(AuthContext);
   const accountsQuery = useQuery({
     queryKey: ['accounts'],
-    queryFn: async (): Promise<Account[]> => {
+    queryFn: async (): Promise<IAccount[]> => {
       const res: AxiosResponse = await request({
         url: '/api/account',
         method: 'GET',
@@ -51,7 +51,7 @@ const AccountsGraphHeader = (props: AccountsGraphHeaderProps): JSX.Element => {
           props.setSelectedAccountIds(
             accountsQuery.data
               ?.filter(
-                (account: Account) =>
+                (account: IAccount) =>
                   !account.hideAccount &&
                   (props.filters ? props.filters?.includes(account.type) : true)
               )

@@ -1,4 +1,4 @@
-import { Account } from './account';
+import { IAccount } from './account';
 
 export interface IGoalResponse {
   id: string;
@@ -10,7 +10,7 @@ export interface IGoalResponse {
   monthlyContribution: number;
   isMonthlyContributionEditable: boolean;
   estimatedInterestRate: number | null;
-  accounts: Account[];
+  accounts: IAccount[];
   userID: string;
 }
 

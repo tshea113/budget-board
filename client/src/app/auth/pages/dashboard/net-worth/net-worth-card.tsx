@@ -4,7 +4,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { AuthContext } from '@/components/auth-provider';
-import { Account } from '@/types/account';
+import { IAccount } from '@/types/account';
 import NetWorthItem from './net-worth-item';
 import { Skeleton } from '@/components/ui/skeleton';
 import { translateAxiosError } from '@/lib/requests';
@@ -15,7 +15,7 @@ const NetWorthCard = (): JSX.Element => {
   const { request } = React.useContext<any>(AuthContext);
   const accountsQuery = useQuery({
     queryKey: ['accounts'],
-    queryFn: async (): Promise<Account[]> => {
+    queryFn: async (): Promise<IAccount[]> => {
       const res: AxiosResponse = await request({
         url: '/api/account',
         method: 'GET',

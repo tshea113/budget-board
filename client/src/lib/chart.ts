@@ -6,7 +6,7 @@ import {
   getInitialBalanceDate,
   getSortedBalanceDates,
 } from './balances';
-import { Account, liabilityAccountTypes } from '@/types/account';
+import { IAccount, liabilityAccountTypes } from '@/types/account';
 import {
   getDaysInMonth,
   getMonthAndYearDateString,
@@ -83,14 +83,14 @@ export const getChartColor = (
  */
 export const BuildAccountsBalanceChartConfig = (
   balances: IBalance[],
-  accounts: Account[],
+  accounts: IAccount[],
   selectedAccountIds: string[]
 ): ChartConfig => {
   const accountBalanceMap: Map<string, IBalance[]> = getAccountBalanceMap(balances);
   const chartConfig: ChartConfig = {};
 
   accountBalanceMap.forEach((_balances: IBalance[], accountId: string) => {
-    const account = accounts.find((account: Account) => account.id === accountId);
+    const account = accounts.find((account: IAccount) => account.id === accountId);
 
     if (account == null) {
       return;
@@ -194,7 +194,7 @@ export interface NetWorthChartDatum {
  */
 export const BuildNetWorthChartData = (
   balances: IBalance[],
-  accounts: Account[],
+  accounts: IAccount[],
   startDate: Date,
   endDate: Date
 ): NetWorthChartDatum[] => {

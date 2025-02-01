@@ -1,10 +1,34 @@
 import { ICategory } from './category';
 
-export interface Account {
-  id: string;
-  syncID: string;
+export interface IAccountCreateRequest {
+  syncId?: string;
   name: string;
-  institutionID: string;
+  institutionID?: string;
+  type: string;
+  subtype: string;
+  hideTransactions: boolean;
+  hideAccount: boolean;
+}
+
+export interface IAccountUpdateRequest {
+  id: string;
+  name: string;
+  type: string;
+  subtype: string;
+  hideTransactions: boolean;
+  hideAccount: boolean;
+}
+
+export interface IAccountIndexRequest {
+  id: string;
+  index: number;
+}
+
+export interface IAccount {
+  id: string;
+  syncId: string;
+  name: string;
+  institutionId: string;
   type: string;
   subtype: string;
   currentBalance: number;
@@ -13,31 +37,7 @@ export interface Account {
   hideAccount: boolean;
   deleted: Date;
   index: number;
-  userID: string;
-}
-
-export interface AccountEditRequest {
-  id: string;
-  name: string;
-  type: string;
-  subtype: string;
-  hideTransactions: boolean;
-  hideAccount: boolean;
-}
-
-export interface AccountIndexRequest {
-  id: string;
-  index: number;
-}
-
-export interface AccountAddRequest {
-  syncId?: string;
-  name: string;
-  institutionID?: string;
-  type: string;
-  subtype: string;
-  hideTransactions: boolean;
-  hideAccount: boolean;
+  userId: string;
 }
 
 export const liabilityAccountTypes = ['Loan', 'Mortgage', 'Credit Card'];

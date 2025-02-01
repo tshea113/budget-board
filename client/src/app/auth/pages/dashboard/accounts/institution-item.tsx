@@ -1,12 +1,12 @@
 import AccountItem from './account-item';
 import { Card } from '@/components/ui/card';
 import { filterVisibleAccounts } from '@/lib/accounts';
-import { Account } from '@/types/account';
+import { IAccount } from '@/types/account';
 import { Institution } from '@/types/institution';
 
 interface InstitutionItemProps {
   institution: Institution;
-  accounts: Account[];
+  accounts: IAccount[];
 }
 
 const InstitutionItem = (props: InstitutionItemProps): JSX.Element => {
@@ -22,7 +22,7 @@ const InstitutionItem = (props: InstitutionItemProps): JSX.Element => {
         </span>
       </Card>
       <div className="flex flex-col gap-1">
-        {sortedFilteredAccounts.map((account: Account) => (
+        {sortedFilteredAccounts.map((account: IAccount) => (
           <AccountItem key={account.id} account={account} />
         ))}
       </div>

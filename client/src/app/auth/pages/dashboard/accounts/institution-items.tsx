@@ -1,10 +1,10 @@
-import { Account } from '@/types/account';
+import { IAccount } from '@/types/account';
 import InstitutionItem from './institution-item';
 import { Institution } from '@/types/institution';
 
 interface InstitutionItemsProps {
   institutions: Institution[];
-  accounts: Account[];
+  accounts: IAccount[];
 }
 
 const InstitutionItems = (props: InstitutionItemsProps): JSX.Element => {
@@ -14,7 +14,7 @@ const InstitutionItems = (props: InstitutionItemsProps): JSX.Element => {
         <InstitutionItem
           key={institution.id}
           institution={institution}
-          accounts={props.accounts.filter((a) => a.institutionID === institution.id)}
+          accounts={props.accounts.filter((a) => a.institutionId === institution.id)}
         />
       ))}
     </div>

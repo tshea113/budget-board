@@ -2,11 +2,11 @@ import React from 'react';
 import { Sortable, SortableItem } from '@/components/sortable';
 import AccountsConfigurationGroup from './accounts-configuration-group';
 import { Institution } from '@/types/institution';
-import { Account } from '@/types/account';
+import { IAccount } from '@/types/account';
 
 interface AccountsConfigurationGroupsProps {
   sortedInstitutions: Institution[];
-  accounts: Account[];
+  accounts: IAccount[];
   setSortedInstitutions: React.Dispatch<React.SetStateAction<Institution[]>>;
   isReorder: boolean;
 }
@@ -36,7 +36,7 @@ const AccountsConfigurationGroups = (props: AccountsConfigurationGroupsProps) =>
               <AccountsConfigurationGroup
                 institution={institution}
                 accounts={props.accounts.filter(
-                  (a) => a.institutionID === institution.id
+                  (a) => a.institutionId === institution.id
                 )}
                 updateInstitution={updateInstitution}
                 isReorder={props.isReorder}

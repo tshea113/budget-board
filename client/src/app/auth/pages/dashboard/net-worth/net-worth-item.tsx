@@ -1,9 +1,9 @@
 import { getAccountsOfTypes, sumAccountsTotalBalance } from '@/lib/accounts';
 import { cn, convertNumberToCurrency } from '@/lib/utils';
-import { Account } from '@/types/account';
+import { IAccount } from '@/types/account';
 
 interface NetWorthItemProps {
-  accounts: Account[];
+  accounts: IAccount[];
   types?: string[];
   title: string;
 }

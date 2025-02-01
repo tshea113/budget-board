@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { areStringsEqual, cn } from '@/lib/utils';
-import { Account } from '@/types/account';
+import { IAccount } from '@/types/account';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import React from 'react';
 import { AuthContext } from './auth-provider';
@@ -29,7 +29,7 @@ const AccountInput = (props: AccountInputProps): JSX.Element => {
 
   const accountsQuery = useQuery({
     queryKey: ['accounts'],
-    queryFn: async (): Promise<Account[]> => {
+    queryFn: async (): Promise<IAccount[]> => {
       const res: AxiosResponse = await request({
         url: '/api/account',
         method: 'GET',
@@ -59,7 +59,7 @@ const AccountInput = (props: AccountInputProps): JSX.Element => {
     return filteredAccounts;
   }, [accountsQuery.data, props.hideHidden]);
 
-  const toggleSelect = (account: Account) => {
+  const toggleSelect = (account: IAccount) => {
     if (props.selectedAccountIds.some((a) => areStringsEqual(a, account.id))) {
       props.setSelectedAccountIds(
         props.selectedAccountIds.filter((a) => !areStringsEqual(a, account.id))
@@ -92,7 +92,7 @@ const AccountInput = (props: AccountInputProps): JSX.Element => {
           <CommandList>
             <CommandEmpty>No accounts found.</CommandEmpty>
             <CommandGroup>
-              {filteredAccounts.map((account: Account) => {
+              {filteredAccounts.map((account: IAccount) => {
                 const isSelected = props.selectedAccountIds.includes(account.id);
 
                 return (

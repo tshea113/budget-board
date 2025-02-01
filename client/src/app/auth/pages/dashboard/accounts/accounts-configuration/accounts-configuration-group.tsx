@@ -4,7 +4,7 @@ import { GripVertical } from 'lucide-react';
 import AccountsConfigurationCards from './accounts-configuration-cards';
 import { Separator } from '@/components/ui/separator';
 import { Institution } from '@/types/institution';
-import { Account, AccountIndexRequest } from '@/types/account';
+import { IAccount, IAccountIndexRequest } from '@/types/account';
 import React from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AuthContext } from '@/components/auth-provider';
@@ -15,20 +15,20 @@ import LoadingIcon from '@/components/loading-icon';
 
 interface AccountsConfigurationGroupProps {
   institution: Institution;
-  accounts: Account[];
+  accounts: IAccount[];
   updateInstitution: (institution: Institution) => void;
   isReorder: boolean;
 }
 
 const AccountsConfigurationGroup = (props: AccountsConfigurationGroupProps) => {
-  const [sortedAccounts, setSortedAccounts] = React.useState<Account[]>(
+  const [sortedAccounts, setSortedAccounts] = React.useState<IAccount[]>(
     props.accounts.sort((a, b) => a.index - b.index)
   );
 
   const { request } = React.useContext<any>(AuthContext);
   const queryClient = useQueryClient();
   const doIndexAccounts = useMutation({
-    mutationFn: async (accounts: AccountIndexRequest[]) =>
+    mutationFn: async (accounts: IAccountIndexRequest[]) =>
       await request({
         url: '/api/account/order',
         method: 'PUT',
@@ -43,10 +43,12 @@ const AccountsConfigurationGroup = (props: AccountsConfigurationGroupProps) => {
 
   React.useEffect(() => {
     if (!props.isReorder) {
-      const indexedAccounts: AccountIndexRequest[] = sortedAccounts.map((acc, index) => ({
-        id: acc.id,
-        index,
-      }));
+      const indexedAccounts: IAccountIndexRequest[] = sortedAccounts.map(
+        (acc, index) => ({
+          id: acc.id,
+          index,
+        })
+      );
       doIndexAccounts.mutate(indexedAccounts);
     }
   }, [props.isReorder]);

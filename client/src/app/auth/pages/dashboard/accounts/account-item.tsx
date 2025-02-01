@@ -1,8 +1,8 @@
 import { cn, convertNumberToCurrency } from '@/lib/utils';
-import { type Account } from '@/types/account';
+import { type IAccount } from '@/types/account';
 
 interface AccountItemProps {
-  account: Account;
+  account: IAccount;
 }
 
 const AccountItem = (props: AccountItemProps): JSX.Element => {
