@@ -27,7 +27,7 @@ const LinkSimpleFin = (): JSX.Element => {
       });
 
       if (res.status === 200) {
-        return res.data;
+        return res.data as User;
       }
 
       return undefined;

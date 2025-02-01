@@ -60,8 +60,8 @@ const NetWorthGraph = (): JSX.Element => {
         method: 'GET',
       });
 
-      if (res.status == 200) {
-        return res.data;
+      if (res.status === 200) {
+        return res.data as IAccount[];
       }
 
       return [];
