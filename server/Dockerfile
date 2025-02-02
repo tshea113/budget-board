@@ -4,13 +4,11 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG configuration=Release
 WORKDIR /src
-COPY ["BudgetBoard.csproj", "server/"]
-RUN dotnet restore "server\BudgetBoard.csproj"
-
+COPY . ./server
 WORKDIR "/src/server"
-COPY . .
 
-RUN dotnet build "BudgetBoard.csproj" -c $configuration -o /app/build
+RUN dotnet restore "BudgetBoard.WebAPI/BudgetBoard.WebAPI.csproj"
+RUN dotnet build "BudgetBoard.WebAPI/BudgetBoard.WebAPI.csproj" -c $configuration -o /app/build
 
 FROM build AS publish
 ARG configuration=Release
