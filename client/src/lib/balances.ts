@@ -13,7 +13,7 @@ export const getAccountBalanceMap = (balances: IBalance[]): Map<string, IBalance
 
   const accountBalanceMap = Map.groupBy(
     sortedBalances,
-    (balance: IBalance) => balance.accountId
+    (balance: IBalance) => balance.accountID
   );
 
   return accountBalanceMap;

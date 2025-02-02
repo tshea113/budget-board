@@ -29,7 +29,7 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
   const doCopyBudget = useMutation({
     mutationFn: async (newBudgets: IBudgetCreateRequest[]) =>
       await request({
-        url: '/api/budget/addmultiple',
+        url: '/api/budget',
         method: 'POST',
         data: newBudgets,
       }),

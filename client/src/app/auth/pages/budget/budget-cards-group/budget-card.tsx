@@ -86,7 +86,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
       await request({
         url: '/api/budget',
         method: 'DELETE',
-        params: { id },
+        params: { guid: id },
       }),
     onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['budgets'] }),
   });
@@ -202,9 +202,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
           <ResponsiveButton
             variant="destructive"
             className="h-full w-9 p-1"
-            onClick={() => {
-              doDeleteBudget.mutate(props.budgets[0].id);
-            }}
+            onClick={() => doDeleteBudget.mutate(props.budgets[0].id)}
             loading={doDeleteBudget.isPending}
           >
             <TrashIcon />

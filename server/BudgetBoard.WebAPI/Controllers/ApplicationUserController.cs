@@ -37,7 +37,7 @@ public class ApplicationUserController(ILogger<ApplicationUserController> logger
 
     [HttpPut]
     [Authorize]
-    public async Task<IActionResult> Update([FromBody] IApplicationUserUpdateRequest newUser)
+    public async Task<IActionResult> Update([FromBody] ApplicationUserUpdateRequest newUser)
     {
         try
         {

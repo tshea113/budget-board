@@ -41,7 +41,7 @@ const AddBudget = (props: AddBudgetProps): JSX.Element => {
 
   const queryClient = useQueryClient();
   const doAddBudget = useMutation({
-    mutationFn: async (newBudget: IBudgetCreateRequest) =>
+    mutationFn: async (newBudget: IBudgetCreateRequest[]) =>
       await request({
         url: '/api/budget',
         method: 'POST',
@@ -97,11 +97,13 @@ const AddBudget = (props: AddBudgetProps): JSX.Element => {
         loading={doAddBudget.isPending}
         onClick={() => {
           if (newCategory.length > 0 && newLimit.length > 0) {
-            doAddBudget.mutate({
-              date: props.date,
-              category: newCategory,
-              limit: parseInt(newLimit, 10),
-            });
+            doAddBudget.mutate([
+              {
+                date: props.date,
+                category: newCategory,
+                limit: parseInt(newLimit, 10),
+              },
+            ]);
           } else {
             toast.error('Please fill in all fields.');
           }

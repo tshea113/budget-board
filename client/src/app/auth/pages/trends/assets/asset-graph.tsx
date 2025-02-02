@@ -41,8 +41,8 @@ const AssetsGraph = (): JSX.Element => {
           params: { accountId },
         });
 
-        if (res.status == 200) {
-          return res.data;
+        if (res.status === 200) {
+          return res.data as IBalance[];
         }
 
         return [];

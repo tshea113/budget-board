@@ -44,7 +44,7 @@ const AccountInput = (props: AccountInputProps): JSX.Element => {
   });
 
   const filteredAccounts = React.useMemo(() => {
-    let filteredAccounts = accountsQuery.data ?? [];
+    let filteredAccounts = (accountsQuery.data ?? []).filter((a) => a.deleted === null);
 
     if (props.hideHidden) {
       filteredAccounts = filteredAccounts.filter((a) => !a.hideAccount);

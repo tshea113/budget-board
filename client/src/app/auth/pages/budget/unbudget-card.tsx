@@ -46,7 +46,7 @@ const UnbudgetCard = (props: UnbudgetCardProps): JSX.Element => {
 
   const queryClient = useQueryClient();
   const doAddBudget = useMutation({
-    mutationFn: async (newBudget: IBudgetCreateRequest) =>
+    mutationFn: async (newBudget: IBudgetCreateRequest[]) =>
       await request({
         url: '/api/budget',
         method: 'POST',
@@ -110,16 +110,18 @@ const UnbudgetCard = (props: UnbudgetCardProps): JSX.Element => {
                 <ResponsiveButton
                   className="h-8 w-8 shrink-0 p-0"
                   loading={doAddBudget.isPending}
-                  onClick={() => {
-                    doAddBudget.mutate({
-                      date: props.selectedDates[0],
-                      category: getFormattedCategoryValue(
-                        props.name,
-                        transactionCategoriesWithCustom
-                      ),
-                      limit: parseInt(newBudgetLimit, 10),
-                    });
-                  }}
+                  onClick={() =>
+                    doAddBudget.mutate([
+                      {
+                        date: props.selectedDates[0],
+                        category: getFormattedCategoryValue(
+                          props.name,
+                          transactionCategoriesWithCustom
+                        ),
+                        limit: parseInt(newBudgetLimit, 10),
+                      },
+                    ])
+                  }
                 >
                   <SendIcon className="h-4 w-4" />
                 </ResponsiveButton>

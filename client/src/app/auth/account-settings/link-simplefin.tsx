@@ -40,7 +40,7 @@ const LinkSimpleFin = (): JSX.Element => {
       await request({
         url: '/api/applicationUser',
         method: 'PUT',
-        params: updatedApplicationUser,
+        data: updatedApplicationUser,
       }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['user'] });
