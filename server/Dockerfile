@@ -8,11 +8,8 @@ COPY . ./server
 WORKDIR "/src/server"
 
 RUN dotnet restore "BudgetBoard.WebAPI/BudgetBoard.WebAPI.csproj"
-RUN dotnet build "BudgetBoard.WebAPI/BudgetBoard.WebAPI.csproj" -c $configuration -o /app/build
-
-FROM build AS publish
 ARG configuration=Release
-RUN dotnet publish "BudgetBoard.csproj" -c $configuration -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "BudgetBoard.WebAPI/BudgetBoard.WebAPI.csproj" -c $configuration -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
