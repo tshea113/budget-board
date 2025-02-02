@@ -6,7 +6,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/
 import { Input } from '@/components/ui/input';
 import { translateAxiosError } from '@/lib/requests';
 import { cn } from '@/lib/utils';
-import { User } from '@/types/user';
+import { IApplicationUser } from '@/types/applicationUser';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosResponse, type AxiosError } from 'axios';
 import React from 'react';
@@ -20,14 +20,14 @@ const LinkSimpleFin = (): JSX.Element => {
 
   const userQuery = useQuery({
     queryKey: ['user'],
-    queryFn: async (): Promise<User | undefined> => {
+    queryFn: async (): Promise<IApplicationUser | undefined> => {
       const res: AxiosResponse = await request({
-        url: '/api/user',
+        url: '/api/applicationUser',
         method: 'GET',
       });
 
       if (res.status === 200) {
-        return res.data as User;
+        return res.data as IApplicationUser;
       }
 
       return undefined;
