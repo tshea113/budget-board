@@ -9,10 +9,6 @@
 
 A simple app for tracking monthly spending and working towards financial goals.
 
-> [!WARNING]
-> This project is in development!
-> Expect breaking changes until v1.0 is released.
-
 ## About The Project
 
 I created this app to be a self-hosted alternative to the now-shut-down personal finance app Mint.
