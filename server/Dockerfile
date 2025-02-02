@@ -14,4 +14,4 @@ RUN dotnet publish "BudgetBoard.WebAPI/BudgetBoard.WebAPI.csproj" -c $configurat
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "BudgetBoard.dll"]
+ENTRYPOINT ["dotnet", "BudgetBoard.WebAPI.dll"]
