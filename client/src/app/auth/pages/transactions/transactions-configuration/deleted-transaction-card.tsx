@@ -3,7 +3,7 @@ import ResponsiveButton from '@/components/responsive-button';
 import { Card } from '@/components/ui/card';
 import { translateAxiosError } from '@/lib/requests';
 import { getDaysSinceDate } from '@/lib/utils';
-import { type Transaction } from '@/types/transaction';
+import { ITransaction } from '@/types/transaction';
 import { ResetIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
@@ -11,7 +11,7 @@ import React from 'react';
 import { toast } from 'sonner';
 
 interface DeletedTransactionCardProps {
-  deletedTransaction: Transaction;
+  deletedTransaction: ITransaction;
 }
 
 const DeletedTransactionCard = (props: DeletedTransactionCardProps): JSX.Element => {
@@ -39,7 +39,7 @@ const DeletedTransactionCard = (props: DeletedTransactionCardProps): JSX.Element
       <div className="flex grow flex-col gap-2 p-1">
         <span className="text-sm">{props.deletedTransaction.merchantName}</span>
         <span className="text-xs text-muted-foreground">
-          {getDaysSinceDate(props.deletedTransaction.deleted) + ' days since deleted'}
+          {getDaysSinceDate(props.deletedTransaction.deleted!) + ' days since deleted'}
         </span>
       </div>
       <div className="">

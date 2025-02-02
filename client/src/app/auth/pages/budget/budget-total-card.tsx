@@ -3,7 +3,7 @@ import { Separator } from '@/components/ui/separator';
 import BudgetTotal from './budget-total';
 import { IBudget } from '@/types/budget';
 import { BudgetGroup, getBudgetsForGroup, sumBudgetAmounts } from '@/lib/budgets';
-import { defaultTransactionCategories, type Transaction } from '@/types/transaction';
+import { defaultTransactionCategories, ITransaction } from '@/types/transaction';
 import { areStringsEqual } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { sumTransactionAmounts } from '@/lib/transactions';
@@ -14,7 +14,7 @@ import { ICategoryResponse } from '@/types/category';
 
 interface BudgetTotalCardProps {
   budgetData: IBudget[];
-  transactionData: Transaction[];
+  transactionData: ITransaction[];
   isPending: boolean;
 }
 

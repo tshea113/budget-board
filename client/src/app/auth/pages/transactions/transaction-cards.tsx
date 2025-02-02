@@ -1,4 +1,4 @@
-import { Transaction, TransactionCardType } from '@/types/transaction';
+import { ITransaction, TransactionCardType } from '@/types/transaction';
 import TransactionCard from './transaction-card';
 import React from 'react';
 import PageSizeSelect from '@/components/page-size-select';
@@ -7,7 +7,7 @@ import { SortDirection } from './transactions-header/sort-button';
 import { Sorts } from './transactions-header/sort-by-menu';
 
 interface TransactionCardsProps {
-  transactions: Transaction[];
+  transactions: ITransaction[];
   sort: Sorts;
   sortDirection: SortDirection;
 }
@@ -26,9 +26,9 @@ const TransactionCards = (props: TransactionCardsProps): JSX.Element => {
   );
 
   const sortTransactions = (
-    transactions: Transaction[],
+    transactions: ITransaction[],
     sortValue: Sorts
-  ): Transaction[] => {
+  ): ITransaction[] => {
     switch (sortValue) {
       case Sorts.Date:
         return props.sortDirection === SortDirection.Decending
@@ -41,14 +41,14 @@ const TransactionCards = (props: TransactionCardsProps): JSX.Element => {
       case Sorts.Merchant:
         return props.sortDirection === SortDirection.Decending
           ? transactions.sort((a, b) =>
-              b.merchantName
+              (b.merchantName ?? '')
                 .toLocaleLowerCase()
-                .localeCompare(a.merchantName.toLocaleLowerCase())
+                .localeCompare((a.merchantName ?? '').toLocaleLowerCase())
             )
           : transactions.sort((a, b) =>
-              a.merchantName
+              (a.merchantName ?? '')
                 .toLocaleLowerCase()
-                .localeCompare(b.merchantName.toLocaleLowerCase())
+                .localeCompare((b.merchantName ?? '').toLocaleLowerCase())
             );
       case Sorts.Category:
         return props.sortDirection === SortDirection.Decending
@@ -91,7 +91,7 @@ const TransactionCards = (props: TransactionCardsProps): JSX.Element => {
     <div className="flex w-full flex-col gap-2">
       {sortTransactions(props.transactions, props.sort)
         .slice((page - 1) * itemsPerPage, (page - 1) * itemsPerPage + itemsPerPage)
-        .map((transaction: Transaction) => (
+        .map((transaction: ITransaction) => (
           <TransactionCard
             key={transaction.id}
             transaction={transaction}

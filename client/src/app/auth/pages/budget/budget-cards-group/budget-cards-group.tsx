@@ -1,12 +1,12 @@
 import { IBudget } from '@/types/budget';
 import BudgetCards from './budget-cards';
 import BudgetHeader from './budget-header';
-import { Transaction } from '@/types/transaction';
+import { ITransaction } from '@/types/transaction';
 
 interface BudgetCardsGroupProps {
   header: string;
   budgetData: IBudget[];
-  transactionsData: Transaction[];
+  transactionsData: ITransaction[];
   isPending: boolean;
 }
 

@@ -1,4 +1,4 @@
-import { defaultTransactionCategories, type Transaction } from '@/types/transaction';
+import { defaultTransactionCategories, ITransaction } from '@/types/transaction';
 import React from 'react';
 import CategoryInput from '@/components/category-input';
 import { getFormattedCategoryValue, getIsParentCategory } from '@/lib/category';
@@ -8,9 +8,9 @@ import { ICategoryResponse } from '@/types/category';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface EditableCategoryCellProps {
-  transaction: Transaction;
+  transaction: ITransaction;
   isSelected: boolean;
-  editCell: (newTransaction: Transaction) => void;
+  editCell: (newTransaction: ITransaction) => void;
   textClassName?: string;
 }
 
@@ -63,7 +63,7 @@ const EditableCategoryCell = (props: EditableCategoryCellProps): JSX.Element => 
         newSubcategory = category.value.toLocaleLowerCase();
       }
 
-      const newTransaction: Transaction = {
+      const newTransaction: ITransaction = {
         ...props.transaction,
         category: newCategory,
         subcategory: newSubcategory,

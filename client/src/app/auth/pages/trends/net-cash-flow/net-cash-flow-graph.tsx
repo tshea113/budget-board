@@ -20,7 +20,7 @@ import {
   getUniqueYears,
   initCurrentMonth,
 } from '@/lib/utils';
-import { Transaction } from '@/types/transaction';
+import { ITransaction } from '@/types/transaction';
 import { useQueries } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import React from 'react';
@@ -38,15 +38,15 @@ const NetCashFlowGraph = () => {
   const transactionsQuery = useQueries({
     queries: getUniqueYears(selectedMonths).map((year: number) => ({
       queryKey: ['transactions', { year }],
-      queryFn: async (): Promise<Transaction[]> => {
+      queryFn: async (): Promise<ITransaction[]> => {
         const res: AxiosResponse = await request({
           url: '/api/transaction',
           method: 'GET',
           params: { year },
         });
 
-        if (res.status == 200) {
-          return res.data;
+        if (res.status === 200) {
+          return res.data as ITransaction[];
         }
 
         return [];

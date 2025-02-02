@@ -2,7 +2,7 @@ import { Card } from '@/components/ui/card';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import { useQuery } from '@tanstack/react-query';
-import { Transaction } from '@/types/transaction';
+import { ITransaction } from '@/types/transaction';
 import { AxiosResponse } from 'axios';
 import {
   convertNumberToCurrency,
@@ -24,7 +24,7 @@ const SpendingTrendsCard = (): JSX.Element => {
       'transactions',
       { month: thisMonthDate.getMonth(), year: thisMonthDate.getFullYear() },
     ],
-    queryFn: async (): Promise<Transaction[]> => {
+    queryFn: async (): Promise<ITransaction[]> => {
       const res: AxiosResponse = await request({
         url: '/api/transaction',
         method: 'GET',
@@ -34,8 +34,8 @@ const SpendingTrendsCard = (): JSX.Element => {
         },
       });
 
-      if (res.status == 200) {
-        return res.data;
+      if (res.status === 200) {
+        return res.data as ITransaction[];
       }
 
       return [];
@@ -47,7 +47,7 @@ const SpendingTrendsCard = (): JSX.Element => {
       'transactions',
       { month: lastMonthDate.getMonth(), year: lastMonthDate.getFullYear() },
     ],
-    queryFn: async (): Promise<Transaction[]> => {
+    queryFn: async (): Promise<ITransaction[]> => {
       const res: AxiosResponse = await request({
         url: '/api/transaction',
         method: 'GET',
@@ -57,8 +57,8 @@ const SpendingTrendsCard = (): JSX.Element => {
         },
       });
 
-      if (res.status == 200) {
-        return res.data;
+      if (res.status === 200) {
+        return res.data as ITransaction[];
       }
 
       return [];

@@ -1,8 +1,4 @@
-import {
-  Filters,
-  hiddenTransactionCategory,
-  type Transaction,
-} from '@/types/transaction';
+import { Filters, hiddenTransactionCategory, ITransaction } from '@/types/transaction';
 import { getIsParentCategory } from './category';
 import { areStringsEqual, getStandardDate } from './utils';
 import { ICategory } from '@/types/category';
@@ -14,10 +10,10 @@ import { ICategory } from '@/types/category';
  * @returns The filtered transactions
  */
 export const getTransactionsByCategory = (
-  transactions: Transaction[],
+  transactions: ITransaction[],
   categoryValue: string
 ) =>
-  transactions.filter((t: Transaction) =>
+  transactions.filter((t: ITransaction) =>
     areStringsEqual(t.category ?? '', categoryValue)
   );
 
@@ -26,23 +22,23 @@ export const getTransactionsByCategory = (
  * @param transactions A list of transactions
  * @returns A list of transactions that are not deleted
  */
-export const getVisibleTransactions = (transactions: Transaction[]): Transaction[] =>
-  transactions.filter((t: Transaction) => t.deleted === null);
+export const getVisibleTransactions = (transactions: ITransaction[]): ITransaction[] =>
+  transactions.filter((t: ITransaction) => t.deleted === null);
 
 /**
  * Filters out any transactions that are not deleted.
  * @param transactions A list of transactions
  * @returns A list of deleted transactions
  */
-export const getDeletedTransactions = (transactions: Transaction[]): Transaction[] =>
-  transactions.filter((t: Transaction) => t.deleted !== null);
+export const getDeletedTransactions = (transactions: ITransaction[]): ITransaction[] =>
+  transactions.filter((t: ITransaction) => t.deleted !== null);
 
 /**
  * Filters out the transactions that are delete or have the 'Hide From Budgets' transaction category
  * @param transactions Transactions to filter
  * @returns Filtered list of transactions
  */
-export const filterHiddenTransactions = (transactions: Transaction[]) =>
+export const filterHiddenTransactions = (transactions: ITransaction[]) =>
   getVisibleTransactions(transactions).filter(
     (t) => !areStringsEqual(t.category ?? '', hiddenTransactionCategory)
   );
@@ -55,10 +51,10 @@ export const filterHiddenTransactions = (transactions: Transaction[]) =>
  * @returns The filtered transactions
  */
 export const getFilteredTransactions = (
-  transactions: Transaction[],
+  transactions: ITransaction[],
   filters: Filters,
   transactionCategories: ICategory[]
-): Transaction[] => {
+): ITransaction[] => {
   // We don't want to include deleted transactions.
   let filteredTransactions = getVisibleTransactions(transactions);
   if (filters.accounts.length > 0) {
@@ -97,11 +93,11 @@ export const getFilteredTransactions = (
  * @returns An array of transactions filtered to the given month and year.
  */
 export const getTransactionsForMonth = (
-  transactionData: Transaction[],
+  transactionData: ITransaction[],
   date: Date
-): Transaction[] =>
+): ITransaction[] =>
   transactionData.filter(
-    (t: Transaction) =>
+    (t: ITransaction) =>
       new Date(t.date).getMonth() === new Date(date).getMonth() &&
       new Date(t.date).getUTCFullYear() === new Date(date).getUTCFullYear()
   );
@@ -113,11 +109,11 @@ export const getTransactionsForMonth = (
  * @returns The sum of all transactions for the given category
  */
 export const sumTransactionAmountsByCategory = (
-  transactionData: Transaction[],
+  transactionData: ITransaction[],
   categoryToSum: string,
   transactionCategories: ICategory[]
 ): number => {
-  const transactionsForCategory = transactionData.filter((t: Transaction) => {
+  const transactionsForCategory = transactionData.filter((t: ITransaction) => {
     // We need to figure out whether the category we are comparing on is a category or subcategory
     // to know which field to look at on the transaction.
     const transactionCategory = getIsParentCategory(categoryToSum, transactionCategories)
@@ -141,7 +137,7 @@ export interface RollingTotalSpendingPerDay {
  * @returns An array of dates with the corresponding cumulative total spending up to that date
  */
 export const getRollingTotalSpendingForMonth = (
-  transactionsForMonth: Transaction[],
+  transactionsForMonth: ITransaction[],
   endDate: number
 ): RollingTotalSpendingPerDay[] => {
   let rollingTotalSpendingPerDay: RollingTotalSpendingPerDay[] = [];
@@ -153,7 +149,7 @@ export const getRollingTotalSpendingForMonth = (
 
   let total = 0;
   const summedTransactionsPerMonth = sortedSpending.reduce(
-    (result: RollingTotalSpendingPerDay[], transaction: Transaction) => {
+    (result: RollingTotalSpendingPerDay[], transaction: ITransaction) => {
       const foundDay = result.find((t) => t.day === new Date(transaction.date).getDate());
 
       // Transactions are negative and we want spending to be positive,
@@ -202,6 +198,6 @@ export const getRollingTotalSpendingForMonth = (
  * @param transactionData Array of transactions
  * @returns The sum of all transaction amounts
  */
-export const sumTransactionAmounts = (transactionData: Transaction[]): number => {
+export const sumTransactionAmounts = (transactionData: ITransaction[]): number => {
   return transactionData.reduce((n, { amount }) => n + amount, 0);
 };

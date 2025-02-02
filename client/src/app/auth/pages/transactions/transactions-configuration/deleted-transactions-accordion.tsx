@@ -4,7 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { type Transaction } from '@/types/transaction';
+import { ITransaction } from '@/types/transaction';
 import DeletedTransactionCard from './deleted-transaction-card';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
@@ -18,15 +18,15 @@ const DeletedTransactionsAccordion = (): JSX.Element => {
 
   const transactionsQuery = useQuery({
     queryKey: ['transactions', { getHidden: true }],
-    queryFn: async (): Promise<Transaction[]> => {
+    queryFn: async (): Promise<ITransaction[]> => {
       const res: AxiosResponse = await request({
         url: '/api/transaction',
         method: 'GET',
         params: { getHidden: true },
       });
 
-      if (res.status == 200) {
-        return res.data;
+      if (res.status === 200) {
+        return res.data as ITransaction[];
       }
 
       return [];
@@ -57,7 +57,7 @@ const DeletedTransactionsAccordion = (): JSX.Element => {
           </AccordionTrigger>
           <AccordionContent className="space-y-2">
             {deletedTransactions.length !== 0 ? (
-              deletedTransactions.map((deletedTransaction: Transaction) => (
+              deletedTransactions.map((deletedTransaction: ITransaction) => (
                 <DeletedTransactionCard
                   key={deletedTransaction.id}
                   deletedTransaction={deletedTransaction}

@@ -13,7 +13,7 @@ import {
   getStandardDate,
   getUniqueDatesInRange,
 } from './utils';
-import { Transaction } from '@/types/transaction';
+import { ITransaction } from '@/types/transaction';
 import {
   getRollingTotalSpendingForMonth,
   getTransactionsForMonth,
@@ -297,7 +297,7 @@ export const BuildTransactionChartConfig = (months: Date[]): ChartConfig => {
  */
 export const BuildTransactionChartData = (
   months: Date[],
-  transactions: Transaction[]
+  transactions: ITransaction[]
 ): any[] => {
   let spendingTrendsChartData: any[] = [];
   months.forEach((month) => {

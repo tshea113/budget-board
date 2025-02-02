@@ -1,5 +1,5 @@
 import { CashFlowValue, IBudget } from '@/types/budget';
-import { Transaction } from '@/types/transaction';
+import { ITransaction } from '@/types/transaction';
 import { getIsParentCategory, getParentCategory } from './category';
 import { areStringsEqual } from './utils';
 import { ICategory } from '@/types/category';
@@ -75,7 +75,7 @@ export const getCashFlowValue = (
  */
 export const buildTimeToMonthlyTotalsMap = (
   months: Date[],
-  transactions: Transaction[]
+  transactions: ITransaction[]
 ): Map<number, number> => {
   const map = new Map();
   months.forEach((month: Date) => {
@@ -96,14 +96,14 @@ export const buildTimeToMonthlyTotalsMap = (
  */
 export const getUnbudgetedTransactions = (
   budgets: IBudget[],
-  transactions: Transaction[],
+  transactions: ITransaction[],
   transactionCategories: ICategory[]
 ): Unbudget[] => {
   if (budgets == null || transactions == null) return [];
 
   // This creates an object that maps category/subcategory => array of amounts
   const groupedTransactions: [string, number[]][] = Object.entries(
-    transactions.reduce((result: any, item: Transaction) => {
+    transactions.reduce((result: any, item: ITransaction) => {
       (result[
         item.subcategory?.length !== 0
           ? (item.subcategory?.toLocaleLowerCase() ?? '')

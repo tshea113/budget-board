@@ -13,7 +13,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import GoalDetails from './goal-details';
 import { AuthContext } from '@/components/auth-provider';
-import { Transaction } from '@/types/transaction';
+import { ITransaction } from '@/types/transaction';
 import { AxiosError, AxiosResponse } from 'axios';
 import { translateAxiosError } from '@/lib/requests';
 import EditableGoalNameCell from './cells/editable-goal-name-cell';
@@ -48,7 +48,7 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
         includeHidden: true,
       },
     ],
-    queryFn: async (): Promise<Transaction[]> => {
+    queryFn: async (): Promise<ITransaction[]> => {
       const res: AxiosResponse = await request({
         url: '/api/transaction',
         method: 'GET',
@@ -59,8 +59,8 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
         },
       });
 
-      if (res.status == 200) {
-        return res.data;
+      if (res.status === 200) {
+        return res.data as ITransaction[];
       }
 
       return [];

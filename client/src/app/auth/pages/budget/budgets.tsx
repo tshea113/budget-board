@@ -7,7 +7,7 @@ import {
 import { IBudget } from '@/types/budget';
 import BudgetTotalCard from './budget-total-card';
 import { initCurrentMonth } from '@/lib/utils';
-import { defaultTransactionCategories, type Transaction } from '@/types/transaction';
+import { defaultTransactionCategories, ITransaction } from '@/types/transaction';
 import Unbudgets from './unbudgets';
 import { AuthContext } from '@/components/auth-provider';
 import { useQueries, useQuery } from '@tanstack/react-query';
@@ -50,15 +50,15 @@ const Budgets = (): JSX.Element => {
   const transactionsForMonthsQuery = useQueries({
     queries: selectedDates.map((date: Date) => ({
       queryKey: ['transactions', { month: date.getMonth(), year: date.getUTCFullYear() }],
-      queryFn: async (): Promise<Transaction[]> => {
+      queryFn: async (): Promise<ITransaction[]> => {
         const res: AxiosResponse = await request({
           url: '/api/transaction',
           method: 'GET',
           params: { month: date.getMonth() + 1, year: date.getFullYear() },
         });
 
-        if (res.status == 200) {
-          return res.data;
+        if (res.status === 200) {
+          return res.data as ITransaction[];
         }
 
         return [];

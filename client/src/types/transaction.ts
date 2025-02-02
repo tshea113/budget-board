@@ -1,20 +1,40 @@
 import { DateRange } from 'react-day-picker';
 import { ICategory } from './category';
 
-export interface Transaction {
+export interface ITransactionCreateRequest {
+  syncID: string | null;
+  amount: number;
+  date: Date;
+  category: string | null;
+  subcategory: string | null;
+  merchantName: string | null;
+  source: string | null;
+  accountID: string;
+}
+
+export interface ITransactionUpdateRequest {
   id: string;
   amount: number;
   date: Date;
   category: string | null;
   subcategory: string | null;
-  merchantName: string;
+  merchantName: string | null;
+  deleted: Date | null;
+}
+
+export interface ITransaction {
+  id: string;
+  syncID: string | null;
+  amount: number;
+  date: Date;
+  category: string | null;
+  subcategory: string | null;
+  merchantName: string | null;
   pending: boolean;
-  deleted: Date;
+  deleted: Date | null;
   source: string;
   accountID: string;
 }
-
-export interface NewTransaction extends Partial<Transaction> {}
 
 export interface IFilters {
   accounts: string[];
