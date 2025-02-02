@@ -6,7 +6,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/
 import { Input } from '@/components/ui/input';
 import { translateAxiosError } from '@/lib/requests';
 import { cn } from '@/lib/utils';
-import { IApplicationUser } from '@/types/applicationUser';
+import { IApplicationUser, IApplicationUserUpdateRequest } from '@/types/applicationUser';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosResponse, type AxiosError } from 'axios';
 import React from 'react';
@@ -36,11 +36,11 @@ const LinkSimpleFin = (): JSX.Element => {
 
   const queryClient = useQueryClient();
   const doSetAccessToken = useMutation({
-    mutationFn: async (newToken: string) =>
+    mutationFn: async (updatedApplicationUser: IApplicationUserUpdateRequest) =>
       await request({
-        url: '/api/simplefin/updatetoken',
-        method: 'POST',
-        params: { newToken },
+        url: '/api/applicationUser',
+        method: 'PUT',
+        params: updatedApplicationUser,
       }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['user'] });
@@ -90,7 +90,7 @@ const LinkSimpleFin = (): JSX.Element => {
               onSubmit={form.handleSubmit(async (data: FormValues, event) => {
                 event?.preventDefault();
                 if (userQuery.data) {
-                  doSetAccessToken.mutate(data.accessToken);
+                  doSetAccessToken.mutate({ accessToken: data.accessToken });
                 }
               })}
               className="flex flex-col gap-4"

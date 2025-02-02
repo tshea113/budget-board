@@ -1,3 +1,7 @@
+export interface IApplicationUserUpdateRequest {
+  accessToken: string;
+}
+
 export interface IApplicationUser {
   id: string;
   accessToken: boolean;

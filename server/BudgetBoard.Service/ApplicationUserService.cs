@@ -49,7 +49,12 @@ public class ApplicationUserService(ILogger<IApplicationUserService> logger, Use
 
         // We are assuming that the access token is valid.
         currentUser.AccessToken = user.AccessToken;
-        currentUser.LastSync = user.LastSync;
+        if (user.LastSync != null)
+        {
+            // This won't be negative, but VS still complains.
+            // Just cast it to DateTime to make it happy.
+            currentUser.LastSync = (DateTime)user.LastSync;
+        }
 
         await _userDataContext.SaveChangesAsync();
     }
