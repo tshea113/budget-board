@@ -1,16 +1,15 @@
 import AccountItem from './account-item';
 import { Card } from '@/components/ui/card';
 import { filterVisibleAccounts } from '@/lib/accounts';
-import { Account } from '@/types/account';
-import { Institution } from '@/types/institution';
+import { IAccount } from '@/types/account';
+import { IInstitution } from '@/types/institution';
 
 interface InstitutionItemProps {
-  institution: Institution;
-  accounts: Account[];
+  institution: IInstitution;
 }
 
 const InstitutionItem = (props: InstitutionItemProps): JSX.Element => {
-  const sortedFilteredAccounts = filterVisibleAccounts(props.accounts).sort(
+  const sortedFilteredAccounts = filterVisibleAccounts(props.institution.accounts).sort(
     (a, b) => a.index - b.index
   );
 
@@ -22,7 +21,7 @@ const InstitutionItem = (props: InstitutionItemProps): JSX.Element => {
         </span>
       </Card>
       <div className="flex flex-col gap-1">
-        {sortedFilteredAccounts.map((account: Account) => (
+        {sortedFilteredAccounts.map((account: IAccount) => (
           <AccountItem key={account.id} account={account} />
         ))}
       </div>

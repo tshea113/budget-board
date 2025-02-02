@@ -3,8 +3,8 @@ import { Card } from '@/components/ui/card';
 import { GripVertical } from 'lucide-react';
 import AccountsConfigurationCards from './accounts-configuration-cards';
 import { Separator } from '@/components/ui/separator';
-import { Institution } from '@/types/institution';
-import { Account, AccountIndexRequest } from '@/types/account';
+import { IInstitution } from '@/types/institution';
+import { IAccount, IAccountIndexRequest } from '@/types/account';
 import React from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AuthContext } from '@/components/auth-provider';
@@ -14,23 +14,24 @@ import { toast } from 'sonner';
 import LoadingIcon from '@/components/loading-icon';
 
 interface AccountsConfigurationGroupProps {
-  institution: Institution;
-  accounts: Account[];
-  updateInstitution: (institution: Institution) => void;
+  institution: IInstitution;
+  updateInstitution: (institution: IInstitution) => void;
   isReorder: boolean;
 }
 
 const AccountsConfigurationGroup = (props: AccountsConfigurationGroupProps) => {
-  const [sortedAccounts, setSortedAccounts] = React.useState<Account[]>(
-    props.accounts.sort((a, b) => a.index - b.index)
+  const [sortedAccounts, setSortedAccounts] = React.useState<IAccount[]>(
+    props.institution.accounts
+      .filter((a) => a.deleted === null)
+      .sort((a, b) => a.index - b.index)
   );
 
   const { request } = React.useContext<any>(AuthContext);
   const queryClient = useQueryClient();
   const doIndexAccounts = useMutation({
-    mutationFn: async (accounts: AccountIndexRequest[]) =>
+    mutationFn: async (accounts: IAccountIndexRequest[]) =>
       await request({
-        url: '/api/account/setindices',
+        url: '/api/account/order',
         method: 'PUT',
         data: accounts,
       }),
@@ -43,13 +44,23 @@ const AccountsConfigurationGroup = (props: AccountsConfigurationGroupProps) => {
 
   React.useEffect(() => {
     if (!props.isReorder) {
-      const indexedAccounts: AccountIndexRequest[] = sortedAccounts.map((acc, index) => ({
-        id: acc.id,
-        index,
-      }));
+      const indexedAccounts: IAccountIndexRequest[] = sortedAccounts.map(
+        (acc, index) => ({
+          id: acc.id,
+          index,
+        })
+      );
       doIndexAccounts.mutate(indexedAccounts);
     }
   }, [props.isReorder]);
+
+  React.useEffect(() => {
+    setSortedAccounts(
+      props.institution.accounts
+        .filter((a) => a.deleted === null)
+        .sort((a, b) => a.index - b.index)
+    );
+  }, [props.institution.accounts]);
 
   return (
     <Card className="flex flex-row items-center gap-2 border-2 bg-background p-2">

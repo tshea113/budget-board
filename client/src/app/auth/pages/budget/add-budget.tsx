@@ -2,7 +2,7 @@ import { Input } from '@/components/ui/input';
 import ResponsiveButton from '@/components/responsive-button';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { translateAxiosError } from '@/lib/requests';
-import { type NewBudgetRequest } from '@/types/budget';
+import { IBudgetCreateRequest } from '@/types/budget';
 import CategoryInput from '@/components/category-input';
 import { AxiosError } from 'axios';
 import { AuthContext } from '@/components/auth-provider';
@@ -41,7 +41,7 @@ const AddBudget = (props: AddBudgetProps): JSX.Element => {
 
   const queryClient = useQueryClient();
   const doAddBudget = useMutation({
-    mutationFn: async (newBudget: NewBudgetRequest) =>
+    mutationFn: async (newBudget: IBudgetCreateRequest[]) =>
       await request({
         url: '/api/budget',
         method: 'POST',
@@ -97,11 +97,13 @@ const AddBudget = (props: AddBudgetProps): JSX.Element => {
         loading={doAddBudget.isPending}
         onClick={() => {
           if (newCategory.length > 0 && newLimit.length > 0) {
-            doAddBudget.mutate({
-              date: props.date,
-              category: newCategory,
-              limit: parseInt(newLimit, 10),
-            });
+            doAddBudget.mutate([
+              {
+                date: props.date,
+                category: newCategory,
+                limit: parseInt(newLimit, 10),
+              },
+            ]);
           } else {
             toast.error('Please fill in all fields.');
           }

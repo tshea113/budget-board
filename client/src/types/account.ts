@@ -1,8 +1,32 @@
 import { ICategory } from './category';
 
-export interface Account {
+export interface IAccountCreateRequest {
+  syncId?: string;
+  name: string;
+  institutionID?: string;
+  type: string;
+  subtype: string;
+  hideTransactions: boolean;
+  hideAccount: boolean;
+}
+
+export interface IAccountUpdateRequest {
   id: string;
-  syncID: string;
+  name: string;
+  type: string;
+  subtype: string;
+  hideTransactions: boolean;
+  hideAccount: boolean;
+}
+
+export interface IAccountIndexRequest {
+  id: string;
+  index: number;
+}
+
+export interface IAccount {
+  id: string;
+  syncId: string;
   name: string;
   institutionID: string;
   type: string;
@@ -15,22 +39,6 @@ export interface Account {
   index: number;
   userID: string;
 }
-
-export interface AccountEditRequest {
-  id: string;
-  name: string;
-  type: string;
-  subtype: string;
-  hideTransactions: boolean;
-  hideAccount: boolean;
-}
-
-export interface AccountIndexRequest {
-  id: string;
-  index: number;
-}
-
-export interface NewAccount extends Partial<Account> {}
 
 export const liabilityAccountTypes = ['Loan', 'Mortgage', 'Credit Card'];
 export const assetAccountTypes = ['Checking', 'Savings', 'Investment', 'Cash', 'Other'];

@@ -1,5 +1,5 @@
-import { CashFlowValue, type BudgetResponse } from '@/types/budget';
-import { Transaction } from '@/types/transaction';
+import { CashFlowValue, IBudget } from '@/types/budget';
+import { ITransaction } from '@/types/transaction';
 import { getIsParentCategory, getParentCategory } from './category';
 import { areStringsEqual } from './utils';
 import { ICategory } from '@/types/category';
@@ -19,7 +19,7 @@ export interface Unbudget {
  * @param budgetData Array of budgets
  * @returns Summed total of budget amounts
  */
-export const sumBudgetAmounts = (budgetData: BudgetResponse[]): number => {
+export const sumBudgetAmounts = (budgetData: IBudget[]): number => {
   return budgetData.reduce((n, { limit }) => n + limit, 0);
 };
 
@@ -28,11 +28,9 @@ export const sumBudgetAmounts = (budgetData: BudgetResponse[]): number => {
  * @param budgets Budgets to be grouped
  * @returns A map of categories to budgets
  */
-export const groupBudgetsByCategory = (
-  budgets: BudgetResponse[]
-): Map<string, BudgetResponse[]> =>
+export const groupBudgetsByCategory = (budgets: IBudget[]): Map<string, IBudget[]> =>
   budgets
-    .sort((a: BudgetResponse, b: BudgetResponse) => {
+    .sort((a: IBudget, b: IBudget) => {
       if (a.category.toUpperCase() < b.category.toUpperCase()) {
         return -1;
       } else if (a.category.toUpperCase() > b.category.toUpperCase()) {
@@ -42,7 +40,7 @@ export const groupBudgetsByCategory = (
       }
     })
     .reduce(
-      (budgetMap: any, item: BudgetResponse) =>
+      (budgetMap: any, item: IBudget) =>
         budgetMap.set(item.category.toLowerCase(), [
           ...(budgetMap.get(item.category.toLowerCase()) || []),
           item,
@@ -77,7 +75,7 @@ export const getCashFlowValue = (
  */
 export const buildTimeToMonthlyTotalsMap = (
   months: Date[],
-  transactions: Transaction[]
+  transactions: ITransaction[]
 ): Map<number, number> => {
   const map = new Map();
   months.forEach((month: Date) => {
@@ -97,15 +95,15 @@ export const buildTimeToMonthlyTotalsMap = (
  * @returns A list of transactions that do not have a corresponding budget
  */
 export const getUnbudgetedTransactions = (
-  budgets: BudgetResponse[],
-  transactions: Transaction[],
+  budgets: IBudget[],
+  transactions: ITransaction[],
   transactionCategories: ICategory[]
 ): Unbudget[] => {
   if (budgets == null || transactions == null) return [];
 
   // This creates an object that maps category/subcategory => array of amounts
   const groupedTransactions: [string, number[]][] = Object.entries(
-    transactions.reduce((result: any, item: Transaction) => {
+    transactions.reduce((result: any, item: ITransaction) => {
       (result[
         item.subcategory?.length !== 0
           ? (item.subcategory?.toLocaleLowerCase() ?? '')
@@ -148,21 +146,18 @@ export const getUnbudgetedTransactions = (
   return unbudgetedTransactions.filter((u) => Math.abs(u.amount) > 1);
 };
 
-export const getBudgetsForMonth = (
-  budgetData: BudgetResponse[],
-  date: Date
-): BudgetResponse[] =>
+export const getBudgetsForMonth = (budgetData: IBudget[], date: Date): IBudget[] =>
   budgetData.filter(
-    (b: BudgetResponse) =>
+    (b: IBudget) =>
       new Date(b.date).getMonth() === new Date(date).getMonth() &&
       new Date(b.date).getUTCFullYear() === new Date(date).getUTCFullYear()
   ) ?? [];
 
 export const getBudgetsForGroup = (
-  budgetData: BudgetResponse[] | undefined,
+  budgetData: IBudget[] | undefined,
   budgetGroup: BudgetGroup,
   transactionCategories: ICategory[]
-): BudgetResponse[] => {
+): IBudget[] => {
   if (budgetData == null) return [];
 
   if (budgetGroup === BudgetGroup.Income) {

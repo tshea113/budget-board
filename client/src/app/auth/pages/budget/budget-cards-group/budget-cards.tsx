@@ -1,5 +1,5 @@
-import { type BudgetResponse } from '@/types/budget';
-import { defaultTransactionCategories, type Transaction } from '@/types/transaction';
+import { IBudget } from '@/types/budget';
+import { defaultTransactionCategories, ITransaction } from '@/types/transaction';
 import { Skeleton } from '@/components/ui/skeleton';
 import BudgetCard from './budget-card';
 import { sumTransactionAmountsByCategory } from '@/lib/transactions';
@@ -12,8 +12,8 @@ import { AuthContext } from '@/components/auth-provider';
 import { ICategoryResponse } from '@/types/category';
 
 interface BudgetCardsProps {
-  budgetData: BudgetResponse[];
-  transactionsData: Transaction[];
+  budgetData: IBudget[];
+  transactionsData: ITransaction[];
   isPending: boolean;
 }
 
@@ -45,7 +45,7 @@ const BudgetCards = (props: BudgetCardsProps): JSX.Element => {
   );
 
   const getCardsForMap = (
-    categoryToBudgetsMap: Map<string, BudgetResponse[]>
+    categoryToBudgetsMap: Map<string, IBudget[]>
   ): JSX.Element[] => {
     const comps: JSX.Element[] = [];
     categoryToBudgetsMap.forEach((value, key) =>

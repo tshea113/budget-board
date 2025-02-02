@@ -3,7 +3,7 @@ import ResponsiveButton from '@/components/responsive-button';
 import { Card } from '@/components/ui/card';
 import { translateAxiosError } from '@/lib/requests';
 import { getDaysSinceDate } from '@/lib/utils';
-import { type Account } from '@/types/account';
+import { IAccount } from '@/types/account';
 import { ResetIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
@@ -11,7 +11,7 @@ import React from 'react';
 import { toast } from 'sonner';
 
 interface DeletedAccountCardProps {
-  deletedAccount: Account;
+  deletedAccount: IAccount;
 }
 
 const DeletedAccountCard = (props: DeletedAccountCardProps): JSX.Element => {
@@ -26,7 +26,9 @@ const DeletedAccountCard = (props: DeletedAccountCardProps): JSX.Element => {
         params: { guid: id },
       }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['accounts'] });
+      // Refetch the accounts and institutions queries immediatly after the account is restored
+      await queryClient.refetchQueries({ queryKey: ['institutions'] });
+      await queryClient.refetchQueries({ queryKey: ['accounts'] });
     },
     onError: (error: AxiosError) => {
       toast.error(translateAxiosError(error));

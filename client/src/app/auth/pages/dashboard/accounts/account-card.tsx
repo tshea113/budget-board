@@ -9,21 +9,21 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { Skeleton } from '@/components/ui/skeleton';
 import { translateAxiosError } from '@/lib/requests';
 import { toast } from 'sonner';
-import { Institution } from '@/types/institution';
-import { Account } from '@/types/account';
+import { IInstitution } from '@/types/institution';
+import { IAccount } from '@/types/account';
 
 const AccountCard = (): JSX.Element => {
   const { request } = React.useContext<any>(AuthContext);
   const institutionQuery = useQuery({
     queryKey: ['institutions'],
-    queryFn: async (): Promise<Institution[]> => {
+    queryFn: async (): Promise<IInstitution[]> => {
       const res: AxiosResponse = await request({
         url: '/api/institution',
         method: 'GET',
       });
 
-      if (res.status == 200) {
-        return res.data;
+      if (res.status === 200) {
+        return res.data as IInstitution[];
       }
 
       return [];
@@ -32,14 +32,14 @@ const AccountCard = (): JSX.Element => {
 
   const accountsQuery = useQuery({
     queryKey: ['accounts'],
-    queryFn: async (): Promise<Account[]> => {
+    queryFn: async (): Promise<IAccount[]> => {
       const res: AxiosResponse = await request({
         url: '/api/account',
         method: 'GET',
       });
 
-      if (res.status == 200) {
-        return res.data;
+      if (res.status === 200) {
+        return res.data as IAccount[];
       }
 
       return [];
@@ -82,10 +82,7 @@ const AccountCard = (): JSX.Element => {
       </div>
       <Separator />
       <div className="p-2">
-        <InstitutionItems
-          institutions={institutionQuery.data ?? []}
-          accounts={accountsQuery.data ?? []}
-        />
+        <InstitutionItems institutions={institutionQuery.data ?? []} />
       </div>
     </Card>
   );

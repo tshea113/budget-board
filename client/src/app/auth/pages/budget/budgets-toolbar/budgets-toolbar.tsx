@@ -3,7 +3,7 @@ import { cn, initCurrentMonth } from '@/lib/utils';
 import React from 'react';
 import ResponsiveButton from '@/components/responsive-button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { BudgetResponse, NewBudgetRequest } from '@/types/budget';
+import { IBudget, IBudgetCreateRequest } from '@/types/budget';
 import { AuthContext } from '@/components/auth-provider';
 import { AxiosError, AxiosResponse } from 'axios';
 import { toast } from 'sonner';
@@ -27,13 +27,13 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
 
   const queryClient = useQueryClient();
   const doCopyBudget = useMutation({
-    mutationFn: async (newBudgets: NewBudgetRequest[]) =>
+    mutationFn: async (newBudgets: IBudgetCreateRequest[]) =>
       await request({
-        url: '/api/budget/addmultiple',
+        url: '/api/budget',
         method: 'POST',
         data: newBudgets,
       }),
-    onSuccess: async (_, variables: NewBudgetRequest[]) =>
+    onSuccess: async (_, variables: IBudgetCreateRequest[]) =>
       await queryClient.invalidateQueries({
         queryKey: ['budgets', variables[0]?.date],
       }),
@@ -50,9 +50,9 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): JSX.Element => {
       params: { date: lastMonth },
     })
       .then((res: AxiosResponse<any, any>) => {
-        const budgets: BudgetResponse[] = res.data;
+        const budgets: IBudget[] = res.data;
         if (budgets.length !== 0) {
-          const newBudgets: NewBudgetRequest[] = budgets.map((budget) => {
+          const newBudgets: IBudgetCreateRequest[] = budgets.map((budget) => {
             return {
               date: props.selectedDates[0],
               category: budget.category,

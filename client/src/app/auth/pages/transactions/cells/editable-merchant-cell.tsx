@@ -1,21 +1,21 @@
 import { Input } from '@/components/ui/input';
-import { type Transaction } from '@/types/transaction';
+import { ITransaction } from '@/types/transaction';
 import React from 'react';
 
 interface EditableMerchantCellProps {
-  transaction: Transaction;
+  transaction: ITransaction;
   isSelected: boolean;
-  editCell: ((newTransaction: Transaction) => void) | undefined;
+  editCell: ((newTransaction: ITransaction) => void) | undefined;
   textClassName?: string;
 }
 
 const EditableMerchantCell = (props: EditableMerchantCellProps): JSX.Element => {
   const [merchantDisplayValue, setMerchantDisplayValue] = React.useState(
-    props.transaction.merchantName
+    props.transaction.merchantName ?? ''
   );
 
   const onTextChange = (): void => {
-    const newTransaction: Transaction = {
+    const newTransaction: ITransaction = {
       ...props.transaction,
       merchantName: merchantDisplayValue,
     };

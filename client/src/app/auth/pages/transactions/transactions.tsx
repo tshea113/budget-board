@@ -3,7 +3,7 @@ import { AuthContext } from '@/components/auth-provider';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
-import { Filters, Transaction, defaultTransactionCategories } from '@/types/transaction';
+import { Filters, ITransaction, defaultTransactionCategories } from '@/types/transaction';
 import TransactionCards from './transaction-cards';
 import { SortDirection } from './transactions-header/sort-button';
 import TransactionsHeader from './transactions-header/transactions.header';
@@ -20,14 +20,14 @@ const Transactions = (): JSX.Element => {
 
   const transactionsQuery = useQuery({
     queryKey: ['transactions'],
-    queryFn: async (): Promise<Transaction[]> => {
+    queryFn: async (): Promise<ITransaction[]> => {
       const res: AxiosResponse = await request({
         url: '/api/transaction',
         method: 'GET',
       });
 
-      if (res.status == 200) {
-        return res.data;
+      if (res.status === 200) {
+        return res.data as ITransaction[];
       }
 
       return [];

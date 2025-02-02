@@ -10,7 +10,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { BuildNetWorthChartData, getChartColor } from '@/lib/chart';
 import { convertNumberToCurrency, getDateFromMonthsAgo } from '@/lib/utils';
-import { Account } from '@/types/account';
+import { IAccount } from '@/types/account';
 import { IBalance } from '@/types/balance';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
@@ -37,8 +37,8 @@ const NetWorthGraph = (): JSX.Element => {
           params: { accountId },
         });
 
-        if (res.status == 200) {
-          return res.data;
+        if (res.status === 200) {
+          return res.data as IBalance[];
         }
 
         return [];
@@ -54,14 +54,14 @@ const NetWorthGraph = (): JSX.Element => {
 
   const accountsQuery = useQuery({
     queryKey: ['accounts'],
-    queryFn: async (): Promise<Account[]> => {
+    queryFn: async (): Promise<IAccount[]> => {
       const res: AxiosResponse = await request({
         url: '/api/account',
         method: 'GET',
       });
 
-      if (res.status == 200) {
-        return res.data;
+      if (res.status === 200) {
+        return res.data as IAccount[];
       }
 
       return [];

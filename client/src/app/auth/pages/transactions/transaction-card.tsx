@@ -2,7 +2,11 @@ import { AuthContext } from '@/components/auth-provider';
 import { Card } from '@/components/ui/card';
 import { translateAxiosError } from '@/lib/requests';
 import { cn } from '@/lib/utils';
-import { Transaction, TransactionCardType } from '@/types/transaction';
+import {
+  ITransaction,
+  ITransactionUpdateRequest,
+  TransactionCardType,
+} from '@/types/transaction';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import React from 'react';
@@ -17,7 +21,7 @@ import { TrashIcon } from 'lucide-react';
 
 interface TransactionCardProps {
   className?: string;
-  transaction: Transaction;
+  transaction: ITransaction;
   type: TransactionCardType;
 }
 
@@ -29,27 +33,37 @@ const TransactionCard = (props: TransactionCardProps): JSX.Element => {
 
   const queryClient = useQueryClient();
   const doEditTransaction = useMutation({
-    mutationFn: async (newTransaction: Transaction) =>
+    mutationFn: async (newTransaction: ITransactionUpdateRequest) =>
       await request({
         url: '/api/transaction',
         method: 'PUT',
         data: newTransaction,
       }),
-    onMutate: async (variables: Transaction) => {
+    onMutate: async (variables: ITransactionUpdateRequest) => {
       await queryClient.cancelQueries({ queryKey: ['transactions'] });
 
-      const previousTransactions: Transaction[] =
+      const previousTransactions: ITransaction[] =
         queryClient.getQueryData(['transactions']) ?? [];
 
-      queryClient.setQueryData(['transactions'], (oldTransactions: Transaction[]) =>
+      queryClient.setQueryData(['transactions'], (oldTransactions: ITransaction[]) =>
         oldTransactions.map((oldTransaction) =>
-          oldTransaction.id === variables.id ? variables : oldTransaction
+          oldTransaction.id === variables.id
+            ? {
+                ...oldTransaction,
+                amount: variables.amount,
+                date: variables.date,
+                category: variables.category,
+                subcategory: variables.subcategory,
+                merchantName: variables.merchantName,
+                deleted: variables.deleted,
+              }
+            : oldTransaction
         )
       );
 
       return { previousTransactions };
     },
-    onError: (error: AxiosError, _variables: Transaction, context) => {
+    onError: (error: AxiosError, _variables: ITransaction, context) => {
       queryClient.setQueryData(['transactions'], context?.previousTransactions ?? []);
       toast.error(translateAxiosError(error));
     },

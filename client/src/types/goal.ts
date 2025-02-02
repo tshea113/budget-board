@@ -1,4 +1,25 @@
-import { Account } from './account';
+import { IAccount } from './account';
+
+export interface IGoalCreateRequest {
+  name: string;
+  completeDate: Date | null;
+  amount: number;
+  initialAmount: number | null;
+  monthlyContribution: number | null;
+  accountIds: string[];
+}
+
+export interface IGoalUpdateRequest {
+  id: string;
+  name: string;
+  completeDate: Date | null;
+  isCompleteDateEditable: boolean;
+  amount: number;
+  initialAmount: number | null;
+  monthlyContribution: number | null;
+  isMonthlyContributionEditable: boolean;
+  accountIds: string[];
+}
 
 export interface IGoalResponse {
   id: string;
@@ -10,42 +31,8 @@ export interface IGoalResponse {
   monthlyContribution: number;
   isMonthlyContributionEditable: boolean;
   estimatedInterestRate: number | null;
-  accounts: Account[];
+  accounts: IAccount[];
   userID: string;
-}
-
-export interface INewGoalRequest {
-  name: string;
-  completeDate: Date | null;
-  amount: number;
-  initialAmount: number | null;
-  monthlyContribution: number | null;
-  accountIds: string[];
-}
-
-export class NewGoalRequest implements INewGoalRequest {
-  name: string;
-  completeDate: Date | null;
-  amount: number;
-  initialAmount: number | null;
-  monthlyContribution: number | null;
-  accountIds: string[];
-
-  constructor(
-    name?: string,
-    accountIds?: string[],
-    completeDate?: Date | null,
-    amount?: number,
-    initialAmount?: number | null,
-    monthlyContribution?: number | null
-  ) {
-    this.name = name ?? '';
-    this.accountIds = accountIds ?? [];
-    this.completeDate = completeDate ?? null;
-    this.amount = amount ?? 0;
-    this.initialAmount = initialAmount ?? null;
-    this.monthlyContribution = monthlyContribution ?? null;
-  }
 }
 
 export enum GoalType {

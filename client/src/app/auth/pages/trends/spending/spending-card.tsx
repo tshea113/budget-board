@@ -1,6 +1,6 @@
 import { useQueries } from '@tanstack/react-query';
 import SpendingGraph from './spending-graph';
-import { Transaction } from '@/types/transaction';
+import { ITransaction } from '@/types/transaction';
 import { AxiosResponse } from 'axios';
 import { AuthContext } from '@/components/auth-provider';
 import React from 'react';
@@ -23,15 +23,15 @@ const SpendingCardContent = (): JSX.Element => {
   const transactionsQuery = useQueries({
     queries: getUniqueYears(selectedMonths).map((year: number) => ({
       queryKey: ['transactions', { year }],
-      queryFn: async (): Promise<Transaction[]> => {
+      queryFn: async (): Promise<ITransaction[]> => {
         const res: AxiosResponse = await request({
           url: '/api/transaction',
           method: 'GET',
           params: { year },
         });
 
-        if (res.status == 200) {
-          return res.data;
+        if (res.status === 200) {
+          return res.data as ITransaction[];
         }
 
         return [];

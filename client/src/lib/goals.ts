@@ -1,7 +1,7 @@
 import { IGoalResponse } from '@/types/goal';
 import { getMonthsUntilDate } from './utils';
 import { sumAccountsTotalBalance } from './accounts';
-import { Transaction } from '@/types/transaction';
+import { ITransaction } from '@/types/transaction';
 
 /**
  * Retrieves the expected monthly contribution amount for a given loan
@@ -43,7 +43,7 @@ export const getGoalTargetAmount = (amount: number, initialAmount: number): numb
 
 export const sumTransactionsForGoalForMonth = (
   goal: IGoalResponse,
-  transactionsForMonth: Transaction[]
+  transactionsForMonth: ITransaction[]
 ): number =>
   transactionsForMonth
     .filter((t) => goal.accounts.some((a) => a.id === t.accountID))

@@ -32,7 +32,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { AxiosError, AxiosResponse } from 'axios';
-import { InfoResponse } from '@/types/user';
+import { IUserInfoResponse } from '@/types/applicationUser';
 import { translateAxiosError } from '@/lib/requests';
 import { toast } from 'sonner';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -100,14 +100,14 @@ const AppSidebar = (props: AppSidebarProps): JSX.Element => {
 
   const userInfoQuery = useQuery({
     queryKey: ['info'],
-    queryFn: async (): Promise<InfoResponse | undefined> => {
+    queryFn: async (): Promise<IUserInfoResponse | undefined> => {
       const res: AxiosResponse = await request({
         url: '/api/manage/info',
         method: 'GET',
       });
 
-      if (res.status == 200) {
-        return res.data;
+      if (res.status === 200) {
+        return res.data as IUserInfoResponse | undefined;
       }
 
       return undefined;

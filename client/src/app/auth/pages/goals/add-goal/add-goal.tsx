@@ -1,7 +1,7 @@
 import AccountInput from '@/components/account-input';
 import ResponsiveButton from '@/components/responsive-button';
 import { Input } from '@/components/ui/input';
-import { GoalCondition, GoalType, INewGoalRequest, NewGoalRequest } from '@/types/goal';
+import { GoalCondition, GoalType, IGoalCreateRequest } from '@/types/goal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import GoalConditionSelect from './goal-condition-select';
 import React from 'react';
@@ -31,7 +31,7 @@ const AddGoal = (): JSX.Element => {
 
   const queryClient = useQueryClient();
   const doAddGoal = useMutation({
-    mutationFn: async (newGoal: INewGoalRequest) =>
+    mutationFn: async (newGoal: IGoalCreateRequest) =>
       await request({
         url: '/api/goal',
         method: 'POST',
@@ -53,7 +53,14 @@ const AddGoal = (): JSX.Element => {
       toast.error('Please select at least one account.');
       return;
     }
-    const newGoal = new NewGoalRequest(newGoalName, newGoalAccounts);
+    const newGoal: IGoalCreateRequest = {
+      name: newGoalName,
+      completeDate: null,
+      amount: 0,
+      initialAmount: null,
+      monthlyContribution: null,
+      accountIds: newGoalAccounts,
+    };
 
     if (goalTypeValue === GoalType.SaveGoal) {
       if (newGoalAmount.length === 0) {

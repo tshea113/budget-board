@@ -8,12 +8,12 @@ import {
   sumTransactionsForGoalForMonth,
 } from '@/lib/goals';
 import { convertNumberToCurrency, cn, getProgress } from '@/lib/utils';
-import { IGoalResponse } from '@/types/goal';
+import { IGoalResponse, IGoalUpdateRequest } from '@/types/goal';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import GoalDetails from './goal-details';
 import { AuthContext } from '@/components/auth-provider';
-import { Transaction } from '@/types/transaction';
+import { ITransaction } from '@/types/transaction';
 import { AxiosError, AxiosResponse } from 'axios';
 import { translateAxiosError } from '@/lib/requests';
 import EditableGoalNameCell from './cells/editable-goal-name-cell';
@@ -48,7 +48,7 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
         includeHidden: true,
       },
     ],
-    queryFn: async (): Promise<Transaction[]> => {
+    queryFn: async (): Promise<ITransaction[]> => {
       const res: AxiosResponse = await request({
         url: '/api/transaction',
         method: 'GET',
@@ -59,8 +59,8 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
         },
       });
 
-      if (res.status == 200) {
-        return res.data;
+      if (res.status === 200) {
+        return res.data as ITransaction[];
       }
 
       return [];
@@ -85,13 +85,13 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
   });
 
   const doEditGoal = useMutation({
-    mutationFn: async (newGoal: IGoalResponse) =>
+    mutationFn: async (newGoal: IGoalUpdateRequest) =>
       await request({
         url: '/api/goal',
         method: 'PUT',
         data: newGoal,
       }),
-    onMutate: async (variables: IGoalResponse) => {
+    onMutate: async (variables: IGoalUpdateRequest) => {
       await queryClient.cancelQueries({
         queryKey: ['goals', { includeInterest: props.includeInterest }],
       });
@@ -103,12 +103,23 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
       queryClient.setQueryData(
         ['goals', { includeInterest: props.includeInterest }],
         (oldGoals: IGoalResponse[]) =>
-          oldGoals?.map((oldGoal) => (oldGoal.id === variables.id ? variables : oldGoal))
+          oldGoals?.map((oldGoal: IGoalResponse) =>
+            oldGoal.id === variables.id
+              ? {
+                  ...oldGoal,
+                  name: variables.name,
+                  completeDate: variables.completeDate,
+                  amount: variables.amount,
+                  initialAmount: variables.initialAmount,
+                  monthlyContribution: variables.monthlyContribution,
+                }
+              : oldGoal
+          )
       );
 
       return { previousGoals };
     },
-    onError: (error: AxiosError, _variables: IGoalResponse, context) => {
+    onError: (error: AxiosError, _variables: IGoalUpdateRequest, context) => {
       queryClient.setQueryData(
         ['goals', { includeInterest: props.includeInterest }],
         context?.previousGoals ?? []

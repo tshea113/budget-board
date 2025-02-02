@@ -4,11 +4,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { type Account } from '@/types/account';
+import { type IAccount } from '@/types/account';
 import DeletedAccountCard from './deleted-account-card';
 
 interface DeletedAccountsCardsProps {
-  deletedAccounts: Account[];
+  deletedAccounts: IAccount[];
 }
 
 const DeletedAccountsCards = (props: DeletedAccountsCardsProps): JSX.Element => {

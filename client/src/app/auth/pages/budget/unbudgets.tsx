@@ -4,8 +4,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { BudgetResponse } from '@/types/budget';
-import { defaultTransactionCategories, Transaction } from '@/types/transaction';
+import { IBudget } from '@/types/budget';
+import { defaultTransactionCategories, ITransaction } from '@/types/transaction';
 import UnbudgetCard from './unbudget-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { convertNumberToCurrency } from '@/lib/utils';
@@ -16,8 +16,8 @@ import React from 'react';
 import { ICategoryResponse } from '@/types/category';
 
 interface UnbudgetProps {
-  transactions: Transaction[];
-  budgets: BudgetResponse[];
+  transactions: ITransaction[];
+  budgets: IBudget[];
   selectedDates: Date[];
   isPending: boolean;
 }

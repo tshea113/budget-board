@@ -9,7 +9,7 @@ import { getSignForBudget } from '@/lib/budgets';
 import { getFormattedCategoryValue } from '@/lib/category';
 import { translateAxiosError } from '@/lib/requests';
 import { cn, convertNumberToCurrency, getProgress } from '@/lib/utils';
-import { type BudgetResponse } from '@/types/budget';
+import { IBudget, IBudgetUpdateRequest } from '@/types/budget';
 import { ICategoryResponse } from '@/types/category';
 import { defaultTransactionCategories } from '@/types/transaction';
 import { TrashIcon } from '@radix-ui/react-icons';
@@ -19,7 +19,7 @@ import React from 'react';
 import { toast } from 'sonner';
 
 interface BudgetCardProps {
-  budgets: BudgetResponse[];
+  budgets: IBudget[];
   amount: number;
   isIncome: boolean;
 }
@@ -29,7 +29,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
   const [selectEffect, setSelectEffect] = React.useState(false);
 
   const limit = React.useMemo(
-    () => props.budgets.reduce((n: number, b: BudgetResponse) => n + b.limit, 0),
+    () => props.budgets.reduce((n: number, b: IBudget) => n + b.limit, 0),
     [props.budgets]
   );
 
@@ -53,27 +53,28 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
 
   const queryClient = useQueryClient();
   const doEditBudget = useMutation({
-    mutationFn: async (newBudget: BudgetResponse) =>
+    mutationFn: async (newBudget: IBudgetUpdateRequest) =>
       await request({
         url: '/api/budget',
         method: 'PUT',
         data: newBudget,
       }),
-    onMutate: async (variables: BudgetResponse) => {
+    onMutate: async (variables: IBudgetUpdateRequest) => {
       await queryClient.cancelQueries({ queryKey: ['budgets'] });
 
-      const previousBudgets: BudgetResponse[] =
-        queryClient.getQueryData(['budgets']) ?? [];
+      const previousBudgets: IBudget[] = queryClient.getQueryData(['budgets']) ?? [];
 
-      queryClient.setQueryData(['budgets'], (oldBudgets: BudgetResponse[]) =>
+      queryClient.setQueryData(['budgets'], (oldBudgets: IBudget[]) =>
         oldBudgets?.map((oldBudget) =>
-          oldBudget.id === variables.id ? variables : oldBudget
+          oldBudget.id === variables.id
+            ? { ...oldBudget, limit: variables.limit }
+            : oldBudget
         )
       );
 
       return { previousBudgets };
     },
-    onError: (error: AxiosError, _variables: BudgetResponse, context) => {
+    onError: (error: AxiosError, _variables: IBudget, context) => {
       queryClient.setQueryData(['budgets'], context?.previousBudgets ?? []);
       toast.error(translateAxiosError(error));
     },
@@ -85,7 +86,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
       await request({
         url: '/api/budget',
         method: 'DELETE',
-        params: { id },
+        params: { guid: id },
       }),
     onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['budgets'] }),
   });
@@ -201,9 +202,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
           <ResponsiveButton
             variant="destructive"
             className="h-full w-9 p-1"
-            onClick={() => {
-              doDeleteBudget.mutate(props.budgets[0].id);
-            }}
+            onClick={() => doDeleteBudget.mutate(props.budgets[0].id)}
             loading={doDeleteBudget.isPending}
           >
             <TrashIcon />

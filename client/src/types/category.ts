@@ -3,10 +3,14 @@ export interface ICategory {
   parent: string;
 }
 
+export interface ICategoryCreateRequest extends ICategory {}
+
+export interface ICategoryUpdateRequest extends ICategory {
+  id: string;
+}
+
 export interface ICategoryResponse extends ICategory {
   id: string;
-  value: string;
-  parent: string;
   userId: string;
 }
 

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Transaction, TransactionCardType } from '@/types/transaction';
+import { ITransaction, TransactionCardType } from '@/types/transaction';
 import { AxiosResponse } from 'axios';
 import React from 'react';
 import { AuthContext } from '@/components/auth-provider';
@@ -16,14 +16,14 @@ const UncategorizedTransactionsCard = (): JSX.Element => {
 
   const transactionsQuery = useQuery({
     queryKey: ['transactions'],
-    queryFn: async (): Promise<Transaction[]> => {
+    queryFn: async (): Promise<ITransaction[]> => {
       const res: AxiosResponse = await request({
         url: '/api/transaction',
         method: 'GET',
       });
 
-      if (res.status == 200) {
-        return res.data;
+      if (res.status === 200) {
+        return res.data as ITransaction[];
       }
 
       return [];
@@ -55,7 +55,7 @@ const UncategorizedTransactionsCard = (): JSX.Element => {
           {filteredTransactions
             .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
             .slice((page - 1) * itemsPerPage, (page - 1) * itemsPerPage + itemsPerPage)
-            .map((transaction: Transaction) => (
+            .map((transaction: ITransaction) => (
               <TransactionCard
                 className="my-1"
                 key={transaction.id}

@@ -11,11 +11,11 @@ import {
   getChartColor,
 } from '@/lib/chart';
 import { convertNumberToCurrency, getMonthAndYearDateString } from '@/lib/utils';
-import { Transaction } from '@/types/transaction';
+import { ITransaction } from '@/types/transaction';
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 interface SpendingGraphProps {
-  transactions: Transaction[];
+  transactions: ITransaction[];
   months: Date[];
   includeGrid?: boolean;
   includeYAxis?: boolean;
