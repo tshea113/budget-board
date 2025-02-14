@@ -90,7 +90,7 @@ public class BalanceService(ILogger<IBalanceService> logger, UserDataContext use
     {
         try
         {
-            var users = await _userDataContext.Users
+            var users = await _userDataContext.ApplicationUsers
                 .Include(u => u.Accounts)
                 .ThenInclude(a => a.Balances)
                 .AsSplitQuery()

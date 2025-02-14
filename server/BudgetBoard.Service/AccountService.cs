@@ -131,11 +131,11 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
         await _userDataContext.SaveChangesAsync();
     }
 
-    private async Task<ApplicationUser?> GetCurrentUserAsync(string id)
+    private async Task<IApplicationUser?> GetCurrentUserAsync(string id)
     {
         try
         {
-            var users = await _userDataContext.Users
+            var users = await _userDataContext.ApplicationUsers
                 .Include(u => u.Accounts)
                 .ThenInclude(a => a.Transactions)
                 .Include(u => u.Accounts)

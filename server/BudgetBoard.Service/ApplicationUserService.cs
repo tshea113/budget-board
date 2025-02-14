@@ -63,7 +63,7 @@ public class ApplicationUserService(ILogger<IApplicationUserService> logger, Use
     {
         try
         {
-            var users = await _userDataContext.Users.ToListAsync();
+            var users = await _userDataContext.ApplicationUsers.ToListAsync();
             return users.Single(u => u.Id == new Guid(id));
         }
         catch (Exception ex)

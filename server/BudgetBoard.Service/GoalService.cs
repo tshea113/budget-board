@@ -125,7 +125,7 @@ public class GoalService(ILogger<IGoalService> logger, UserDataContext userDataC
     {
         try
         {
-            var users = await _userDataContext.Users
+            var users = await _userDataContext.ApplicationUsers
                 .Include(u => u.Goals)
                 .ThenInclude((g) => g.Accounts)
                 .ThenInclude((a) => a.Transactions)

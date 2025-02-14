@@ -93,7 +93,7 @@ public class BudgetService(ILogger<IBudgetService> logger, UserDataContext userD
     {
         try
         {
-            var users = await _userDataContext.Users
+            var users = await _userDataContext.ApplicationUsers
                 .Include(u => u.Budgets)
                 .ToListAsync();
             return users.Single(u => u.Id == new Guid(id));

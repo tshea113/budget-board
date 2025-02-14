@@ -109,7 +109,7 @@ public class TransactionCategoryService(ILogger<ITransactionCategoryService> log
     {
         try
         {
-            var users = await _userDataContext.Users
+            var users = await _userDataContext.ApplicationUsers
                 .Include(u => u.TransactionCategories)
                 .Include(u => u.Accounts)
                     .ThenInclude(a => a.Transactions)

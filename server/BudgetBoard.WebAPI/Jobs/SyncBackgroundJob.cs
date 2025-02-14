@@ -17,7 +17,7 @@ public class SyncBackgroundJob(ILogger<SyncBackgroundJob> logger, UserDataContex
 
     public async Task Execute(IJobExecutionContext context)
     {
-        var users = _userDataContext.Users
+        var users = _userDataContext.ApplicationUsers
             .Include(user => user.Accounts)
                 .ThenInclude(a => a.Transactions)
             .Include(user => user.Accounts)

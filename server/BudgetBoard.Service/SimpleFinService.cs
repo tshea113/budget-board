@@ -120,7 +120,7 @@ public class SimpleFinService(
     {
         try
         {
-            var users = await _userDataContext.Users
+            var users = await _userDataContext.ApplicationUsers
                 .Include(u => u.Accounts)
                     .ThenInclude(a => a.Transactions)
                 .Include(u => u.Accounts)

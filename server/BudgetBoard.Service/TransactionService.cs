@@ -136,7 +136,7 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
     {
         try
         {
-            var users = await _userDataContext.Users
+            var users = await _userDataContext.ApplicationUsers
                 .Include(u => u.Accounts)
                 .ThenInclude(a => a.Transactions)
                 .AsSplitQuery()

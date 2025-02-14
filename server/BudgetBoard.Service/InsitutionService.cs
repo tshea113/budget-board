@@ -107,7 +107,7 @@ public class InstitutionService(ILogger<IInstitutionService> logger, UserDataCon
     {
         try
         {
-            var users = await _userDataContext.Users
+            var users = await _userDataContext.ApplicationUsers
                 .Include(u => u.Institutions)
                 .ThenInclude(i => i.Accounts)
                 .ThenInclude(a => a.Balances)
