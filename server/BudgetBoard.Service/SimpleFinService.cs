@@ -205,7 +205,7 @@ public class SimpleFinService(
                     InstitutionID = institutionId,
                 };
 
-                await _accountService.CreateAccountAsync(userData, newAccount);
+                await _accountService.CreateAccountAsync(userData.Id, newAccount);
             }
 
             await SyncTransactionsAsync(userData, accountData.Id, accountData.Transactions);

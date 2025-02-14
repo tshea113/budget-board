@@ -100,6 +100,7 @@ public class AccountResponse : IAccountResponse
     public AccountResponse()
     {
         ID = Guid.NewGuid();
+        SyncID = string.Empty;
         Name = string.Empty;
         InstitutionID = null;
         Type = string.Empty;
@@ -116,6 +117,7 @@ public class AccountResponse : IAccountResponse
     public AccountResponse(Account account)
     {
         ID = account.ID;
+        SyncID = account.SyncID;
         Name = account.Name;
         InstitutionID = account.InstitutionID;
         Type = account.Type;

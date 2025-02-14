@@ -2,32 +2,19 @@
 using BudgetBoard.Database.Models;
 using BudgetBoard.Service.Interfaces;
 using BudgetBoard.Service.Types;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Security.Claims;
 
 namespace BudgetBoard.Service;
 
-public class AccountService(ILogger<IAccountService> logger, UserDataContext userDataContext, UserManager<ApplicationUser> userManager) : IAccountService
+public class AccountService(ILogger<IAccountService> logger, UserDataContext userDataContext) : IAccountService
 {
     private readonly ILogger<IAccountService> _logger = logger;
     private readonly UserDataContext _userDataContext = userDataContext;
-    private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-    public async Task<IApplicationUser> GetUserData(ClaimsPrincipal user)
+    public async Task CreateAccountAsync(Guid userGuid, IAccountCreateRequest account)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-        return userData;
-    }
-
-    public async Task CreateAccountAsync(IApplicationUser userData, IAccountCreateRequest account)
-    {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         var newAccount = new Account
         {
             SyncID = account.SyncID,
@@ -44,11 +31,12 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
         await _userDataContext.SaveChangesAsync();
     }
 
-    public IEnumerable<IAccountResponse> ReadAccountsAsync(IApplicationUser userData, Guid guid = default)
+    public async Task<IEnumerable<IAccountResponse>> ReadAccountsAsync(Guid userGuid, Guid accountGuid = default)
     {
-        if (guid != default)
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
+        if (accountGuid != default)
         {
-            var account = userData.Accounts.FirstOrDefault(a => a.ID == guid);
+            var account = userData.Accounts.FirstOrDefault(a => a.ID == accountGuid);
             if (account == null)
             {
                 _logger.LogError("Attempt to access account that does not exist.");
@@ -61,8 +49,9 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
         return userData.Accounts.Select(a => new AccountResponse(a));
     }
 
-    public async Task UpdateAccountAsync(IApplicationUser userData, IAccountUpdateRequest editedAccount)
+    public async Task UpdateAccountAsync(Guid userGuid, IAccountUpdateRequest editedAccount)
     {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         var account = userData.Accounts.FirstOrDefault(a => a.ID == editedAccount.ID);
         if (account == null)
         {
@@ -79,8 +68,9 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task DeleteAccountAsync(IApplicationUser userData, Guid guid, bool deleteTransactions = false)
+    public async Task DeleteAccountAsync(Guid userGuid, Guid guid, bool deleteTransactions = false)
     {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         var account = userData.Accounts.FirstOrDefault(a => a.ID == guid);
         if (account == null)
         {
@@ -101,8 +91,9 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task RestoreAccountAsync(IApplicationUser userData, Guid guid)
+    public async Task RestoreAccountAsync(Guid userGuid, Guid guid, bool restoreTransactions = false)
     {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         var account = userData.Accounts.FirstOrDefault(a => a.ID == guid);
         if (account == null)
         {
@@ -111,11 +102,21 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
         }
 
         account.Deleted = null;
+
+        if (restoreTransactions)
+        {
+            foreach (var transaction in account.Transactions)
+            {
+                transaction.Deleted = null;
+            }
+        }
+
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task OrderAccountsAsync(IApplicationUser userData, IEnumerable<IAccountIndexRequest> orderedAccounts)
+    public async Task OrderAccountsAsync(Guid userGuid, IEnumerable<IAccountIndexRequest> orderedAccounts)
     {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         foreach (var orderedAccount in orderedAccounts)
         {
             var account = userData.Accounts.FirstOrDefault(a => a.ID == orderedAccount.ID);
@@ -131,23 +132,31 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
         await _userDataContext.SaveChangesAsync();
     }
 
-    private async Task<IApplicationUser?> GetCurrentUserAsync(string id)
+    private async Task<IApplicationUser> GetCurrentUserAsync(string id)
     {
+        List<ApplicationUser> users;
         try
         {
-            var users = await _userDataContext.ApplicationUsers
+            users = await _userDataContext.ApplicationUsers
                 .Include(u => u.Accounts)
                 .ThenInclude(a => a.Transactions)
                 .Include(u => u.Accounts)
                 .ThenInclude(a => a.Balances)
                 .AsSplitQuery()
                 .ToListAsync();
-            return users.Single(u => u.Id == new Guid(id));
         }
         catch (Exception ex)
         {
             _logger.LogError("An error occurred while retrieving the user data: {ExceptionMessage}", ex.Message);
-            return null;
+            throw new Exception("An error occurred while retrieving the user data.");
         }
+
+        if (users == null)
+        {
+            _logger.LogError("Attempt to create an account for an invalid user.");
+            throw new Exception("Provided user not found.");
+        }
+
+        return users.First(u => u.Id == new Guid(id));
     }
 }
