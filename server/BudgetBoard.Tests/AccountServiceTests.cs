@@ -10,6 +10,7 @@ using Xunit.Abstractions;
 
 namespace BudgetBoard.IntegrationTests;
 
+[Collection("IntegrationTests")]
 public class AccountServiceTests(ITestOutputHelper testOutputHelper)
 {
     private readonly ITestOutputHelper _testOutputHelper = testOutputHelper;
@@ -51,6 +52,20 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         .RuleFor(a => a.HideTransactions, f => false)
         .RuleFor(a => a.HideAccount, f => false);
 
+    [Fact]
+    public async Task CreateAccountAsync_InvalidUserId_ThrowsError()
+    {
+        // Arrange
+        var helper = new TestHelper();
+        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
+        var account = _accountCreateRequestFaker.Generate();
+
+        // Act
+        var createAccountAct = () => accountService.CreateAccountAsync(Guid.NewGuid(), account);
+
+        // Assert
+        await createAccountAct.Should().ThrowAsync<Exception>().WithMessage("Provided user not found.");
+    }
 
     [Fact]
     public async Task CreateAccountAsync_NewAccount_HappyPath()
@@ -217,7 +232,7 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         await accountService.DeleteAccountAsync(helper.demoUser.Id, account.ID);
 
         // Assert
-        helper.demoUser.Accounts.Single(a => a.ID.Equals(account.ID)).Deleted.Should().BeCloseTo(DateTime.Now.ToUniversalTime(), TimeSpan.FromMinutes(1));
+        helper.demoUser.Accounts.Single(a => a.ID == account.ID).Deleted.Should().BeCloseTo(DateTime.Now.ToUniversalTime(), TimeSpan.FromMinutes(1));
     }
 
     [Fact]
@@ -260,8 +275,8 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         await accountService.DeleteAccountAsync(helper.demoUser.Id, account.ID, true);
 
         // Assert
-        helper.demoUser.Accounts.Single(a => a.ID.Equals(account.ID)).Deleted.Should().BeCloseTo(DateTime.Now.ToUniversalTime(), TimeSpan.FromMinutes(1));
-        helper.demoUser.Accounts.Single(a => a.ID.Equals(account.ID)).Transactions.Single(t => t.ID.Equals(transaction.ID)).Deleted.Should().BeCloseTo(DateTime.Now.ToUniversalTime(), TimeSpan.FromMinutes(1));
+        helper.demoUser.Accounts.Single(a => a.ID == account.ID).Deleted.Should().BeCloseTo(DateTime.Now.ToUniversalTime(), TimeSpan.FromMinutes(1));
+        helper.demoUser.Accounts.Single(a => a.ID == account.ID).Transactions.Single(t => t.ID == transaction.ID).Deleted.Should().BeCloseTo(DateTime.Now.ToUniversalTime(), TimeSpan.FromMinutes(1));
     }
 
     [Fact]
@@ -281,7 +296,7 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         await accountService.RestoreAccountAsync(helper.demoUser.Id, account.ID);
 
         // Assert
-        helper.demoUser.Accounts.Single(a => a.ID.Equals(account.ID)).Deleted.Should().BeNull();
+        helper.demoUser.Accounts.Single(a => a.ID == account.ID).Deleted.Should().BeNull();
     }
 
     [Fact]
@@ -328,8 +343,8 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         await accountService.RestoreAccountAsync(helper.demoUser.Id, account.ID, true);
 
         // Assert
-        helper.demoUser.Accounts.Single(a => a.ID.Equals(account.ID)).Deleted.Should().BeNull();
-        helper.demoUser.Accounts.Single(a => a.ID.Equals(account.ID)).Transactions.Single(t => t.ID.Equals(transaction.ID)).Deleted.Should().BeNull();
+        helper.demoUser.Accounts.Single(a => a.ID == account.ID).Deleted.Should().BeNull();
+        helper.demoUser.Accounts.Single(a => a.ID == account.ID).Transactions.Single(t => t.ID == transaction.ID).Deleted.Should().BeNull();
     }
 
     [Fact]
@@ -363,7 +378,7 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         // Assert
         foreach (var account in accounts)
         {
-            helper.demoUser.Accounts.Single(a => a.ID.Equals(account.ID)).Index.Should().Be(accounts.IndexOf(account));
+            helper.demoUser.Accounts.Single(a => a.ID == account.ID).Index.Should().Be(accounts.IndexOf(account));
         }
     }
 

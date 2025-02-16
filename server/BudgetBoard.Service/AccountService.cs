@@ -135,6 +135,7 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
     private async Task<IApplicationUser> GetCurrentUserAsync(string id)
     {
         List<ApplicationUser> users;
+        ApplicationUser? foundUser;
         try
         {
             users = await _userDataContext.ApplicationUsers
@@ -144,6 +145,7 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
                 .ThenInclude(a => a.Balances)
                 .AsSplitQuery()
                 .ToListAsync();
+            foundUser = users.FirstOrDefault(u => u.Id == new Guid(id));
         }
         catch (Exception ex)
         {
@@ -151,12 +153,12 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
             throw new Exception("An error occurred while retrieving the user data.");
         }
 
-        if (users == null)
+        if (foundUser == null)
         {
             _logger.LogError("Attempt to create an account for an invalid user.");
             throw new Exception("Provided user not found.");
         }
 
-        return users.First(u => u.Id == new Guid(id));
+        return foundUser;
     }
 }

@@ -242,7 +242,7 @@ public class SimpleFinService(
                         AccountID = userAccount.ID,
                     };
 
-                    await _transactionService.CreateTransactionAsync(userData, newTransaction);
+                    await _transactionService.CreateTransactionAsync(userData.Id, newTransaction);
                 }
             }
         }

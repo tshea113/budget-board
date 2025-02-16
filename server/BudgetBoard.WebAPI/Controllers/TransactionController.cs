@@ -1,16 +1,19 @@
-﻿using BudgetBoard.Service.Interfaces;
+﻿using BudgetBoard.Database.Models;
+using BudgetBoard.Service.Interfaces;
 using BudgetBoard.Service.Models;
 using BudgetBoard.WebAPI.Utils;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetBoard.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class TransactionController(ILogger<TransactionController> logger, ITransactionService transactionService) : ControllerBase
+public class TransactionController(ILogger<TransactionController> logger, UserManager<ApplicationUser> userManager, ITransactionService transactionService) : ControllerBase
 {
     private readonly ILogger<TransactionController> _logger = logger;
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly ITransactionService _transactionService = transactionService;
 
     [HttpPost]
@@ -19,8 +22,7 @@ public class TransactionController(ILogger<TransactionController> logger, ITrans
     {
         try
         {
-            var userData = await _transactionService.GetUserData(User);
-            await _transactionService.CreateTransactionAsync(userData, transaction);
+            await _transactionService.CreateTransactionAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), transaction);
             return Ok();
         }
         catch (Exception ex)
@@ -36,8 +38,7 @@ public class TransactionController(ILogger<TransactionController> logger, ITrans
 
         try
         {
-            var userData = await _transactionService.GetUserData(User);
-            return Ok(_transactionService.ReadTransactionsAsync(userData, year, month, getHidden));
+            return Ok(_transactionService.ReadTransactionsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), year, month, getHidden));
         }
         catch (Exception ex)
         {
@@ -51,8 +52,7 @@ public class TransactionController(ILogger<TransactionController> logger, ITrans
     {
         try
         {
-            var userData = await _transactionService.GetUserData(User);
-            return Ok(_transactionService.ReadTransactionsAsync(userData, null, null, false, guid));
+            return Ok(_transactionService.ReadTransactionsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), null, null, false, guid));
         }
         catch (Exception ex)
         {
@@ -66,8 +66,7 @@ public class TransactionController(ILogger<TransactionController> logger, ITrans
     {
         try
         {
-            var userData = await _transactionService.GetUserData(User);
-            await _transactionService.UpdateTransactionAsync(userData, newTransaction);
+            await _transactionService.UpdateTransactionAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), newTransaction);
             return Ok();
         }
         catch (Exception ex)
@@ -82,8 +81,7 @@ public class TransactionController(ILogger<TransactionController> logger, ITrans
     {
         try
         {
-            var userData = await _transactionService.GetUserData(User);
-            await _transactionService.DeleteTransactionAsync(userData, guid);
+            await _transactionService.DeleteTransactionAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), guid);
             return Ok();
         }
 
@@ -100,8 +98,7 @@ public class TransactionController(ILogger<TransactionController> logger, ITrans
     {
         try
         {
-            var userData = await _transactionService.GetUserData(User);
-            await _transactionService.RestoreTransactionAsync(userData, guid);
+            await _transactionService.RestoreTransactionAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), guid);
             return Ok();
         }
         catch (Exception ex)
