@@ -2,32 +2,19 @@
 using BudgetBoard.Database.Models;
 using BudgetBoard.Service.Interfaces;
 using BudgetBoard.Service.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Security.Claims;
 
 namespace BudgetBoard.Service;
 
-public class BalanceService(ILogger<IBalanceService> logger, UserDataContext userDataContext, UserManager<ApplicationUser> userManager) : IBalanceService
+public class BalanceService(ILogger<IBalanceService> logger, UserDataContext userDataContext) : IBalanceService
 {
     private readonly ILogger<IBalanceService> _logger = logger;
     private readonly UserDataContext _userDataContext = userDataContext;
-    private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-    public async Task<IApplicationUser> GetUserData(ClaimsPrincipal user)
+    public async Task CreateBalancesAsync(Guid userGuid, IBalanceCreateRequest balance)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-        return userData;
-    }
-
-    public async Task CreateBalancesAsync(IApplicationUser userData, IBalanceCreateRequest balance)
-    {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         var account = userData.Accounts.FirstOrDefault(a => a.ID == balance.AccountID);
         if (account == null)
         {
@@ -46,8 +33,9 @@ public class BalanceService(ILogger<IBalanceService> logger, UserDataContext use
         await _userDataContext.SaveChangesAsync();
     }
 
-    public IEnumerable<IBalanceResponse> ReadBalancesAsync(IApplicationUser userData, Guid accountId)
+    public async Task<IEnumerable<IBalanceResponse>> ReadBalancesAsync(Guid userGuid, Guid accountId)
     {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         var account = userData.Accounts.FirstOrDefault(a => a.ID == accountId);
         if (account == null)
         {
@@ -58,8 +46,9 @@ public class BalanceService(ILogger<IBalanceService> logger, UserDataContext use
         return account.Balances.Select(b => new BalanceResponse(b));
     }
 
-    public async Task UpdateBalanceAsync(IApplicationUser userData, IBalanceUpdateRequest updatedBalance)
+    public async Task UpdateBalanceAsync(Guid userGuid, IBalanceUpdateRequest updatedBalance)
     {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         var balance = userData.Accounts.SelectMany(a => a.Balances).FirstOrDefault(b => b.ID == updatedBalance.ID);
         if (balance == null)
         {
@@ -73,8 +62,9 @@ public class BalanceService(ILogger<IBalanceService> logger, UserDataContext use
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task DeleteBalanceAsync(IApplicationUser userData, Guid balanceId)
+    public async Task DeleteBalanceAsync(Guid userGuid, Guid balanceId)
     {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         var balance = userData.Accounts.SelectMany(a => a.Balances).FirstOrDefault(b => b.ID == balanceId);
         if (balance == null)
         {
@@ -86,21 +76,31 @@ public class BalanceService(ILogger<IBalanceService> logger, UserDataContext use
         await _userDataContext.SaveChangesAsync();
     }
 
-    private async Task<ApplicationUser?> GetCurrentUserAsync(string id)
+    private async Task<ApplicationUser> GetCurrentUserAsync(string id)
     {
+        List<ApplicationUser> users;
+        ApplicationUser? foundUser;
         try
         {
-            var users = await _userDataContext.ApplicationUsers
+            users = await _userDataContext.ApplicationUsers
                 .Include(u => u.Accounts)
                 .ThenInclude(a => a.Balances)
                 .AsSplitQuery()
                 .ToListAsync();
-            return users.Single(u => u.Id == new Guid(id));
+            foundUser = users.FirstOrDefault(u => u.Id == new Guid(id));
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Message);
-            return null;
+            _logger.LogError("An error occurred while retrieving the user data: {ExceptionMessage}", ex.Message);
+            throw new Exception("An error occurred while retrieving the user data.");
         }
+
+        if (foundUser == null)
+        {
+            _logger.LogError("Attempt to create an account for an invalid user.");
+            throw new Exception("Provided user not found.");
+        }
+
+        return foundUser;
     }
 }

@@ -270,7 +270,7 @@ public class SimpleFinService(
                     AccountID = foundAccount.ID,
                 };
 
-                await _balanceService.CreateBalancesAsync(userData, newBalance);
+                await _balanceService.CreateBalancesAsync(userData.Id, newBalance);
             }
         }
     }
