@@ -38,7 +38,7 @@ public class TransactionController(ILogger<TransactionController> logger, UserMa
 
         try
         {
-            return Ok(_transactionService.ReadTransactionsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), year, month, getHidden));
+            return Ok(await _transactionService.ReadTransactionsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), year, month, getHidden));
         }
         catch (Exception ex)
         {
@@ -52,7 +52,7 @@ public class TransactionController(ILogger<TransactionController> logger, UserMa
     {
         try
         {
-            return Ok(_transactionService.ReadTransactionsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), null, null, false, guid));
+            return Ok(await _transactionService.ReadTransactionsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), null, null, false, guid));
         }
         catch (Exception ex)
         {

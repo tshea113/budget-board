@@ -5,10 +5,12 @@ namespace BudgetBoard.IntegrationTests.Fakers;
 
 public class TransactionFaker : Faker<Transaction>
 {
-    public IEnumerable<Guid> AccountIds { get; set; }
+    public ICollection<Guid> AccountIds { get; set; }
 
     public TransactionFaker()
     {
+        AccountIds = new List<Guid>();
+
         AccountIds = [];
         RuleFor(t => t.ID, f => Guid.NewGuid())
             .RuleFor(t => t.SyncID, f => f.Random.String(20))

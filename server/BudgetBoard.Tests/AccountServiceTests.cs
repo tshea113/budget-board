@@ -1,5 +1,5 @@
 using Bogus;
-using BudgetBoard.Database.Models;
+using BudgetBoard.IntegrationTests.Fakers;
 using BudgetBoard.Service;
 using BudgetBoard.Service.Interfaces;
 using BudgetBoard.Service.Types;
@@ -14,27 +14,6 @@ namespace BudgetBoard.IntegrationTests;
 public class AccountServiceTests(ITestOutputHelper testOutputHelper)
 {
     private readonly ITestOutputHelper _testOutputHelper = testOutputHelper;
-
-    private readonly Faker<Transaction> _transactionFaker = new Faker<Transaction>()
-        .RuleFor(t => t.ID, f => Guid.NewGuid())
-        .RuleFor(t => t.SyncID, f => f.Random.String(20))
-        .RuleFor(t => t.Amount, f => f.Finance.Amount())
-        .RuleFor(t => t.Date, f => f.Date.Past())
-        .RuleFor(t => t.Category, f => f.Random.String(10))
-        .RuleFor(t => t.Subcategory, f => f.Random.String(10))
-        .RuleFor(t => t.MerchantName, f => f.Random.String(10))
-        .RuleFor(t => t.Pending, f => false)
-        .RuleFor(t => t.Source, f => f.Random.String(10));
-
-    private readonly Faker<Account> _accountFaker = new Faker<Account>()
-        .RuleFor(a => a.ID, f => Guid.NewGuid())
-        .RuleFor(a => a.SyncID, f => f.Random.String(20))
-        .RuleFor(a => a.Name, f => f.Finance.AccountName())
-        .RuleFor(a => a.InstitutionID, f => Guid.NewGuid())
-        .RuleFor(a => a.Type, f => f.Finance.TransactionType())
-        .RuleFor(a => a.Subtype, f => f.Finance.TransactionType())
-        .RuleFor(a => a.HideTransactions, f => false)
-        .RuleFor(a => a.HideAccount, f => false);
 
     private readonly Faker<AccountCreateRequest> _accountCreateRequestFaker = new Faker<AccountCreateRequest>()
         .RuleFor(a => a.SyncID, f => f.Random.String(20))
@@ -80,16 +59,7 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
 
         // Assert
         helper.demoUser.Accounts.Should().HaveCount(1);
-        helper.demoUser.Accounts.Single().SyncID.Should().Be(account.SyncID);
-        helper.demoUser.Accounts.Single().Name.Should().Be(account.Name);
-        helper.demoUser.Accounts.Single().InstitutionID.Should().Be(account.InstitutionID);
-        helper.demoUser.Accounts.Single().Type.Should().Be(account.Type);
-        helper.demoUser.Accounts.Single().Subtype.Should().Be(account.Subtype);
-        helper.demoUser.Accounts.Single().HideTransactions.Should().Be(account.HideTransactions);
-        helper.demoUser.Accounts.Single().HideAccount.Should().Be(account.HideAccount);
-        helper.demoUser.Accounts.Single().Deleted.Should().BeNull();
-        helper.demoUser.Accounts.Single().Index.Should().Be(0);
-        helper.demoUser.Accounts.Single().UserID.Should().Be(helper.demoUser.Id);
+        helper.demoUser.Accounts.Single().Should().BeEquivalentTo(account);
     }
 
     [Fact]
@@ -98,7 +68,9 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         // Arrange
         var helper = new TestHelper();
         var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
-        var account = _accountFaker.Generate();
+
+        var accountFaker = new AccountFaker();
+        var account = accountFaker.Generate();
         account.UserID = helper.demoUser.Id;
 
         helper.userDataContext.Accounts.Add(account);
@@ -109,13 +81,7 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
 
         // Assert
         result.Should().HaveCount(1);
-        result.Single().SyncID.Should().Be(account.SyncID);
-        result.Single().Name.Should().Be(account.Name);
-        result.Single().InstitutionID.Should().Be(account.InstitutionID);
-        result.Single().Type.Should().Be(account.Type);
-        result.Single().Subtype.Should().Be(account.Subtype);
-        result.Single().HideTransactions.Should().Be(account.HideTransactions);
-        result.Single().HideAccount.Should().Be(account.HideAccount);
+        result.Single().Should().BeEquivalentTo(new AccountResponse(account));
     }
 
     [Fact]
@@ -124,9 +90,11 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         // Arrange
         var helper = new TestHelper();
         var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
-        var account = _accountFaker.Generate();
+
+        var accountFaker = new AccountFaker();
+        var account = accountFaker.Generate();
         account.UserID = helper.demoUser.Id;
-        var secondAccount = _accountFaker.Generate();
+        var secondAccount = accountFaker.Generate();
         secondAccount.UserID = helper.demoUser.Id;
 
         helper.userDataContext.Accounts.Add(account);
@@ -138,14 +106,7 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
 
         // Assert
         result.Should().HaveCount(1);
-        result.Single().ID.Should().Be(account.ID);
-        result.Single().SyncID.Should().Be(account.SyncID);
-        result.Single().Name.Should().Be(account.Name);
-        result.Single().InstitutionID.Should().Be(account.InstitutionID);
-        result.Single().Type.Should().Be(account.Type);
-        result.Single().Subtype.Should().Be(account.Subtype);
-        result.Single().HideTransactions.Should().Be(account.HideTransactions);
-        result.Single().HideAccount.Should().Be(account.HideAccount);
+        result.Single().Should().BeEquivalentTo(new AccountResponse(account));
     }
 
     [Fact]
@@ -154,12 +115,15 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         // Arrange
         var helper = new TestHelper();
         var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
-        var invalidGuid = Guid.NewGuid();
-        var account = _accountFaker.Generate();
+
+        var accountFaker = new AccountFaker();
+        var account = accountFaker.Generate();
         account.UserID = helper.demoUser.Id;
 
         helper.userDataContext.Accounts.Add(account);
         helper.userDataContext.SaveChanges();
+
+        var invalidGuid = Guid.NewGuid();
 
         // Act
         var readAccountAct = () => accountService.ReadAccountsAsync(helper.demoUser.Id, invalidGuid);
@@ -174,7 +138,9 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         // Arrange
         var helper = new TestHelper();
         var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
-        var account = _accountFaker.Generate();
+
+        var accountFaker = new AccountFaker();
+        var account = accountFaker.Generate();
         account.UserID = helper.demoUser.Id;
 
         helper.userDataContext.Accounts.Add(account);
@@ -187,11 +153,7 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         await accountService.UpdateAccountAsync(helper.demoUser.Id, editedAccount);
 
         // Assert
-        account.Name.Should().Be(editedAccount.Name);
-        account.Type.Should().Be(editedAccount.Type);
-        account.Subtype.Should().Be(editedAccount.Subtype);
-        account.HideTransactions.Should().Be(editedAccount.HideTransactions);
-        account.HideAccount.Should().Be(editedAccount.HideAccount);
+        account.Should().BeEquivalentTo(editedAccount);
     }
 
     [Fact]
@@ -200,14 +162,17 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         // Arrange
         var helper = new TestHelper();
         var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
-        var invalidGuid = Guid.NewGuid();
-        var account = _accountFaker.Generate();
+
+        var accountFaker = new AccountFaker();
+        var account = accountFaker.Generate();
         account.UserID = helper.demoUser.Id;
 
         helper.userDataContext.Accounts.Add(account);
         helper.userDataContext.SaveChanges();
 
         var editedAccount = _accountUpdateRequestFaker.Generate();
+
+        var invalidGuid = Guid.NewGuid();
 
         // Act
         var updateAccountAct = () => accountService.UpdateAccountAsync(helper.demoUser.Id, editedAccount);
@@ -222,7 +187,9 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         // Arrange
         var helper = new TestHelper();
         var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
-        var account = _accountFaker.Generate();
+
+        var accountFaker = new AccountFaker();
+        var account = accountFaker.Generate();
         account.UserID = helper.demoUser.Id;
 
         helper.userDataContext.Accounts.Add(account);
@@ -242,7 +209,9 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         var helper = new TestHelper();
         var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
         var invalidGuid = Guid.NewGuid();
-        var account = _accountFaker.Generate();
+
+        var accountFaker = new AccountFaker();
+        var account = accountFaker.Generate();
         account.UserID = helper.demoUser.Id;
 
         helper.userDataContext.Accounts.Add(account);
@@ -261,10 +230,14 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         // Arrange
         var helper = new TestHelper();
         var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
-        var account = _accountFaker.Generate();
+
+        var accountFaker = new AccountFaker();
+        var account = accountFaker.Generate();
         account.UserID = helper.demoUser.Id;
 
-        var transaction = _transactionFaker.Generate();
+        var transactionFaker = new TransactionFaker();
+        transactionFaker.AccountIds.Add(account.ID);
+        var transaction = transactionFaker.Generate();
         transaction.AccountID = account.ID;
 
         helper.userDataContext.Accounts.Add(account);
@@ -285,7 +258,9 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         // Arrange
         var helper = new TestHelper();
         var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
-        var account = _accountFaker.Generate();
+
+        var accountFaker = new AccountFaker();
+        var account = accountFaker.Generate();
         account.UserID = helper.demoUser.Id;
         account.Deleted = DateTime.Now.ToUniversalTime();
 
@@ -305,7 +280,9 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         // Arrange
         var helper = new TestHelper();
         var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
-        var account = _accountFaker.Generate();
+
+        var accountFaker = new AccountFaker();
+        var account = accountFaker.Generate();
         account.UserID = helper.demoUser.Id;
         account.Deleted = DateTime.Now.ToUniversalTime();
 
@@ -327,12 +304,16 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         // Arrange
         var helper = new TestHelper();
         var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
-        var account = _accountFaker.Generate();
+
+        var accountFaker = new AccountFaker();
+        var account = accountFaker.Generate();
         account.UserID = helper.demoUser.Id;
         account.Deleted = DateTime.Now.ToUniversalTime();
 
-        var transaction = _transactionFaker.Generate();
-        transaction.AccountID = account.ID;
+        var transactionFaker = new TransactionFaker();
+        transactionFaker.AccountIds.Add(account.ID);
+        var transaction = transactionFaker.Generate();
+
         transaction.Deleted = DateTime.Now.ToUniversalTime();
 
         helper.userDataContext.Accounts.Add(account);
@@ -357,7 +338,8 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         var randomNumberBetween1And10 = new Random().Next(1, 10);
         _testOutputHelper.WriteLine($"Number of accounts: {randomNumberBetween1And10}");
 
-        var accounts = _accountFaker.Generate(randomNumberBetween1And10);
+        var accountFaker = new AccountFaker();
+        var accounts = accountFaker.Generate(randomNumberBetween1And10);
         foreach (var account in accounts)
         {
             account.UserID = helper.demoUser.Id;
@@ -392,7 +374,8 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         var randomNumberBetween1And10 = new Random().Next(1, 10);
         _testOutputHelper.WriteLine($"Number of accounts: {randomNumberBetween1And10}");
 
-        var accounts = _accountFaker.Generate(randomNumberBetween1And10);
+        var accountFaker = new AccountFaker();
+        var accounts = accountFaker.Generate(randomNumberBetween1And10);
         foreach (var account in accounts)
         {
             account.UserID = helper.demoUser.Id;
