@@ -360,7 +360,7 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         // Assert
         foreach (var account in accounts)
         {
-            helper.demoUser.Accounts.Single(a => a.ID == account.ID).Index.Should().Be(accounts.IndexOf(account));
+            helper.demoUser.Accounts.Single(a => a.ID == account.ID).Should().BeEquivalentTo(account);
         }
     }
 

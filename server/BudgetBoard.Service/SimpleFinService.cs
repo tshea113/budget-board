@@ -180,7 +180,7 @@ public class SimpleFinService(
                 UserID = userData.Id,
             };
 
-            await _institutionService.CreateInstitutionAsync(userData, newInstitution);
+            await _institutionService.CreateInstitutionAsync(userData.Id, newInstitution);
         }
     }
 
