@@ -37,7 +37,7 @@ public class InstitutionController(ILogger<InstitutionController> logger, UserMa
     {
         try
         {
-            return Ok(_institutionService.ReadInstitutionsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty)));
+            return Ok(await _institutionService.ReadInstitutionsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty)));
         }
         catch (Exception ex)
         {
@@ -51,7 +51,7 @@ public class InstitutionController(ILogger<InstitutionController> logger, UserMa
     {
         try
         {
-            return Ok(_institutionService.ReadInstitutionsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), guid));
+            return Ok(await _institutionService.ReadInstitutionsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), guid));
         }
         catch (Exception ex)
         {
