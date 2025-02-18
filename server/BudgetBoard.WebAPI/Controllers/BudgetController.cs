@@ -1,16 +1,19 @@
-﻿using BudgetBoard.Service.Interfaces;
+﻿using BudgetBoard.Database.Models;
+using BudgetBoard.Service.Interfaces;
 using BudgetBoard.Service.Models;
 using BudgetBoard.WebAPI.Utils;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetBoard.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class BudgetController(ILogger<BudgetController> logger, IBudgetService budgetService) : ControllerBase
+public class BudgetController(ILogger<BudgetController> logger, UserManager<ApplicationUser> userManager, IBudgetService budgetService) : ControllerBase
 {
     private readonly ILogger<BudgetController> _logger = logger;
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly IBudgetService _budgetService = budgetService;
 
     [HttpPost]
@@ -19,8 +22,7 @@ public class BudgetController(ILogger<BudgetController> logger, IBudgetService b
     {
         try
         {
-            var userData = await _budgetService.GetUserData(User);
-            await _budgetService.CreateBudgetsAsync(userData, budgets);
+            await _budgetService.CreateBudgetsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), budgets);
             return Ok();
         }
         catch (Exception ex)
@@ -35,8 +37,7 @@ public class BudgetController(ILogger<BudgetController> logger, IBudgetService b
     {
         try
         {
-            var userData = await _budgetService.GetUserData(User);
-            return Ok(_budgetService.ReadBudgetsAsync(userData, date));
+            return Ok(await _budgetService.ReadBudgetsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), date));
         }
         catch (Exception ex)
         {
@@ -50,8 +51,7 @@ public class BudgetController(ILogger<BudgetController> logger, IBudgetService b
     {
         try
         {
-            var userData = await _budgetService.GetUserData(User);
-            await _budgetService.UpdateBudgetAsync(userData, editBudget);
+            await _budgetService.UpdateBudgetAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), editBudget);
             return Ok();
         }
         catch (Exception ex)
@@ -66,8 +66,7 @@ public class BudgetController(ILogger<BudgetController> logger, IBudgetService b
     {
         try
         {
-            var userData = await _budgetService.GetUserData(User);
-            await _budgetService.DeleteBudgetAsync(userData, guid);
+            await _budgetService.DeleteBudgetAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), guid);
             return Ok();
         }
         catch (Exception ex)
