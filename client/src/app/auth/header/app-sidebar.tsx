@@ -19,6 +19,7 @@ import {
   CalculatorIcon,
   ChartNoAxesColumnIncreasingIcon,
   ChevronsUpDown,
+  CircleUserIcon,
   GoalIcon,
   LayoutDashboardIcon,
   LogOutIcon,
@@ -30,7 +31,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { AxiosError, AxiosResponse } from 'axios';
 import { IUserInfoResponse } from '@/types/applicationUser';
 import { translateAxiosError } from '@/lib/requests';
@@ -171,12 +171,8 @@ const AppSidebar = (props: AppSidebarProps): JSX.Element => {
                 asChild
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
-                <div className="flex flex-row">
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback className="bg-primary text-primary-foreground">
-                      {userInfoQuery.data?.email.charAt(0).toLocaleUpperCase() ?? 'A'}
-                    </AvatarFallback>
-                  </Avatar>
+                <div className="flex flex-row items-center">
+                  <CircleUserIcon className="size-6" />
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-semibold">
                       {userInfoQuery.data?.email}
@@ -190,7 +186,7 @@ const AppSidebar = (props: AppSidebarProps): JSX.Element => {
               <SheetItem
                 triggerChildren={
                   <div className="flex flex-row items-center gap-2">
-                    <UserPenIcon className="h-4 w-4" />
+                    <UserPenIcon className="size-4" />
                     <p>Account</p>
                   </div>
                 }
@@ -200,7 +196,7 @@ const AppSidebar = (props: AppSidebarProps): JSX.Element => {
               </SheetItem>
               <DropdownMenuItem onClick={Logout}>
                 <div className="flex flex-row items-center gap-2">
-                  <LogOutIcon className="h-4 w-4" />
+                  <LogOutIcon className="size-4" />
                   <span>Logout</span>
                 </div>
               </DropdownMenuItem>
