@@ -1,6 +1,6 @@
 import DatePicker from '@/components/date-picker';
 import { IGoalResponse, IGoalUpdateRequest } from '@/types/goal';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 interface EditableGoalTargetDateCellProps {
   goal: IGoalResponse;

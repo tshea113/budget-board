@@ -15,7 +15,7 @@ import ResponsiveButton from '@/components/responsive-button';
 import { Button } from '@/components/ui/button';
 import { AxiosError, AxiosResponse } from 'axios';
 import { translateAxiosError } from '@/lib/requests';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import { LoginCardState } from './welcome';
 import { toast } from 'sonner';

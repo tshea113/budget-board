@@ -18,7 +18,7 @@ import { IAccount } from '@/types/account';
 import { IBalance } from '@/types/balance';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import AccountsGraphHeader from '../accounts-graph-header';
 import { DateRange } from 'react-day-picker';

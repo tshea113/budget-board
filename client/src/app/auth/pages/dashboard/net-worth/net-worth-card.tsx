@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { AxiosError, AxiosResponse } from 'axios';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { AuthContext } from '@/components/auth-provider';
 import { IAccount } from '@/types/account';

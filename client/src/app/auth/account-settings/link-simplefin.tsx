@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import { IApplicationUser, IApplicationUserUpdateRequest } from '@/types/applicationUser';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosResponse, type AxiosError } from 'axios';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 

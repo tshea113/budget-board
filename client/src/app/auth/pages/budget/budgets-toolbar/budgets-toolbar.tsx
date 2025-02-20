@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { cn, initCurrentMonth } from '@/lib/utils';
-import React from 'react';
+import React, { type JSX } from 'react';
 import ResponsiveButton from '@/components/responsive-button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { IBudget, IBudgetCreateRequest } from '@/types/budget';

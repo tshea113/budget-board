@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input';
 import { ITransaction } from '@/types/transaction';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 interface EditableMerchantCellProps {
   transaction: ITransaction;

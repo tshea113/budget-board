@@ -1,5 +1,7 @@
 import SortButton, { SortDirection } from './sort-button';
 
+import type { JSX } from "react";
+
 export enum Sorts {
   Date,
   Merchant,

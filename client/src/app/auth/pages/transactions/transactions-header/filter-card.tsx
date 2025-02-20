@@ -8,7 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ICategoryResponse } from '@/types/category';
 import { Filters, defaultTransactionCategories } from '@/types/transaction';
 import { useQuery } from '@tanstack/react-query';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { DateRange } from 'react-day-picker';
 
 interface FilterCardProps {

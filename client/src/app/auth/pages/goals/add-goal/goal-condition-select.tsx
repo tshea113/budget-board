@@ -2,6 +2,8 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { GoalCondition } from '@/types/goal';
 
+import type { JSX } from "react";
+
 interface GoalSelectProps {
   defaultValue: string;
   onValueChange: (goalType: GoalCondition) => void;

@@ -4,6 +4,8 @@ import { filterVisibleAccounts } from '@/lib/accounts';
 import { IAccount } from '@/types/account';
 import { IInstitution } from '@/types/institution';
 
+import type { JSX } from "react";
+
 interface InstitutionItemProps {
   institution: IInstitution;
 }

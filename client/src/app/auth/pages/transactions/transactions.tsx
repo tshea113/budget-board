@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { AuthContext } from '@/components/auth-provider';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import { Filters, ITransaction, defaultTransactionCategories } from '@/types/transaction';

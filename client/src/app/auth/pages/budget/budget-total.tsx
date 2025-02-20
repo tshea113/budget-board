@@ -1,6 +1,8 @@
 import { Progress } from '@/components/ui/progress';
 import { cn, getProgress } from '@/lib/utils';
 
+import type { JSX } from "react";
+
 interface BudgetTotalProps {
   label: string;
   amount: number;

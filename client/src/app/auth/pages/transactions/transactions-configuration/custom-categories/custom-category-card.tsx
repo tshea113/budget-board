@@ -6,7 +6,7 @@ import { ICategoryResponse } from '@/types/category';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { Trash2Icon, Undo2Icon } from 'lucide-react';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { toast } from 'sonner';
 
 interface CustomCategoryCardProps {

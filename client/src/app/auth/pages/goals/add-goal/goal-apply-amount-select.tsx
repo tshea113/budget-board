@@ -1,6 +1,8 @@
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
+import type { JSX } from "react";
+
 interface GoalSelectProps {
   defaultValue: boolean;
   onValueChange: (value: boolean) => void;

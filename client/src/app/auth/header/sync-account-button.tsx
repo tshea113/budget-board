@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { UpdateIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosResponse, type AxiosError } from 'axios';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { toast } from 'sonner';
 
 interface SyncAccountButtonProps {

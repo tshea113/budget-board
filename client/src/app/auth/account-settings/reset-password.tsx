@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input';
 import { translateAxiosError, ValidationError } from '@/lib/requests';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';

@@ -9,6 +9,8 @@ import {
 import { cn } from '@/lib/utils';
 import { GraphType } from '@/types/trends';
 
+import type { JSX } from "react";
+
 interface GraphSelectProps {
   graphType: GraphType;
   setGraphType: (graphType: GraphType) => void;

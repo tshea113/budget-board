@@ -6,7 +6,7 @@ import { IBudgetCreateRequest } from '@/types/budget';
 import CategoryInput from '@/components/category-input';
 import { AxiosError } from 'axios';
 import { AuthContext } from '@/components/auth-provider';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { defaultTransactionCategories } from '@/types/transaction';
 import { toast } from 'sonner';
 import { SendIcon } from 'lucide-react';

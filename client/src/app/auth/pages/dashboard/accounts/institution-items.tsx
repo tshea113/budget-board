@@ -1,6 +1,8 @@
 import InstitutionItem from './institution-item';
 import { IInstitution } from '@/types/institution';
 
+import type { JSX } from "react";
+
 interface InstitutionItemsProps {
   institutions: IInstitution[];
 }

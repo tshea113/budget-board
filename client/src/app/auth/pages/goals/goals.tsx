@@ -1,7 +1,7 @@
 import GoalCards from './goal-cards';
 import { Button } from '@/components/ui/button';
 import { PlusIcon, TriangleAlertIcon } from 'lucide-react';
-import React from 'react';
+import React, { type JSX } from 'react';
 import AddGoal from './add-goal/add-goal';
 import { cn } from '@/lib/utils';
 import { Card } from '@/components/ui/card';

@@ -3,6 +3,8 @@ import ResetPassword from './reset-password';
 import DarkModeToggle from './dark-mode-toggle';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
+import type { JSX } from "react";
+
 const AccountSettings = (): JSX.Element => {
   return (
     <div className="flex h-full flex-col gap-2">

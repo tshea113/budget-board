@@ -15,7 +15,7 @@ import { defaultTransactionCategories } from '@/types/transaction';
 import { TrashIcon } from '@radix-ui/react-icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { toast } from 'sonner';
 
 interface BudgetCardProps {

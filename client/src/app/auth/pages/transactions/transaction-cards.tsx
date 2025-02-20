@@ -1,6 +1,6 @@
 import { ITransaction, TransactionCardType } from '@/types/transaction';
 import TransactionCard from './transaction-card';
-import React from 'react';
+import React, { type JSX } from 'react';
 import PageSizeSelect from '@/components/page-size-select';
 import PageSelect from '@/components/page-select';
 import { SortDirection } from './transactions-header/sort-button';

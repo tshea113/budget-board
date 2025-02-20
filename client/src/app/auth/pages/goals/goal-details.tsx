@@ -4,6 +4,8 @@ import { cn } from '@/lib/utils';
 import { IAccount } from '@/types/account';
 import { IGoalResponse } from '@/types/goal';
 
+import type { JSX } from "react";
+
 interface GoalDetailsProps {
   className?: string;
   goal: IGoalResponse;

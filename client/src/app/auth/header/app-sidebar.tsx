@@ -36,7 +36,7 @@ import { IUserInfoResponse } from '@/types/applicationUser';
 import { translateAxiosError } from '@/lib/requests';
 import { toast } from 'sonner';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import SheetItem from '@/components/sheet-item';
 import { Pages } from '../pages/page-content';

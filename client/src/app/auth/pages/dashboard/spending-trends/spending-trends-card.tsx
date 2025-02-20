@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import { useQuery } from '@tanstack/react-query';
 import { ITransaction } from '@/types/transaction';

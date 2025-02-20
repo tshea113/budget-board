@@ -5,7 +5,7 @@ import BudgetCard from './budget-card';
 import { sumTransactionAmountsByCategory } from '@/lib/transactions';
 import { getParentCategory } from '@/lib/category';
 import { areStringsEqual } from '@/lib/utils';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { groupBudgetsByCategory } from '@/lib/budgets';
 import { useQuery } from '@tanstack/react-query';
 import { AuthContext } from '@/components/auth-provider';

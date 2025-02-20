@@ -1,7 +1,7 @@
 import { Input } from '@/components/ui/input';
 import { convertNumberToCurrency } from '@/lib/utils';
 import { IGoalResponse, IGoalUpdateRequest } from '@/types/goal';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 interface EditableGoalMonthlyAmountCellProps {
   goal: IGoalResponse;

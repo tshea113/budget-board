@@ -1,6 +1,6 @@
 import Login from './login';
 import Register from './register';
-import React from 'react';
+import React, { type JSX } from 'react';
 import ResetPassword from './reset-password';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

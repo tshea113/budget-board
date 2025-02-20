@@ -10,7 +10,7 @@ import {
 import { convertNumberToCurrency, cn, getProgress } from '@/lib/utils';
 import { IGoalResponse, IGoalUpdateRequest } from '@/types/goal';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import React from 'react';
+import React, { type JSX } from 'react';
 import GoalDetails from './goal-details';
 import { AuthContext } from '@/components/auth-provider';
 import { ITransaction } from '@/types/transaction';

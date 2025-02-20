@@ -1,5 +1,5 @@
 import { defaultTransactionCategories, ITransaction } from '@/types/transaction';
-import React from 'react';
+import React, { type JSX } from 'react';
 import CategoryInput from '@/components/category-input';
 import { getFormattedCategoryValue, getIsParentCategory } from '@/lib/category';
 import { useQuery } from '@tanstack/react-query';

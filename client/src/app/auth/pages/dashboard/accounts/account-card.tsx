@@ -2,7 +2,7 @@ import { Card } from '@/components/ui/card';
 import AccountsConfiguration from './accounts-configuration/accounts-configuration';
 import InstitutionItems from './institution-items';
 import { Separator } from '@/components/ui/separator';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';

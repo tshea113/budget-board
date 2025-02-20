@@ -12,7 +12,7 @@ import { convertNumberToCurrency } from '@/lib/utils';
 import { getUnbudgetedTransactions, Unbudget } from '@/lib/budgets';
 import { useQuery } from '@tanstack/react-query';
 import { AuthContext } from '@/components/auth-provider';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { ICategoryResponse } from '@/types/category';
 
 interface UnbudgetProps {

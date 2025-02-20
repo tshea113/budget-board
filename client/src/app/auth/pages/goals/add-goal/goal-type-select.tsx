@@ -7,6 +7,8 @@ import {
 } from '@/components/ui/select';
 import { GoalType } from '@/types/goal';
 
+import type { JSX } from "react";
+
 interface GoalTypeSelectProps {
   defaultValue?: GoalType;
   onValueChange: (value: GoalType) => void;

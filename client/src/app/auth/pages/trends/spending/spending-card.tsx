@@ -3,7 +3,7 @@ import SpendingGraph from './spending-graph';
 import { ITransaction } from '@/types/transaction';
 import { AxiosResponse } from 'axios';
 import { AuthContext } from '@/components/auth-provider';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { getDateFromMonthsAgo, getUniqueYears, initCurrentMonth } from '@/lib/utils';
 import { filterHiddenTransactions } from '@/lib/transactions';
 import MonthToolCards from '@/components/month-toolcards';

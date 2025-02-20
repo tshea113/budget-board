@@ -7,7 +7,7 @@ import { defaultTransactionCategories, ITransaction } from '@/types/transaction'
 import { areStringsEqual } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { sumTransactionAmounts } from '@/lib/transactions';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import { useQuery } from '@tanstack/react-query';
 import { ICategoryResponse } from '@/types/category';

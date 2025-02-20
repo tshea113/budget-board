@@ -1,5 +1,5 @@
 import { GraphType } from '@/types/trends';
-import React from 'react';
+import React, { type JSX } from 'react';
 import GraphSelect from './graph-select';
 import { Card } from '@/components/ui/card';
 import NetWorthGraph from './net-worth/net-worth-graph';

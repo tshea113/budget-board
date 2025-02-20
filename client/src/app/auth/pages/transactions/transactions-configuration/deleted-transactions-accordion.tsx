@@ -6,7 +6,7 @@ import {
 } from '@/components/ui/accordion';
 import { ITransaction } from '@/types/transaction';
 import DeletedTransactionCard from './deleted-transaction-card';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';

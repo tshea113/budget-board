@@ -7,6 +7,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
+import type { JSX } from "react";
+
 const DarkModeToggle = (): JSX.Element => {
   const { setTheme, theme } = useTheme();
 

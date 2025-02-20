@@ -2,6 +2,8 @@ import { IAccount } from '@/types/account';
 import AccountsConfigurationCard from './accounts-configuration-card';
 import { Sortable, SortableItem } from '@/components/sortable';
 
+import type { JSX } from "react";
+
 interface AccountsConfigurationCardsProps {
   accounts: IAccount[];
   updateAccounts: (accounts: IAccount[]) => void;

@@ -14,7 +14,7 @@ import { defaultTransactionCategories } from '@/types/transaction';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { PlusIcon, SendIcon } from 'lucide-react';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { toast } from 'sonner';
 
 interface UnbudgetCardProps {

@@ -2,6 +2,8 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 
+import type { JSX } from "react";
+
 interface PageIteratorProps {
   className?: string;
   page: number;

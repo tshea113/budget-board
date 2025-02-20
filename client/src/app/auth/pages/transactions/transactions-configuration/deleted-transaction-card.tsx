@@ -7,7 +7,7 @@ import { ITransaction } from '@/types/transaction';
 import { ResetIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { toast } from 'sonner';
 
 interface DeletedTransactionCardProps {

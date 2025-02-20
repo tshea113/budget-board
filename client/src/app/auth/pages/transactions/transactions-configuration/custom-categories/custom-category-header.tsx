@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 const CustomCategoryHeader = (): JSX.Element => {
   return (
     <div className="flex w-full grow gap-2 p-2">

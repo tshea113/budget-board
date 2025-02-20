@@ -11,6 +11,8 @@ import DeletedTransactionsAccordion from './deleted-transactions-accordion';
 import AddCategoryAccordion from './custom-categories/custom-category-accordion';
 import { SettingsIcon } from 'lucide-react';
 
+import type { JSX } from "react";
+
 interface TransactionsConfigurationProps {
   className?: string;
 }

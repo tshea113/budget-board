@@ -2,6 +2,8 @@ import { getAccountsOfTypes, sumAccountsTotalBalance } from '@/lib/accounts';
 import { cn, convertNumberToCurrency } from '@/lib/utils';
 import { IAccount } from '@/types/account';
 
+import type { JSX } from "react";
+
 interface NetWorthItemProps {
   accounts: IAccount[];
   types?: string[];

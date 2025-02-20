@@ -5,7 +5,7 @@ import SortByMenu, { Sorts } from './sort-by-menu';
 import { Button } from '@/components/ui/button';
 import { FilterIcon } from 'lucide-react';
 import FilterCard from './filter-card';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { cn } from '@/lib/utils';
 
 interface TransactionsHeaderProps {

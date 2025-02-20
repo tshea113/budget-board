@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { translateAxiosError } from '@/lib/requests';
 import { AxiosError } from 'axios';
 import { AuthContext } from '@/components/auth-provider';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { ICategoryCreateRequest, ICategoryResponse } from '@/types/category';
 import { toast } from 'sonner';
 import CategoryInput from '@/components/category-input';

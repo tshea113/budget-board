@@ -9,7 +9,7 @@ import {
 } from '@/types/transaction';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import React from 'react';
+import React, { type JSX } from 'react';
 import EditableCategoryCell from './cells/editable-category-cell';
 import EditableCurrencyCell from '@/components/cells/editable-currency-cell';
 import EditableMerchantCell from './cells/editable-merchant-cell';

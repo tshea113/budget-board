@@ -2,7 +2,7 @@ import Header from './header/header';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import AppSidebar from './header/app-sidebar';
 import PageContent, { Pages } from './pages/page-content';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 const DashboardLayout = (): JSX.Element => {
   const [currentPage, setCurrentPage] = React.useState(Pages.Dashboard);

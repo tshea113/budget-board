@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { ITransaction, TransactionCardType } from '@/types/transaction';
 import { AxiosResponse } from 'axios';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { AuthContext } from '@/components/auth-provider';
 import { getTransactionsByCategory, getVisibleTransactions } from '@/lib/transactions';
 import { ScrollArea } from '@/components/ui/scroll-area';

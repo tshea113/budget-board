@@ -4,6 +4,8 @@ import Transactions from './transactions/transactions';
 import Goals from './goals/goals';
 import Trends from './trends/trends';
 
+import type { JSX } from "react";
+
 export enum Pages {
   Dashboard,
   Transactions,

@@ -1,6 +1,8 @@
 import { cn, convertNumberToCurrency } from '@/lib/utils';
 import { type IAccount } from '@/types/account';
 
+import type { JSX } from "react";
+
 interface AccountItemProps {
   account: IAccount;
 }

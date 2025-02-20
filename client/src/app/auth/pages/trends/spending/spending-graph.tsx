@@ -14,6 +14,8 @@ import { convertNumberToCurrency, getMonthAndYearDateString } from '@/lib/utils'
 import { ITransaction } from '@/types/transaction';
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
+import type { JSX } from "react";
+
 interface SpendingGraphProps {
   transactions: ITransaction[];
   months: Date[];

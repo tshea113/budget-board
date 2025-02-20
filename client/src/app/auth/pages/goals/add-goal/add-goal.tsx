@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { GoalCondition, GoalType, IGoalCreateRequest } from '@/types/goal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import GoalConditionSelect from './goal-condition-select';
-import React from 'react';
+import React, { type JSX } from 'react';
 import DatePicker from '@/components/date-picker';
 import GoalApplyAccountSelect from './goal-apply-amount-select';
 import GoalTypeSelect from './goal-type-select';

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { IAccount } from '@/types/account';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 interface AccountsGraphHeaderProps {
   selectedAccountIds: string[];

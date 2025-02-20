@@ -7,6 +7,8 @@ import {
 import { type IAccount } from '@/types/account';
 import DeletedAccountCard from './deleted-account-card';
 
+import type { JSX } from "react";
+
 interface DeletedAccountsCardsProps {
   deletedAccounts: IAccount[];
 }

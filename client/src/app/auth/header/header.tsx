@@ -5,6 +5,8 @@ import SyncAccountButton from './sync-account-button';
 import BudgetBoardLogo from '@/assets/budget-board-logo';
 import { getIsDarkMode } from '@/lib/utils';
 
+import type { JSX } from "react";
+
 const Header = (): JSX.Element => {
   const isMobile = useIsMobile();
 

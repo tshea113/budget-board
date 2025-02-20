@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input';
 import { IGoalResponse, IGoalUpdateRequest } from '@/types/goal';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 interface EditableGoalNameCellProps {
   goal: IGoalResponse;

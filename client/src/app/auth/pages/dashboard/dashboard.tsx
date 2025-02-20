@@ -4,6 +4,8 @@ import NetWorthCard from './net-worth/net-worth-card';
 import SpendingTrendsCard from './spending-trends/spending-trends-card';
 import Footer from './footer/Footer';
 
+import type { JSX } from "react";
+
 const Dashboard = (): JSX.Element => {
   return (
     <div className="flex h-full flex-col">

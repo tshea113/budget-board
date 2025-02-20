@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 interface BudgetHeaderProps {
   children: JSX.Element | string;
 }

@@ -1,6 +1,6 @@
 import DatePicker from '@/components/date-picker';
 import { ITransaction } from '@/types/transaction';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 interface EditableDateCellProps {
   transaction: ITransaction;

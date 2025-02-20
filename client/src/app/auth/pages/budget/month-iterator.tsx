@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { getMonthAndYearDateString } from '@/lib/utils';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 interface MonthIteratorProps {
   date: Date;

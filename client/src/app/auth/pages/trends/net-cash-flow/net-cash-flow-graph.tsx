@@ -23,7 +23,7 @@ import {
 import { ITransaction } from '@/types/transaction';
 import { useQueries } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { Bar, CartesianGrid, ComposedChart, Line, XAxis, YAxis } from 'recharts';
 
 const NetCashFlowGraph = () => {

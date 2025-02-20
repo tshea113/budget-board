@@ -3,6 +3,8 @@ import BudgetCards from './budget-cards';
 import BudgetHeader from './budget-header';
 import { ITransaction } from '@/types/transaction';
 
+import type { JSX } from "react";
+
 interface BudgetCardsGroupProps {
   header: string;
   budgetData: IBudget[];
