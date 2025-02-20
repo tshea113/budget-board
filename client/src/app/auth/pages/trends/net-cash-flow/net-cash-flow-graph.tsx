@@ -110,15 +110,15 @@ const NetCashFlowGraph = () => {
   const chartConfig = {
     income: {
       label: 'Income',
-      color: 'hsl(var(--success))',
+      color: 'var(--success)',
     },
     spending: {
       label: 'Spending',
-      color: 'hsl(var(--destructive))',
+      color: 'var(--destructive)',
     },
     net: {
       label: 'Net Cashflow',
-      color: 'hsl(var(--foreground))',
+      color: 'var(--foreground)',
     },
   } satisfies ChartConfig;
 
@@ -156,7 +156,7 @@ const NetCashFlowGraph = () => {
                     <div className="custom-tooltip flex w-full flex-col gap-1">
                       <div className="flex flex-row items-center gap-1">
                         <div
-                          className="h-2.5 w-2.5 shrink-0 rounded-[2px] bg-[--color-bg]"
+                          className="h-2.5 w-2.5 shrink-0 rounded-[2px] bg-(--color-bg)"
                           style={
                             {
                               '--color-bg': item.color,
@@ -164,7 +164,7 @@ const NetCashFlowGraph = () => {
                           }
                         />
                         {chartConfig[name as keyof typeof chartConfig]?.label || name}
-                        <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
+                        <div className="text-foreground ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums">
                           {convertNumberToCurrency(value as number, true)}
                         </div>
                       </div>

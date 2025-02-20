@@ -44,7 +44,7 @@ const SpendingGraph = (props: SpendingGraphProps): JSX.Element => {
               formatter={(value, name, item) => (
                 <div className="custom-tooltip flex w-full flex-row items-center gap-1">
                   <div
-                    className="h-2.5 w-2.5 shrink-0 rounded-[2px] bg-[--color-bg]"
+                    className="h-2.5 w-2.5 shrink-0 rounded-[2px] bg-(--color-bg)"
                     style={
                       {
                         '--color-bg': item.color,

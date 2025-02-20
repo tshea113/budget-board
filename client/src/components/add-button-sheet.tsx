@@ -21,7 +21,7 @@ const AddButtonSheet = ({ children }: AddButtonProps): JSX.Element => {
         aria-describedby={undefined}
         className="flex h-full w-full flex-row justify-center"
       >
-        <div className="w-full 2xl:max-w-screen-2xl">{children}</div>
+        <div className="w-full 2xl:max-w-(--breakpoint-2xl)">{children}</div>
       </SheetContent>
     </Sheet>
   );

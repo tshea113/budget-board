@@ -1,83 +1,205 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-@layer base {
-  :root {
-    --background: 216 33% 97%;
-    --foreground: 228 18% 11%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 84% 5%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 84% 5%;
-    --primary: 210 63% 57%;
-    --primary-foreground: 216 33% 97%;
-    --secondary: 209 100% 36%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 204 12% 90%;
-    --muted-foreground: 220 4% 44%;
-    --accent: 214 4% 89%;
-    --accent-foreground: 222 84% 5%;
-    --destructive: 349 90% 54%;
-    --destructive-foreground: 0 0% 100%;
-    --success: 122 39% 49%;
-    --success-foreground: 0 0% 100%;
-    --warning: 35 100% 51%;
-    --warning-foreground: 0 0% 100%;
-    --border: 204 12% 84%;
-    --input: 216 33% 94%;
-    --ring: 204 90% 60%;
-    --radius: 0.3rem;
-    --chart-1: 209 100% 52%;
-    --chart-2: 164 95% 43%;
-    --chart-3: 307 50% 40%;
-    --chart-4: 35 99% 59%;
-    --chart-5: 358 70% 66%;
-    --sidebar-background: 214 13% 89%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 210 63% 57%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 214 4% 90%;
-    --sidebar-accent-foreground: 222 84% 5%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+@plugin 'tailwindcss-animate';
+@plugin '@tailwindcss/container-queries';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: hsl(216 33% 97%);
+  --foreground: hsl(228 18% 11%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(222 84% 5%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(222 84% 5%);
+  --primary: hsl(210 63% 57%);
+  --primary-foreground: hsl(216 33% 97%);
+  --secondary: hsl(209 100% 36%);
+  --secondary-foreground: hsl(0 0% 100%);
+  --muted: hsl(204 12% 90%);
+  --muted-foreground: hsl(220 4% 44%);
+  --accent: hsl(214 4% 89%);
+  --accent-foreground: hsl(222 84% 5%);
+  --destructive: hsl(349 90% 54%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --success: hsl(122 39% 49%);
+  --success-foreground: hsl(0 0% 100%);
+  --warning: hsl(35 100% 51%);
+  --warning-foreground: hsl(0 0% 100%);
+  --border: hsl(204 12% 84%);
+  --input: hsl(216 33% 94%);
+  --ring: hsl(204 90% 60%);
+  --radius: hsl(0.3rem);
+  --chart-1: hsl(209 100% 52%);
+  --chart-2: hsl(164 95% 43%);
+  --chart-3: hsl(307 50% 40%);
+  --chart-4: hsl(35 99% 59%);
+  --chart-5: hsl(358 70% 66%);
+  --sidebar-background: hsl(214 13% 89%);
+  --sidebar-foreground: hsl(240 5.3% 26.1%);
+  --sidebar-primary: hsl(210 63% 57%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(214 4% 90%);
+  --sidebar-accent-foreground: hsl(222 84% 5%);
+  --sidebar-border: hsl(220 13% 91%);
+  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+}
+
+.dark {
+  --background: hsl(228 18% 11%);
+  --foreground: hsl(240 9% 89%);
+  --card: hsl(228 10% 14%);
+  --card-foreground: hsl(240 9% 89%);
+  --popover: hsl(228 18% 11%);
+  --popover-foreground: hsl(240 9% 89%);
+  --primary: hsl(224 49% 70%);
+  --primary-foreground: hsl(228 18% 11%);
+  --secondary: hsl(217 52% 49%);
+  --secondary-foreground: hsl(240 9% 89%);
+  --muted: hsl(233 6% 21%);
+  --muted-foreground: hsl(240 4% 64%);
+  --accent: hsl(228 10% 19%);
+  --accent-foreground: hsl(240 9% 89%);
+  --destructive: hsl(0 84% 60%);
+  --destructive-foreground: hsl(240 9% 89%);
+  --success: hsl(118 49% 48%);
+  --success-foreground: hsl(240 9% 89%);
+  --border: hsl(233 6% 28%);
+  --input: hsl(233 6% 16%);
+  --ring: hsl(224.3 76.3% 48%);
+  --chart-1: hsl(220 70% 50%);
+  --chart-2: hsl(160 60% 45%);
+  --chart-3: hsl(30 80% 55%);
+  --chart-4: hsl(280 65% 60%);
+  --chart-5: hsl(340 75% 55%);
+  --sidebar-background: hsl(216 12% 8%);
+  --sidebar-foreground: hsl(240 9% 89%);
+  --sidebar-primary: hsl(224 49% 70%);
+  --sidebar-primary-foreground: hsl(228 18% 11%);
+  --sidebar-accent: hsl(233 6% 25%);
+  --sidebar-accent-foreground: hsl(240 9% 89%);
+  --sidebar-border: hsl(240 3.7% 15.9%);
+  --sidebar-ring: hsl(224.3 76.3% 48%);
+}
+
+@theme inline {
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-sidebar: var(--sidebar-background);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-pop: pop 200ms ease-out;
+  --animate-big-pop: big-pop 200ms ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
   }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+  @keyframes pop {
+    0% {
+      transform: scale(0.99);
+    }
+    40% {
+      transform: scale(1.01);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+  @keyframes big-pop {
+    0% {
+      transform: scale(0.96);
+    }
+    40% {
+      transform: scale(1.04);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+}
 
-  .dark {
-    --background: 228 18% 11%;
-    --foreground: 240 9% 89%;
-    --card: 228 10% 14%;
-    --card-foreground: 240 9% 89%;
-    --popover: 228 18% 11%;
-    --popover-foreground: 240 9% 89%;
-    --primary: 224 49% 70%;
-    --primary-foreground: 228 18% 11%;
-    --secondary: 217 52% 49%;
-    --secondary-foreground: 240 9% 89%;
-    --muted: 233 6% 21%;
-    --muted-foreground: 240 4% 64%;
-    --accent: 228 10% 19%;
-    --accent-foreground: 240 9% 89%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 240 9% 89%;
-    --success: 118 49% 48%;
-    --success-foreground: 240 9% 89%;
-    --border: 233 6% 28%;
-    --input: 233 6% 16%;
-    --ring: 224.3 76.3% 48%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 216 12% 8%;
-    --sidebar-foreground: 240 9% 89%;
-    --sidebar-primary: 224 49% 70%;
-    --sidebar-primary-foreground: 228 18% 11%;
-    --sidebar-accent: 233 6% 25%;
-    --sidebar-accent-foreground: 240 9% 89%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 224.3 76.3% 48%;
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+  @media (width >= --theme(--breakpoint-sm)) {
+    max-width: none;
+  }
+  @media (width >= 1400px) {
+    max-width: 1400px;
+  }
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
   }
 }
 

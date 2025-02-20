@@ -115,7 +115,7 @@ const AssetsGraph = (): JSX.Element => {
                     <div className="custom-tooltip flex w-full flex-col gap-1">
                       <div className="flex flex-row justify-between gap-1">
                         <div
-                          className="h-2.5 w-2.5 shrink-0 rounded-[2px] bg-[--color-bg]"
+                          className="h-2.5 w-2.5 shrink-0 rounded-[2px] bg-(--color-bg)"
                           style={
                             {
                               '--color-bg': item.color,

@@ -46,7 +46,7 @@ const CustomCategoryCard = (props: CustomCategoryCardProps): JSX.Element => {
   });
 
   return (
-    <Card className="flex w-full flex-grow flex-row items-center justify-between gap-2 p-2">
+    <Card className="flex w-full grow flex-row items-center justify-between gap-2 p-2">
       <span className="w-1/2 grow">{props.category.value}</span>
       <span className="w-1/2 grow">{props.category.parent}</span>
       <ResponsiveButton

@@ -101,7 +101,7 @@ export const BuildAccountsBalanceChartConfig = (
 
     chartConfig[accountId] = {
       label: account.name,
-      color: `hsl(var(--chart-${lineColorNumber}))`,
+      color: `var(--chart-${lineColorNumber})`,
     };
   });
 
@@ -283,7 +283,7 @@ export const BuildTransactionChartConfig = (months: Date[]): ChartConfig => {
 
     chartConfig[getMonthAndYearDateString(month)] = {
       label: getMonthAndYearDateString(month),
-      color: `hsl(var(--chart-${lineColorNumber}))`,
+      color: `var(--chart-${lineColorNumber})`,
     };
   });
   return chartConfig;

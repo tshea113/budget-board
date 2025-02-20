@@ -74,7 +74,7 @@ const AccountsConfiguration = (props: AccountsConfigurationProps): JSX.Element =
       </SheetTrigger>
       <SheetTitle className="hidden" />
       <SheetContent side="top" className="flex h-full w-full flex-row justify-center">
-        <div className="w-full gap-3 pt-2 2xl:max-w-screen-2xl">
+        <div className="w-full gap-3 pt-2 2xl:max-w-(--breakpoint-2xl)">
           <ScrollArea className="h-full pr-4" type="auto">
             <div className="flex flex-col gap-3">
               <div className="flex flex-row items-center justify-between">
