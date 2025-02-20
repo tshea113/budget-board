@@ -3061,7 +3061,7 @@ __metadata:
     react-hook-form: "npm:^7.54.2"
     react-router-dom: "npm:^7.2.0"
     recharts: "npm:^2.15.1"
-    sonner: "npm:^1.7.4"
+    sonner: "npm:^2.0.0"
     tailwind-merge: "npm:^2.6.0"
     tailwindcss: "npm:^3.4.17"
     tailwindcss-animate: "npm:^1.0.7"
@@ -6914,13 +6914,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sonner@npm:^1.7.4":
-  version: 1.7.4
-  resolution: "sonner@npm:1.7.4"
+"sonner@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "sonner@npm:2.0.0"
   peerDependencies:
     react: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
     react-dom: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
-  checksum: 10c0/2856a43c1afaacec5ca74c7f6bb8eb439edf1fdadb045bd201590f809e6e9b711eabcf7d1e8f3448cf414e1333d97e3e16372a989011a3190f20952947b1f60a
+  checksum: 10c0/bd5b2cd909b1742fed0417d12d17c1dbeb5d27c22ff42e5e45c650da750e7e1c70b7ffaa153feba2b3ae2925233d2c8addfaa994939e4bdb935bbacf8a561af3
   languageName: node
   linkType: hard
 
