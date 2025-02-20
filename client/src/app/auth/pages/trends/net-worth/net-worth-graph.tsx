@@ -89,28 +89,17 @@ const NetWorthGraph = (): JSX.Element => {
     },
   } satisfies ChartConfig;
 
-  if (balancesQuery.isPending || accountsQuery.isPending) {
-    return (
-      <div className="flex flex-col gap-3">
-        <Skeleton className="h-[40px] w-full max-w-[300px]" />
-        <Skeleton className="aspect-video max-h-[400px] w-full" />
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex flex-col gap-2">
-      <AccountsGraphHeader
-        selectedAccountIds={selectedAccountIds}
-        setSelectedAccountIds={setSelectedAccountIds}
-        dateRange={dateRange}
-        setDateRange={setDateRange}
-      />
-      {selectedAccountIds.length === 0 ? (
+  const conditionalRender = (): JSX.Element => {
+    if (balancesQuery.isPending || accountsQuery.isPending) {
+      return <Skeleton className="aspect-video max-h-[400px] w-full" />;
+    } else if (selectedAccountIds.length === 0) {
+      return (
         <div className="flex aspect-video max-h-[400px] w-full items-center justify-center">
           <span className="text-center">Select an account to display the chart.</span>
         </div>
-      ) : (
+      );
+    } else {
+      return (
         <ChartContainer config={chartConfig} className="max-h-[400px] w-full">
           <ComposedChart accessibilityLayer data={chartData} stackOffset="sign">
             <CartesianGrid vertical={true} />
@@ -193,7 +182,19 @@ const NetWorthGraph = (): JSX.Element => {
             />
           </ComposedChart>
         </ChartContainer>
-      )}
+      );
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-2">
+      <AccountsGraphHeader
+        selectedAccountIds={selectedAccountIds}
+        setSelectedAccountIds={setSelectedAccountIds}
+        dateRange={dateRange}
+        setDateRange={setDateRange}
+      />
+      {conditionalRender()}
     </div>
   );
 };

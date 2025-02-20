@@ -72,6 +72,7 @@ const NetCashFlowGraph = () => {
     net: number;
   }
 
+  const monthButtons = [3, 6, 12];
   const sortedMonths = selectedMonths.sort((a, b) => a.getTime() - b.getTime());
 
   const BuildChartData = (): ChartDatum[] => {
@@ -121,60 +122,17 @@ const NetCashFlowGraph = () => {
     },
   } satisfies ChartConfig;
 
-  if (transactionsQuery.isPending) {
-    return (
-      <div className="flex flex-col gap-3">
-        <Skeleton className="h-[62px] w-full" />
-        <Skeleton className="aspect-video max-h-[400px] w-full" />
-      </div>
-    );
-  }
-
-  const monthButtons = [3, 6, 12];
-
-  return (
-    <div className="flex w-full flex-col gap-4">
-      <MonthToolCards
-        selectedDates={selectedMonths}
-        setSelectedDates={setSelectedMonths}
-        timeToMonthlyTotalsMap={buildTimeToMonthlyTotalsMap(
-          selectedMonths,
-          transactionsWithoutHidden
-        )}
-        showCopy={false}
-        isPending={false}
-        allowSelectMultiple={true}
-      />
-      <div className="flex w-full flex-row flex-wrap justify-end gap-2">
-        {monthButtons.map((months) => (
-          <Button
-            size="sm"
-            variant="outline"
-            key={months}
-            onClick={() => {
-              // Clear prior to adding new months to prevent duplicates.
-              setSelectedMonths([]);
-              for (let i = 0; i < months; i++) {
-                setSelectedMonths((prev) => {
-                  const newMonths = [...prev];
-                  newMonths.push(getDateFromMonthsAgo(i));
-                  return newMonths;
-                });
-              }
-            }}
-          >
-            Last {months} Months
-          </Button>
-        ))}
-        <Button size="sm" onClick={() => setSelectedMonths([])}>
-          Clear
-        </Button>
-      </div>
-      {selectedMonths.length === 0 ? (
+  const conditionalRender = (): JSX.Element => {
+    if (transactionsQuery.isPending) {
+      return <Skeleton className="aspect-video max-h-[400px] w-full" />;
+    } else if (selectedMonths.length === 0) {
+      return (
         <div className="flex aspect-video max-h-[400px] w-full items-center justify-center">
           <span className="text-center">Select an account to display the chart.</span>
         </div>
-      ) : (
+      );
+    } else {
+      return (
         <ChartContainer config={chartConfig} className="max-h-[400px] w-full">
           <ComposedChart accessibilityLayer data={chartData} stackOffset="sign">
             <CartesianGrid vertical={true} />
@@ -259,7 +217,49 @@ const NetCashFlowGraph = () => {
             />
           </ComposedChart>
         </ChartContainer>
-      )}
+      );
+    }
+  };
+
+  return (
+    <div className="flex w-full flex-col gap-4">
+      <MonthToolCards
+        selectedDates={selectedMonths}
+        setSelectedDates={setSelectedMonths}
+        timeToMonthlyTotalsMap={buildTimeToMonthlyTotalsMap(
+          selectedMonths,
+          transactionsWithoutHidden
+        )}
+        showCopy={false}
+        isPending={false}
+        allowSelectMultiple={true}
+      />
+      <div className="flex w-full flex-row flex-wrap justify-end gap-2">
+        {monthButtons.map((months) => (
+          <Button
+            size="sm"
+            variant="outline"
+            key={months}
+            onClick={() => {
+              // Clear prior to adding new months to prevent duplicates.
+              setSelectedMonths([]);
+              for (let i = 0; i < months; i++) {
+                setSelectedMonths((prev) => {
+                  const newMonths = [...prev];
+                  newMonths.push(getDateFromMonthsAgo(i));
+                  return newMonths;
+                });
+              }
+            }}
+          >
+            Last {months} Months
+          </Button>
+        ))}
+        <Button size="sm" onClick={() => setSelectedMonths([])}>
+          Clear
+        </Button>
+      </div>
+      {conditionalRender()}
     </div>
   );
 };
