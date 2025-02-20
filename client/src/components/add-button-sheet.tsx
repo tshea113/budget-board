@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Button } from '@/components/ui/button';
-import { PlusIcon } from '@radix-ui/react-icons';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from './ui/sheet';
+import { PlusIcon } from 'lucide-react';
 
 interface AddButtonProps {
   children: JSX.Element;
@@ -12,7 +12,7 @@ const AddButtonSheet = ({ children }: AddButtonProps): JSX.Element => {
     <Sheet>
       <SheetTrigger asChild>
         <Button variant="outline">
-          <PlusIcon></PlusIcon>
+          <PlusIcon className="size-4" />
         </Button>
       </SheetTrigger>
       <SheetTitle className="hidden" />

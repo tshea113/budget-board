@@ -4,7 +4,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { translateAxiosError } from '@/lib/requests';
 import { accountCategories, IAccount, IAccountUpdateRequest } from '@/types/account';
-import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
 import React, { type JSX } from 'react';
@@ -15,7 +14,7 @@ import CategoryInput from '@/components/category-input';
 import { getIsParentCategory, getParentCategory } from '@/lib/category';
 import { toast } from 'sonner';
 import { SortableDragHandle } from '@/components/sortable';
-import { GripVertical } from 'lucide-react';
+import { BanIcon, CheckIcon, GripVertical } from 'lucide-react';
 
 interface AccountsConfigurationCardProps {
   account: IAccount;
@@ -149,7 +148,7 @@ const AccountsConfigurationCard = (
                 }}
                 loading={false}
               >
-                <Cross2Icon className="h-4 w-4" />
+                <BanIcon className="h-4 w-4" />
               </ResponsiveButton>
             </div>
           ) : (

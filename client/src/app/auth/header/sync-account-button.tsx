@@ -2,9 +2,9 @@ import { AuthContext } from '@/components/auth-provider';
 import { Button } from '@/components/ui/button';
 import { translateAxiosError } from '@/lib/requests';
 import { cn } from '@/lib/utils';
-import { UpdateIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosResponse, type AxiosError } from 'axios';
+import { RefreshCwIcon } from 'lucide-react';
 import React, { type JSX } from 'react';
 import { toast } from 'sonner';
 
@@ -47,7 +47,9 @@ const SyncAccountButton = (props: SyncAccountButtonProps): JSX.Element => {
     >
       <div className="flex flex-row items-center gap-1">
         <span>{doSyncMutation.isPending ? 'Syncing' : 'Sync'}</span>
-        <UpdateIcon className={cn(doSyncMutation.isPending ? 'animate-spin' : '')} />
+        <RefreshCwIcon
+          className={cn('size-4', doSyncMutation.isPending ? 'animate-spin' : '')}
+        />
       </div>
     </Button>
   );

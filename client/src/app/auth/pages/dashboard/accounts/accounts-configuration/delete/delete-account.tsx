@@ -4,9 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { translateAxiosError } from '@/lib/requests';
-import { TrashIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
+import { TrashIcon } from 'lucide-react';
 import React, { type JSX } from 'react';
 import { toast } from 'sonner';
 
@@ -56,7 +56,7 @@ const DeleteAccount = (props: DeleteAccountProps): JSX.Element => {
             />
             <label
               htmlFor="deleteTransaction"
-              className="select-none text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               Delete transactions for account
             </label>

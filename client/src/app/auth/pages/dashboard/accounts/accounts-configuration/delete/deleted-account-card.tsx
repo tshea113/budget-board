@@ -4,9 +4,9 @@ import { Card } from '@/components/ui/card';
 import { translateAxiosError } from '@/lib/requests';
 import { getDaysSinceDate } from '@/lib/utils';
 import { IAccount } from '@/types/account';
-import { ResetIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
+import { Undo2Icon } from 'lucide-react';
 import React, { type JSX } from 'react';
 import { toast } from 'sonner';
 
@@ -49,7 +49,7 @@ const DeletedAccountCard = (props: DeletedAccountCardProps): JSX.Element => {
             doRestoreAccount.mutate(props.deletedAccount.id);
           }}
         >
-          <ResetIcon className="h-4 w-4" />
+          <Undo2Icon className="h-4 w-4" />
         </ResponsiveButton>
       </div>
     </Card>

@@ -1,8 +1,7 @@
 import { Button } from '@/components/ui/button';
-import { ArrowDownIcon, ArrowUpIcon } from '@radix-ui/react-icons';
-import { ArrowUpDownIcon } from 'lucide-react';
+import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon } from 'lucide-react';
 
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 export enum SortDirection {
   None,

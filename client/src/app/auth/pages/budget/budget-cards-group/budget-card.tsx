@@ -12,9 +12,9 @@ import { cn, convertNumberToCurrency, getProgress } from '@/lib/utils';
 import { IBudget, IBudgetUpdateRequest } from '@/types/budget';
 import { ICategoryResponse } from '@/types/category';
 import { defaultTransactionCategories } from '@/types/transaction';
-import { TrashIcon } from '@radix-ui/react-icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
+import { TrashIcon } from 'lucide-react';
 import React, { type JSX } from 'react';
 import { toast } from 'sonner';
 
@@ -109,7 +109,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
   return (
     <Card
       className={cn(
-        'flex flex-row shadow-md hover:border-primary',
+        'hover:border-primary flex flex-row shadow-md',
         isSelected ? 'bg-muted' : 'bg-card',
         selectEffect && 'animate-pop'
       )}
@@ -117,12 +117,12 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
       onAnimationEnd={() => setSelectEffect(false)}
     >
       <div className="flex w-full flex-col px-3 py-1">
-        <div className="flex min-h-10 flex-row items-center @container">
+        <div className="@container flex min-h-10 flex-row items-center">
           <div className="flex min-h-8 w-2/5 flex-row items-center justify-start gap-2 md:w-1/2">
             {transactionCategoriesQuery.isPending ? (
               <Skeleton className="h-8 w-full" />
             ) : (
-              <span className="select-none text-lg font-semibold tracking-tight @sm:text-xl">
+              <span className="text-lg font-semibold tracking-tight select-none @sm:text-xl">
                 {getFormattedCategoryValue(
                   props.budgets[0].category,
                   transactionCategoriesWithCustom
@@ -131,11 +131,11 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
             )}
             {(doEditBudget.isPending || doDeleteBudget.isPending) && <LoadingIcon />}
           </div>
-          <div className="flex min-h-8 w-3/5 flex-row items-center justify-items-center text-base font-semibold @sm:text-lg md:w-1/2">
+          <div className="flex min-h-8 w-3/5 flex-row items-center justify-items-center text-base font-semibold md:w-1/2 @sm:text-lg">
             {transactionCategoriesQuery.isPending ? (
               <Skeleton className="h-8 w-1/3" />
             ) : (
-              <span className="w-1/3 select-none text-center">
+              <span className="w-1/3 text-center select-none">
                 {convertNumberToCurrency(
                   props.amount *
                     getSignForBudget(
@@ -160,7 +160,7 @@ const BudgetCard = (props: BudgetCardProps): JSX.Element => {
             />
             <span
               className={cn(
-                'w-1/3 select-none text-center font-semibold',
+                'w-1/3 text-center font-semibold select-none',
                 // Income behaves opposite of spending, since being above the limit is a good thing :)
                 (limit - props.amount * (props.isIncome ? 1 : -1)) *
                   (props.isIncome ? -1 : 1) >
