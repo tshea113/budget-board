@@ -166,20 +166,12 @@ const AppSidebar = (props: AppSidebarProps): JSX.Element => {
         <SidebarMenu>
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <SidebarMenuButton
-                size="lg"
-                asChild
-                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-              >
-                <div className="flex flex-row items-center">
+              <SidebarMenuButton asChild>
+                <div className="flex h-12 flex-row items-center p-0">
                   {/* For some reason the size is being ignored here. I'm not sure why, but it's probably realted to Tailwindcss v4 updates.
-                  Shadcn might fix this when they fully support v4, but for now the icon will be smaller than the old one. */}
-                  <CircleUserIcon className="size-6" />
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">
-                      {userInfoQuery.data?.email}
-                    </span>
-                  </div>
+                    Shadcn might fix this when they fully support v4, but for now the icon will be smaller than the old one. */}
+                  <CircleUserIcon className="size-8" />
+                  <span className="font-semibold">{userInfoQuery.data?.email}</span>
                   <ChevronsUpDown className="ml-auto size-4" />
                 </div>
               </SidebarMenuButton>
