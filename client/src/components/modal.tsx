@@ -5,7 +5,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 import ModalProvider from './modal-provider';
 
 const Modal = ({ button, children }: { button: string; children: any }): JSX.Element => {

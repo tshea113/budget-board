@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import LoadingIcon from './loading-icon';
 
 const PageLoading = (): JSX.Element => {

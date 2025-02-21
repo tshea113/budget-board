@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from './ui/sheet';
 import { PlusIcon } from 'lucide-react';
+import { JSX } from 'react';
 
 interface AddButtonProps {
   children: JSX.Element;

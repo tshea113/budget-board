@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { PlusIcon } from 'lucide-react';
+import { JSX } from 'react';
 
 interface AddButtonProps {
   children: JSX.Element;

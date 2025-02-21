@@ -10,7 +10,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { areStringsEqual, cn } from '@/lib/utils';
 import { Check, ChevronsUpDown } from 'lucide-react';
-import React from 'react';
+import React, { JSX } from 'react';
 import CommandSubcategory from './command-subcategory';
 import { ICategory, ICategoryNode } from '@/types/category';
 import { buildCategoriesTree, getFormattedCategoryValue } from '@/lib/category';
@@ -34,7 +34,7 @@ const CategoryInput = (props: CategoryInputProps): JSX.Element => {
             variant="dropdown"
             role="combobox"
             aria-expanded={open}
-            className="w-full min-w-[50px] max-w-full justify-between hover:bg-accent hover:text-accent-foreground"
+            className="hover:bg-accent hover:text-accent-foreground w-full max-w-full min-w-[50px] justify-between"
             onClick={(e) => {
               e.stopPropagation();
             }}

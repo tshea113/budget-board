@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import MonthToolcard from './month-toolcard';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
-import React from 'react';
+import React, { JSX } from 'react';
 import { getDateFromMonthsAgo, isInArray } from '@/lib/utils';
 import { useMeasure } from '@uidotdev/usehooks';
 import { getCashFlowValue } from '@/lib/budgets';

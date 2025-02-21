@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { RefreshCwIcon } from 'lucide-react';
+import { JSX } from 'react';
 
 interface LoadingIconProps {
   className?: string;

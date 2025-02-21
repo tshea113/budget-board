@@ -2,6 +2,7 @@ import { CommandItem } from '@/components/ui/command';
 import { areStringsEqual, cn } from '@/lib/utils';
 import { ICategory, ICategoryNode } from '@/types/category';
 import { Check } from 'lucide-react';
+import { JSX } from 'react';
 
 interface CommandSubcategoryProps {
   category: ICategoryNode;

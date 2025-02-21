@@ -10,7 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { areStringsEqual, cn } from '@/lib/utils';
 import { IAccount } from '@/types/account';
 import { Check, ChevronsUpDown } from 'lucide-react';
-import React from 'react';
+import React, { JSX } from 'react';
 import { AuthContext } from './auth-provider';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';

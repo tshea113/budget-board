@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input';
 import { cn, convertNumberToCurrency } from '@/lib/utils';
-import React from 'react';
+import React, { JSX } from 'react';
 
 interface EditableCurrencyCellProps {
   className?: string;

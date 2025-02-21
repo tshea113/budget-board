@@ -1,6 +1,6 @@
 import { getProjectEnvVariables } from '@/shared/projectEnvVariables';
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { createContext, useState } from 'react';
+import { createContext, JSX, useState } from 'react';
 import React from 'react';
 
 export const AuthContext = createContext({});

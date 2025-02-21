@@ -2,7 +2,7 @@ import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { CashFlowValue } from '@/types/budget';
 import { months } from '@/types/misc';
-import React from 'react';
+import React, { JSX } from 'react';
 
 interface MonthToolCardProps {
   date: Date;
@@ -37,7 +37,7 @@ const MonthToolCard = (props: MonthToolCardProps): JSX.Element => {
   return (
     <Card
       className={cn(
-        'flex w-[60px] flex-col p-0.5 hover:border-primary',
+        'hover:border-primary flex w-[60px] flex-col p-0.5',
         props.isSelected ? 'bg-muted' : 'bg-card',
         selectEffect && 'animate-big-pop'
       )}
@@ -50,10 +50,10 @@ const MonthToolCard = (props: MonthToolCardProps): JSX.Element => {
           getLightColor(props.cashFlowValue, props.isSelected)
         )}
       />
-      <span className="select-none text-sm">
+      <span className="text-sm select-none">
         {months.at(props.date.getMonth())?.substring(0, 3)}
       </span>
-      <span className="select-none text-xs text-muted-foreground">
+      <span className="text-muted-foreground text-xs select-none">
         {props.date.getFullYear()}
       </span>
     </Card>

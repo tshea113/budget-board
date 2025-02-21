@@ -4,6 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { JSX } from 'react';
 
 interface DatePickerProps {
   className?: string;
@@ -22,7 +23,7 @@ const DatePicker = (props: DatePickerProps): JSX.Element => {
           variant="dropdown"
           className={cn(
             props.className,
-            'min-w-[50px] max-w-full justify-start text-left font-normal',
+            'max-w-full min-w-[50px] justify-start text-left font-normal',
             !props.value && 'text-muted-foreground'
           )}
           onClick={(e) => {

@@ -38,7 +38,7 @@ const queryClient = new QueryClient({
   },
 });
 
-const App = (): JSX.Element => {
+const App = (): React.ReactNode => {
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <AuthProvider>

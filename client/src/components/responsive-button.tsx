@@ -1,5 +1,6 @@
 import { Button } from './ui/button';
 import LoadingIcon from './loading-icon';
+import { JSX } from 'react';
 
 interface ResponsiveButtonProps {
   children: JSX.Element | string;

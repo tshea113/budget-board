@@ -5,6 +5,7 @@ import {
   ChevronsRightIcon,
 } from 'lucide-react';
 import { Button } from './ui/button';
+import { type JSX } from 'react';
 
 interface PageSelectProps {
   pageNumber: number;

@@ -1,5 +1,6 @@
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from './ui/sheet';
 import { DropdownMenuItem } from './ui/dropdown-menu';
+import { JSX } from 'react';
 
 interface SheetItemProps {
   onSelect?: () => void;

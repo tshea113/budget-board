@@ -1,9 +1,12 @@
 import { createContext, useState } from 'react';
-import PropTypes from 'prop-types';
 
 export const ModalContext = createContext({});
 
-const ModalProvider = ({ children }: { children: any }): JSX.Element => {
+interface ModalProviderProps {
+  children: React.ReactNode;
+}
+
+const ModalProvider = ({ children }: ModalProviderProps): React.ReactNode => {
   const [open, setOpen] = useState<boolean>(true);
 
   const modalValue = {
@@ -12,10 +15,6 @@ const ModalProvider = ({ children }: { children: any }): JSX.Element => {
   };
 
   return <ModalContext.Provider value={modalValue}>{children}</ModalContext.Provider>;
-};
-
-ModalProvider.propTypes = {
-  children: PropTypes.node.isRequired,
 };
 
 export default ModalProvider;
