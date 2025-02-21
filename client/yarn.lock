@@ -2190,26 +2190,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-query-devtools@npm:^5.66.7":
-  version: 5.66.7
-  resolution: "@tanstack/react-query-devtools@npm:5.66.7"
+"@tanstack/react-query-devtools@npm:^5.66.8":
+  version: 5.66.8
+  resolution: "@tanstack/react-query-devtools@npm:5.66.8"
   dependencies:
     "@tanstack/query-devtools": "npm:5.65.0"
   peerDependencies:
-    "@tanstack/react-query": ^5.66.7
+    "@tanstack/react-query": ^5.66.8
     react: ^18 || ^19
-  checksum: 10c0/5391bafe7c52b87e5ec4578d11d84fb9690442360502ac59416f1c3ae69d68a35e16919ab510195e1da92346b9315a5ae5b000218c33e96caba6d49c8db755a8
+  checksum: 10c0/1f5b860320b0bd9452dac9701436f5b4500bcd49e1fe834355005c24222aa0154039b1c30f71f0360ba54318b1d5b14a39055df93a77862fe780c4e5e68e196c
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:^5.66.7":
-  version: 5.66.7
-  resolution: "@tanstack/react-query@npm:5.66.7"
+"@tanstack/react-query@npm:^5.66.8":
+  version: 5.66.8
+  resolution: "@tanstack/react-query@npm:5.66.8"
   dependencies:
     "@tanstack/query-core": "npm:5.66.4"
   peerDependencies:
     react: ^18 || ^19
-  checksum: 10c0/e17af87fa0d3e1e3f18dc1417e1eac2e09e37c5203b9df0bcdeb239ec6430bd95df70c48a87e1824c6671cb051805b7a10ec5ad27321d5c57cdd8636d2ba13fb
+  checksum: 10c0/b5b0f954ee32cff4dbe76731dd7560d03e56f879d8b854049530f4a011a7806a99d8f83b5b69af03156bc5d0b399c66f0f427c43d513d87a2dccd54b256b1fc7
   languageName: node
   linkType: hard
 
@@ -3076,8 +3076,8 @@ __metadata:
     "@tailwindcss/container-queries": "npm:^0.1.1"
     "@tailwindcss/postcss": "npm:^4.0.7"
     "@tanstack/eslint-plugin-query": "npm:^5.66.1"
-    "@tanstack/react-query": "npm:^5.66.7"
-    "@tanstack/react-query-devtools": "npm:^5.66.7"
+    "@tanstack/react-query": "npm:^5.66.8"
+    "@tanstack/react-query-devtools": "npm:^5.66.8"
     "@trivago/prettier-plugin-sort-imports": "npm:^5.2.2"
     "@types/node": "npm:^22.13.4"
     "@types/react": "npm:^19.0.10"
@@ -3112,7 +3112,7 @@ __metadata:
     react-hook-form: "npm:^7.54.2"
     react-router-dom: "npm:^7.2.0"
     recharts: "npm:^2.15.1"
-    sonner: "npm:^2.0.0"
+    sonner: "npm:^2.0.1"
     tailwind-merge: "npm:^3.0.1"
     tailwindcss: "npm:^4.0.7"
     tailwindcss-animate: "npm:^1.0.7"
@@ -6877,13 +6877,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sonner@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "sonner@npm:2.0.0"
+"sonner@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "sonner@npm:2.0.1"
   peerDependencies:
     react: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
     react-dom: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
-  checksum: 10c0/bd5b2cd909b1742fed0417d12d17c1dbeb5d27c22ff42e5e45c650da750e7e1c70b7ffaa153feba2b3ae2925233d2c8addfaa994939e4bdb935bbacf8a561af3
+  checksum: 10c0/29e15324109ac19e0c9f2236ad695e2791fcf183264e5a4ffc72acfff28894fb8e80de65a1bf40bcea881fe4d06481b3c533ee3dc6ffafa80a44912e2ebc5cf6
   languageName: node
   linkType: hard
 
