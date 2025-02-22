@@ -1,16 +1,19 @@
-﻿using BudgetBoard.Service.Interfaces;
+﻿using BudgetBoard.Database.Models;
+using BudgetBoard.Service.Interfaces;
 using BudgetBoard.Service.Models;
 using BudgetBoard.WebAPI.Utils;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetBoard.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class GoalController(ILogger<GoalController> logger, IGoalService goalService) : ControllerBase
+public class GoalController(ILogger<GoalController> logger, UserManager<ApplicationUser> userManager, IGoalService goalService) : ControllerBase
 {
     private readonly ILogger<GoalController> _logger = logger;
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly IGoalService _goalService = goalService;
 
     [HttpPost]
@@ -19,8 +22,7 @@ public class GoalController(ILogger<GoalController> logger, IGoalService goalSer
     {
         try
         {
-            var userData = await _goalService.GetUserData(User);
-            await _goalService.CreateGoalAsync(userData, newGoal);
+            await _goalService.CreateGoalAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), newGoal);
             return Ok();
         }
         catch (Exception ex)
@@ -35,8 +37,7 @@ public class GoalController(ILogger<GoalController> logger, IGoalService goalSer
     {
         try
         {
-            var userData = await _goalService.GetUserData(User);
-            return Ok(_goalService.ReadGoalsAsync(userData, includeInterest));
+            return Ok(await _goalService.ReadGoalsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), includeInterest));
         }
         catch (Exception ex)
         {
@@ -50,8 +51,7 @@ public class GoalController(ILogger<GoalController> logger, IGoalService goalSer
     {
         try
         {
-            var userData = await _goalService.GetUserData(User);
-            await _goalService.UpdateGoalAsync(userData, editedGoal);
+            await _goalService.UpdateGoalAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), editedGoal);
             return Ok();
         }
         catch (Exception ex)
@@ -66,8 +66,7 @@ public class GoalController(ILogger<GoalController> logger, IGoalService goalSer
     {
         try
         {
-            var userData = await _goalService.GetUserData(User);
-            await _goalService.DeleteGoalAsync(userData, guid);
+            await _goalService.DeleteGoalAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), guid);
             return Ok();
         }
         catch (Exception ex)

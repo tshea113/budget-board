@@ -9,6 +9,7 @@ using Moq;
 
 namespace BudgetBoard.IntegrationTests;
 
+[Collection("IntegrationTests")]
 public class BudgetServiceTests
 {
     private readonly Faker<BudgetCreateRequest> _budgetCreateRequestFaker = new Faker<BudgetCreateRequest>()

@@ -9,6 +9,7 @@ using Moq;
 
 namespace BudgetBoard.IntegrationTests;
 
+[Collection("IntegrationTests")]
 public class InstitutionServiceTests
 {
     private readonly Faker<InstitutionCreateRequest> _institutionCreateRequestFaker = new Faker<InstitutionCreateRequest>()
