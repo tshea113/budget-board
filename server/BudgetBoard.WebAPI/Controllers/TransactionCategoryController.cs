@@ -1,16 +1,19 @@
-﻿using BudgetBoard.Service.Interfaces;
+﻿using BudgetBoard.Database.Models;
+using BudgetBoard.Service.Interfaces;
 using BudgetBoard.Service.Models;
 using BudgetBoard.WebAPI.Utils;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetBoard.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class TransactionCategoryController(ILogger<TransactionCategoryController> logger, ITransactionCategoryService transactionCategoryService) : ControllerBase
+public class TransactionCategoryController(ILogger<TransactionCategoryController> logger, UserManager<ApplicationUser> userManager, ITransactionCategoryService transactionCategoryService) : ControllerBase
 {
     private readonly ILogger<TransactionCategoryController> _logger = logger;
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly ITransactionCategoryService _transactionCategoryService = transactionCategoryService;
 
     [HttpPost]
@@ -19,8 +22,7 @@ public class TransactionCategoryController(ILogger<TransactionCategoryController
     {
         try
         {
-            var userData = await _transactionCategoryService.GetUserData(User);
-            await _transactionCategoryService.CreateTransactionCategoryAsync(userData, category);
+            await _transactionCategoryService.CreateTransactionCategoryAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), category);
             return Ok();
         }
         catch (Exception ex)
@@ -35,8 +37,7 @@ public class TransactionCategoryController(ILogger<TransactionCategoryController
     {
         try
         {
-            var userData = await _transactionCategoryService.GetUserData(User);
-            return Ok(_transactionCategoryService.ReadTransactionCategoriesAsync(userData));
+            return Ok(await _transactionCategoryService.ReadTransactionCategoriesAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty)));
         }
         catch (Exception ex)
         {
@@ -50,8 +51,7 @@ public class TransactionCategoryController(ILogger<TransactionCategoryController
     {
         try
         {
-            var userData = await _transactionCategoryService.GetUserData(User);
-            await _transactionCategoryService.UpdateTransactionCategoryAsync(userData, category);
+            await _transactionCategoryService.UpdateTransactionCategoryAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), category);
             return Ok();
         }
         catch (Exception ex)
@@ -66,8 +66,7 @@ public class TransactionCategoryController(ILogger<TransactionCategoryController
     {
         try
         {
-            var userData = await _transactionCategoryService.GetUserData(User);
-            await _transactionCategoryService.DeleteTransactionCategoryAsync(userData, guid);
+            await _transactionCategoryService.DeleteTransactionCategoryAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), guid);
             return Ok();
         }
         catch (Exception ex)

@@ -9,7 +9,7 @@ public class TransactionFaker : Faker<Transaction>
 
     public TransactionFaker()
     {
-        AccountIds = new List<Guid>();
+        AccountIds = [];
 
         AccountIds = [];
         RuleFor(t => t.ID, f => Guid.NewGuid())
