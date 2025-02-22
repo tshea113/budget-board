@@ -107,13 +107,29 @@ public class SimpleFinService(
         await SyncInstitutionsAsync(userData, simpleFinData.Accounts);
         await SyncAccountsAsync(userData, simpleFinData.Accounts);
 
-        await _applicationUserService.UpdateApplicationUserAsync(userData, new ApplicationUserUpdateRequest
+        await _applicationUserService.UpdateApplicationUserAsync(userData.Id, new ApplicationUserUpdateRequest
         {
             AccessToken = userData.AccessToken,
             LastSync = DateTime.Now.ToUniversalTime(),
         });
 
         return simpleFinData.Errors;
+    }
+
+    public async Task<bool> IsAccessTokenValid(string accessToken)
+    {
+        var data = GetUrlCredentials(accessToken);
+
+        var request = new HttpRequestMessage(
+            HttpMethod.Get,
+            data.BaseUrl + "/accounts");
+
+        var client = _clientFactory.CreateClient();
+        var byteArray = Encoding.ASCII.GetBytes(data.Auth);
+        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+
+        var response = await client.SendAsync(request);
+        return response.IsSuccessStatusCode;
     }
 
     private async Task<ApplicationUser?> GetCurrentUserAsync(string id)
