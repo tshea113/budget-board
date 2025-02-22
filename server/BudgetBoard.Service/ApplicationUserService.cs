@@ -2,33 +2,19 @@
 using BudgetBoard.Database.Models;
 using BudgetBoard.Service.Interfaces;
 using BudgetBoard.Service.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Security.Claims;
 
 namespace BudgetBoard.Service;
 
-public class ApplicationUserService(ILogger<IApplicationUserService> logger, UserDataContext userDataContext, UserManager<ApplicationUser> userManager) : IApplicationUserService
+public class ApplicationUserService(ILogger<IApplicationUserService> logger, UserDataContext userDataContext) : IApplicationUserService
 {
     private readonly ILogger<IApplicationUserService> _logger = logger;
     private readonly UserDataContext _userDataContext = userDataContext;
-    private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-    public async Task<IApplicationUser> GetUserData(ClaimsPrincipal user)
+    public async Task<IApplicationUserResponse> ReadApplicationUserAsync(Guid userGuid)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
-        return userData;
-    }
-    public async Task<IApplicationUserResponse> ReadApplicationUserAsync(ClaimsPrincipal user)
-    {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         if (userData == null)
         {
             _logger.LogError("Attempt to access authorized content by unauthorized user.");
@@ -38,38 +24,51 @@ public class ApplicationUserService(ILogger<IApplicationUserService> logger, Use
         return new ApplicationUserResponse(userData);
     }
 
-    public async Task UpdateApplicationUserAsync(IApplicationUser userData, IApplicationUserUpdateRequest user)
+    public async Task UpdateApplicationUserAsync(Guid userGuid, IApplicationUserUpdateRequest user)
     {
-        var currentUser = await GetCurrentUserAsync(userData.Id.ToString());
-        if (currentUser == null)
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
+        if (userData == null)
         {
             _logger.LogError("Attempt to update user by unauthorized user.");
             throw new Exception("You are not authorized to update this user.");
         }
 
-        // We are assuming that the access token is valid.
-        currentUser.AccessToken = user.AccessToken;
-        if (user.LastSync != null)
-        {
-            // This won't be negative, but VS still complains.
-            // Just cast it to DateTime to make it happy.
-            currentUser.LastSync = (DateTime)user.LastSync;
-        }
+        // TODO: Need to refactor SimpleFinService to not require this service to avoid circular dependency.
+        // But would be nice to have a check here to ensure the token is valid.
+
+        //if (!await _simpleFinService.IsAccessTokenValid(user.AccessToken))
+        //{
+        //    _logger.LogError("Attempt to update user with invalid access token.");
+        //    throw new Exception("Invalid access token.");
+        //}
+
+        userData.AccessToken = user.AccessToken;
+        userData.LastSync = user.LastSync ?? userData.LastSync;
 
         await _userDataContext.SaveChangesAsync();
     }
 
-    private async Task<ApplicationUser?> GetCurrentUserAsync(string id)
+    private async Task<ApplicationUser> GetCurrentUserAsync(string id)
     {
+        List<ApplicationUser> users;
+        ApplicationUser? foundUser;
         try
         {
-            var users = await _userDataContext.ApplicationUsers.ToListAsync();
-            return users.Single(u => u.Id == new Guid(id));
+            users = await _userDataContext.ApplicationUsers.ToListAsync();
+            foundUser = users.FirstOrDefault(u => u.Id == new Guid(id));
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Message);
-            return null;
+            _logger.LogError("An error occurred while retrieving the user data: {ExceptionMessage}", ex.Message);
+            throw new Exception("An error occurred while retrieving the user data.");
         }
+
+        if (foundUser == null)
+        {
+            _logger.LogError("Attempt to create an account for an invalid user.");
+            throw new Exception("Provided user not found.");
+        }
+
+        return foundUser;
     }
 }

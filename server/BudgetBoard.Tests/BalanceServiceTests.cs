@@ -25,7 +25,7 @@ public class BalanceServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var balanceService = new BalanceService(Mock.Of<ILogger<IBalanceService>>(), helper.userDataContext);
+        var balanceService = new BalanceService(Mock.Of<ILogger<IBalanceService>>(), helper.UserDataContext);
 
         var balanceCreateRequest = _balanceCreateRequestFaker.Generate();
 
@@ -41,14 +41,14 @@ public class BalanceServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var balanceService = new BalanceService(Mock.Of<ILogger<IBalanceService>>(), helper.userDataContext);
+        var balanceService = new BalanceService(Mock.Of<ILogger<IBalanceService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
         account.UserID = helper.demoUser.Id;
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         var balanceCreateRequest = _balanceCreateRequestFaker.Generate();
         balanceCreateRequest.AccountID = account.ID;
@@ -57,8 +57,8 @@ public class BalanceServiceTests
         await balanceService.CreateBalancesAsync(helper.demoUser.Id, balanceCreateRequest);
 
         // Assert
-        helper.userDataContext.Balances.Should().ContainSingle();
-        helper.userDataContext.Balances.Single().Should().BeEquivalentTo(balanceCreateRequest);
+        helper.UserDataContext.Balances.Should().ContainSingle();
+        helper.UserDataContext.Balances.Single().Should().BeEquivalentTo(balanceCreateRequest);
     }
 
     [Fact]
@@ -66,7 +66,7 @@ public class BalanceServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var balanceService = new BalanceService(Mock.Of<ILogger<IBalanceService>>(), helper.userDataContext);
+        var balanceService = new BalanceService(Mock.Of<ILogger<IBalanceService>>(), helper.UserDataContext);
 
         var balanceCreateRequest = _balanceCreateRequestFaker.Generate();
 
@@ -82,7 +82,7 @@ public class BalanceServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var balanceService = new BalanceService(Mock.Of<ILogger<IBalanceService>>(), helper.userDataContext);
+        var balanceService = new BalanceService(Mock.Of<ILogger<IBalanceService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
@@ -94,8 +94,8 @@ public class BalanceServiceTests
 
         account.Balances = balances;
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         var result = await balanceService.ReadBalancesAsync(helper.demoUser.Id, account.ID);
@@ -109,7 +109,7 @@ public class BalanceServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var balanceService = new BalanceService(Mock.Of<ILogger<IBalanceService>>(), helper.userDataContext);
+        var balanceService = new BalanceService(Mock.Of<ILogger<IBalanceService>>(), helper.UserDataContext);
 
         // Act
         Func<Task> act = async () => await balanceService.ReadBalancesAsync(helper.demoUser.Id, Guid.NewGuid());
@@ -123,7 +123,7 @@ public class BalanceServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var balanceService = new BalanceService(Mock.Of<ILogger<IBalanceService>>(), helper.userDataContext);
+        var balanceService = new BalanceService(Mock.Of<ILogger<IBalanceService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
@@ -135,8 +135,8 @@ public class BalanceServiceTests
 
         account.Balances.Add(balance);
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         var balanceUpdateRequest = _balanceUpdateRequestFaker.Generate();
         balanceUpdateRequest.ID = balance.ID;
@@ -146,7 +146,7 @@ public class BalanceServiceTests
         await balanceService.UpdateBalanceAsync(helper.demoUser.Id, balanceUpdateRequest);
 
         // Assert
-        helper.userDataContext.Balances.Single().Should().BeEquivalentTo(balanceUpdateRequest);
+        helper.UserDataContext.Balances.Single().Should().BeEquivalentTo(balanceUpdateRequest);
     }
 
     [Fact]
@@ -154,7 +154,7 @@ public class BalanceServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var balanceService = new BalanceService(Mock.Of<ILogger<IBalanceService>>(), helper.userDataContext);
+        var balanceService = new BalanceService(Mock.Of<ILogger<IBalanceService>>(), helper.UserDataContext);
 
         var balanceUpdateRequest = _balanceUpdateRequestFaker.Generate();
 
@@ -170,7 +170,7 @@ public class BalanceServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var balanceService = new BalanceService(Mock.Of<ILogger<IBalanceService>>(), helper.userDataContext);
+        var balanceService = new BalanceService(Mock.Of<ILogger<IBalanceService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
@@ -182,14 +182,14 @@ public class BalanceServiceTests
 
         account.Balances.Add(balance);
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         await balanceService.DeleteBalanceAsync(helper.demoUser.Id, balance.ID);
 
         // Assert
-        helper.userDataContext.Balances.Should().BeEmpty();
+        helper.UserDataContext.Balances.Should().BeEmpty();
     }
 
     [Fact]
@@ -197,7 +197,7 @@ public class BalanceServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var balanceService = new BalanceService(Mock.Of<ILogger<IBalanceService>>(), helper.userDataContext);
+        var balanceService = new BalanceService(Mock.Of<ILogger<IBalanceService>>(), helper.UserDataContext);
 
         // Act
         Func<Task> act = async () => await balanceService.DeleteBalanceAsync(helper.demoUser.Id, Guid.NewGuid());

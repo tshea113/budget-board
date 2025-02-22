@@ -26,7 +26,7 @@ public class BudgetServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var budgetService = new BudgetService(Mock.Of<ILogger<IBudgetService>>(), helper.userDataContext);
+        var budgetService = new BudgetService(Mock.Of<ILogger<IBudgetService>>(), helper.UserDataContext);
 
         var budget = _budgetCreateRequestFaker.Generate();
 
@@ -43,17 +43,17 @@ public class BudgetServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var budgetService = new BudgetService(Mock.Of<ILogger<IBudgetService>>(), helper.userDataContext);
+        var budgetService = new BudgetService(Mock.Of<ILogger<IBudgetService>>(), helper.UserDataContext);
 
         var budget = _budgetCreateRequestFaker.Generate();
-        await helper.userDataContext.SaveChangesAsync();
+        await helper.UserDataContext.SaveChangesAsync();
 
         // Act
         await budgetService.CreateBudgetsAsync(helper.demoUser.Id, [budget]);
 
         // Assert
-        helper.userDataContext.Budgets.Should().ContainSingle();
-        helper.userDataContext.Budgets.Single().Should().BeEquivalentTo(budget);
+        helper.UserDataContext.Budgets.Should().ContainSingle();
+        helper.UserDataContext.Budgets.Single().Should().BeEquivalentTo(budget);
     }
 
     [Fact]
@@ -61,10 +61,10 @@ public class BudgetServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var budgetService = new BudgetService(Mock.Of<ILogger<IBudgetService>>(), helper.userDataContext);
+        var budgetService = new BudgetService(Mock.Of<ILogger<IBudgetService>>(), helper.UserDataContext);
 
         var budget = _budgetCreateRequestFaker.Generate();
-        await helper.userDataContext.SaveChangesAsync();
+        await helper.UserDataContext.SaveChangesAsync();
 
         // Act
         Func<Task> act = async () => await budgetService.CreateBudgetsAsync(helper.demoUser.Id, [budget, budget]);
@@ -77,14 +77,14 @@ public class BudgetServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var budgetService = new BudgetService(Mock.Of<ILogger<IBudgetService>>(), helper.userDataContext);
+        var budgetService = new BudgetService(Mock.Of<ILogger<IBudgetService>>(), helper.UserDataContext);
 
         var budgetFaker = new BudgetFaker();
         var budgets = budgetFaker.Generate(20);
         budgets.ForEach(b => b.UserID = helper.demoUser.Id);
 
-        helper.userDataContext.Budgets.AddRange(budgets);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Budgets.AddRange(budgets);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         var result = await budgetService.ReadBudgetsAsync(helper.demoUser.Id, DateTime.Now);
@@ -99,14 +99,14 @@ public class BudgetServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var budgetService = new BudgetService(Mock.Of<ILogger<IBudgetService>>(), helper.userDataContext);
+        var budgetService = new BudgetService(Mock.Of<ILogger<IBudgetService>>(), helper.UserDataContext);
 
         var budgetFaker = new BudgetFaker();
         var budget = budgetFaker.Generate();
         budget.UserID = helper.demoUser.Id;
 
-        helper.userDataContext.Budgets.Add(budget);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Budgets.Add(budget);
+        helper.UserDataContext.SaveChanges();
 
         var updatedBudget = _budgetUpdateRequestFaker.Generate();
         updatedBudget.ID = budget.ID;
@@ -115,7 +115,7 @@ public class BudgetServiceTests
         await budgetService.UpdateBudgetAsync(helper.demoUser.Id, updatedBudget);
 
         // Assert
-        helper.userDataContext.Budgets.Single().Should().BeEquivalentTo(updatedBudget);
+        helper.UserDataContext.Budgets.Single().Should().BeEquivalentTo(updatedBudget);
     }
 
     [Fact]
@@ -123,14 +123,14 @@ public class BudgetServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var budgetService = new BudgetService(Mock.Of<ILogger<IBudgetService>>(), helper.userDataContext);
+        var budgetService = new BudgetService(Mock.Of<ILogger<IBudgetService>>(), helper.UserDataContext);
 
         var budgetFaker = new BudgetFaker();
         var budget = budgetFaker.Generate();
         budget.UserID = helper.demoUser.Id;
 
-        helper.userDataContext.Budgets.Add(budget);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Budgets.Add(budget);
+        helper.UserDataContext.SaveChanges();
 
         var updatedBudget = _budgetUpdateRequestFaker.Generate();
         updatedBudget.ID = Guid.NewGuid();
@@ -147,16 +147,16 @@ public class BudgetServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var budgetService = new BudgetService(Mock.Of<ILogger<IBudgetService>>(), helper.userDataContext);
+        var budgetService = new BudgetService(Mock.Of<ILogger<IBudgetService>>(), helper.UserDataContext);
         var budgetFaker = new BudgetFaker();
         var budget = budgetFaker.Generate();
         budget.UserID = helper.demoUser.Id;
-        helper.userDataContext.Budgets.Add(budget);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Budgets.Add(budget);
+        helper.UserDataContext.SaveChanges();
         // Act
         await budgetService.DeleteBudgetAsync(helper.demoUser.Id, budget.ID);
         // Assert
-        helper.userDataContext.Budgets.Should().BeEmpty();
+        helper.UserDataContext.Budgets.Should().BeEmpty();
     }
 
     [Fact]
@@ -164,14 +164,14 @@ public class BudgetServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var budgetService = new BudgetService(Mock.Of<ILogger<IBudgetService>>(), helper.userDataContext);
+        var budgetService = new BudgetService(Mock.Of<ILogger<IBudgetService>>(), helper.UserDataContext);
 
         var budgetFaker = new BudgetFaker();
         var budget = budgetFaker.Generate();
         budget.UserID = helper.demoUser.Id;
 
-        helper.userDataContext.Budgets.Add(budget);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Budgets.Add(budget);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         Func<Task> act = async () => await budgetService.DeleteBudgetAsync(helper.demoUser.Id, Guid.NewGuid());

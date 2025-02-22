@@ -1,8 +1,10 @@
 ﻿using BudgetBoard.Database.Data;
+using BudgetBoard.Database.Models;
 using BudgetBoard.Service.Interfaces;
 using BudgetBoard.Service.Models;
 using BudgetBoard.WebAPI.Utils;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetBoard.WebAPI.Controllers;
@@ -14,9 +16,10 @@ public class ApplicationUserConstants
 
 [Route("api/[controller]")]
 [ApiController]
-public class ApplicationUserController(ILogger<ApplicationUserController> logger, UserDataContext context, IApplicationUserService applicationUserService, ISimpleFinService simpleFinService) : ControllerBase
+public class ApplicationUserController(ILogger<ApplicationUserController> logger, UserManager<ApplicationUser> userManager, UserDataContext context, IApplicationUserService applicationUserService, ISimpleFinService simpleFinService) : ControllerBase
 {
     private readonly ILogger<ApplicationUserController> _logger = logger;
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly UserDataContext _userDataContext = context;
     private readonly IApplicationUserService _applicationUserService = applicationUserService;
     private readonly ISimpleFinService _simpleFinService = simpleFinService;
@@ -27,7 +30,7 @@ public class ApplicationUserController(ILogger<ApplicationUserController> logger
     {
         try
         {
-            return Ok(await _applicationUserService.ReadApplicationUserAsync(User));
+            return Ok(await _applicationUserService.ReadApplicationUserAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty)));
         }
         catch (Exception ex)
         {
@@ -41,8 +44,7 @@ public class ApplicationUserController(ILogger<ApplicationUserController> logger
     {
         try
         {
-            var userData = await _applicationUserService.GetUserData(User);
-            await _applicationUserService.UpdateApplicationUserAsync(userData, newUser);
+            await _applicationUserService.UpdateApplicationUserAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), newUser);
             return Ok();
         }
         catch (Exception ex)

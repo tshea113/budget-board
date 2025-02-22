@@ -26,7 +26,7 @@ public class TransactionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.userDataContext);
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
 
         var transaction = _transactionCreateRequestFaker.Generate();
 
@@ -42,14 +42,14 @@ public class TransactionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.userDataContext);
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
         account.UserID = helper.demoUser.Id;
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         var transaction = _transactionCreateRequestFaker.Generate();
         transaction.AccountID = account.ID;
@@ -58,8 +58,8 @@ public class TransactionServiceTests
         await transactionService.CreateTransactionAsync(helper.demoUser.Id, transaction);
 
         // Assert
-        helper.userDataContext.Transactions.Should().ContainSingle();
-        helper.userDataContext.Transactions.Single().Should().BeEquivalentTo(transaction);
+        helper.UserDataContext.Transactions.Should().ContainSingle();
+        helper.UserDataContext.Transactions.Single().Should().BeEquivalentTo(transaction);
     }
 
     [Fact]
@@ -67,7 +67,7 @@ public class TransactionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.userDataContext);
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
 
         var transaction = _transactionCreateRequestFaker.Generate();
 
@@ -83,7 +83,7 @@ public class TransactionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.userDataContext);
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
@@ -94,8 +94,8 @@ public class TransactionServiceTests
 
         account.Transactions = transactions;
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         var result = await transactionService.ReadTransactionsAsync(helper.demoUser.Id, null, null, false);
@@ -110,7 +110,7 @@ public class TransactionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.userDataContext);
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
 
         // Act
         Func<Task> act = async () => await transactionService.ReadTransactionsAsync(helper.demoUser.Id, null, null, false, Guid.NewGuid());
@@ -124,7 +124,7 @@ public class TransactionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.userDataContext);
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
@@ -135,8 +135,8 @@ public class TransactionServiceTests
 
         account.Transactions = transactions;
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         var year = DateTime.Now.Year;
 
@@ -153,7 +153,7 @@ public class TransactionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.userDataContext);
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
@@ -164,8 +164,8 @@ public class TransactionServiceTests
 
         account.Transactions = transactions;
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         var month = DateTime.Now.Month;
 
@@ -182,7 +182,7 @@ public class TransactionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.userDataContext);
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
@@ -193,8 +193,8 @@ public class TransactionServiceTests
 
         account.Transactions = transactions;
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         var result = await transactionService.ReadTransactionsAsync(helper.demoUser.Id, null, null, true);
@@ -209,7 +209,7 @@ public class TransactionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.userDataContext);
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
@@ -221,8 +221,8 @@ public class TransactionServiceTests
         account.Transactions = transactions;
         account.HideTransactions = true;
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         var result = await transactionService.ReadTransactionsAsync(helper.demoUser.Id, null, null, false);
@@ -236,7 +236,7 @@ public class TransactionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.userDataContext);
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
@@ -247,8 +247,8 @@ public class TransactionServiceTests
 
         account.Transactions = transactions;
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         var editedTransaction = new TransactionUpdateRequest
         {
@@ -272,7 +272,7 @@ public class TransactionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.userDataContext);
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
 
         var editedTransaction = new TransactionUpdateRequest
         {
@@ -296,7 +296,7 @@ public class TransactionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.userDataContext);
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
@@ -307,8 +307,8 @@ public class TransactionServiceTests
 
         account.Transactions = transactions;
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         var transactionToDelete = transactions.First();
 
@@ -316,7 +316,7 @@ public class TransactionServiceTests
         await transactionService.DeleteTransactionAsync(helper.demoUser.Id, transactionToDelete.ID);
 
         // Assert
-        helper.userDataContext.Transactions.Single(t => t.ID == transactionToDelete.ID).Deleted.Should().NotBeNull();
+        helper.UserDataContext.Transactions.Single(t => t.ID == transactionToDelete.ID).Deleted.Should().NotBeNull();
     }
 
     [Fact]
@@ -324,7 +324,7 @@ public class TransactionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.userDataContext);
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
 
         // Act
         Func<Task> act = async () => await transactionService.DeleteTransactionAsync(helper.demoUser.Id, Guid.NewGuid());
@@ -338,7 +338,7 @@ public class TransactionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.userDataContext);
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
@@ -349,8 +349,8 @@ public class TransactionServiceTests
 
         account.Transactions = transactions;
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         var transactionToRestore = transactions.First();
         transactionToRestore.Deleted = DateTime.Now.ToUniversalTime();
@@ -359,7 +359,7 @@ public class TransactionServiceTests
         await transactionService.RestoreTransactionAsync(helper.demoUser.Id, transactionToRestore.ID);
 
         // Assert
-        helper.userDataContext.Transactions.Single(t => t.ID == transactionToRestore.ID).Deleted.Should().BeNull();
+        helper.UserDataContext.Transactions.Single(t => t.ID == transactionToRestore.ID).Deleted.Should().BeNull();
     }
 
     [Fact]
@@ -367,7 +367,7 @@ public class TransactionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.userDataContext);
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
 
         // Act
         Func<Task> act = async () => await transactionService.RestoreTransactionAsync(helper.demoUser.Id, Guid.NewGuid());
@@ -381,7 +381,7 @@ public class TransactionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.userDataContext);
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
@@ -392,8 +392,8 @@ public class TransactionServiceTests
 
         account.Transactions = transactions;
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         var transactionToRestore = transactions.First();
 
@@ -401,6 +401,6 @@ public class TransactionServiceTests
         await transactionService.RestoreTransactionAsync(helper.demoUser.Id, transactionToRestore.ID);
 
         // Assert
-        helper.userDataContext.Transactions.Single(t => t.ID == transactionToRestore.ID).Deleted.Should().BeNull();
+        helper.UserDataContext.Transactions.Single(t => t.ID == transactionToRestore.ID).Deleted.Should().BeNull();
     }
 }

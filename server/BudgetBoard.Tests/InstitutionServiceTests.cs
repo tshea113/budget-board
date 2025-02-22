@@ -23,7 +23,7 @@ public class InstitutionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.userDataContext);
+        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.UserDataContext);
 
         var institutionCreateRequest = _institutionCreateRequestFaker.Generate();
 
@@ -39,7 +39,7 @@ public class InstitutionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.userDataContext);
+        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.UserDataContext);
 
         var institutionCreateRequest = _institutionCreateRequestFaker.Generate();
         institutionCreateRequest.UserID = helper.demoUser.Id;
@@ -48,8 +48,8 @@ public class InstitutionServiceTests
         await institutionService.CreateInstitutionAsync(helper.demoUser.Id, institutionCreateRequest);
 
         // Assert
-        helper.userDataContext.Institutions.Should().ContainSingle();
-        helper.userDataContext.Institutions.Single().Should().BeEquivalentTo(institutionCreateRequest);
+        helper.UserDataContext.Institutions.Should().ContainSingle();
+        helper.UserDataContext.Institutions.Single().Should().BeEquivalentTo(institutionCreateRequest);
     }
 
     [Fact]
@@ -57,14 +57,14 @@ public class InstitutionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.userDataContext);
+        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.UserDataContext);
 
         var institutionFaker = new InstitutionFaker();
         var institution = institutionFaker.Generate();
         institution.UserID = helper.demoUser.Id;
 
-        helper.userDataContext.Institutions.Add(institution);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Institutions.Add(institution);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         var result = await institutionService.ReadInstitutionsAsync(helper.demoUser.Id);
@@ -79,14 +79,14 @@ public class InstitutionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.userDataContext);
+        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.UserDataContext);
 
         var institutionFaker = new InstitutionFaker();
         var institution = institutionFaker.Generate();
         institution.UserID = helper.demoUser.Id;
 
-        helper.userDataContext.Institutions.Add(institution);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Institutions.Add(institution);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         var result = await institutionService.ReadInstitutionsAsync(helper.demoUser.Id, institution.ID);
@@ -101,14 +101,14 @@ public class InstitutionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.userDataContext);
+        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.UserDataContext);
 
         var institutionFaker = new InstitutionFaker();
         var institution = institutionFaker.Generate();
         institution.UserID = helper.demoUser.Id;
 
-        helper.userDataContext.Institutions.Add(institution);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Institutions.Add(institution);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         var act = async () => await institutionService.ReadInstitutionsAsync(helper.demoUser.Id, Guid.NewGuid());
@@ -122,14 +122,14 @@ public class InstitutionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.userDataContext);
+        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.UserDataContext);
 
         var insitutionFaker = new InstitutionFaker();
         var institution = insitutionFaker.Generate();
         institution.UserID = helper.demoUser.Id;
 
-        helper.userDataContext.Institutions.Add(institution);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Institutions.Add(institution);
+        helper.UserDataContext.SaveChanges();
 
         var institutionUpdateRequest = _institutionUpdateRequestFaker.Generate();
         institutionUpdateRequest.UserID = helper.demoUser.Id;
@@ -139,8 +139,8 @@ public class InstitutionServiceTests
         await institutionService.UpdateInstitutionAsync(helper.demoUser.Id, institutionUpdateRequest);
 
         // Assert
-        helper.userDataContext.Institutions.Should().ContainSingle();
-        helper.userDataContext.Institutions.Single().Should().BeEquivalentTo(institutionUpdateRequest);
+        helper.UserDataContext.Institutions.Should().ContainSingle();
+        helper.UserDataContext.Institutions.Single().Should().BeEquivalentTo(institutionUpdateRequest);
     }
 
     [Fact]
@@ -148,7 +148,7 @@ public class InstitutionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.userDataContext);
+        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.UserDataContext);
 
         var institutionUpdateRequest = _institutionUpdateRequestFaker.Generate();
         institutionUpdateRequest.UserID = helper.demoUser.Id;
@@ -165,7 +165,7 @@ public class InstitutionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.userDataContext);
+        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.UserDataContext);
 
         var insitutionFaker = new InstitutionFaker();
         var institution = insitutionFaker.Generate();
@@ -183,16 +183,16 @@ public class InstitutionServiceTests
         account.Transactions = transactions;
         institution.Accounts.Add(account);
 
-        helper.userDataContext.Institutions.Add(institution);
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Institutions.Add(institution);
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         await institutionService.DeleteInstitutionAsync(helper.demoUser.Id, institution.ID, false);
 
         // Assert
-        helper.userDataContext.Institutions.Should().BeEmpty();
-        helper.userDataContext.Transactions.Select(t => t.Deleted).Should().AllBeEquivalentTo(default(DateTime?));
+        helper.UserDataContext.Institutions.Should().BeEmpty();
+        helper.UserDataContext.Transactions.Select(t => t.Deleted).Should().AllBeEquivalentTo(default(DateTime?));
     }
 
     [Fact]
@@ -200,7 +200,7 @@ public class InstitutionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.userDataContext);
+        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.UserDataContext);
 
         var insitutionFaker = new InstitutionFaker();
         var institution = insitutionFaker.Generate();
@@ -218,16 +218,16 @@ public class InstitutionServiceTests
         account.Transactions = transactions;
         institution.Accounts.Add(account);
 
-        helper.userDataContext.Institutions.Add(institution);
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Institutions.Add(institution);
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         await institutionService.DeleteInstitutionAsync(helper.demoUser.Id, institution.ID, true);
 
         // Assert
-        helper.userDataContext.Institutions.Should().BeEmpty();
-        helper.userDataContext.Transactions.Select(t => t.Deleted).Should().NotBeNull();
+        helper.UserDataContext.Institutions.Should().BeEmpty();
+        helper.UserDataContext.Transactions.Select(t => t.Deleted).Should().NotBeNull();
     }
 
     [Fact]
@@ -235,7 +235,7 @@ public class InstitutionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.userDataContext);
+        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.UserDataContext);
 
         var updateInstitutionRequest = _institutionUpdateRequestFaker.Generate();
         updateInstitutionRequest.UserID = helper.demoUser.Id;
@@ -252,15 +252,15 @@ public class InstitutionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.userDataContext);
+        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.UserDataContext);
 
         var institutionFaker = new InstitutionFaker();
         var institutions = institutionFaker.Generate(10);
 
         institutions.ForEach(i => i.UserID = helper.demoUser.Id);
 
-        helper.userDataContext.Institutions.AddRange(institutions);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Institutions.AddRange(institutions);
+        helper.UserDataContext.SaveChanges();
 
         List<IInstitutionIndexRequest> orderedInstitutions = [];
         foreach (var institution in institutions)
@@ -274,7 +274,7 @@ public class InstitutionServiceTests
         // Assert
         foreach (var institution in institutions)
         {
-            helper.userDataContext.Institutions.Single(i => i.ID == institution.ID).Should().BeEquivalentTo(institution);
+            helper.UserDataContext.Institutions.Single(i => i.ID == institution.ID).Should().BeEquivalentTo(institution);
         }
     }
 
@@ -283,14 +283,14 @@ public class InstitutionServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.userDataContext);
+        var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.UserDataContext);
 
         var institutionFaker = new InstitutionFaker();
         var institutions = institutionFaker.Generate(10);
         institutions.ForEach(i => i.UserID = helper.demoUser.Id);
 
-        helper.userDataContext.Institutions.AddRange(institutions);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Institutions.AddRange(institutions);
+        helper.UserDataContext.SaveChanges();
 
         List<IInstitutionIndexRequest> orderedInstitutions = [];
         foreach (var institution in institutions)

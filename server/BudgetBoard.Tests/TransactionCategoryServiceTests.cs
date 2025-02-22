@@ -25,7 +25,7 @@ public class TransactionCategoryServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.userDataContext);
+        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.UserDataContext);
 
         var categoryCreateRequest = _categoryCreateRequestFaker.Generate();
 
@@ -41,7 +41,7 @@ public class TransactionCategoryServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.userDataContext);
+        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.UserDataContext);
 
         var categoryCreateRequest = _categoryCreateRequestFaker.Generate();
 
@@ -49,7 +49,7 @@ public class TransactionCategoryServiceTests
         await transactionCategoryService.CreateTransactionCategoryAsync(helper.demoUser.Id, categoryCreateRequest);
 
         // Assert
-        helper.userDataContext.TransactionCategories.Should().ContainSingle();
+        helper.UserDataContext.TransactionCategories.Should().ContainSingle();
     }
 
     [Fact]
@@ -57,14 +57,14 @@ public class TransactionCategoryServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.userDataContext);
+        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.UserDataContext);
 
         var transactionCategoryFaker = new TransactionCategoryFaker();
         var transactionCategories = transactionCategoryFaker.Generate(5);
         transactionCategories.ForEach(c => c.UserID = helper.demoUser.Id);
 
-        helper.userDataContext.TransactionCategories.AddRange(transactionCategories);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.TransactionCategories.AddRange(transactionCategories);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         var result = await transactionCategoryService.ReadTransactionCategoriesAsync(helper.demoUser.Id);
@@ -78,14 +78,14 @@ public class TransactionCategoryServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.userDataContext);
+        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.UserDataContext);
 
         var transactionCategoryFaker = new TransactionCategoryFaker();
         var transactionCategories = transactionCategoryFaker.Generate(5);
         transactionCategories.ForEach(c => c.UserID = helper.demoUser.Id);
 
-        helper.userDataContext.TransactionCategories.AddRange(transactionCategories);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.TransactionCategories.AddRange(transactionCategories);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         var result = await transactionCategoryService.ReadTransactionCategoriesAsync(helper.demoUser.Id, transactionCategories.First().ID);
@@ -99,14 +99,14 @@ public class TransactionCategoryServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.userDataContext);
+        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.UserDataContext);
 
         var transactionCategoryFaker = new TransactionCategoryFaker();
         var transactionCategories = transactionCategoryFaker.Generate(5);
         transactionCategories.ForEach(c => c.UserID = helper.demoUser.Id);
 
-        helper.userDataContext.TransactionCategories.AddRange(transactionCategories);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.TransactionCategories.AddRange(transactionCategories);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         Func<Task> act = async () => await transactionCategoryService.ReadTransactionCategoriesAsync(helper.demoUser.Id, Guid.NewGuid());
@@ -120,14 +120,14 @@ public class TransactionCategoryServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.userDataContext);
+        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.UserDataContext);
 
         var transactionCategoryFaker = new TransactionCategoryFaker();
         var transactionCategories = transactionCategoryFaker.Generate(5);
         transactionCategories.ForEach(c => c.UserID = helper.demoUser.Id);
 
-        helper.userDataContext.TransactionCategories.AddRange(transactionCategories);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.TransactionCategories.AddRange(transactionCategories);
+        helper.UserDataContext.SaveChanges();
 
         var categoryUpdateRequest = _categoryUpdateRequestFaker.Generate();
         categoryUpdateRequest.ID = transactionCategories.First().ID;
@@ -136,7 +136,7 @@ public class TransactionCategoryServiceTests
         await transactionCategoryService.UpdateTransactionCategoryAsync(helper.demoUser.Id, categoryUpdateRequest);
 
         // Assert
-        helper.userDataContext.TransactionCategories.First().Value.Should().Be(categoryUpdateRequest.Value);
+        helper.UserDataContext.TransactionCategories.First().Value.Should().Be(categoryUpdateRequest.Value);
     }
 
     [Fact]
@@ -144,14 +144,14 @@ public class TransactionCategoryServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.userDataContext);
+        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.UserDataContext);
 
         var transactionCategoryFaker = new TransactionCategoryFaker();
         var transactionCategories = transactionCategoryFaker.Generate(5);
         transactionCategories.ForEach(c => c.UserID = helper.demoUser.Id);
 
-        helper.userDataContext.TransactionCategories.AddRange(transactionCategories);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.TransactionCategories.AddRange(transactionCategories);
+        helper.UserDataContext.SaveChanges();
 
         var categoryUpdateRequest = _categoryUpdateRequestFaker.Generate();
         categoryUpdateRequest.ID = Guid.NewGuid();
@@ -168,20 +168,20 @@ public class TransactionCategoryServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.userDataContext);
+        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.UserDataContext);
 
         var transactionCategoryFaker = new TransactionCategoryFaker();
         var transactionCategories = transactionCategoryFaker.Generate(5);
         transactionCategories.ForEach(c => c.UserID = helper.demoUser.Id);
 
-        helper.userDataContext.TransactionCategories.AddRange(transactionCategories);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.TransactionCategories.AddRange(transactionCategories);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         await transactionCategoryService.DeleteTransactionCategoryAsync(helper.demoUser.Id, transactionCategories.First().ID);
 
         // Assert
-        helper.userDataContext.TransactionCategories.Should().NotContainEquivalentOf(transactionCategories.First());
+        helper.UserDataContext.TransactionCategories.Should().NotContainEquivalentOf(transactionCategories.First());
     }
 
     [Fact]
@@ -189,14 +189,14 @@ public class TransactionCategoryServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.userDataContext);
+        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.UserDataContext);
 
         var transactionCategoryFaker = new TransactionCategoryFaker();
         var transactionCategories = transactionCategoryFaker.Generate(5);
         transactionCategories.ForEach(c => c.UserID = helper.demoUser.Id);
 
-        helper.userDataContext.TransactionCategories.AddRange(transactionCategories);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.TransactionCategories.AddRange(transactionCategories);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         Func<Task> act = async () => await transactionCategoryService.DeleteTransactionCategoryAsync(helper.demoUser.Id, Guid.NewGuid());
@@ -210,7 +210,7 @@ public class TransactionCategoryServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.userDataContext);
+        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.UserDataContext);
 
         var transactionCategoryFaker = new TransactionCategoryFaker();
         var transactionCategories = transactionCategoryFaker.Generate(5);
@@ -226,10 +226,10 @@ public class TransactionCategoryServiceTests
 
         transactions.ForEach(t => t.Category = transactionCategories.First().Value);
 
-        helper.userDataContext.TransactionCategories.AddRange(transactionCategories);
-        helper.userDataContext.Transactions.AddRange(transactions);
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.TransactionCategories.AddRange(transactionCategories);
+        helper.UserDataContext.Transactions.AddRange(transactions);
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         Func<Task> act = async () => await transactionCategoryService.DeleteTransactionCategoryAsync(helper.demoUser.Id, transactionCategories.First().ID);
@@ -243,7 +243,7 @@ public class TransactionCategoryServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.userDataContext);
+        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.UserDataContext);
 
         var transactionCategoryFaker = new TransactionCategoryFaker();
         var transactionCategories = transactionCategoryFaker.Generate(5);
@@ -259,10 +259,10 @@ public class TransactionCategoryServiceTests
 
         transactions.ForEach(t => t.Subcategory = transactionCategories.First().Value);
 
-        helper.userDataContext.TransactionCategories.AddRange(transactionCategories);
-        helper.userDataContext.Transactions.AddRange(transactions);
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.TransactionCategories.AddRange(transactionCategories);
+        helper.UserDataContext.Transactions.AddRange(transactions);
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         Func<Task> act = async () => await transactionCategoryService.DeleteTransactionCategoryAsync(helper.demoUser.Id, transactionCategories.First().ID);
@@ -276,7 +276,7 @@ public class TransactionCategoryServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.userDataContext);
+        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.UserDataContext);
 
         var transactionCategoryFaker = new TransactionCategoryFaker();
         var transactionCategories = transactionCategoryFaker.Generate(5);
@@ -287,9 +287,9 @@ public class TransactionCategoryServiceTests
         budgets.ForEach(budget => budget.UserID = helper.demoUser.Id);
         budgets.ForEach(b => b.Category = transactionCategories.First().Value);
 
-        helper.userDataContext.TransactionCategories.AddRange(transactionCategories);
-        helper.userDataContext.Budgets.AddRange(budgets);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.TransactionCategories.AddRange(transactionCategories);
+        helper.UserDataContext.Budgets.AddRange(budgets);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         Func<Task> act = async () => await transactionCategoryService.DeleteTransactionCategoryAsync(helper.demoUser.Id, transactionCategories.First().ID);
@@ -303,7 +303,7 @@ public class TransactionCategoryServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.userDataContext);
+        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.UserDataContext);
 
         var transactionCategoryFaker = new TransactionCategoryFaker();
         var transactionCategories = transactionCategoryFaker.Generate(5);
@@ -311,8 +311,8 @@ public class TransactionCategoryServiceTests
 
         transactionCategories.Last().Parent = transactionCategories.First().Value;
 
-        helper.userDataContext.TransactionCategories.AddRange(transactionCategories);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.TransactionCategories.AddRange(transactionCategories);
+        helper.UserDataContext.SaveChanges();
         // Act
         Func<Task> act = async () => await transactionCategoryService.DeleteTransactionCategoryAsync(helper.demoUser.Id, transactionCategories.First().ID);
 

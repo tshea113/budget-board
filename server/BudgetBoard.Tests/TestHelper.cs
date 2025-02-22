@@ -1,32 +1,30 @@
 ﻿using BudgetBoard.Database.Data;
 using BudgetBoard.Database.Models;
+using BudgetBoard.IntegrationTests.Fakers;
 using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBoard.IntegrationTests;
 
 internal class TestHelper
 {
-    public readonly ApplicationUser demoUser = new()
-    {
-        Id = new Guid(),
-        Accounts = []
-    };
+    public readonly UserDataContext UserDataContext;
+    public readonly ApplicationUser demoUser = _applicationUserFaker.Generate();
 
+    private static readonly ApplicationUserFaker _applicationUserFaker = new();
 
-    public readonly UserDataContext userDataContext;
     public TestHelper()
     {
         var builder = new DbContextOptionsBuilder<UserDataContext>();
         builder.UseInMemoryDatabase(new Guid().ToString());
 
         var dbContextOptions = builder.Options;
-        userDataContext = new UserDataContext(dbContextOptions);
+        UserDataContext = new UserDataContext(dbContextOptions);
         // Delete existing db before creating a new one
-        userDataContext.Database.EnsureDeleted();
-        userDataContext.Database.EnsureCreated();
+        UserDataContext.Database.EnsureDeleted();
+        UserDataContext.Database.EnsureCreated();
 
         // Seed a demo user
-        userDataContext.Users.Add(demoUser);
-        userDataContext.SaveChanges();
+        UserDataContext.Users.Add(demoUser);
+        UserDataContext.SaveChanges();
     }
 }

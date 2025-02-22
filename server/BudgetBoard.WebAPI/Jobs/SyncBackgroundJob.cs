@@ -53,7 +53,7 @@ public class SyncBackgroundJob(ILogger<SyncBackgroundJob> logger, UserDataContex
 
                 await _simpleFinService.SyncAsync(user);
 
-                await _applicationUserService.UpdateApplicationUserAsync(user, new ApplicationUserUpdateRequest
+                await _applicationUserService.UpdateApplicationUserAsync(user.Id, new ApplicationUserUpdateRequest
                 {
                     AccessToken = user.AccessToken,
                     LastSync = DateTime.Now.ToUniversalTime()

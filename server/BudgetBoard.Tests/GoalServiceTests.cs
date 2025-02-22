@@ -31,7 +31,7 @@ public class GoalServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.userDataContext);
+        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.UserDataContext);
 
         var goal = _goalCreateRequestFaker.Generate();
 
@@ -47,14 +47,14 @@ public class GoalServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.userDataContext);
+        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var accounts = accountFaker.Generate(5);
         accounts.ForEach(a => a.UserID = helper.demoUser.Id);
 
-        helper.userDataContext.Accounts.AddRange(accounts);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.AddRange(accounts);
+        helper.UserDataContext.SaveChanges();
 
         var goal = _goalCreateRequestFaker.Generate();
         goal.AccountIds = [.. accounts.Select(a => a.ID)];
@@ -63,10 +63,10 @@ public class GoalServiceTests
         await goalService.CreateGoalAsync(helper.demoUser.Id, goal);
 
         // Assert
-        helper.userDataContext.Goals.Should().ContainSingle();
-        helper.userDataContext.Goals.Single().Should().BeEquivalentTo(goal, options => options
+        helper.UserDataContext.Goals.Should().ContainSingle();
+        helper.UserDataContext.Goals.Single().Should().BeEquivalentTo(goal, options => options
         .Excluding(g => g.AccountIds));
-        helper.userDataContext.Goals.Single().Accounts.Should().BeEquivalentTo(accounts);
+        helper.UserDataContext.Goals.Single().Accounts.Should().BeEquivalentTo(accounts);
     }
 
     [Fact]
@@ -74,7 +74,7 @@ public class GoalServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.userDataContext);
+        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.UserDataContext);
 
         var goal = _goalCreateRequestFaker.Generate();
         goal.AccountIds = [Guid.NewGuid()];
@@ -91,7 +91,7 @@ public class GoalServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.userDataContext);
+        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var accounts = accountFaker.Generate(5);
@@ -104,11 +104,11 @@ public class GoalServiceTests
             balance.AccountID = a.ID;
             a.Balances.Add(balance);
 
-            helper.userDataContext.Balances.Add(balance);
+            helper.UserDataContext.Balances.Add(balance);
         });
 
-        helper.userDataContext.Accounts.AddRange(accounts);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.AddRange(accounts);
+        helper.UserDataContext.SaveChanges();
 
         var goal = _goalCreateRequestFaker.Generate();
         goal.AccountIds = [.. accounts.Select(a => a.ID)];
@@ -118,8 +118,8 @@ public class GoalServiceTests
         await goalService.CreateGoalAsync(helper.demoUser.Id, goal);
 
         // Assert
-        helper.userDataContext.Goals.Should().ContainSingle();
-        helper.userDataContext.Goals.Single().InitialAmount.Should().Be(accounts.Select(a => a.Balances.Single().Amount).Sum());
+        helper.UserDataContext.Goals.Should().ContainSingle();
+        helper.UserDataContext.Goals.Single().InitialAmount.Should().Be(accounts.Select(a => a.Balances.Single().Amount).Sum());
     }
 
     // This test is created with an APR of 48%. The expected values were validated with an online calculator.
@@ -130,7 +130,7 @@ public class GoalServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.userDataContext);
+        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
@@ -148,7 +148,7 @@ public class GoalServiceTests
         balance1.Amount = -52000;
         balance1.DateTime = DateTime.Now.AddMonths(-1);
 
-        helper.userDataContext.Balances.Add(balance1);
+        helper.UserDataContext.Balances.Add(balance1);
 
         var balance2 = balanceFaker.Generate();
         balance2.AccountID = account.ID;
@@ -157,8 +157,8 @@ public class GoalServiceTests
 
         account.Balances = [balance0, balance1, balance2];
 
-        helper.userDataContext.Balances.AddRange([balance0, balance1, balance2]);
-        helper.userDataContext.Accounts.Add(account);
+        helper.UserDataContext.Balances.AddRange([balance0, balance1, balance2]);
+        helper.UserDataContext.Accounts.Add(account);
 
         var goalFaker = new GoalFaker();
         var goal = goalFaker.Generate();
@@ -170,8 +170,8 @@ public class GoalServiceTests
         goal.InitialAmount = -60000;
         goal.MonthlyContribution = 3000;
 
-        helper.userDataContext.Goals.Add(goal);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Goals.Add(goal);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         var result = await goalService.ReadGoalsAsync(helper.demoUser.Id, includeInterest);
@@ -188,7 +188,7 @@ public class GoalServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.userDataContext);
+        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
@@ -206,7 +206,7 @@ public class GoalServiceTests
         balance1.Amount = -52000;
         balance1.DateTime = DateTime.Now.AddMonths(-1);
 
-        helper.userDataContext.Balances.Add(balance1);
+        helper.UserDataContext.Balances.Add(balance1);
 
         var balance2 = balanceFaker.Generate();
         balance2.AccountID = account.ID;
@@ -215,8 +215,8 @@ public class GoalServiceTests
 
         account.Balances = [balance0, balance1, balance2];
 
-        helper.userDataContext.Balances.AddRange([balance0, balance1, balance2]);
-        helper.userDataContext.Accounts.Add(account);
+        helper.UserDataContext.Balances.AddRange([balance0, balance1, balance2]);
+        helper.UserDataContext.Accounts.Add(account);
 
         var goalFaker = new GoalFaker();
         var goal = goalFaker.Generate();
@@ -228,8 +228,8 @@ public class GoalServiceTests
         goal.InitialAmount = -60000;
         goal.MonthlyContribution = null;
 
-        helper.userDataContext.Goals.Add(goal);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Goals.Add(goal);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         var result = await goalService.ReadGoalsAsync(helper.demoUser.Id, includeInterest);
@@ -243,21 +243,21 @@ public class GoalServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.userDataContext);
+        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var accounts = accountFaker.Generate(5);
         accounts.ForEach(a => a.UserID = helper.demoUser.Id);
 
-        helper.userDataContext.Accounts.AddRange(accounts);
+        helper.UserDataContext.Accounts.AddRange(accounts);
 
         var goalFaker = new GoalFaker();
         var goal = goalFaker.Generate();
         goal.UserID = helper.demoUser.Id;
         goal.Accounts = accounts;
 
-        helper.userDataContext.Goals.Add(goal);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Goals.Add(goal);
+        helper.UserDataContext.SaveChanges();
 
         var updatedGoal = _goalUpdateRequestFaker.Generate();
         updatedGoal.ID = goal.ID;
@@ -266,8 +266,8 @@ public class GoalServiceTests
         await goalService.UpdateGoalAsync(helper.demoUser.Id, updatedGoal);
 
         // Assert
-        helper.userDataContext.Goals.Should().ContainSingle();
-        helper.userDataContext.Goals.Single().Should().BeEquivalentTo(updatedGoal, options => options
+        helper.UserDataContext.Goals.Should().ContainSingle();
+        helper.UserDataContext.Goals.Single().Should().BeEquivalentTo(updatedGoal, options => options
         .Excluding(g => g.IsCompleteDateEditable)
         .Excluding(g => g.IsMonthlyContributionEditable));
     }
@@ -277,7 +277,7 @@ public class GoalServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.userDataContext);
+        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.UserDataContext);
 
         var updatedGoal = _goalUpdateRequestFaker.Generate();
 
@@ -293,21 +293,21 @@ public class GoalServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.userDataContext);
+        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var accounts = accountFaker.Generate(5);
         accounts.ForEach(a => a.UserID = helper.demoUser.Id);
 
-        helper.userDataContext.Accounts.AddRange(accounts);
+        helper.UserDataContext.Accounts.AddRange(accounts);
 
         var goalFaker = new GoalFaker();
         var goal = goalFaker.Generate();
         goal.UserID = helper.demoUser.Id;
         goal.Accounts = accounts;
 
-        helper.userDataContext.Goals.Add(goal);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Goals.Add(goal);
+        helper.UserDataContext.SaveChanges();
 
         var updatedGoal = _goalUpdateRequestFaker.Generate();
         updatedGoal.ID = goal.ID;
@@ -317,8 +317,8 @@ public class GoalServiceTests
         await goalService.UpdateGoalAsync(helper.demoUser.Id, updatedGoal);
 
         // Assert
-        helper.userDataContext.Goals.Should().ContainSingle();
-        helper.userDataContext.Goals.Single().MonthlyContribution.Should().Be(goal.MonthlyContribution);
+        helper.UserDataContext.Goals.Should().ContainSingle();
+        helper.UserDataContext.Goals.Single().MonthlyContribution.Should().Be(goal.MonthlyContribution);
     }
 
     [Fact]
@@ -326,21 +326,21 @@ public class GoalServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.userDataContext);
+        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var accounts = accountFaker.Generate(5);
         accounts.ForEach(a => a.UserID = helper.demoUser.Id);
 
-        helper.userDataContext.Accounts.AddRange(accounts);
+        helper.UserDataContext.Accounts.AddRange(accounts);
 
         var goalFaker = new GoalFaker();
         var goal = goalFaker.Generate();
         goal.UserID = helper.demoUser.Id;
         goal.Accounts = accounts;
 
-        helper.userDataContext.Goals.Add(goal);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Goals.Add(goal);
+        helper.UserDataContext.SaveChanges();
 
         var updatedGoal = _goalUpdateRequestFaker.Generate();
         updatedGoal.ID = goal.ID;
@@ -350,8 +350,8 @@ public class GoalServiceTests
         await goalService.UpdateGoalAsync(helper.demoUser.Id, updatedGoal);
 
         // Assert
-        helper.userDataContext.Goals.Should().ContainSingle();
-        helper.userDataContext.Goals.Single().CompleteDate.Should().Be(goal.CompleteDate);
+        helper.UserDataContext.Goals.Should().ContainSingle();
+        helper.UserDataContext.Goals.Single().CompleteDate.Should().Be(goal.CompleteDate);
     }
 
     [Fact]
@@ -359,34 +359,34 @@ public class GoalServiceTests
     {
         // Arrange
         var helper = new TestHelper();
-        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.userDataContext);
+        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var accounts = accountFaker.Generate(5);
         accounts.ForEach(a => a.UserID = helper.demoUser.Id);
 
-        helper.userDataContext.Accounts.AddRange(accounts);
+        helper.UserDataContext.Accounts.AddRange(accounts);
 
         var goalFaker = new GoalFaker();
         var goal = goalFaker.Generate();
         goal.UserID = helper.demoUser.Id;
         goal.Accounts = accounts;
 
-        helper.userDataContext.Goals.Add(goal);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Goals.Add(goal);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         await goalService.DeleteGoalAsync(helper.demoUser.Id, goal.ID);
 
         // Assert
-        helper.userDataContext.Goals.Should().BeEmpty();
+        helper.UserDataContext.Goals.Should().BeEmpty();
     }
 
     [Fact]
     public async Task DeleteGoalAsync_WhenInvalidGoal_ShouldThrowError()
     {   // Arrange
         var helper = new TestHelper();
-        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.userDataContext);
+        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.UserDataContext);
 
         // Act
         Func<Task> act = async () => await goalService.DeleteGoalAsync(helper.demoUser.Id, Guid.NewGuid());

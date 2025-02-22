@@ -36,7 +36,7 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
     {
         // Arrange
         var helper = new TestHelper();
-        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
+        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
         var account = _accountCreateRequestFaker.Generate();
 
         // Act
@@ -51,7 +51,7 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
     {
         // Arrange
         var helper = new TestHelper();
-        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
+        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
         var account = _accountCreateRequestFaker.Generate();
 
         // Act
@@ -67,14 +67,14 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
     {
         // Arrange
         var helper = new TestHelper();
-        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
+        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
         account.UserID = helper.demoUser.Id;
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         var result = await accountService.ReadAccountsAsync(helper.demoUser.Id);
@@ -89,7 +89,7 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
     {
         // Arrange
         var helper = new TestHelper();
-        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
+        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
@@ -97,9 +97,9 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         var secondAccount = accountFaker.Generate();
         secondAccount.UserID = helper.demoUser.Id;
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.Accounts.Add(secondAccount);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.Accounts.Add(secondAccount);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         var result = await accountService.ReadAccountsAsync(helper.demoUser.Id, account.ID);
@@ -114,14 +114,14 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
     {
         // Arrange
         var helper = new TestHelper();
-        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
+        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
         account.UserID = helper.demoUser.Id;
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         var invalidGuid = Guid.NewGuid();
 
@@ -137,14 +137,14 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
     {
         // Arrange
         var helper = new TestHelper();
-        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
+        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
         account.UserID = helper.demoUser.Id;
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         var editedAccount = _accountUpdateRequestFaker.Generate();
         editedAccount.ID = account.ID;
@@ -161,14 +161,14 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
     {
         // Arrange
         var helper = new TestHelper();
-        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
+        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
         account.UserID = helper.demoUser.Id;
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         var editedAccount = _accountUpdateRequestFaker.Generate();
 
@@ -186,14 +186,14 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
     {
         // Arrange
         var helper = new TestHelper();
-        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
+        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
         account.UserID = helper.demoUser.Id;
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         await accountService.DeleteAccountAsync(helper.demoUser.Id, account.ID);
@@ -207,15 +207,15 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
     {
         // Arrange
         var helper = new TestHelper();
-        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
+        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
         var invalidGuid = Guid.NewGuid();
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
         account.UserID = helper.demoUser.Id;
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         var deleteAccountAct = () => accountService.DeleteAccountAsync(helper.demoUser.Id, invalidGuid);
@@ -229,7 +229,7 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
     {
         // Arrange
         var helper = new TestHelper();
-        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
+        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
@@ -240,9 +240,9 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         var transaction = transactionFaker.Generate();
         transaction.AccountID = account.ID;
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.Transactions.Add(transaction);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.Transactions.Add(transaction);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         await accountService.DeleteAccountAsync(helper.demoUser.Id, account.ID, true);
@@ -257,15 +257,15 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
     {
         // Arrange
         var helper = new TestHelper();
-        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
+        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
         account.UserID = helper.demoUser.Id;
         account.Deleted = DateTime.Now.ToUniversalTime();
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         await accountService.RestoreAccountAsync(helper.demoUser.Id, account.ID);
@@ -279,15 +279,15 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
     {
         // Arrange
         var helper = new TestHelper();
-        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
+        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
         account.UserID = helper.demoUser.Id;
         account.Deleted = DateTime.Now.ToUniversalTime();
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
 
         var invalidGuid = Guid.NewGuid();
 
@@ -303,7 +303,7 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
     {
         // Arrange
         var helper = new TestHelper();
-        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
+        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
 
         var accountFaker = new AccountFaker();
         var account = accountFaker.Generate();
@@ -316,9 +316,9 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
 
         transaction.Deleted = DateTime.Now.ToUniversalTime();
 
-        helper.userDataContext.Accounts.Add(account);
-        helper.userDataContext.Transactions.Add(transaction);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.Transactions.Add(transaction);
+        helper.UserDataContext.SaveChanges();
 
         // Act
         await accountService.RestoreAccountAsync(helper.demoUser.Id, account.ID, true);
@@ -333,7 +333,7 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
     {
         // Arrange
         var helper = new TestHelper();
-        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
+        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
 
         var randomNumberBetween1And10 = new Random().Next(1, 10);
         _testOutputHelper.WriteLine($"Number of accounts: {randomNumberBetween1And10}");
@@ -345,8 +345,8 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
             account.UserID = helper.demoUser.Id;
         }
 
-        helper.userDataContext.Accounts.AddRange(accounts);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.AddRange(accounts);
+        helper.UserDataContext.SaveChanges();
 
         List<IAccountIndexRequest> orderedAccounts = [];
         foreach (var account in accounts)
@@ -369,7 +369,7 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
     {
         // Arrange
         var helper = new TestHelper();
-        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.userDataContext);
+        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
 
         var randomNumberBetween1And10 = new Random().Next(1, 10);
         _testOutputHelper.WriteLine($"Number of accounts: {randomNumberBetween1And10}");
@@ -381,8 +381,8 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
             account.UserID = helper.demoUser.Id;
         }
 
-        helper.userDataContext.Accounts.AddRange(accounts);
-        helper.userDataContext.SaveChanges();
+        helper.UserDataContext.Accounts.AddRange(accounts);
+        helper.UserDataContext.SaveChanges();
 
         List<IAccountIndexRequest> orderedAccounts = [];
         foreach (var account in accounts)
