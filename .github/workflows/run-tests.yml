@@ -15,11 +15,12 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "8.0.x"
-      - name: Navigate to the server directory
-        run: cd server
       - name: Install dependencies
+        working-directory: ./server
         run: dotnet restore
       - name: Build
+        working-directory: ./server
         run: dotnet build
       - name: Test with the dotnet CLI
+        working-directory: ./server
         run: dotnet test
