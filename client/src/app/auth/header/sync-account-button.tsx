@@ -20,6 +20,7 @@ const SyncAccountButton = (props: SyncAccountButtonProps): JSX.Element => {
     mutationFn: async () => await request({ url: '/api/simplefin/sync', method: 'GET' }),
     onSuccess: async (data: AxiosResponse) => {
       await queryClient.invalidateQueries({ queryKey: ['transactions'] });
+      await queryClient.invalidateQueries({ queryKey: ['institutions'] });
       await queryClient.invalidateQueries({ queryKey: ['accounts'] });
       if ((data.data?.length ?? 0) > 0) {
         toast.error(

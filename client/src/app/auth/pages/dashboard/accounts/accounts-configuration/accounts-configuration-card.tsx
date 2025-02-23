@@ -61,6 +61,7 @@ const AccountsConfigurationCard = (
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['accounts'] });
+      await queryClient.invalidateQueries({ queryKey: ['institutions'] });
       await queryClient.invalidateQueries({ queryKey: ['transactions'] });
       setValueDirty(false);
     },
