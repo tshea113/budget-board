@@ -110,7 +110,6 @@ const GoalCard = (props: GoalCardProps): JSX.Element => {
                   name: variables.name,
                   completeDate: variables.completeDate,
                   amount: variables.amount,
-                  initialAmount: variables.initialAmount,
                   monthlyContribution: variables.monthlyContribution,
                 }
               : oldGoal

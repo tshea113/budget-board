@@ -20,7 +20,6 @@ const EditableGoalTargetDateCell = (
     const newGoal: IGoalUpdateRequest = {
       ...props.goal,
       completeDate: date,
-      accountIds: props.goal.accounts.map((account) => account.id),
     };
     if (props.editCell != null) {
       props.editCell(newGoal);
