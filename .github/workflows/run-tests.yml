@@ -15,6 +15,8 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "8.0.x"
+      - name: Navigate to the server directory
+        run: cd server
       - name: Install dependencies
         run: dotnet restore
       - name: Build
