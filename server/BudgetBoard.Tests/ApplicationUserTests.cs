@@ -47,7 +47,6 @@ public class ApplicationUserTests
         var applicationUserService = new ApplicationUserService(Mock.Of<ILogger<IApplicationUserService>>(), helper.UserDataContext);
         var userUpdateRequest = new ApplicationUserUpdateRequest
         {
-            AccessToken = "newAccessToken",
             LastSync = DateTime.Now
         };
 
@@ -67,7 +66,6 @@ public class ApplicationUserTests
 
         var userUpdateRequest = new ApplicationUserUpdateRequest
         {
-            AccessToken = "newAccessToken",
             LastSync = DateTime.Now
         };
 
@@ -76,25 +74,5 @@ public class ApplicationUserTests
 
         // Assert
         await act.Should().ThrowAsync<Exception>().WithMessage("Provided user not found.");
-    }
-
-    [Fact(Skip = "Access Token check is not implemented yet.")]
-    public async Task UpdateApplicationUserAsync_WhenInvalidAccessToken_ShouldThrowError()
-    {
-        // Arrange
-        var helper = new TestHelper();
-        var applicationUserService = new ApplicationUserService(Mock.Of<ILogger<IApplicationUserService>>(), helper.UserDataContext);
-
-        var userUpdateRequest = new ApplicationUserUpdateRequest
-        {
-            AccessToken = "invalidAccessToken",
-            LastSync = DateTime.Now
-        };
-
-        // Act
-        Func<Task> act = async () => await applicationUserService.UpdateApplicationUserAsync(helper.demoUser.Id, userUpdateRequest);
-
-        // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("Invalid access token.");
     }
 }

@@ -5,18 +5,15 @@ namespace BudgetBoard.Service.Models;
 
 public interface IApplicationUserUpdateRequest
 {
-    string AccessToken { get; set; }
-    DateTime? LastSync { get; set; }
+    DateTime LastSync { get; set; }
 }
 public class ApplicationUserUpdateRequest : IApplicationUserUpdateRequest
 {
-    public string AccessToken { get; set; }
-    public DateTime? LastSync { get; set; }
+    public DateTime LastSync { get; set; }
 
     [JsonConstructor]
     public ApplicationUserUpdateRequest()
     {
-        AccessToken = string.Empty;
         LastSync = DateTime.MinValue;
     }
 }
