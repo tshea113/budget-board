@@ -2,32 +2,19 @@
 using BudgetBoard.Database.Models;
 using BudgetBoard.Service.Interfaces;
 using BudgetBoard.Service.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Security.Claims;
 
 namespace BudgetBoard.Service;
 
-public class TransactionService(ILogger<ITransactionService> logger, UserDataContext userDataContext, UserManager<ApplicationUser> userManager) : ITransactionService
+public class TransactionService(ILogger<ITransactionService> logger, UserDataContext userDataContext) : ITransactionService
 {
     private readonly ILogger<ITransactionService> _logger = logger;
     private readonly UserDataContext _userDataContext = userDataContext;
-    private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-    public async Task<IApplicationUser> GetUserData(ClaimsPrincipal user)
+    public async Task CreateTransactionAsync(Guid userGuid, ITransactionCreateRequest transaction)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
-        return userData;
-    }
-    public async Task CreateTransactionAsync(IApplicationUser userData, ITransactionCreateRequest transaction)
-    {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         var account = userData.Accounts.FirstOrDefault(a => a.ID == transaction.AccountID);
         if (account == null)
         {
@@ -51,8 +38,9 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         await _userDataContext.SaveChangesAsync();
     }
 
-    public IEnumerable<ITransactionResponse> ReadTransactionsAsync(IApplicationUser userData, int? year, int? month, bool getHidden, Guid guid = default)
+    public async Task<IEnumerable<ITransactionResponse>> ReadTransactionsAsync(Guid userGuid, int? year, int? month, bool getHidden, Guid guid = default)
     {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         var transactions = userData.Accounts
                 .SelectMany(t => t.Transactions)
                 .Where(t => getHidden || !(t.Account?.HideTransactions ?? false));
@@ -82,11 +70,12 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         return transactions.Select(t => new TransactionResponse(t));
     }
 
-    public async Task UpdateTransactionAsync(IApplicationUser userData, ITransactionUpdateRequest editedTransaction)
+    public async Task UpdateTransactionAsync(Guid userGuid, ITransactionUpdateRequest editedTransaction)
     {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         var transaction = userData.Accounts
             .SelectMany(t => t.Transactions)
-            .First(t => t.ID == editedTransaction.ID);
+            .FirstOrDefault(t => t.ID == editedTransaction.ID);
         if (transaction == null)
         {
             _logger.LogError("Attempt to edit transaction that does not exist.");
@@ -102,11 +91,12 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task DeleteTransactionAsync(IApplicationUser userData, Guid guid)
+    public async Task DeleteTransactionAsync(Guid userGuid, Guid guid)
     {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         var transaction = userData.Accounts
             .SelectMany(t => t.Transactions)
-            .First(t => t.ID == guid);
+            .FirstOrDefault(t => t.ID == guid);
         if (transaction == null)
         {
             _logger.LogError("Attempt to delete transaction that does not exist.");
@@ -117,11 +107,12 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task RestoreTransactionAsync(IApplicationUser userData, Guid guid)
+    public async Task RestoreTransactionAsync(Guid userGuid, Guid guid)
     {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         var transaction = userData.Accounts
             .SelectMany(t => t.Transactions)
-            .First(t => t.ID == guid);
+            .FirstOrDefault(t => t.ID == guid);
         if (transaction == null)
         {
             _logger.LogError("Attempt to restore transaction that does not exist.");
@@ -132,21 +123,31 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         await _userDataContext.SaveChangesAsync();
     }
 
-    private async Task<ApplicationUser?> GetCurrentUserAsync(string id)
+    private async Task<IApplicationUser> GetCurrentUserAsync(string id)
     {
+        List<ApplicationUser> users;
+        ApplicationUser? foundUser;
         try
         {
-            var users = await _userDataContext.Users
+            users = await _userDataContext.ApplicationUsers
                 .Include(u => u.Accounts)
                 .ThenInclude(a => a.Transactions)
                 .AsSplitQuery()
                 .ToListAsync();
-            return users.Single(u => u.Id == new Guid(id));
+            foundUser = users.FirstOrDefault(u => u.Id == new Guid(id));
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Message);
-            return null;
+            _logger.LogError("An error occurred while retrieving the user data: {ExceptionMessage}", ex.Message);
+            throw new Exception("An error occurred while retrieving the user data.");
         }
+
+        if (foundUser == null)
+        {
+            _logger.LogError("Attempt to create an account for an invalid user.");
+            throw new Exception("Provided user not found.");
+        }
+
+        return foundUser;
     }
 }

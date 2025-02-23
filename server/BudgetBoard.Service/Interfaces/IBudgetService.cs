@@ -1,14 +1,11 @@
-﻿using BudgetBoard.Database.Models;
-using BudgetBoard.Service.Models;
-using System.Security.Claims;
+﻿using BudgetBoard.Service.Models;
 
 namespace BudgetBoard.Service.Interfaces;
 
 public interface IBudgetService
 {
-    Task<IApplicationUser> GetUserData(ClaimsPrincipal user);
-    Task CreateBudgetsAsync(IApplicationUser userData, IEnumerable<IBudgetCreateRequest> budget);
-    IEnumerable<IBudgetResponse> ReadBudgetsAsync(IApplicationUser userData, DateTime date);
-    Task UpdateBudgetAsync(IApplicationUser userData, IBudgetUpdateRequest updatedBudget);
-    Task DeleteBudgetAsync(IApplicationUser userData, Guid guid);
+    Task CreateBudgetsAsync(Guid userGuid, IEnumerable<IBudgetCreateRequest> budget);
+    Task<IEnumerable<IBudgetResponse>> ReadBudgetsAsync(Guid userGuid, DateTime date);
+    Task UpdateBudgetAsync(Guid userGuid, IBudgetUpdateRequest updatedBudget);
+    Task DeleteBudgetAsync(Guid userGuid, Guid budgetGuid);
 }

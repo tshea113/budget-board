@@ -2,32 +2,19 @@
 using BudgetBoard.Database.Models;
 using BudgetBoard.Service.Interfaces;
 using BudgetBoard.Service.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Security.Claims;
 
 namespace BudgetBoard.Service;
 
-public class TransactionCategoryService(ILogger<ITransactionCategoryService> logger, UserDataContext userDataContext, UserManager<ApplicationUser> userManager) : ITransactionCategoryService
+public class TransactionCategoryService(ILogger<ITransactionCategoryService> logger, UserDataContext userDataContext) : ITransactionCategoryService
 {
     private readonly ILogger<ITransactionCategoryService> _logger = logger;
     private readonly UserDataContext _userDataContext = userDataContext;
-    private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-    public async Task<IApplicationUser> GetUserData(ClaimsPrincipal user)
+    public async Task CreateTransactionCategoryAsync(Guid userGuid, ICategoryCreateRequest request)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
-        return userData;
-    }
-    public async Task CreateTransactionCategoryAsync(IApplicationUser userData, ICategoryCreateRequest request)
-    {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         var newCategory = new Category
         {
             Value = request.Value,
@@ -39,15 +26,16 @@ public class TransactionCategoryService(ILogger<ITransactionCategoryService> log
         await _userDataContext.SaveChangesAsync();
     }
 
-    public IEnumerable<ICategoryResponse> ReadTransactionCategoriesAsync(IApplicationUser userData, Guid guid = default)
+    public async Task<IEnumerable<ICategoryResponse>> ReadTransactionCategoriesAsync(Guid userGuid, Guid categoryGuid = default)
     {
-        if (guid != default)
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
+        if (categoryGuid != default)
         {
-            var transactionCategory = userData.TransactionCategories.FirstOrDefault(t => t.ID == guid);
+            var transactionCategory = userData.TransactionCategories.FirstOrDefault(t => t.ID == categoryGuid);
             if (transactionCategory == null)
             {
-                _logger.LogError("Attempt to access transaction that does not exist.");
-                throw new Exception("The transaction you are trying to access does not exist.");
+                _logger.LogError("Attempt to access transaction category that does not exist.");
+                throw new Exception("The transaction category you are trying to access does not exist.");
             }
 
             return [new CategoryResponse(transactionCategory)];
@@ -56,8 +44,9 @@ public class TransactionCategoryService(ILogger<ITransactionCategoryService> log
         return userData.TransactionCategories.Select(c => new CategoryResponse(c));
     }
 
-    public async Task UpdateTransactionCategoryAsync(IApplicationUser userData, ICategoryUpdateRequest updatedCategory)
+    public async Task UpdateTransactionCategoryAsync(Guid userGuid, ICategoryUpdateRequest updatedCategory)
     {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         var transactionCategory = userData.TransactionCategories.FirstOrDefault(t => t.ID == updatedCategory.ID);
         if (transactionCategory == null)
         {
@@ -71,13 +60,14 @@ public class TransactionCategoryService(ILogger<ITransactionCategoryService> log
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task DeleteTransactionCategoryAsync(IApplicationUser userData, Guid guid)
+    public async Task DeleteTransactionCategoryAsync(Guid userGuid, Guid guid)
     {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         var transactionCategory = userData.TransactionCategories.FirstOrDefault(t => t.ID == guid);
         if (transactionCategory == null)
         {
-            _logger.LogError("Attempt to access transaction category that does not exist.");
-            throw new Exception("The transaction category you are trying to access does not exist.");
+            _logger.LogError("Attempt to delete transaction category that does not exist.");
+            throw new Exception("The transaction category you are trying to delete does not exist.");
         }
 
         // We want to preserve the category in the database if it is in use. 
@@ -98,6 +88,11 @@ public class TransactionCategoryService(ILogger<ITransactionCategoryService> log
             _logger.LogError("Attempt to delete transaction category that is in use by budget(s).");
             throw new Exception("Category is in use by budget(s) and cannot be deleted.");
         }
+        else if (userData.TransactionCategories.Any(c => c.Parent == transactionCategory.Value))
+        {
+            _logger.LogError("Attempt to delete transaction category that is a parent category.");
+            throw new Exception("Transaction category has subcategories associated with it and cannot be deleted.");
+        }
         else
         {
             userData.TransactionCategories.Remove(transactionCategory);
@@ -105,23 +100,33 @@ public class TransactionCategoryService(ILogger<ITransactionCategoryService> log
         }
     }
 
-    private async Task<ApplicationUser?> GetCurrentUserAsync(string id)
+    private async Task<ApplicationUser> GetCurrentUserAsync(string id)
     {
+        List<ApplicationUser> users;
+        ApplicationUser? foundUser;
         try
         {
-            var users = await _userDataContext.Users
+            users = await _userDataContext.ApplicationUsers
                 .Include(u => u.TransactionCategories)
                 .Include(u => u.Accounts)
                     .ThenInclude(a => a.Transactions)
                 .Include(u => u.Budgets)
                 .AsSplitQuery()
                 .ToListAsync();
-            return users.Single(u => u.Id == new Guid(id));
+            foundUser = users.FirstOrDefault(u => u.Id == new Guid(id));
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Message);
-            return null;
+            _logger.LogError("An error occurred while retrieving the user data: {ExceptionMessage}", ex.Message);
+            throw new Exception("An error occurred while retrieving the user data.");
         }
+
+        if (foundUser == null)
+        {
+            _logger.LogError("Attempt to create an account for an invalid user.");
+            throw new Exception("Provided user not found.");
+        }
+
+        return foundUser;
     }
 }

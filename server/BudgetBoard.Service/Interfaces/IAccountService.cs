@@ -1,16 +1,13 @@
-﻿using BudgetBoard.Database.Models;
-using BudgetBoard.Service.Types;
-using System.Security.Claims;
+﻿using BudgetBoard.Service.Types;
 
 namespace BudgetBoard.Service.Interfaces;
 
 public interface IAccountService
 {
-    Task<IApplicationUser> GetUserData(ClaimsPrincipal user);
-    Task CreateAccountAsync(IApplicationUser userData, IAccountCreateRequest account);
-    IEnumerable<IAccountResponse> ReadAccountsAsync(IApplicationUser userData, Guid guid = default);
-    Task UpdateAccountAsync(IApplicationUser userData, IAccountUpdateRequest editedAccount);
-    Task DeleteAccountAsync(IApplicationUser userData, Guid guid, bool deleteTransactions = false);
-    Task RestoreAccountAsync(IApplicationUser userData, Guid guid);
-    Task OrderAccountsAsync(IApplicationUser userData, IEnumerable<IAccountIndexRequest> orderedAccounts);
+    Task CreateAccountAsync(Guid userGuid, IAccountCreateRequest account);
+    Task<IEnumerable<IAccountResponse>> ReadAccountsAsync(Guid userGuid, Guid accountGuid = default);
+    Task UpdateAccountAsync(Guid userGuid, IAccountUpdateRequest editedAccount);
+    Task DeleteAccountAsync(Guid userGuid, Guid guid, bool deleteTransactions = false);
+    Task RestoreAccountAsync(Guid userGuid, Guid guid, bool restoreTransactions = false);
+    Task OrderAccountsAsync(Guid userGuid, IEnumerable<IAccountIndexRequest> orderedAccounts);
 }

@@ -15,10 +15,8 @@ export interface IGoalUpdateRequest {
   completeDate: Date | null;
   isCompleteDateEditable: boolean;
   amount: number;
-  initialAmount: number | null;
   monthlyContribution: number | null;
   isMonthlyContributionEditable: boolean;
-  accountIds: string[];
 }
 
 export interface IGoalResponse {

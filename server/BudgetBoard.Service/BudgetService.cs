@@ -2,32 +2,19 @@
 using BudgetBoard.Database.Models;
 using BudgetBoard.Service.Interfaces;
 using BudgetBoard.Service.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Security.Claims;
 
 namespace BudgetBoard.Service;
 
-public class BudgetService(ILogger<IBudgetService> logger, UserDataContext userDataContext, UserManager<ApplicationUser> userManager) : IBudgetService
+public class BudgetService(ILogger<IBudgetService> logger, UserDataContext userDataContext) : IBudgetService
 {
     private readonly ILogger<IBudgetService> _logger = logger;
     private readonly UserDataContext _userDataContext = userDataContext;
-    private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-    public async Task<IApplicationUser> GetUserData(ClaimsPrincipal user)
+    public async Task CreateBudgetsAsync(Guid userGuid, IEnumerable<IBudgetCreateRequest> budgets)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
-        return userData;
-    }
-    public async Task CreateBudgetsAsync(IApplicationUser userData, IEnumerable<IBudgetCreateRequest> budgets)
-    {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         foreach (var budget in budgets)
         {
             // Do not allow duplicate categories in a given month
@@ -54,16 +41,18 @@ public class BudgetService(ILogger<IBudgetService> logger, UserDataContext userD
         await _userDataContext.SaveChangesAsync();
     }
 
-    public IEnumerable<IBudgetResponse> ReadBudgetsAsync(IApplicationUser userData, DateTime date)
+    public async Task<IEnumerable<IBudgetResponse>> ReadBudgetsAsync(Guid userGuid, DateTime date)
     {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         var budgets = userData.Budgets
         .Where(b => b.Date.Month == date.Month && b.Date.Year == date.Year);
 
         return budgets.Select(b => new BudgetResponse(b));
     }
 
-    public async Task UpdateBudgetAsync(IApplicationUser userData, IBudgetUpdateRequest updatedBudget)
+    public async Task UpdateBudgetAsync(Guid userGuid, IBudgetUpdateRequest updatedBudget)
     {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         var budget = userData.Budgets.SingleOrDefault(b => b.ID == updatedBudget.ID);
         if (budget == null)
         {
@@ -76,32 +65,43 @@ public class BudgetService(ILogger<IBudgetService> logger, UserDataContext userD
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task DeleteBudgetAsync(IApplicationUser userData, Guid guid)
+    public async Task DeleteBudgetAsync(Guid userGuid, Guid budgetGuid)
     {
-        var budget = userData.Budgets.SingleOrDefault(b => b.ID == guid);
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
+        var budget = userData.Budgets.SingleOrDefault(b => b.ID == budgetGuid);
         if (budget == null)
         {
-            _logger.LogError("Attempt to update budget that does not exist.");
-            throw new Exception("The budget you are trying to update does not exist.");
+            _logger.LogError("Attempt to delete budget that does not exist.");
+            throw new Exception("The budget you are trying to delete does not exist.");
         }
 
         _userDataContext.Budgets.Remove(budget);
         await _userDataContext.SaveChangesAsync();
     }
 
-    private async Task<ApplicationUser?> GetCurrentUserAsync(string id)
+    private async Task<ApplicationUser> GetCurrentUserAsync(string id)
     {
+        List<ApplicationUser> users;
+        ApplicationUser? foundUser;
         try
         {
-            var users = await _userDataContext.Users
+            users = await _userDataContext.ApplicationUsers
                 .Include(u => u.Budgets)
                 .ToListAsync();
-            return users.Single(u => u.Id == new Guid(id));
+            foundUser = users.FirstOrDefault(u => u.Id == new Guid(id));
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Message);
-            return null;
+            _logger.LogError("An error occurred while retrieving the user data: {ExceptionMessage}", ex.Message);
+            throw new Exception("An error occurred while retrieving the user data.");
         }
+
+        if (foundUser == null)
+        {
+            _logger.LogError("Attempt to create an account for an invalid user.");
+            throw new Exception("Provided user not found.");
+        }
+
+        return foundUser;
     }
 }

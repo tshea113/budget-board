@@ -1,16 +1,19 @@
-﻿using BudgetBoard.Service.Interfaces;
+﻿using BudgetBoard.Database.Models;
+using BudgetBoard.Service.Interfaces;
 using BudgetBoard.Service.Types;
 using BudgetBoard.WebAPI.Utils;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetBoard.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AccountController(ILogger<AccountController> logger, IAccountService accountService) : ControllerBase
+public class AccountController(ILogger<AccountController> logger, UserManager<ApplicationUser> userManager, IAccountService accountService) : ControllerBase
 {
     private readonly ILogger<AccountController> _logger = logger;
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly IAccountService _accountService = accountService;
 
     [HttpPost]
@@ -19,8 +22,7 @@ public class AccountController(ILogger<AccountController> logger, IAccountServic
     {
         try
         {
-            var userData = await _accountService.GetUserData(User);
-            await _accountService.CreateAccountAsync(userData, account);
+            await _accountService.CreateAccountAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), account);
             return Ok();
         }
         catch (Exception ex)
@@ -35,8 +37,7 @@ public class AccountController(ILogger<AccountController> logger, IAccountServic
     {
         try
         {
-            var userData = await _accountService.GetUserData(User);
-            return Ok(_accountService.ReadAccountsAsync(userData));
+            return Ok(await _accountService.ReadAccountsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty)));
         }
         catch (Exception ex)
         {
@@ -50,8 +51,7 @@ public class AccountController(ILogger<AccountController> logger, IAccountServic
     {
         try
         {
-            var userData = await _accountService.GetUserData(User);
-            return Ok(_accountService.ReadAccountsAsync(userData, guid));
+            return Ok(await _accountService.ReadAccountsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), guid));
         }
         catch (Exception ex)
         {
@@ -65,8 +65,7 @@ public class AccountController(ILogger<AccountController> logger, IAccountServic
     {
         try
         {
-            var userData = await _accountService.GetUserData(User);
-            await _accountService.UpdateAccountAsync(userData, editedAccount);
+            await _accountService.UpdateAccountAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), editedAccount);
             return Ok();
         }
         catch (Exception ex)
@@ -81,8 +80,7 @@ public class AccountController(ILogger<AccountController> logger, IAccountServic
     {
         try
         {
-            var userData = await _accountService.GetUserData(User);
-            await _accountService.DeleteAccountAsync(userData, guid, deleteTransactions);
+            await _accountService.DeleteAccountAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), guid, deleteTransactions);
             return Ok();
         }
         catch (Exception ex)
@@ -98,8 +96,7 @@ public class AccountController(ILogger<AccountController> logger, IAccountServic
     {
         try
         {
-            var userData = await _accountService.GetUserData(User);
-            await _accountService.RestoreAccountAsync(userData, guid);
+            await _accountService.RestoreAccountAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), guid);
             return Ok();
         }
         catch (Exception ex)
@@ -115,8 +112,7 @@ public class AccountController(ILogger<AccountController> logger, IAccountServic
     {
         try
         {
-            var userData = await _accountService.GetUserData(User);
-            await _accountService.OrderAccountsAsync(userData, accounts);
+            await _accountService.OrderAccountsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), accounts);
             return Ok();
         }
         catch (Exception ex)

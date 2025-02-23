@@ -1,16 +1,19 @@
-﻿using BudgetBoard.Service.Interfaces;
+﻿using BudgetBoard.Database.Models;
+using BudgetBoard.Service.Interfaces;
 using BudgetBoard.Service.Models;
 using BudgetBoard.WebAPI.Utils;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetBoard.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class InstitutionController(ILogger<InstitutionController> logger, IInstitutionService institutionService) : ControllerBase
+public class InstitutionController(ILogger<InstitutionController> logger, UserManager<ApplicationUser> userManager, IInstitutionService institutionService) : ControllerBase
 {
     private readonly ILogger<InstitutionController> _logger = logger;
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly IInstitutionService _institutionService = institutionService;
 
     [HttpPost]
@@ -19,8 +22,7 @@ public class InstitutionController(ILogger<InstitutionController> logger, IInsti
     {
         try
         {
-            var userData = await _institutionService.GetUserData(User);
-            await _institutionService.CreateInstitutionAsync(userData, createdInstitution);
+            await _institutionService.CreateInstitutionAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), createdInstitution);
             return Ok();
         }
         catch (Exception ex)
@@ -35,8 +37,7 @@ public class InstitutionController(ILogger<InstitutionController> logger, IInsti
     {
         try
         {
-            var userData = await _institutionService.GetUserData(User);
-            return Ok(_institutionService.ReadInstitutionsAsync(userData));
+            return Ok(await _institutionService.ReadInstitutionsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty)));
         }
         catch (Exception ex)
         {
@@ -50,8 +51,7 @@ public class InstitutionController(ILogger<InstitutionController> logger, IInsti
     {
         try
         {
-            var userData = await _institutionService.GetUserData(User);
-            return Ok(_institutionService.ReadInstitutionsAsync(userData, guid));
+            return Ok(await _institutionService.ReadInstitutionsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), guid));
         }
         catch (Exception ex)
         {
@@ -65,8 +65,7 @@ public class InstitutionController(ILogger<InstitutionController> logger, IInsti
     {
         try
         {
-            var userData = await _institutionService.GetUserData(User);
-            await _institutionService.UpdateInstitutionAsync(userData, updatedInstitution);
+            await _institutionService.UpdateInstitutionAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), updatedInstitution);
             return Ok();
         }
         catch (Exception ex)
@@ -81,8 +80,7 @@ public class InstitutionController(ILogger<InstitutionController> logger, IInsti
     {
         try
         {
-            var userData = await _institutionService.GetUserData(User);
-            await _institutionService.DeleteInstitutionAsync(userData, guid, deleteTransactions);
+            await _institutionService.DeleteInstitutionAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), guid, deleteTransactions);
             return Ok();
         }
         catch (Exception ex)
@@ -98,8 +96,7 @@ public class InstitutionController(ILogger<InstitutionController> logger, IInsti
     {
         try
         {
-            var userData = await _institutionService.GetUserData(User);
-            await _institutionService.OrderInstitutionsAsync(userData, institutions);
+            await _institutionService.OrderInstitutionsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), institutions);
             return Ok();
         }
         catch (Exception ex)

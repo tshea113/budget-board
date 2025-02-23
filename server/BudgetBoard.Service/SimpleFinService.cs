@@ -3,11 +3,9 @@ using BudgetBoard.Database.Models;
 using BudgetBoard.Service.Interfaces;
 using BudgetBoard.Service.Models;
 using BudgetBoard.Service.Types;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
-using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
@@ -18,7 +16,6 @@ public class SimpleFinService(
     IHttpClientFactory clientFactory,
     ILogger<ISimpleFinService> logger,
     UserDataContext userDataContext,
-    UserManager<ApplicationUser> userManager,
     IAccountService accountService,
     IInstitutionService institutionService,
     ITransactionService transactionService,
@@ -61,7 +58,6 @@ public class SimpleFinService(
     private readonly IHttpClientFactory _clientFactory = clientFactory;
     private readonly ILogger<ISimpleFinService> _logger = logger;
     private readonly UserDataContext _userDataContext = userDataContext;
-    private readonly UserManager<ApplicationUser> _userManager = userManager;
 
     private readonly IAccountService _accountService = accountService;
     private readonly IInstitutionService _institutionService = institutionService;
@@ -69,20 +65,10 @@ public class SimpleFinService(
     private readonly IBalanceService _balanceService = balanceService;
     private readonly IApplicationUserService _applicationUserService = applicationUserService;
 
-    public async Task<IApplicationUser> GetUserData(ClaimsPrincipal user)
+    public async Task<IEnumerable<string>> SyncAsync(Guid userGuid)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
 
-        return userData;
-    }
-
-    public async Task<IEnumerable<string>> SyncAsync(IApplicationUser userData)
-    {
         long startDate;
         if (userData.LastSync == DateTime.MinValue)
         {
@@ -107,20 +93,62 @@ public class SimpleFinService(
         await SyncInstitutionsAsync(userData, simpleFinData.Accounts);
         await SyncAccountsAsync(userData, simpleFinData.Accounts);
 
-        await _applicationUserService.UpdateApplicationUserAsync(userData, new ApplicationUserUpdateRequest
+        await _applicationUserService.UpdateApplicationUserAsync(userData.Id, new ApplicationUserUpdateRequest
         {
-            AccessToken = userData.AccessToken,
             LastSync = DateTime.Now.ToUniversalTime(),
         });
 
         return simpleFinData.Errors;
     }
 
-    private async Task<ApplicationUser?> GetCurrentUserAsync(string id)
+    public async Task UpdateAccessTokenFromSetupToken(Guid userGuid, string setupToken)
     {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
+
+        var decodeAccessTokenResponse = await DecodeAccessToken(setupToken);
+
+        if (!decodeAccessTokenResponse.IsSuccessStatusCode)
+        {
+            _logger.LogError("Attempt to decode setup token was unsuccessful.");
+            throw new Exception("There was an issue decoding the setup token.");
+        }
+
+        var accessToken = await decodeAccessTokenResponse.Content.ReadAsStringAsync();
+
+        if (!await IsAccessTokenValid(accessToken))
+        {
+            _logger.LogError("Attempt to update user with invalid access token.");
+            throw new Exception("Invalid access token.");
+        }
+
+        userData.AccessToken = accessToken;
+        await _userDataContext.SaveChangesAsync();
+    }
+
+    private async Task<HttpResponseMessage> DecodeAccessToken(string setupToken)
+    {
+        // SimpleFin tokens are Base64-encoded URLs on which a POST request will
+        // return the access URL for getting bank data.
+
+        byte[] data = Convert.FromBase64String(setupToken);
+        string decodedString = Encoding.UTF8.GetString(data);
+
+        var request = new HttpRequestMessage(
+            HttpMethod.Post,
+            decodedString);
+        var client = _clientFactory.CreateClient();
+        var response = await client.SendAsync(request);
+
+        return response;
+    }
+
+    private async Task<ApplicationUser> GetCurrentUserAsync(string id)
+    {
+        List<ApplicationUser> users;
+        ApplicationUser? foundUser;
         try
         {
-            var users = await _userDataContext.Users
+            users = await _userDataContext.ApplicationUsers
                 .Include(u => u.Accounts)
                     .ThenInclude(a => a.Transactions)
                 .Include(u => u.Accounts)
@@ -128,13 +156,21 @@ public class SimpleFinService(
                 .Include(u => u.Institutions)
                 .AsSplitQuery()
                 .ToListAsync();
-            return users.Single(u => u.Id == new Guid(id));
+            foundUser = users.FirstOrDefault(u => u.Id == new Guid(id));
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Message);
-            return null;
+            _logger.LogError("An error occurred while retrieving the user data: {ExceptionMessage}", ex.Message);
+            throw new Exception("An error occurred while retrieving the user data.");
         }
+
+        if (foundUser == null)
+        {
+            _logger.LogError("Attempt to create an account for an invalid user.");
+            throw new Exception("Provided user not found.");
+        }
+
+        return foundUser;
     }
 
     private static SimpleFinData GetUrlCredentials(string accessToken)
@@ -147,26 +183,34 @@ public class SimpleFinService(
         return new SimpleFinData(auth, baseUrl);
     }
 
-    private async Task<ISimpleFinAccountData> GetAccountData(string accessToken, long startDate)
+    private async Task<HttpResponseMessage> GetSimpleFinAccountData(string accessToken, long? startDate)
     {
         SimpleFinData data = GetUrlCredentials(accessToken);
 
-        var startArg = "?start-date=" + startDate.ToString();
+        var startArg = startDate.HasValue ? "?start-date=" + startDate.Value.ToString() : string.Empty;
 
         var request = new HttpRequestMessage(
             HttpMethod.Get,
             data.BaseUrl + "/accounts" + startArg);
+
         var client = _clientFactory.CreateClient();
         var byteArray = Encoding.ASCII.GetBytes(data.Auth);
         client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
 
-        var response = await client.SendAsync(request);
+        return await client.SendAsync(request);
+    }
+
+    private async Task<ISimpleFinAccountData> GetAccountData(string accessToken, long startDate)
+    {
+        var response = await GetSimpleFinAccountData(accessToken, startDate);
         var jsonString = await response.Content.ReadAsStringAsync();
 
         return JsonSerializer.Deserialize<ISimpleFinAccountData>(jsonString, s_readOptions) ?? new SimpleFinAccountData();
     }
 
-    private async Task SyncInstitutionsAsync(IApplicationUser userData, IEnumerable<ISimpleFinAccount> accountsData)
+    private async Task<bool> IsAccessTokenValid(string accessToken) => (await GetSimpleFinAccountData(accessToken, null)).IsSuccessStatusCode;
+
+    private async Task SyncInstitutionsAsync(ApplicationUser userData, IEnumerable<ISimpleFinAccount> accountsData)
     {
         var institutions = accountsData.Select(a => a.Org).Distinct();
         foreach (var institution in institutions)
@@ -180,11 +224,11 @@ public class SimpleFinService(
                 UserID = userData.Id,
             };
 
-            await _institutionService.CreateInstitutionAsync(userData, newInstitution);
+            await _institutionService.CreateInstitutionAsync(userData.Id, newInstitution);
         }
     }
 
-    private async Task SyncAccountsAsync(IApplicationUser userData, IEnumerable<ISimpleFinAccount> accountsData)
+    private async Task SyncAccountsAsync(ApplicationUser userData, IEnumerable<ISimpleFinAccount> accountsData)
     {
         foreach (var accountData in accountsData)
         {
@@ -205,7 +249,7 @@ public class SimpleFinService(
                     InstitutionID = institutionId,
                 };
 
-                await _accountService.CreateAccountAsync(userData, newAccount);
+                await _accountService.CreateAccountAsync(userData.Id, newAccount);
             }
 
             await SyncTransactionsAsync(userData, accountData.Id, accountData.Transactions);
@@ -213,7 +257,7 @@ public class SimpleFinService(
         }
     }
 
-    private async Task SyncTransactionsAsync(IApplicationUser userData, string syncId, IEnumerable<ISimpleFinTransaction> transactionsData)
+    private async Task SyncTransactionsAsync(ApplicationUser userData, string syncId, IEnumerable<ISimpleFinTransaction> transactionsData)
     {
         if (!transactionsData.Any()) return;
 
@@ -242,13 +286,13 @@ public class SimpleFinService(
                         AccountID = userAccount.ID,
                     };
 
-                    await _transactionService.CreateTransactionAsync(userData, newTransaction);
+                    await _transactionService.CreateTransactionAsync(userData.Id, newTransaction);
                 }
             }
         }
     }
 
-    private async Task SyncBalancesAsync(IApplicationUser userData, string syncId, ISimpleFinAccount accountData)
+    private async Task SyncBalancesAsync(ApplicationUser userData, string syncId, ISimpleFinAccount accountData)
     {
         var foundAccount = userData.Accounts.SingleOrDefault(a => a.SyncID == syncId);
 
@@ -270,25 +314,8 @@ public class SimpleFinService(
                     AccountID = foundAccount.ID,
                 };
 
-                await _balanceService.CreateBalancesAsync(userData, newBalance);
+                await _balanceService.CreateBalancesAsync(userData.Id, newBalance);
             }
         }
-    }
-
-    public async Task<HttpResponseMessage> ReadAccessToken(string setupToken)
-    {
-        // SimpleFin tokens are Base64-encoded URLs on which a POST request will
-        // return the access URL for getting bank data.
-
-        byte[] data = Convert.FromBase64String(setupToken);
-        string decodedString = Encoding.UTF8.GetString(data);
-
-        var request = new HttpRequestMessage(
-            HttpMethod.Post,
-            decodedString);
-        var client = _clientFactory.CreateClient();
-        var response = await client.SendAsync(request);
-
-        return response;
     }
 }

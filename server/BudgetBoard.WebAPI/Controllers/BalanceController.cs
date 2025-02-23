@@ -1,16 +1,19 @@
+using BudgetBoard.Database.Models;
 using BudgetBoard.Service.Interfaces;
 using BudgetBoard.Service.Models;
 using BudgetBoard.WebAPI.Utils;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetBoard.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class BalanceController(ILogger<BalanceController> logger, IBalanceService balanceService) : ControllerBase
+public class BalanceController(ILogger<BalanceController> logger, UserManager<ApplicationUser> userManager, IBalanceService balanceService) : ControllerBase
 {
     private readonly ILogger<BalanceController> _logger = logger;
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly IBalanceService _balanceService = balanceService;
 
     [HttpPost]
@@ -19,8 +22,7 @@ public class BalanceController(ILogger<BalanceController> logger, IBalanceServic
     {
         try
         {
-            var userData = await _balanceService.GetUserData(User);
-            await _balanceService.CreateBalancesAsync(userData, balance);
+            await _balanceService.CreateBalancesAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), balance);
             return Ok();
         }
         catch (Exception ex)
@@ -35,8 +37,7 @@ public class BalanceController(ILogger<BalanceController> logger, IBalanceServic
     {
         try
         {
-            var userData = await _balanceService.GetUserData(User);
-            return Ok(_balanceService.ReadBalancesAsync(userData, accountId));
+            return Ok(await _balanceService.ReadBalancesAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), accountId));
         }
         catch (Exception ex)
         {
@@ -50,8 +51,7 @@ public class BalanceController(ILogger<BalanceController> logger, IBalanceServic
     {
         try
         {
-            var userData = await _balanceService.GetUserData(User);
-            await _balanceService.UpdateBalanceAsync(userData, updatedBalance);
+            await _balanceService.UpdateBalanceAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), updatedBalance);
             return Ok();
         }
         catch (Exception ex)
@@ -66,8 +66,7 @@ public class BalanceController(ILogger<BalanceController> logger, IBalanceServic
     {
         try
         {
-            var userData = await _balanceService.GetUserData(User);
-            await _balanceService.DeleteBalanceAsync(userData, id);
+            await _balanceService.DeleteBalanceAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), id);
             return Ok();
         }
         catch (Exception ex)

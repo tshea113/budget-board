@@ -17,7 +17,7 @@ public class SyncBackgroundJob(ILogger<SyncBackgroundJob> logger, UserDataContex
 
     public async Task Execute(IJobExecutionContext context)
     {
-        var users = _userDataContext.Users
+        var users = _userDataContext.ApplicationUsers
             .Include(user => user.Accounts)
                 .ThenInclude(a => a.Transactions)
             .Include(user => user.Accounts)
@@ -51,11 +51,10 @@ public class SyncBackgroundJob(ILogger<SyncBackgroundJob> logger, UserDataContex
                     startDate = Math.Min(oneMonthAgo, lastSyncWithBuffer);
                 }
 
-                await _simpleFinService.SyncAsync(user);
+                await _simpleFinService.SyncAsync(user.Id);
 
-                await _applicationUserService.UpdateApplicationUserAsync(user, new ApplicationUserUpdateRequest
+                await _applicationUserService.UpdateApplicationUserAsync(user.Id, new ApplicationUserUpdateRequest
                 {
-                    AccessToken = user.AccessToken,
                     LastSync = DateTime.Now.ToUniversalTime()
                 });
 

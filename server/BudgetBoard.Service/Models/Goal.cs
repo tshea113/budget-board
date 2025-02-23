@@ -42,10 +42,8 @@ public interface IGoalUpdateRequest
     DateTime? CompleteDate { get; set; }
     bool IsCompleteDateEditable { get; set; }
     decimal Amount { get; set; }
-    decimal? InitialAmount { get; set; }
     decimal? MonthlyContribution { get; set; }
     bool IsMonthlyContributionEditable { get; set; }
-    IEnumerable<string> AccountIds { get; set; }
 }
 public class GoalUpdateRequest : IGoalUpdateRequest
 {
@@ -53,12 +51,9 @@ public class GoalUpdateRequest : IGoalUpdateRequest
     public string Name { get; set; }
     public DateTime? CompleteDate { get; set; }
     public bool IsCompleteDateEditable { get; set; }
-    public decimal Amount
-    { get; set; }
-    public decimal? InitialAmount { get; set; }
+    public decimal Amount { get; set; }
     public decimal? MonthlyContribution { get; set; }
     public bool IsMonthlyContributionEditable { get; set; }
-    public IEnumerable<string> AccountIds { get; set; }
 
     [JsonConstructor]
     public GoalUpdateRequest()
@@ -66,9 +61,7 @@ public class GoalUpdateRequest : IGoalUpdateRequest
         Name = string.Empty;
         CompleteDate = null;
         Amount = 0.0M;
-        InitialAmount = null;
         MonthlyContribution = null;
-        AccountIds = [];
     }
 }
 

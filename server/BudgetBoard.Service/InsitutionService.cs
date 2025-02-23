@@ -2,56 +2,52 @@
 using BudgetBoard.Database.Models;
 using BudgetBoard.Service.Interfaces;
 using BudgetBoard.Service.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Security.Claims;
+
 namespace BudgetBoard.Service;
 
-public class InstitutionService(ILogger<IInstitutionService> logger, UserDataContext userDataContext, UserManager<ApplicationUser> userManager) : IInstitutionService
+public class InstitutionService(ILogger<IInstitutionService> logger, UserDataContext userDataContext) : IInstitutionService
 {
     private readonly ILogger<IInstitutionService> _logger = logger;
     private readonly UserDataContext _userDataContext = userDataContext;
-    private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-
-    public async Task<IApplicationUser> GetUserData(ClaimsPrincipal user)
+    public async Task CreateInstitutionAsync(Guid userGuid, IInstitutionCreateRequest request)
     {
-        var userData = await GetCurrentUserAsync(_userManager.GetUserId(user) ?? string.Empty);
-        if (userData == null)
-        {
-            _logger.LogError("Attempt to access authorized content by unauthorized user.");
-            throw new Exception("You are not authorized to access this content.");
-        }
-
-        return userData;
-    }
-    public async Task CreateInstitutionAsync(IApplicationUser userData, IInstitutionCreateRequest request)
-    {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         var institution = new Institution
         {
             Name = request.Name,
             Index = request.Index,
-            UserID = request.UserID
+            UserID = userGuid
         };
 
         userData.Institutions.Add(institution);
         await _userDataContext.SaveChangesAsync();
     }
 
-    public IEnumerable<IInstitutionResponse> ReadInstitutionsAsync(IApplicationUser userData, Guid guid = default)
+    public async Task<IEnumerable<IInstitutionResponse>> ReadInstitutionsAsync(Guid userGuid, Guid guid = default)
     {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         if (guid != default)
         {
-            return [new InstitutionResponse(userData.Institutions.Single(i => i.ID == guid))];
+            var insitution = userData.Institutions.FirstOrDefault(i => i.ID == guid);
+            if (insitution == null)
+            {
+                _logger.LogError("Attempt to access non-existent institution.");
+                throw new Exception("The institution you are trying to access does not exist.");
+            }
+
+            return [new InstitutionResponse(insitution)];
         }
 
         return userData.Institutions.Select(i => new InstitutionResponse(i));
     }
 
-    public async Task UpdateInstitutionAsync(IApplicationUser userData, IInstitutionUpdateRequest request)
+    public async Task UpdateInstitutionAsync(Guid userGuid, IInstitutionUpdateRequest request)
     {
-        var institution = userData.Institutions.Single(i => i.ID == request.ID);
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
+        var institution = userData.Institutions.FirstOrDefault(i => i.ID == request.ID);
         if (institution == null)
         {
             _logger.LogError("Attempt to update non-existent institution.");
@@ -65,9 +61,10 @@ public class InstitutionService(ILogger<IInstitutionService> logger, UserDataCon
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task DeleteInstitutionAsync(IApplicationUser userData, Guid id, bool deleteTransactions)
+    public async Task DeleteInstitutionAsync(Guid userGuid, Guid id, bool deleteTransactions)
     {
-        var institution = userData.Institutions.Single(i => i.ID == id);
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
+        var institution = userData.Institutions.FirstOrDefault(i => i.ID == id);
         if (institution == null)
         {
             _logger.LogError("Attempt to delete non-existent institution.");
@@ -86,38 +83,49 @@ public class InstitutionService(ILogger<IInstitutionService> logger, UserDataCon
         await _userDataContext.SaveChangesAsync();
     }
 
-    public async Task OrderInstitutionsAsync(IApplicationUser userData, IEnumerable<IInstitutionIndexRequest> orderedInstitutions)
+    public async Task OrderInstitutionsAsync(Guid userGuid, IEnumerable<IInstitutionIndexRequest> orderedInstitutions)
     {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
         foreach (var institution in orderedInstitutions)
         {
-            var inst = userData.Institutions.Single(i => i.ID == institution.ID);
-            if (inst == null)
+            var insitution = userData.Institutions.FirstOrDefault(i => i.ID == institution.ID);
+            if (insitution == null)
             {
                 _logger.LogError("Attempt to order non-existent institution.");
                 throw new Exception("The institution you are trying to order does not exist.");
             }
 
-            inst.Index = institution.Index;
+            insitution.Index = institution.Index;
         }
 
         await _userDataContext.SaveChangesAsync();
     }
 
-    private async Task<ApplicationUser?> GetCurrentUserAsync(string id)
+    private async Task<ApplicationUser> GetCurrentUserAsync(string id)
     {
+        List<ApplicationUser> users;
+        ApplicationUser? foundUser;
         try
         {
-            var users = await _userDataContext.Users
+            users = await _userDataContext.ApplicationUsers
                 .Include(u => u.Institutions)
                 .ThenInclude(i => i.Accounts)
                 .ThenInclude(a => a.Balances)
                 .ToListAsync();
-            return users.Single(u => u.Id == new Guid(id));
+            foundUser = users.FirstOrDefault(u => u.Id == new Guid(id));
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Message);
-            return null;
+            _logger.LogError("An error occurred while retrieving the user data: {ExceptionMessage}", ex.Message);
+            throw new Exception("An error occurred while retrieving the user data.");
         }
+
+        if (foundUser == null)
+        {
+            _logger.LogError("Attempt to create an account for an invalid user.");
+            throw new Exception("Provided user not found.");
+        }
+
+        return foundUser;
     }
 }

@@ -65,7 +65,7 @@ namespace BudgetBoard.Database.Data
             modelBuilder.UseIdentityColumns();
         }
 
-        public DbSet<ApplicationUser> Users { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Budget> Budgets { get; set; }

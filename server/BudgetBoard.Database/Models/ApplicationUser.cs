@@ -4,7 +4,6 @@ namespace BudgetBoard.Database.Models;
 public interface IApplicationUser
 {
     Guid Id { get; set; }
-    string Uid { get; set; }
     string AccessToken { get; set; }
     DateTime LastSync { get; set; }
     ICollection<Account> Accounts { get; set; }
@@ -15,7 +14,6 @@ public interface IApplicationUser
 }
 public class ApplicationUser : IdentityUser<Guid>, IApplicationUser
 {
-    public string Uid { get; set; } = string.Empty;
     public string AccessToken { get; set; } = string.Empty;
     public DateTime LastSync { get; set; } = DateTime.MinValue;
     public ICollection<Account> Accounts { get; set; } = [];

@@ -1,15 +1,12 @@
-﻿using BudgetBoard.Database.Models;
-using BudgetBoard.Service.Models;
-using System.Security.Claims;
+﻿using BudgetBoard.Service.Models;
 
 namespace BudgetBoard.Service.Interfaces;
 
 public interface ITransactionService
 {
-    Task<IApplicationUser> GetUserData(ClaimsPrincipal user);
-    Task CreateTransactionAsync(IApplicationUser userData, ITransactionCreateRequest transaction);
-    IEnumerable<ITransactionResponse> ReadTransactionsAsync(IApplicationUser userData, int? year, int? month, bool getHidden, Guid guid = default);
-    Task UpdateTransactionAsync(IApplicationUser userData, ITransactionUpdateRequest editedTransaction);
-    Task DeleteTransactionAsync(IApplicationUser userData, Guid transactionID);
-    Task RestoreTransactionAsync(IApplicationUser userData, Guid transactionID);
+    Task CreateTransactionAsync(Guid userGuid, ITransactionCreateRequest transaction);
+    Task<IEnumerable<ITransactionResponse>> ReadTransactionsAsync(Guid userGuid, int? year, int? month, bool getHidden, Guid guid = default);
+    Task UpdateTransactionAsync(Guid userGuid, ITransactionUpdateRequest editedTransaction);
+    Task DeleteTransactionAsync(Guid userGuid, Guid transactionID);
+    Task RestoreTransactionAsync(Guid userGuid, Guid transactionID);
 }

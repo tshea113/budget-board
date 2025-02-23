@@ -22,7 +22,6 @@ const EditableGoalTargetAmountCell = (
       const newGoal: IGoalUpdateRequest = {
         ...props.goal,
         amount: parseFloat(goalAmountValue),
-        accountIds: props.goal.accounts.map((account) => account.id),
       };
       if (props.editCell != null) {
         props.editCell(newGoal);

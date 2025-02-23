@@ -1,14 +1,11 @@
-﻿using BudgetBoard.Database.Models;
-using BudgetBoard.Service.Models;
-using System.Security.Claims;
+﻿using BudgetBoard.Service.Models;
 
 namespace BudgetBoard.Service.Interfaces;
 
 public interface IBalanceService
 {
-    Task<IApplicationUser> GetUserData(ClaimsPrincipal user);
-    Task CreateBalancesAsync(IApplicationUser userData, IBalanceCreateRequest balance);
-    IEnumerable<IBalanceResponse> ReadBalancesAsync(IApplicationUser userData, Guid accountId);
-    Task UpdateBalanceAsync(IApplicationUser userData, IBalanceUpdateRequest updatedBalance);
-    Task DeleteBalanceAsync(IApplicationUser userData, Guid guid);
+    Task CreateBalancesAsync(Guid userGuid, IBalanceCreateRequest balance);
+    Task<IEnumerable<IBalanceResponse>> ReadBalancesAsync(Guid userGuid, Guid accountId);
+    Task UpdateBalanceAsync(Guid userGuid, IBalanceUpdateRequest updatedBalance);
+    Task DeleteBalanceAsync(Guid userGuid, Guid guid);
 }
