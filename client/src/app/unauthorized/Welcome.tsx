@@ -16,12 +16,24 @@ const Welcome = (): React.ReactNode => {
     LoginCardState.Login
   );
 
+  const [userEmail, setUserEmail] = React.useState<string>("");
+
   const getCardState = (): React.ReactNode => {
     switch (loginCardState) {
       case LoginCardState.Login:
-        return <Login setLoginCardState={setLoginCardState} />;
+        return (
+          <Login
+            setLoginCardState={setLoginCardState}
+            setUserEmail={setUserEmail}
+          />
+        );
       case LoginCardState.ResetPassword:
-        return <ResetPassword setLoginCardState={setLoginCardState} />;
+        return (
+          <ResetPassword
+            setLoginCardState={setLoginCardState}
+            email={userEmail}
+          />
+        );
       case LoginCardState.Register:
         return <Register setLoginCardState={setLoginCardState} />;
       default:

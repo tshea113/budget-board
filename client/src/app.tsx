@@ -1,8 +1,12 @@
 import "./App.css";
 import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
 
 import { BrowserRouter, Route, Routes } from "react-router";
 import { Center, createTheme, MantineProvider } from "@mantine/core";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Notifications } from "@mantine/notifications";
+
 import Authorized from "./app/authorized/authorized";
 import Welcome from "./app/unauthorized/Welcome";
 import AuthProvider from "./components/auth/AuthProvider";
@@ -29,28 +33,31 @@ function App() {
   return (
     <MantineProvider theme={theme} defaultColorScheme="dark">
       <AuthProvider>
-        <Center>
-          <BrowserRouter>
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  <UnauthorizedRoute>
-                    <Welcome />
-                  </UnauthorizedRoute>
-                }
-              />
-              <Route
-                path="/dashboard"
-                element={
-                  <AuthorizedRoute>
-                    <Authorized />
-                  </AuthorizedRoute>
-                }
-              />
-            </Routes>
-          </BrowserRouter>
-        </Center>
+        <QueryClientProvider client={queryClient}>
+          <Notifications />
+          <Center>
+            <BrowserRouter>
+              <Routes>
+                <Route
+                  path="/"
+                  element={
+                    <UnauthorizedRoute>
+                      <Welcome />
+                    </UnauthorizedRoute>
+                  }
+                />
+                <Route
+                  path="/dashboard"
+                  element={
+                    <AuthorizedRoute>
+                      <Authorized />
+                    </AuthorizedRoute>
+                  }
+                />
+              </Routes>
+            </BrowserRouter>
+          </Center>
+        </QueryClientProvider>
       </AuthProvider>
     </MantineProvider>
   );

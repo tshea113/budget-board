@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { AuthContext } from "./AuthProvider";
 import { Navigate } from "react-router";
+import { Loader } from "@mantine/core";
 
 interface UnauthorizedRouteProps {
   children: React.ReactNode;
@@ -9,9 +10,8 @@ interface UnauthorizedRouteProps {
 const UnauthorizedRoute = (props: UnauthorizedRouteProps): React.ReactNode => {
   const { accessToken, loading } = useContext<any>(AuthContext);
 
-  // TODO: Add a loading spinner here
   if (loading) {
-    return <p>Loading</p>;
+    return <Loader size={100} />;
   }
 
   if (!accessToken) {
