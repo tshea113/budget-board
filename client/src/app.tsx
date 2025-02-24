@@ -1,34 +1,21 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Welcome from './app/no-auth/welcome/welcome';
-import DashboardLayout from './app/auth/layout';
-import ErrorPage from './components/error-page';
-import AuthProvider from './components/auth-provider';
-import AuthRoute from './components/auth-route';
-import NoAuthRoute from './components/no-auth-route';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ThemeProvider } from './components/theme-provider';
-import { Toaster } from './components/ui/sonner';
-import { TooltipProvider } from './components/ui/tooltip';
+import "./App.css";
+import "@mantine/core/styles.css";
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: (
-      <NoAuthRoute>
-        <Welcome />
-      </NoAuthRoute>
-    ),
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: '/dashboard',
-    element: (
-      <AuthRoute>
-        <DashboardLayout />
-      </AuthRoute>
-    ),
-  },
-]);
+import { BrowserRouter, Route, Routes } from "react-router";
+import { Center, createTheme, MantineProvider } from "@mantine/core";
+import Authorized from "./app/authorized/authorized";
+import Welcome from "./app/unauthorized/Welcome";
+import AuthProvider from "./components/auth/AuthProvider";
+import AuthorizedRoute from "./components/auth/AuthorizedRoute";
+import UnauthorizedRoute from "./components/auth/UnauthorizedRoute";
+
+// Your theme configuration is merged with default theme
+const theme = createTheme({
+  fontFamily: "Montserrat, sans-serif",
+  defaultRadius: "sm",
+  primaryColor: "indigo",
+  primaryShade: 3,
+});
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -38,19 +25,35 @@ const queryClient = new QueryClient({
   },
 });
 
-const App = (): JSX.Element => {
+function App() {
   return (
-    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+    <MantineProvider theme={theme} defaultColorScheme="dark">
       <AuthProvider>
-        <QueryClientProvider client={queryClient}>
-          <TooltipProvider>
-            <RouterProvider router={router} />
-            <Toaster />
-          </TooltipProvider>
-        </QueryClientProvider>
+        <Center>
+          <BrowserRouter>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <UnauthorizedRoute>
+                    <Welcome />
+                  </UnauthorizedRoute>
+                }
+              />
+              <Route
+                path="/dashboard"
+                element={
+                  <AuthorizedRoute>
+                    <Authorized />
+                  </AuthorizedRoute>
+                }
+              />
+            </Routes>
+          </BrowserRouter>
+        </Center>
       </AuthProvider>
-    </ThemeProvider>
+    </MantineProvider>
   );
-};
+}
 
 export default App;

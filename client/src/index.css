@@ -1,91 +1,68 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
 
-@layer base {
-  :root {
-    --background: 216 33% 97%;
-    --foreground: 228 18% 11%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 84% 5%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 84% 5%;
-    --primary: 210 63% 57%;
-    --primary-foreground: 216 33% 97%;
-    --secondary: 209 100% 36%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 204 12% 90%;
-    --muted-foreground: 220 4% 44%;
-    --accent: 214 4% 89%;
-    --accent-foreground: 222 84% 5%;
-    --destructive: 349 90% 54%;
-    --destructive-foreground: 0 0% 100%;
-    --success: 122 39% 49%;
-    --success-foreground: 0 0% 100%;
-    --warning: 35 100% 51%;
-    --warning-foreground: 0 0% 100%;
-    --border: 204 12% 84%;
-    --input: 216 33% 94%;
-    --ring: 204 90% 60%;
-    --radius: 0.3rem;
-    --chart-1: 209 100% 52%;
-    --chart-2: 164 95% 43%;
-    --chart-3: 307 50% 40%;
-    --chart-4: 35 99% 59%;
-    --chart-5: 358 70% 66%;
-    --sidebar-background: 214 13% 89%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 210 63% 57%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 214 4% 90%;
-    --sidebar-accent-foreground: 222 84% 5%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
 
-  .dark {
-    --background: 228 18% 11%;
-    --foreground: 240 9% 89%;
-    --card: 228 10% 14%;
-    --card-foreground: 240 9% 89%;
-    --popover: 228 18% 11%;
-    --popover-foreground: 240 9% 89%;
-    --primary: 224 49% 70%;
-    --primary-foreground: 228 18% 11%;
-    --secondary: 217 52% 49%;
-    --secondary-foreground: 240 9% 89%;
-    --muted: 233 6% 21%;
-    --muted-foreground: 240 4% 64%;
-    --accent: 228 10% 19%;
-    --accent-foreground: 240 9% 89%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 240 9% 89%;
-    --success: 118 49% 48%;
-    --success-foreground: 240 9% 89%;
-    --border: 233 6% 28%;
-    --input: 233 6% 16%;
-    --ring: 224.3 76.3% 48%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 216 12% 8%;
-    --sidebar-foreground: 240 9% 89%;
-    --sidebar-primary: 224 49% 70%;
-    --sidebar-primary-foreground: 228 18% 11%;
-    --sidebar-accent: 233 6% 25%;
-    --sidebar-accent-foreground: 240 9% 89%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 224.3 76.3% 48%;
-  }
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-@layer base {
-  * {
-    @apply border-border;
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
   }
-  body {
-    @apply bg-background text-foreground;
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
   }
 }
