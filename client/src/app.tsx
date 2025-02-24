@@ -15,8 +15,7 @@ import UnauthorizedRoute from "./components/auth/UnauthorizedRoute";
 
 // Your theme configuration is merged with default theme
 const theme = createTheme({
-  fontFamily: "Montserrat, sans-serif",
-  defaultRadius: "sm",
+  defaultRadius: "xs",
   primaryColor: "indigo",
   primaryShade: 3,
 });
