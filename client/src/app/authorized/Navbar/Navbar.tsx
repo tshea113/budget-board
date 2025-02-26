@@ -1,6 +1,6 @@
 import classes from "./Navbar.module.css";
 
-import { Stack } from "@mantine/core";
+import { Burger, Stack } from "@mantine/core";
 import {
   BanknoteIcon,
   CalculatorIcon,
@@ -34,6 +34,8 @@ const sidebarItems = [
 interface NavbarProps {
   currentPage: Pages;
   setCurrentPage: (page: Pages) => void;
+  isNavbarOpen: boolean;
+  toggleNavbar: () => void;
 }
 
 const Navbar = (props: NavbarProps) => {
@@ -69,21 +71,32 @@ const Navbar = (props: NavbarProps) => {
   ));
 
   return (
-    <nav className={classes.navbar}>
+    <>
       <div className={classes.navbarMain}>
-        <Stack justify="center" gap={5}>
+        <Stack justify="center" align="center" gap={5}>
+          <Burger
+            opened={props.isNavbarOpen}
+            className={classes.burger}
+            mb={10}
+            onClick={props.toggleNavbar}
+            hiddenFrom="xs"
+            size="md"
+          />
           {links}
         </Stack>
       </div>
-      <Stack justify="center" gap={0}>
-        <NavbarLink
-          icon={<SettingsIcon />}
-          label="Settings"
-          onClick={() => props.setCurrentPage(Pages.Settings)}
-        />
-        <NavbarLink icon={<LogOutIcon />} label="Logout" onClick={Logout} />
-      </Stack>
-    </nav>
+      <div className={classes.navbarFooter}>
+        <Stack justify="center" align="center" gap={5}>
+          <NavbarLink
+            icon={<SettingsIcon />}
+            label="Settings"
+            active={props.currentPage === Pages.Settings}
+            onClick={() => props.setCurrentPage(Pages.Settings)}
+          />
+          <NavbarLink icon={<LogOutIcon />} label="Logout" onClick={Logout} />
+        </Stack>
+      </div>
+    </>
   );
 };
 
