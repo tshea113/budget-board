@@ -16,6 +16,11 @@ const Authorized = (): React.ReactNode => {
   const [currentPage, setCurrentPage] = React.useState(Pages.Dashboard);
   const [isNavbarOpen, { toggle }] = useDisclosure();
 
+  const onPageSelect = (page: Pages): void => {
+    setCurrentPage(page);
+    toggle();
+  };
+
   return (
     <AppShell
       className={classes.appShell}
@@ -36,7 +41,7 @@ const Authorized = (): React.ReactNode => {
       <AppShellNavbar className={classes.navbar}>
         <Navbar
           currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
+          setCurrentPage={onPageSelect}
           isNavbarOpen={isNavbarOpen}
           toggleNavbar={toggle}
         />
