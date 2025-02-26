@@ -1,0 +1,90 @@
+import classes from "./Navbar.module.css";
+
+import { Stack } from "@mantine/core";
+import {
+  BanknoteIcon,
+  CalculatorIcon,
+  ChartNoAxesColumnIncreasingIcon,
+  GoalIcon,
+  LayoutDashboardIcon,
+  LogOutIcon,
+  SettingsIcon,
+} from "lucide-react";
+import NavbarLink from "./NavbarLink";
+import { Pages } from "../PageContent/PageContent";
+import { useQueryClient } from "@tanstack/react-query";
+import { AuthContext } from "../../../components/auth/AuthProvider";
+import React from "react";
+import { AxiosError } from "axios";
+import { translateAxiosError } from "../../helpers/requests";
+import { notifications } from "@mantine/notifications";
+
+const sidebarItems = [
+  { icon: <LayoutDashboardIcon />, page: Pages.Dashboard, label: "Dashboard" },
+  { icon: <BanknoteIcon />, page: Pages.Transactions, label: "Transactions" },
+  { icon: <CalculatorIcon />, page: Pages.Budgets, label: "Budgets" },
+  { icon: <GoalIcon />, page: Pages.Goals, label: "Goals" },
+  {
+    icon: <ChartNoAxesColumnIncreasingIcon />,
+    page: Pages.Trends,
+    label: "Trends",
+  },
+];
+
+interface NavbarProps {
+  currentPage: Pages;
+  setCurrentPage: (page: Pages) => void;
+}
+
+const Navbar = (props: NavbarProps) => {
+  const { request, setAccessToken } = React.useContext<any>(AuthContext);
+
+  const queryClient = useQueryClient();
+  const Logout = (): void => {
+    request({
+      url: "/api/logout",
+      method: "POST",
+      data: {},
+    })
+      .then(() => {
+        queryClient.removeQueries();
+        setAccessToken("");
+        localStorage.removeItem("refresh-token");
+      })
+      .catch((error: AxiosError) => {
+        notifications.show({
+          color: "red",
+          message: translateAxiosError(error),
+        });
+      });
+  };
+
+  const links = sidebarItems.map((link) => (
+    <NavbarLink
+      {...link}
+      key={link.label}
+      active={props.currentPage === link.page}
+      onClick={() => props.setCurrentPage(link.page)}
+    />
+  ));
+
+  return (
+    <nav className={classes.navbar}>
+      <div className={classes.navbarMain}>
+        <Stack justify="center" gap={5}>
+          {links}
+        </Stack>
+      </div>
+      <Stack justify="center" gap={0}>
+        <NavbarLink
+          icon={<SettingsIcon />}
+          label="Settings"
+          onClick={() => props.setCurrentPage(Pages.Settings)}
+        />
+        <NavbarLink icon={<LogOutIcon />} label="Logout" onClick={Logout} />
+      </Stack>
+    </nav>
+  );
+};
+
+export default Navbar;

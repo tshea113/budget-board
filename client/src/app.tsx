@@ -7,11 +7,11 @@ import { Center, createTheme, MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Notifications } from "@mantine/notifications";
 
-import Authorized from "./app/authorized/authorized";
 import Welcome from "./app/unauthorized/Welcome";
 import AuthProvider from "./components/auth/AuthProvider";
 import AuthorizedRoute from "./components/auth/AuthorizedRoute";
 import UnauthorizedRoute from "./components/auth/UnauthorizedRoute";
+import Authorized from "./app/authorized/Authorized";
 
 // Your theme configuration is merged with default theme
 const theme = createTheme({
