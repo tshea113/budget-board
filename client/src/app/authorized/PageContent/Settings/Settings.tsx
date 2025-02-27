@@ -2,7 +2,7 @@ import classes from "./Settings.module.css";
 
 import { Stack, Title } from "@mantine/core";
 import DarkModeToggle from "./DarkModeToggle";
-import LinkSimpleFin from "./LinkSimpleFin/LinkSimpleFin";
+import LinkSimpleFin from "./LinkSimpleFin";
 import React from "react";
 import ResetPassword from "./ResetPassword";
 
