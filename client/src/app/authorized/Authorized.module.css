@@ -17,6 +17,13 @@
   );
 }
 
+.main {
+  width: 100vw;
+  display: flex;
+  align-content: flex-start;
+  justify-content: center;
+}
+
 .burger {
   &:hover {
     background-color: light-dark(

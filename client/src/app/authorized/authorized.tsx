@@ -46,14 +46,7 @@ const Authorized = (): React.ReactNode => {
           toggleNavbar={toggle}
         />
       </AppShellNavbar>
-      <AppShellMain
-        w="100vw"
-        style={{
-          display: "flex",
-          alignContent: "flex-start",
-          justifyContent: "center",
-        }}
-      >
+      <AppShellMain className={classes.main}>
         <PageContent currentPage={currentPage} />
       </AppShellMain>
     </AppShell>

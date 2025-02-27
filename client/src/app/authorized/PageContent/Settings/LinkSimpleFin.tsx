@@ -1,4 +1,4 @@
-import classes from "./LinkSimpleFin.module.css";
+import classes from "./Settings.module.css";
 
 import {
   Button,
