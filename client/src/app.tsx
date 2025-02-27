@@ -17,7 +17,6 @@ import Authorized from "./app/authorized/Authorized";
 const theme = createTheme({
   defaultRadius: "xs",
   primaryColor: "indigo",
-  primaryShade: 3,
 });
 
 const queryClient = new QueryClient({
@@ -30,7 +29,7 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <MantineProvider theme={theme} defaultColorScheme="dark">
+    <MantineProvider theme={theme} defaultColorScheme="light">
       <AuthProvider>
         <QueryClientProvider client={queryClient}>
           <Notifications />

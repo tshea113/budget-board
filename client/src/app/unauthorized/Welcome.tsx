@@ -1,6 +1,14 @@
 import React from "react";
 import BudgetBoardLogo from "../../assets/budget-board-logo";
-import { Card, Container, Text, Stack, Group, Anchor } from "@mantine/core";
+import {
+  Container,
+  Text,
+  Stack,
+  Group,
+  Anchor,
+  useComputedColorScheme,
+  Paper,
+} from "@mantine/core";
 import Register from "./Register";
 import Login from "./Login";
 import ResetPassword from "./ResetPassword";
@@ -15,8 +23,8 @@ const Welcome = (): React.ReactNode => {
   const [loginCardState, setLoginCardState] = React.useState<LoginCardState>(
     LoginCardState.Login
   );
-
   const [userEmail, setUserEmail] = React.useState<string>("");
+  const computedColorScheme = useComputedColorScheme();
 
   const getCardState = (): React.ReactNode => {
     switch (loginCardState) {
@@ -45,12 +53,15 @@ const Welcome = (): React.ReactNode => {
     <Container size="lg" w="500px">
       <Stack align="center" gap={10}>
         <Text size="xl">Welcome to</Text>
-        <BudgetBoardLogo width={340} darkMode />
+        <BudgetBoardLogo
+          width={340}
+          darkMode={computedColorScheme === "dark"}
+        />
         <Text size="md">A simple app for managing monthly budgets.</Text>
       </Stack>
-      <Card withBorder mt="2em" w="100%" maw="500px">
+      <Paper shadow="sm" withBorder mt="2em" w="100%" maw="500px" p={20}>
         {getCardState()}
-      </Card>
+      </Paper>
       {loginCardState !== LoginCardState.Register && (
         <Group mt="xl" justify="center">
           <Text size="sm">Don't have an account?</Text>
