@@ -12,7 +12,7 @@
 .header {
   padding: 5px;
   background-color: light-dark(
-    var(--mantine-color-gray-1),
+    var(--mantine-color-gray-2),
     var(--mantine-color-dark-8)
   );
 }
@@ -22,6 +22,10 @@
   display: flex;
   align-content: flex-start;
   justify-content: center;
+  background-color: light-dark(
+    var(--mantine-color-gray-1),
+    var(--mantine-color-dark-8)
+  );
 }
 
 .burger {

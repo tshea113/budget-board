@@ -1,3 +1,4 @@
+import Dashboard from "./Dashboard/Dashboard";
 import Settings from "./Settings/Settings";
 
 export enum Pages {
@@ -16,7 +17,7 @@ interface PageContentProps {
 const PageContent = (props: PageContentProps): React.ReactNode => {
   switch (props.currentPage) {
     case Pages.Dashboard:
-      return <div>Dashboard content</div>;
+      return <Dashboard />;
     case Pages.Transactions:
       return <div>Transactions content</div>;
     case Pages.Budgets:
