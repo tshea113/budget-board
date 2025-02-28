@@ -1,4 +1,4 @@
-import BudgetBoardLogo from "../../../assets/budget-board-logo";
+import BudgetBoardLogo from "@assets/budget-board-logo";
 import classes from "./Header.module.css";
 
 import { Burger, Group, useComputedColorScheme } from "@mantine/core";

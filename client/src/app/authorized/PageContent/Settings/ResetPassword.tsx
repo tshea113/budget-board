@@ -10,13 +10,10 @@ import {
   Title,
 } from "@mantine/core";
 import React from "react";
-import { AuthContext } from "../../../../components/auth/AuthProvider";
+import { AuthContext } from "@components/auth/AuthProvider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
-import {
-  translateAxiosError,
-  ValidationError,
-} from "../../../helpers/requests";
+import { translateAxiosError, ValidationError } from "@helpers/requests";
 import { AxiosError } from "axios";
 
 type ResetPasswordData = {
