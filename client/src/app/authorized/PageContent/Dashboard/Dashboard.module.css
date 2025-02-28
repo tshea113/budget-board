@@ -1,5 +1,6 @@
 .root {
   width: 100%;
+  max-width: 1400px;
 }
 
 .mainContent {
@@ -23,7 +24,7 @@
   justify-content: flex-start;
   align-items: center;
   width: 40%;
-  max-width: 425px;
+  max-width: 400px;
   height: 100%;
 
   @media (max-width: $mantine-breakpoint-sm) {
