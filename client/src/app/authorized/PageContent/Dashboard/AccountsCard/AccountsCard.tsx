@@ -34,7 +34,7 @@ const AccountsCard = (): React.ReactNode => {
   return (
     <Card
       className={classes.card}
-      padding="sm"
+      padding="xs"
       radius="md"
       shadow="sm"
       withBorder
