@@ -8,6 +8,9 @@ import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import { IInstitution } from "@models/institution";
 import InstitutionItem from "./InstitutionItems/InstitutionItem";
+import AccountsSettings from "./AccountsSettings/AccountsSettings";
+import { useDisclosure } from "@mantine/hooks";
+import { IAccount } from "@models/account";
 
 const AccountsCard = (): React.ReactNode => {
   const { request } = React.useContext<any>(AuthContext);
@@ -27,6 +30,24 @@ const AccountsCard = (): React.ReactNode => {
     },
   });
 
+  const accountsQuery = useQuery({
+    queryKey: ["accounts"],
+    queryFn: async (): Promise<IAccount[]> => {
+      const res: AxiosResponse = await request({
+        url: "/api/account",
+        method: "GET",
+      });
+
+      if (res.status === 200) {
+        return res.data as IAccount[];
+      }
+
+      return [];
+    },
+  });
+
+  const [opened, { open, close }] = useDisclosure(false);
+
   const sortedInstitutions = institutionQuery.data?.sort(
     (a, b) => a.index - b.index
   );
@@ -41,9 +62,18 @@ const AccountsCard = (): React.ReactNode => {
     >
       <Group justify="space-between" align="center">
         <Title order={2}>Accounts</Title>
-        <ActionIcon className={classes.settingsIcon} variant="subtle">
+        <ActionIcon
+          className={classes.settingsIcon}
+          variant="subtle"
+          onClick={open}
+        >
           <SettingsIcon />
         </ActionIcon>
+        <AccountsSettings
+          modalOpened={opened}
+          closeModal={close}
+          accounts={accountsQuery.data ?? []}
+        />
       </Group>
       <Stack gap={5}>
         {(sortedInstitutions ?? []).map((institution: IInstitution) => (
