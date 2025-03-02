@@ -58,7 +58,6 @@ const AccountSelectInput = ({
 
   return (
     <MultiSelect
-      w="20rem"
       data={getFilteredAccounts().map((a) => {
         return { value: a.id, label: a.name };
       })}
