@@ -17,7 +17,7 @@
     "@mantine/charts": "^7.17.0",
     "@mantine/code-highlight": "^7.17.0",
     "@mantine/core": "^7.17.0",
-    "@mantine/dates": "^7.17.0",
+    "@mantine/dates": "^7.17.1",
     "@mantine/dropzone": "^7.17.0",
     "@mantine/form": "^7.17.0",
     "@mantine/hooks": "^7.17.0",

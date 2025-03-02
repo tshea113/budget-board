@@ -1,5 +1,6 @@
 import Dashboard from "./Dashboard/Dashboard";
 import Settings from "./Settings/Settings";
+import Transactions from "./Transactions/Transactions";
 
 export enum Pages {
   Dashboard,
@@ -19,7 +20,7 @@ const PageContent = (props: PageContentProps): React.ReactNode => {
     case Pages.Dashboard:
       return <Dashboard />;
     case Pages.Transactions:
-      return <div>Transactions content</div>;
+      return <Transactions />;
     case Pages.Budgets:
       return <div>Budgets content</div>;
     case Pages.Goals:
