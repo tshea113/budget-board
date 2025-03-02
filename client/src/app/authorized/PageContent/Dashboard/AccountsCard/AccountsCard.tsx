@@ -72,6 +72,7 @@ const AccountsCard = (): React.ReactNode => {
         <AccountsSettings
           modalOpened={opened}
           closeModal={close}
+          institutions={institutionQuery.data ?? []}
           accounts={accountsQuery.data ?? []}
         />
       </Group>
