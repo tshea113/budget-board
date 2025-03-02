@@ -3,11 +3,16 @@ import classes from "./TransactionCard.module.css";
 import EditableCurrencyCell from "@app/authorized/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableCurrencyCell/EditableCurrencyCell";
 import EditableDateCell from "@app/authorized/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableDateCell/EditableDateCell";
 import EditableMerchantCell from "@app/authorized/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableMerchantCell/EditableMerchantCell";
-import { Card, Flex } from "@mantine/core";
+import { Card, Flex, LoadingOverlay } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { ITransaction } from "@models/transaction";
+import { ITransaction, ITransactionUpdateRequest } from "@models/transaction";
 import React from "react";
 import EditableCategoryCell from "./EditableCategoryCell/EditableCategoryCell";
+import { AuthContext } from "@components/Auth/AuthProvider";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { translateAxiosError } from "@helpers/requests";
+import { notifications } from "@mantine/notifications";
+import { AxiosError } from "axios";
 
 interface TransactionCardProps {
   transaction: ITransaction;
@@ -15,6 +20,55 @@ interface TransactionCardProps {
 
 const TransactionCard = (props: TransactionCardProps): React.ReactNode => {
   const [isSelected, { toggle }] = useDisclosure();
+
+  const { request } = React.useContext<any>(AuthContext);
+
+  const queryClient = useQueryClient();
+  const doEditTransaction = useMutation({
+    mutationFn: async (newTransaction: ITransactionUpdateRequest) =>
+      await request({
+        url: "/api/transaction",
+        method: "PUT",
+        data: newTransaction,
+      }),
+    onMutate: async (variables: ITransactionUpdateRequest) => {
+      await queryClient.cancelQueries({ queryKey: ["transactions"] });
+
+      const previousTransactions: ITransaction[] =
+        queryClient.getQueryData(["transactions"]) ?? [];
+
+      queryClient.setQueryData(
+        ["transactions"],
+        (oldTransactions: ITransaction[]) =>
+          oldTransactions.map((oldTransaction) =>
+            oldTransaction.id === variables.id
+              ? {
+                  ...oldTransaction,
+                  amount: variables.amount,
+                  date: variables.date,
+                  category: variables.category,
+                  subcategory: variables.subcategory,
+                  merchantName: variables.merchantName,
+                  deleted: variables.deleted,
+                }
+              : oldTransaction
+          )
+      );
+
+      return { previousTransactions };
+    },
+    onError: (error: AxiosError, _variables: ITransaction, context) => {
+      queryClient.setQueryData(
+        ["transactions"],
+        context?.previousTransactions ?? []
+      );
+      notifications.show({ color: "red", message: translateAxiosError(error) });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+    },
+  });
+
   return (
     <Card
       className={classes.card}
@@ -22,6 +76,7 @@ const TransactionCard = (props: TransactionCardProps): React.ReactNode => {
       radius="lg"
       withBorder={isSelected}
     >
+      <LoadingOverlay visible={doEditTransaction.isPending} />
       <Flex
         className={classes.container}
         direction={{ base: "column", xs: "row" }}
@@ -29,22 +84,22 @@ const TransactionCard = (props: TransactionCardProps): React.ReactNode => {
         <EditableDateCell
           transaction={props.transaction}
           isSelected={isSelected}
-          editCell={undefined}
+          editCell={doEditTransaction.mutate}
         />
         <EditableMerchantCell
           transaction={props.transaction}
           isSelected={isSelected}
-          editCell={undefined}
+          editCell={doEditTransaction.mutate}
         />
         <EditableCategoryCell
           transaction={props.transaction}
           isSelected={isSelected}
-          editCell={() => {}}
+          editCell={doEditTransaction.mutate}
         />
         <EditableCurrencyCell
-          value={props.transaction.amount}
+          transaction={props.transaction}
           isSelected={isSelected}
-          editCell={() => {}}
+          editCell={doEditTransaction.mutate}
         />
       </Flex>
     </Card>

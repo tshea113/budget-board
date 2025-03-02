@@ -2,17 +2,13 @@ import classes from "./EditableCurrencyCell.module.css";
 
 import { convertNumberToCurrency } from "@helpers/currency";
 import { Flex, Group, NumberInput, Text } from "@mantine/core";
+import { ITransaction } from "@models/transaction";
 import React from "react";
 
 interface EditableCurrencyCellProps {
-  className?: string;
-  inputClassName?: string;
-  textClassName?: string;
-  value: number;
+  transaction: ITransaction;
   isSelected: boolean;
-  editCell: (newValue: number) => void;
-  disableColor?: boolean;
-  invertColor?: boolean;
+  editCell: (newTransaction: ITransaction) => void;
   hideCents?: boolean;
 }
 
@@ -21,7 +17,17 @@ const EditableCurrencyCell = (
 ): React.ReactNode => {
   const [currencyDisplayValue, setCurrencyDisplayValue] = React.useState<
     string | number
-  >(props.value);
+  >(props.transaction.amount);
+
+  const onValueChange = (): void => {
+    const newTransaction: ITransaction = {
+      ...props.transaction,
+      amount: currencyDisplayValue as number,
+    };
+    if (props.editCell != null) {
+      props.editCell(newTransaction);
+    }
+  };
 
   return (
     <Flex className={classes.container} w={{ base: "100%", xs: "100px" }}>
@@ -31,6 +37,7 @@ const EditableCurrencyCell = (
             w="100%"
             value={currencyDisplayValue}
             onChange={setCurrencyDisplayValue}
+            onBlur={onValueChange}
             prefix="$"
             decimalScale={2}
             fixedDecimalScale
@@ -40,7 +47,7 @@ const EditableCurrencyCell = (
         <Text
           style={{
             color:
-              props.value < 0
+              props.transaction.amount < 0
                 ? "var(--mantine-color-red-6)"
                 : "var(--mantine-color-green-6)",
             fontWeight: 600,
