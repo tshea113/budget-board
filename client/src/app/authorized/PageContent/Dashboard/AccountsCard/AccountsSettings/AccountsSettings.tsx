@@ -6,7 +6,7 @@ import InstitutionSettingsCard from "./InstitutionSettingsCard/InstitutionSettin
 import { IInstitution, InstitutionIndexRequest } from "@models/institution";
 import { useDisclosure } from "@mantine/hooks";
 import Sortable from "@components/Sortable/Sortable";
-import { AuthContext } from "@components/auth/AuthProvider";
+import { AuthContext } from "@components/Auth/AuthProvider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { translateAxiosError } from "@helpers/requests";

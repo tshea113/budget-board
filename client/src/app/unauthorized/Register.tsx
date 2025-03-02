@@ -10,7 +10,7 @@ import React from "react";
 import { LoginCardState } from "./Welcome";
 
 import classes from "./Welcome.module.css";
-import { AuthContext } from "@components/auth/AuthProvider";
+import { AuthContext } from "@components/Auth/AuthProvider";
 import { notifications } from "@mantine/notifications";
 import { AxiosError } from "axios";
 import { translateAxiosError, ValidationError } from "@helpers/requests";

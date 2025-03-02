@@ -10,9 +10,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Notifications } from "@mantine/notifications";
 
 import Welcome from "./app/unauthorized/Welcome";
-import AuthProvider from "./components/auth/AuthProvider";
-import AuthorizedRoute from "./components/auth/AuthorizedRoute";
-import UnauthorizedRoute from "./components/auth/UnauthorizedRoute";
+import AuthProvider from "./components/Auth/AuthProvider";
+import AuthorizedRoute from "./components/Auth/AuthorizedRoute";
+import UnauthorizedRoute from "./components/Auth/UnauthorizedRoute";
 import Authorized from "./app/authorized/Authorized";
 
 // Your theme configuration is merged with default theme

@@ -1,4 +1,4 @@
-import { AuthContext } from "@components/auth/AuthProvider";
+import { AuthContext } from "@components/Auth/AuthProvider";
 import classes from "./DeletedAccountCard.module.css";
 
 import { getDaysSinceDate } from "@helpers/datetime";

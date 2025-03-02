@@ -10,7 +10,7 @@ import {
   Title,
 } from "@mantine/core";
 import React from "react";
-import { AuthContext } from "@components/auth/AuthProvider";
+import { AuthContext } from "@components/Auth/AuthProvider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { translateAxiosError, ValidationError } from "@helpers/requests";

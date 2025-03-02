@@ -37,3 +37,24 @@ export const buildCategoriesTree = (
 
   return roots;
 };
+
+/**
+ * Searches the given categories for a category matching the provided string.
+ * If a matching category is found, returns its value; otherwise returns "Uncategorized".
+ *
+ * The comparison is case-insensitive, leveraging the utility function areStringsEqual.
+ *
+ * @param {string} categoryString - The category to look up in the categories array.
+ * @param {ICategory[]} categories - The array of category objects.
+ * @returns {string} The matching category's value, or "Uncategorized" if no match is found.
+ */
+export const getFormattedCategoryValue = (
+  categoryString: string,
+  categories: ICategory[]
+): string => {
+  const foundCategory = categories.find((c) =>
+    areStringsEqual(c.value, categoryString)
+  );
+
+  return foundCategory?.value ?? "Uncategorized";
+};

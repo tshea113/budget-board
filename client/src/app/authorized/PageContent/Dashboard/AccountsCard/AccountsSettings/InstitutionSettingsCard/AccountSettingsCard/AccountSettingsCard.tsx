@@ -1,4 +1,4 @@
-import { AuthContext } from "@components/auth/AuthProvider";
+import { AuthContext } from "@components/Auth/AuthProvider";
 import SortableHandle from "@components/Sortable/SortableHandle";
 import SortableItem from "@components/Sortable/SortableItem";
 import { translateAxiosError } from "@helpers/requests";
