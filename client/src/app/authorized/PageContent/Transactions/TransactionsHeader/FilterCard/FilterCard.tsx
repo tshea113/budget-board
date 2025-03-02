@@ -2,7 +2,7 @@ import CategorySelect from "@components/CategorySelect";
 import classes from "./FilterCard.module.css";
 
 import AccountSelectInput from "@components/AccountSelectInput";
-import { Card, Group, Stack, Title, useCombobox } from "@mantine/core";
+import { Card, Flex, Stack, Title, useCombobox } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { Filters } from "@models/transaction";
 import React from "react";
@@ -22,7 +22,12 @@ const FilterCard = (props: FilterCardProps): React.ReactNode => {
     <Card radius="md">
       <Stack>
         <Title order={2}>Filters</Title>
-        <Group className={classes.group}>
+        <Flex
+          className={classes.group}
+          direction={{ base: "column", sm: "row" }}
+          wrap="nowrap"
+          gap="md"
+        >
           <DatePickerInput
             w="100%"
             type="range"
@@ -50,7 +55,7 @@ const FilterCard = (props: FilterCardProps): React.ReactNode => {
           />
           {/* TODO: Create a category select component */}
           <CategorySelect combobox={useCombobox()} categories={[]} />
-        </Group>
+        </Flex>
       </Stack>
     </Card>
   );
