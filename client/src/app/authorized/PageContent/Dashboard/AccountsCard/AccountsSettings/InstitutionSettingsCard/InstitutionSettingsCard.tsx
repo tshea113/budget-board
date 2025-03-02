@@ -67,6 +67,14 @@ const InstitutionSettingsCard = (
     }
   }, [props.isSortable]);
 
+  useDidUpdate(() => {
+    setSortedAccounts(
+      props.institution.accounts
+        .filter((a) => a.deleted === null)
+        .sort((a, b) => a.index - b.index)
+    );
+  }, [props.institution.accounts]);
+
   return (
     <SortableItem value={props.institution.id}>
       <Card className={classes.card} radius="md" withBorder>

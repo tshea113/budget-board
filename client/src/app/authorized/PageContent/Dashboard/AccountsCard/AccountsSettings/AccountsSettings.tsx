@@ -39,7 +39,6 @@ const AccountsSettings = (props: AccountsSettingsProps): React.ReactNode => {
         data: institutions,
       }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["institutions"] });
       await queryClient.invalidateQueries({ queryKey: ["accounts"] });
       toggle();
     },
