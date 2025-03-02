@@ -24,7 +24,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { GripVertical } from "lucide-react";
 import React from "react";
-import DeleteAccountPopover from "./DeleteAccountPopover";
+import DeleteAccountPopover from "./DeleteAccountPopover/DeleteAccountPopover";
 
 interface AccountSettingsCardProps {
   account: IAccount;

@@ -11,7 +11,7 @@ import {
 import { IInstitution } from "@models/institution";
 
 import React from "react";
-import AccountSettingsCard from "./AccountSettingsCard";
+import AccountSettingsCard from "./AccountSettingsCard/AccountSettingsCard";
 import { GripVertical } from "lucide-react";
 import SortableItem from "@components/Sortable/SortableItem";
 import SortableHandle from "@components/Sortable/SortableHandle";
