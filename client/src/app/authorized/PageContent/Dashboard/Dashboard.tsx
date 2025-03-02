@@ -4,6 +4,7 @@ import { Flex, Stack } from "@mantine/core";
 import React from "react";
 import AccountsCard from "./AccountsCard/AccountsCard";
 import NetWorthCard from "./NetWorthCard/NetWorthCard";
+import Footer from "./Footer/Footer";
 
 const Dashboard = (): React.ReactNode => {
   return (
@@ -17,7 +18,7 @@ const Dashboard = (): React.ReactNode => {
           <p>feed</p>
         </Stack>
       </Flex>
-      <p>Footer</p>
+      <Footer />
     </Stack>
   );
 };
