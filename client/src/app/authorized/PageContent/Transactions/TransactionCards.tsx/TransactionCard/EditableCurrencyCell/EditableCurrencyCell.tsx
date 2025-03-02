@@ -37,7 +37,15 @@ const EditableCurrencyCell = (
           />
         </Group>
       ) : (
-        <Text>
+        <Text
+          style={{
+            color:
+              props.value < 0
+                ? "var(--mantine-color-red-6)"
+                : "var(--mantine-color-green-6)",
+            fontWeight: 600,
+          }}
+        >
           {convertNumberToCurrency(
             currencyDisplayValue as number,
             !props.hideCents
