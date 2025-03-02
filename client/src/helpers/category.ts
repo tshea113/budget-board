@@ -58,3 +58,21 @@ export const getFormattedCategoryValue = (
 
   return foundCategory?.value ?? "Uncategorized";
 };
+
+/**
+ * Checks if the specified category is a root (parent) category.
+ *
+ * This function locates a matching category by the given value, then checks
+ * if its parent field is empty (length === 0). If so, the category
+ * is considered a parent category.
+ *
+ * @param {string} categoryValue - The category value to look for.
+ * @param {ICategory[]} categories - An array of all available categories.
+ * @returns {boolean} True if the category is a parent category, false otherwise.
+ */
+export const getIsParentCategory = (
+  categoryValue: string,
+  categories: ICategory[]
+): boolean =>
+  categories.find((c) => areStringsEqual(c.value, categoryValue))?.parent
+    .length === 0;
