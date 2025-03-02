@@ -32,7 +32,7 @@ const EditableDateCell = (props: EditableDateCellProps): React.ReactNode => {
   };
 
   return (
-    <Flex className={classes.container} w={{ base: "100%", xs: "200px" }}>
+    <Flex className={classes.container} w={{ base: "100%", xs: "175px" }}>
       {props.isSelected ? (
         <Group onClick={(e) => e.stopPropagation()}>
           <DatePickerInput

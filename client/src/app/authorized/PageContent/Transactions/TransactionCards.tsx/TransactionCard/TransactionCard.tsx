@@ -3,7 +3,7 @@ import classes from "./TransactionCard.module.css";
 import EditableCurrencyCell from "@app/authorized/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableCurrencyCell/EditableCurrencyCell";
 import EditableDateCell from "@app/authorized/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableDateCell/EditableDateCell";
 import EditableMerchantCell from "@app/authorized/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableMerchantCell/EditableMerchantCell";
-import { Card, Flex, LoadingOverlay } from "@mantine/core";
+import { ActionIcon, Card, Flex, Group, LoadingOverlay } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { ITransaction, ITransactionUpdateRequest } from "@models/transaction";
 import React from "react";
@@ -13,6 +13,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { translateAxiosError } from "@helpers/requests";
 import { notifications } from "@mantine/notifications";
 import { AxiosError } from "axios";
+import { TrashIcon } from "lucide-react";
 
 interface TransactionCardProps {
   transaction: ITransaction;
@@ -69,6 +70,18 @@ const TransactionCard = (props: TransactionCardProps): React.ReactNode => {
     },
   });
 
+  const doDeleteTransaction = useMutation({
+    mutationFn: async (id: string) =>
+      await request({
+        url: "/api/transaction",
+        method: "DELETE",
+        params: { guid: id },
+      }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["transactions"] });
+    },
+  });
+
   return (
     <Card
       className={classes.card}
@@ -77,32 +90,47 @@ const TransactionCard = (props: TransactionCardProps): React.ReactNode => {
       withBorder={isSelected}
       bg={isSelected ? "var(--mantine-primary-color-light)" : ""}
     >
-      <LoadingOverlay visible={doEditTransaction.isPending} />
-      <Flex
-        className={classes.container}
-        direction={{ base: "column", xs: "row" }}
-      >
-        <EditableDateCell
-          transaction={props.transaction}
-          isSelected={isSelected}
-          editCell={doEditTransaction.mutate}
-        />
-        <EditableMerchantCell
-          transaction={props.transaction}
-          isSelected={isSelected}
-          editCell={doEditTransaction.mutate}
-        />
-        <EditableCategoryCell
-          transaction={props.transaction}
-          isSelected={isSelected}
-          editCell={doEditTransaction.mutate}
-        />
-        <EditableCurrencyCell
-          transaction={props.transaction}
-          isSelected={isSelected}
-          editCell={doEditTransaction.mutate}
-        />
-      </Flex>
+      <LoadingOverlay
+        visible={doEditTransaction.isPending || doDeleteTransaction.isPending}
+      />
+      <Group wrap="nowrap">
+        <Flex
+          className={classes.container}
+          direction={{ base: "column", xs: "row" }}
+        >
+          <EditableDateCell
+            transaction={props.transaction}
+            isSelected={isSelected}
+            editCell={doEditTransaction.mutate}
+          />
+          <EditableMerchantCell
+            transaction={props.transaction}
+            isSelected={isSelected}
+            editCell={doEditTransaction.mutate}
+          />
+          <EditableCategoryCell
+            transaction={props.transaction}
+            isSelected={isSelected}
+            editCell={doEditTransaction.mutate}
+          />
+          <EditableCurrencyCell
+            transaction={props.transaction}
+            isSelected={isSelected}
+            editCell={doEditTransaction.mutate}
+          />
+        </Flex>
+        {isSelected && (
+          <ActionIcon
+            color="red"
+            onClick={(e) => {
+              e.stopPropagation();
+              doDeleteTransaction.mutate(props.transaction.id);
+            }}
+          >
+            <TrashIcon size="1rem" />
+          </ActionIcon>
+        )}
+      </Group>
     </Card>
   );
 };
