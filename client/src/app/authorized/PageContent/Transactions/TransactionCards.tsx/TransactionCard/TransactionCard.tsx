@@ -94,41 +94,53 @@ const TransactionCard = (props: TransactionCardProps): React.ReactNode => {
         visible={doEditTransaction.isPending || doDeleteTransaction.isPending}
       />
       <Group wrap="nowrap">
-        <Flex
-          className={classes.container}
-          direction={{ base: "column", xs: "row" }}
-        >
-          <EditableDateCell
-            transaction={props.transaction}
-            isSelected={isSelected}
-            editCell={doEditTransaction.mutate}
-          />
-          <EditableMerchantCell
-            transaction={props.transaction}
-            isSelected={isSelected}
-            editCell={doEditTransaction.mutate}
-          />
-          <EditableCategoryCell
-            transaction={props.transaction}
-            isSelected={isSelected}
-            editCell={doEditTransaction.mutate}
-          />
-          <EditableCurrencyCell
-            transaction={props.transaction}
-            isSelected={isSelected}
-            editCell={doEditTransaction.mutate}
-          />
+        <Flex className={classes.container}>
+          <Flex
+            className={classes.subcontainer}
+            direction={{ base: "column", xs: "row" }}
+            style={{ flexGrow: 1 }}
+          >
+            <EditableDateCell
+              transaction={props.transaction}
+              isSelected={isSelected}
+              editCell={doEditTransaction.mutate}
+            />
+            <EditableMerchantCell
+              transaction={props.transaction}
+              isSelected={isSelected}
+              editCell={doEditTransaction.mutate}
+            />
+          </Flex>
+          <Flex
+            className={classes.subcontainer}
+            direction={{ base: "column", xs: "row" }}
+            style={{ flexShrink: 1 }}
+          >
+            <EditableCategoryCell
+              transaction={props.transaction}
+              isSelected={isSelected}
+              editCell={doEditTransaction.mutate}
+            />
+            <EditableCurrencyCell
+              transaction={props.transaction}
+              isSelected={isSelected}
+              editCell={doEditTransaction.mutate}
+            />
+          </Flex>
         </Flex>
         {isSelected && (
-          <ActionIcon
-            color="red"
-            onClick={(e) => {
-              e.stopPropagation();
-              doDeleteTransaction.mutate(props.transaction.id);
-            }}
-          >
-            <TrashIcon size="1rem" />
-          </ActionIcon>
+          <Group style={{ alignSelf: "stretch" }}>
+            <ActionIcon
+              color="red"
+              onClick={(e) => {
+                e.stopPropagation();
+                doDeleteTransaction.mutate(props.transaction.id);
+              }}
+              h="100%"
+            >
+              <TrashIcon size="1rem" />
+            </ActionIcon>
+          </Group>
         )}
       </Group>
     </Card>

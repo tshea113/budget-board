@@ -32,7 +32,7 @@ const EditableCurrencyCell = (
   return (
     <Flex
       className={classes.container}
-      w={{ base: "100%", xs: props.isSelected ? "100px" : "120px" }}
+      w={{ base: "100%", xs: props.isSelected ? "100px" : "130px" }}
     >
       {props.isSelected ? (
         <Group onClick={(e) => e.stopPropagation()}>
