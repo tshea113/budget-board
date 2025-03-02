@@ -75,6 +75,7 @@ const TransactionCard = (props: TransactionCardProps): React.ReactNode => {
       onClick={toggle}
       radius="lg"
       withBorder={isSelected}
+      bg={isSelected ? "var(--mantine-primary-color-light)" : ""}
     >
       <LoadingOverlay visible={doEditTransaction.isPending} />
       <Flex
