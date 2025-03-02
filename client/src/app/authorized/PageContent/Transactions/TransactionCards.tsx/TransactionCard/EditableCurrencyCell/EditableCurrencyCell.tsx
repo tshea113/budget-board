@@ -1,7 +1,7 @@
 import classes from "./EditableCurrencyCell.module.css";
 
 import { convertNumberToCurrency } from "@helpers/currency";
-import { Flex, NumberInput, Text } from "@mantine/core";
+import { Flex, Group, NumberInput, Text } from "@mantine/core";
 import React from "react";
 
 interface EditableCurrencyCellProps {
@@ -26,15 +26,16 @@ const EditableCurrencyCell = (
   return (
     <Flex className={classes.container} w={{ base: "100%", xs: "100px" }}>
       {props.isSelected ? (
-        <NumberInput
-          w="100%"
-          value={currencyDisplayValue}
-          onChange={setCurrencyDisplayValue}
-          prefix="$"
-          decimalScale={2}
-          fixedDecimalScale
-          onClick={(e) => e.stopPropagation()}
-        />
+        <Group onClick={(e) => e.stopPropagation()}>
+          <NumberInput
+            w="100%"
+            value={currencyDisplayValue}
+            onChange={setCurrencyDisplayValue}
+            prefix="$"
+            decimalScale={2}
+            fixedDecimalScale
+          />
+        </Group>
       ) : (
         <Text>
           {convertNumberToCurrency(

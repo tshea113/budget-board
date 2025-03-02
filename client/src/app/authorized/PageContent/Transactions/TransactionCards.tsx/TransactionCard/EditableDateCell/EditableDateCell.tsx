@@ -1,6 +1,6 @@
 import classes from "./EditableDateCell.module.css";
 
-import { Flex, Text } from "@mantine/core";
+import { Flex, Group, Text } from "@mantine/core";
 import { DatePickerInput, DateValue } from "@mantine/dates";
 import { ITransaction } from "@models/transaction";
 import React from "react";
@@ -34,12 +34,14 @@ const EditableDateCell = (props: EditableDateCellProps): React.ReactNode => {
   return (
     <Flex className={classes.container} w={{ base: "100%", xs: "200px" }}>
       {props.isSelected ? (
-        <DatePickerInput
-          w="100%"
-          value={dateDisplayValue}
-          onChange={onDatePick}
-          onClick={(e) => e.stopPropagation()}
-        />
+        <Group onClick={(e) => e.stopPropagation()}>
+          <DatePickerInput
+            w="100%"
+            value={dateDisplayValue}
+            onChange={onDatePick}
+            onClick={(e) => e.stopPropagation()}
+          />
+        </Group>
       ) : (
         <Text>
           {new Date(dateDisplayValue ?? 0).toLocaleDateString([], {
