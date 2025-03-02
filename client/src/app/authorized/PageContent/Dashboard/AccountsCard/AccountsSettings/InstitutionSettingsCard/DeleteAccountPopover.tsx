@@ -51,7 +51,7 @@ const DeleteAccountPopover = (
         <Stack gap={10}>
           <Checkbox
             checked={deleteTransactions}
-            onClick={toggle}
+            onChange={toggle}
             label="Delete Transactions?"
           />
           <Button
