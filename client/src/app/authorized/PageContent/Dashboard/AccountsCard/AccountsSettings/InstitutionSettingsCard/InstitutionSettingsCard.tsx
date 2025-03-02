@@ -22,6 +22,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { translateAxiosError } from "@helpers/requests";
 import { AxiosError } from "axios";
+import { useDidUpdate } from "@mantine/hooks";
 
 interface InstitutionSettingsCardProps {
   institution: IInstitution;
@@ -46,15 +47,15 @@ const InstitutionSettingsCard = (
         method: "PUT",
         data: accounts,
       }),
-    onSuccess: async () =>
-      await queryClient.invalidateQueries({
-        queryKey: ["accounts"],
-      }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["institutions"] });
+      await queryClient.invalidateQueries({ queryKey: ["accounts"] });
+    },
     onError: (error: AxiosError) =>
       notifications.show({ color: "red", message: translateAxiosError(error) }),
   });
 
-  React.useEffect(() => {
+  useDidUpdate(() => {
     if (!props.isSortable) {
       const indexedAccounts: IAccountIndexRequest[] = sortedAccounts.map(
         (acc, index) => ({
@@ -65,14 +66,6 @@ const InstitutionSettingsCard = (
       doIndexAccounts.mutate(indexedAccounts);
     }
   }, [props.isSortable]);
-
-  React.useEffect(() => {
-    setSortedAccounts(
-      props.institution.accounts
-        .filter((a) => a.deleted === null)
-        .sort((a, b) => a.index - b.index)
-    );
-  }, [props.institution.accounts]);
 
   return (
     <SortableItem value={props.institution.id}>
