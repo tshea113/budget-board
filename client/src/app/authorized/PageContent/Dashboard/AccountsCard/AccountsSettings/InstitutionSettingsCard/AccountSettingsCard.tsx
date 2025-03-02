@@ -115,6 +115,7 @@ const AccountSettingsCard = (
               gap={10}
             >
               <TextInput
+                w="100%"
                 label="Account Name"
                 value={accountName}
                 onChange={(e) => setAccountName(e.currentTarget.value)}

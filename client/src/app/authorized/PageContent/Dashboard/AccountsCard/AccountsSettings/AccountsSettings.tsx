@@ -61,7 +61,7 @@ const AccountsSettings = (props: AccountsSettingsProps): React.ReactNode => {
 
   return (
     <Modal
-      size="auto"
+      size="100rem"
       centered
       opened={props.modalOpened}
       onClose={props.closeModal}
