@@ -35,7 +35,7 @@ const TransactionsHeader = (
           sortDirection={props.sortDirection}
           setSortDirection={props.setSortDirection}
         />
-        <Group>
+        <Group className={classes.buttonGroup}>
           <Button
             size="sm"
             rightSection={<FilterIcon size="1rem" />}

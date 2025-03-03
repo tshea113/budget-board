@@ -10,3 +10,8 @@
   align-items: center;
   margin-bottom: 20px;
 }
+
+.buttonGroup {
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
