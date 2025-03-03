@@ -21,6 +21,7 @@ const FilterCard = (props: FilterCardProps): React.ReactNode => {
   return (
     <Card radius="md">
       <Stack>
+        {/* TODO: Finish the styling on this */}
         <Title order={2}>Filters</Title>
         <Flex
           className={classes.group}
