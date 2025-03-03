@@ -49,7 +49,7 @@ const TransactionsSettings = (
       onClose={props.closeModal}
       title="Transactions Settings"
     >
-      <Accordion variant="filled">
+      <Accordion variant="filled" multiple>
         <Accordion.Item value="custom categories">
           <Accordion.Control>Custom Categories</Accordion.Control>
           <Accordion.Panel>
