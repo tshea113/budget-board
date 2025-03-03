@@ -80,11 +80,28 @@ export const sortTransactions = (
   }
 };
 
+/**
+ * Retrieves the category or subcategory for a transaction.
+ *
+ * This function returns the subcategory if it exists, otherwise it returns the category.
+ *
+ * @param {string} category - The transaction's category.
+ * @param {string} subcategory - The transaction's subcategory.
+ * @returns {string} The transaction's category or subcategory.
+ */
 export const getTransactionCategory = (
   category: string,
   subcategory: string
 ): string => (subcategory && subcategory.length > 0 ? subcategory : category);
 
+/**
+ * Filters out transactions that have not been deleted.
+ *
+ * The function filters the transactions array, excluding those with a null 'deleted' field.
+ *
+ * @param {ITransaction[]} transactions - Array of transaction objects.
+ * @returns {ITransaction[]} The filtered array of transactions.
+ */
 export const getVisibleTransactions = (
   transactions: ITransaction[]
 ): ITransaction[] =>
@@ -138,3 +155,17 @@ export const getFilteredTransactions = (
   }
   return filteredTransactions;
 };
+
+/**
+ * Retrieves an array of transactions that are marked as deleted.
+ *
+ * The function examines each transaction's 'deleted' property and filters
+ * those with a non-null 'deleted' field, indicating they were removed by the user.
+ *
+ * @param {ITransaction[]} transactions - Array of all transaction objects.
+ * @returns {ITransaction[]} An array containing the deleted transactions.
+ */
+export const getDeletedTransactions = (
+  transactions: ITransaction[]
+): ITransaction[] =>
+  transactions.filter((t: ITransaction) => t.deleted !== null);
