@@ -9,6 +9,7 @@ import { Filters } from "@models/transaction";
 import { Sorts } from "./SortMenu/SortMenuHelpers";
 import FilterCard from "./FilterCard/FilterCard";
 import { useDisclosure } from "@mantine/hooks";
+import TransactionsSettings from "./TransactionsSettings/TransactionsSettings";
 
 interface TransactionsHeaderProps {
   sort: Sorts;
@@ -22,6 +23,7 @@ interface TransactionsHeaderProps {
 const TransactionsHeader = (
   props: TransactionsHeaderProps
 ): React.ReactNode => {
+  const [settingsOpen, { open, close }] = useDisclosure(false);
   const [isFilterCardOpen, { toggle }] = useDisclosure();
 
   return (
@@ -41,9 +43,10 @@ const TransactionsHeader = (
           >
             Filter
           </Button>
-          <ActionIcon size="input-sm">
+          <ActionIcon size="input-sm" onClick={open}>
             <SettingsIcon />
           </ActionIcon>
+          <TransactionsSettings modalOpened={settingsOpen} closeModal={close} />
         </Group>
       </Flex>
       <FilterCard
