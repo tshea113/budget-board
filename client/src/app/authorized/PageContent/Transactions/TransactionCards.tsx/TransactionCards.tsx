@@ -11,7 +11,7 @@ import {
   getFilteredTransactions,
   sortTransactions,
 } from "@helpers/transactions";
-import { Stack } from "@mantine/core";
+import { Group, Pagination, Stack } from "@mantine/core";
 import { AuthContext } from "@components/Auth/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
@@ -25,7 +25,7 @@ interface TransactionCardsProps {
 
 const TransactionCards = (props: TransactionCardsProps): React.ReactNode => {
   const [page, setPage] = React.useState(1);
-  const [itemsPerPage, setItemsPerPage] = React.useState(25);
+  const [itemsPerPage, _setItemsPerPage] = React.useState(25);
 
   const { request } = React.useContext<any>(AuthContext);
 
@@ -81,6 +81,13 @@ const TransactionCards = (props: TransactionCardsProps): React.ReactNode => {
         .map((transaction) => (
           <TransactionCard key={transaction.id} transaction={transaction} />
         ))}
+      <Group justify="center">
+        <Pagination
+          value={page}
+          onChange={setPage}
+          total={Math.ceil(filteredTransactions.length / itemsPerPage)}
+        />
+      </Group>
     </Stack>
   );
 };
