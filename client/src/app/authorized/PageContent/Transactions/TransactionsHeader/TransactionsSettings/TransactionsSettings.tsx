@@ -45,6 +45,7 @@ const TransactionsSettings = (
     <Modal
       size="40rem"
       centered
+      padding="0.5rem"
       opened={props.modalOpened}
       onClose={props.closeModal}
       title="Transactions Settings"
