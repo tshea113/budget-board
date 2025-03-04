@@ -1,0 +1,23 @@
+.card {
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.stack {
+  gap: 0.1rem;
+}
+
+.topFlex {
+  display: flex;
+  direction: row;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+  justify-content: space-between;
+}
+
+.bottomFlex {
+  display: flex;
+  direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}

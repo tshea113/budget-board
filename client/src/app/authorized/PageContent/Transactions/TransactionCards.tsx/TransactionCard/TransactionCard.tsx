@@ -86,7 +86,7 @@ const TransactionCard = (props: TransactionCardProps): React.ReactNode => {
     <Card
       className={classes.card}
       onClick={toggle}
-      radius="lg"
+      radius="md"
       withBorder={isSelected}
       bg={isSelected ? "var(--mantine-primary-color-light)" : ""}
     >

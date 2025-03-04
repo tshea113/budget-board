@@ -1,4 +1,5 @@
 import Dashboard from "./Dashboard/Dashboard";
+import Goals from "./Goals/Goals";
 import Settings from "./Settings/Settings";
 import Transactions from "./Transactions/Transactions";
 
@@ -24,7 +25,7 @@ const PageContent = (props: PageContentProps): React.ReactNode => {
     case Pages.Budgets:
       return <div>Budgets content</div>;
     case Pages.Goals:
-      return <div>Goals content</div>;
+      return <Goals />;
     case Pages.Trends:
       return <div>Trends content</div>;
     case Pages.Settings:
