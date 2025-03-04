@@ -89,6 +89,7 @@ const GoalCard = (props: GoalCardProps): React.ReactNode => {
       withBorder
       shadow="sm"
       onClick={toggle}
+      bg={isSelected ? "var(--mantine-primary-color-light)" : ""}
     >
       <Stack className={classes.stack}>
         <Flex className={classes.topFlex}>
