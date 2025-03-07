@@ -2,6 +2,7 @@ import classes from "./GoalCard.module.css";
 
 import {
   ActionIcon,
+  Badge,
   Card,
   Flex,
   Group,
@@ -25,6 +26,7 @@ import EditableGoalTargetDateCell from "./EditableGoalTargetDateCell/EditableGoa
 import EditableGoalMonthlyAmountCell from "./EditableGoalMonthlyAmountCell/EditableGoalMonthlyAmountCell";
 import { useDisclosure } from "@mantine/hooks";
 import { TrashIcon } from "lucide-react";
+import GoalDetails from "./GoalDetails/GoalDetails";
 
 interface GoalCardProps {
   goal: IGoalResponse;
@@ -126,11 +128,22 @@ const GoalCard = (props: GoalCardProps): React.ReactNode => {
       <Group wrap="nowrap">
         <Stack className={classes.stack}>
           <Flex className={classes.topFlex}>
-            <EditableGoalNameCell
-              goal={props.goal}
-              isSelected={isSelected}
-              editCell={doEditGoal.mutate}
-            />
+            <Group align="center" gap={10}>
+              <EditableGoalNameCell
+                goal={props.goal}
+                isSelected={isSelected}
+                editCell={doEditGoal.mutate}
+              />
+              {props.includeInterest && props.goal.estimatedInterestRate && (
+                <Badge variant="light">
+                  {props.goal.estimatedInterestRate.toLocaleString(undefined, {
+                    style: "percent",
+                    minimumFractionDigits: 2,
+                  })}{" "}
+                  APR
+                </Badge>
+              )}
+            </Group>
             <EditableGoalTargetAmountCell
               goal={props.goal}
               isSelected={isSelected}
@@ -143,11 +156,14 @@ const GoalCard = (props: GoalCardProps): React.ReactNode => {
             </Progress.Section>
           </Progress.Root>
           <Flex className={classes.bottomFlex}>
-            <EditableGoalTargetDateCell
-              goal={props.goal}
-              isSelected={isSelected}
-              editCell={doEditGoal.mutate}
-            />
+            <Group align="center" gap="sm">
+              <EditableGoalTargetDateCell
+                goal={props.goal}
+                isSelected={isSelected}
+                editCell={doEditGoal.mutate}
+              />
+              <GoalDetails goal={props.goal} />
+            </Group>
             <EditableGoalMonthlyAmountCell
               goal={props.goal}
               isSelected={isSelected}

@@ -41,7 +41,7 @@ const EditableGoalNameCell = (
           onClick={(e) => e.stopPropagation()}
         />
       ) : (
-        <Text size="lg" fw={600} style={{ textWrap: "nowrap" }}>
+        <Text size="lg" fw={600}>
           {props.goal.name}
         </Text>
       )}
