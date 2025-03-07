@@ -149,7 +149,7 @@ public class GoalService(ILogger<IGoalService> logger, UserDataContext userDataC
     {
         if (goal.CompleteDate.HasValue) return goal.CompleteDate.Value;
 
-        if (goal.MonthlyContribution == null)
+        if (goal.MonthlyContribution == null || goal.MonthlyContribution == 0)
         {
             // If a complete date has not been set, then a monthly contribution is required.
             throw new ArgumentException("A target date cannot be estimated without a monthly contribution.");

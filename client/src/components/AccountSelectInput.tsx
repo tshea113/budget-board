@@ -6,8 +6,8 @@ import { IAccount } from "@models/account";
 import { AxiosResponse } from "axios";
 
 interface AccountSelectInputProps {
-  selectedAccountIds: string[];
-  setSelectedAccountIds: (accountIds: string[]) => void;
+  selectedAccountIds?: string[];
+  setSelectedAccountIds?: (accountIds: string[]) => void;
   hideHidden?: boolean;
   filterTypes?: string[];
   [x: string]: any;

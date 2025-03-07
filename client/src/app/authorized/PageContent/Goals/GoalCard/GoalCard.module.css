@@ -9,6 +9,7 @@
 
 .stack {
   gap: 0.1rem;
+  width: 100%;
 }
 
 .topFlex {

@@ -15,7 +15,7 @@ const EditableGoalTargetDateCell = (
   props: EditableGoalTargetDateCellProps
 ): React.ReactNode => {
   const [goalTargetDateValue, setGoalTargetDateValue] = React.useState<Date>(
-    props.goal.completeDate
+    new Date(props.goal.completeDate)
   );
 
   const onDatePick = (date: DateValue): void => {
@@ -36,11 +36,17 @@ const EditableGoalTargetDateCell = (
     <Flex className={classes.container}>
       <Text>Projected: </Text>
       {props.isSelected && props.goal.isCompleteDateEditable ? (
-        <DatePickerInput
-          className="h-8"
-          onChange={onDatePick}
-          value={goalTargetDateValue}
-        />
+        <Flex
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <DatePickerInput
+            className="h-8"
+            onChange={onDatePick}
+            value={goalTargetDateValue}
+          />
+        </Flex>
       ) : (
         <Text>
           {new Date(props.goal.completeDate).toLocaleDateString("en-US", {

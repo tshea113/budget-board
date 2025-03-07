@@ -1,6 +1,14 @@
 import classes from "./GoalCard.module.css";
 
-import { Card, Flex, Progress, Stack } from "@mantine/core";
+import {
+  ActionIcon,
+  Card,
+  Flex,
+  Group,
+  LoadingOverlay,
+  Progress,
+  Stack,
+} from "@mantine/core";
 import React from "react";
 import EditableGoalNameCell from "./EditableGoalNameCell/EditableGoalNameCell";
 import { IGoalResponse, IGoalUpdateRequest } from "@models/goal";
@@ -16,6 +24,7 @@ import { getProgress } from "@helpers/utils";
 import EditableGoalTargetDateCell from "./EditableGoalTargetDateCell/EditableGoalTargetDateCell";
 import EditableGoalMonthlyAmountCell from "./EditableGoalMonthlyAmountCell/EditableGoalMonthlyAmountCell";
 import { useDisclosure } from "@mantine/hooks";
+import { TrashIcon } from "lucide-react";
 
 interface GoalCardProps {
   goal: IGoalResponse;
@@ -77,6 +86,26 @@ const GoalCard = (props: GoalCardProps): React.ReactNode => {
     },
   });
 
+  const doDeleteGoal = useMutation({
+    mutationFn: async (id: string) =>
+      await request({
+        url: "/api/goal",
+        method: "DELETE",
+        params: { guid: id },
+      }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["goals", { includeInterest: props.includeInterest }],
+      });
+    },
+    onError: (error: AxiosError) => {
+      notifications.show({
+        color: "red",
+        message: translateAxiosError(error),
+      });
+    },
+  });
+
   const percentComplete = getProgress(
     sumAccountsTotalBalance(props.goal.accounts) - props.goal.initialAmount,
     getGoalTargetAmount(props.goal.amount, props.goal.initialAmount)
@@ -91,37 +120,56 @@ const GoalCard = (props: GoalCardProps): React.ReactNode => {
       onClick={toggle}
       bg={isSelected ? "var(--mantine-primary-color-light)" : ""}
     >
-      <Stack className={classes.stack}>
-        <Flex className={classes.topFlex}>
-          <EditableGoalNameCell
-            goal={props.goal}
-            isSelected={isSelected}
-            editCell={doEditGoal.mutate}
-          />
-          <EditableGoalTargetAmountCell
-            goal={props.goal}
-            isSelected={isSelected}
-            editCell={doEditGoal.mutate}
-          />
-        </Flex>
-        <Progress.Root size={18} radius="xl">
-          <Progress.Section value={percentComplete}>
-            <Progress.Label>{percentComplete.toFixed(0)}%</Progress.Label>
-          </Progress.Section>
-        </Progress.Root>
-        <Flex className={classes.bottomFlex}>
-          <EditableGoalTargetDateCell
-            goal={props.goal}
-            isSelected={isSelected}
-            editCell={doEditGoal.mutate}
-          />
-          <EditableGoalMonthlyAmountCell
-            goal={props.goal}
-            isSelected={isSelected}
-            editCell={doEditGoal.mutate}
-          />
-        </Flex>
-      </Stack>
+      <LoadingOverlay
+        visible={doEditGoal.isPending || doDeleteGoal.isPending}
+      />
+      <Group wrap="nowrap">
+        <Stack className={classes.stack}>
+          <Flex className={classes.topFlex}>
+            <EditableGoalNameCell
+              goal={props.goal}
+              isSelected={isSelected}
+              editCell={doEditGoal.mutate}
+            />
+            <EditableGoalTargetAmountCell
+              goal={props.goal}
+              isSelected={isSelected}
+              editCell={doEditGoal.mutate}
+            />
+          </Flex>
+          <Progress.Root size={18} radius="xl">
+            <Progress.Section value={percentComplete}>
+              <Progress.Label>{percentComplete.toFixed(0)}%</Progress.Label>
+            </Progress.Section>
+          </Progress.Root>
+          <Flex className={classes.bottomFlex}>
+            <EditableGoalTargetDateCell
+              goal={props.goal}
+              isSelected={isSelected}
+              editCell={doEditGoal.mutate}
+            />
+            <EditableGoalMonthlyAmountCell
+              goal={props.goal}
+              isSelected={isSelected}
+              editCell={doEditGoal.mutate}
+            />
+          </Flex>
+        </Stack>
+        {isSelected && (
+          <Group style={{ alignSelf: "stretch" }}>
+            <ActionIcon
+              color="red"
+              onClick={(e) => {
+                e.stopPropagation();
+                doDeleteGoal.mutate(props.goal.id);
+              }}
+              h="100%"
+            >
+              <TrashIcon size="1rem" />
+            </ActionIcon>
+          </Group>
+        )}
+      </Group>
     </Card>
   );
 };

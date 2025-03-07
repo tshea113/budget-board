@@ -2,12 +2,13 @@ import classes from "./Goals.module.css";
 
 import { AuthContext } from "@components/Auth/AuthProvider";
 import { Stack } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDidUpdate, useDisclosure } from "@mantine/hooks";
 import { IGoalResponse } from "@models/goal";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import React from "react";
 import GoalCard from "./GoalCard/GoalCard";
+import GoalsHeader from "./GoalsHeader/GoalsHeader";
 
 const Goals = (): React.ReactNode => {
   const [includeInterest, { toggle }] = useDisclosure();
@@ -29,11 +30,26 @@ const Goals = (): React.ReactNode => {
       return [];
     },
   });
+
+  useDidUpdate(() => {
+    goalsQuery.refetch();
+  }, [includeInterest]);
+
   return (
     <Stack className={classes.root}>
-      {(goalsQuery.data ?? []).map((goal: IGoalResponse) => (
-        <GoalCard key={goal.id} goal={goal} includeInterest={includeInterest} />
-      ))}
+      <GoalsHeader
+        includeInterest={includeInterest}
+        toggleIncludeInterest={toggle}
+      />
+      <Stack className={classes.goals}>
+        {(goalsQuery.data ?? []).map((goal: IGoalResponse) => (
+          <GoalCard
+            key={goal.id}
+            goal={goal}
+            includeInterest={includeInterest}
+          />
+        ))}
+      </Stack>
     </Stack>
   );
 };
