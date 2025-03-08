@@ -1,7 +1,7 @@
 import classes from "./Goals.module.css";
 
 import { AuthContext } from "@components/Auth/AuthProvider";
-import { Stack } from "@mantine/core";
+import { Skeleton, Stack } from "@mantine/core";
 import { useDidUpdate, useDisclosure } from "@mantine/hooks";
 import { IGoalResponse } from "@models/goal";
 import { useQuery } from "@tanstack/react-query";
@@ -42,13 +42,17 @@ const Goals = (): React.ReactNode => {
         toggleIncludeInterest={toggle}
       />
       <Stack className={classes.goals}>
-        {(goalsQuery.data ?? []).map((goal: IGoalResponse) => (
-          <GoalCard
-            key={goal.id}
-            goal={goal}
-            includeInterest={includeInterest}
-          />
-        ))}
+        {goalsQuery.isPending ? (
+          <Skeleton h={100} w="100%" radius="lg" />
+        ) : (
+          (goalsQuery.data ?? []).map((goal: IGoalResponse) => (
+            <GoalCard
+              key={goal.id}
+              goal={goal}
+              includeInterest={includeInterest}
+            />
+          ))
+        )}
       </Stack>
     </Stack>
   );

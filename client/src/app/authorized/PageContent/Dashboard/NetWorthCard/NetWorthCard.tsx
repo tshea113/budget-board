@@ -1,6 +1,6 @@
 import classes from "./NetWorthCard.module.css";
 
-import { Card, Stack, Title } from "@mantine/core";
+import { Card, Skeleton, Stack, Title } from "@mantine/core";
 import React from "react";
 import NetWorthItem from "./NetWorthItem/NetWorthItem";
 import { filterVisibleAccounts } from "@helpers/accounts";
@@ -40,38 +40,48 @@ const NetWorthCard = (): React.ReactNode => {
     >
       <Stack className={classes.content}>
         <Title order={3}>Net Worth</Title>
-        <Card className={classes.group} radius="lg">
-          <NetWorthItem
-            accounts={validAccounts}
-            types={["Checking", "Credit Card"]}
-            title="Spending"
-          />
-          <NetWorthItem
-            accounts={validAccounts}
-            types={["Loan"]}
-            title="Loans"
-          />
-          <NetWorthItem
-            accounts={validAccounts}
-            types={["Savings"]}
-            title="Savings"
-          />
-        </Card>
-        <Card className={classes.group} radius="lg">
-          <NetWorthItem
-            accounts={validAccounts}
-            types={["Checking", "Credit Card", "Loan", "Savings"]}
-            title="Liquid"
-          />
-          <NetWorthItem
-            accounts={validAccounts}
-            types={["Investment"]}
-            title="Investments"
-          />
-        </Card>
-        <Card className={classes.group} radius="lg">
-          <NetWorthItem accounts={validAccounts} title="Total" />
-        </Card>
+        {accountsQuery.isPending ? (
+          <Stack gap="0.5rem">
+            <Skeleton height={90} radius="lg" />
+            <Skeleton height={65} radius="lg" />
+            <Skeleton height={40} radius="lg" />
+          </Stack>
+        ) : (
+          <Stack gap="0.5rem">
+            <Card className={classes.group} radius="lg">
+              <NetWorthItem
+                accounts={validAccounts}
+                types={["Checking", "Credit Card"]}
+                title="Spending"
+              />
+              <NetWorthItem
+                accounts={validAccounts}
+                types={["Loan"]}
+                title="Loans"
+              />
+              <NetWorthItem
+                accounts={validAccounts}
+                types={["Savings"]}
+                title="Savings"
+              />
+            </Card>
+            <Card className={classes.group} radius="lg">
+              <NetWorthItem
+                accounts={validAccounts}
+                types={["Checking", "Credit Card", "Loan", "Savings"]}
+                title="Liquid"
+              />
+              <NetWorthItem
+                accounts={validAccounts}
+                types={["Investment"]}
+                title="Investments"
+              />
+            </Card>
+            <Card className={classes.group} radius="lg">
+              <NetWorthItem accounts={validAccounts} title="Total" />
+            </Card>
+          </Stack>
+        )}
       </Stack>
     </Card>
   );

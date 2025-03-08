@@ -11,7 +11,7 @@ import {
   getFilteredTransactions,
   sortTransactions,
 } from "@helpers/transactions";
-import { Group, Pagination, Stack } from "@mantine/core";
+import { Group, Pagination, Skeleton, Stack } from "@mantine/core";
 import { AuthContext } from "@components/Auth/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
@@ -73,14 +73,26 @@ const TransactionCards = (props: TransactionCardsProps): React.ReactNode => {
 
   return (
     <Stack gap={10}>
-      {sortTransactions(filteredTransactions, props.sort, props.sortDirection)
-        .slice(
-          (page - 1) * itemsPerPage,
-          (page - 1) * itemsPerPage + itemsPerPage
-        )
-        .map((transaction) => (
-          <TransactionCard key={transaction.id} transaction={transaction} />
-        ))}
+      {transactionsQuery.isPending || transactionCategoriesQuery.isPending ? (
+        Array.from({ length: itemsPerPage }).map((_, index) => (
+          <Skeleton key={index} height={40} radius="md" />
+        ))
+      ) : (
+        <Stack gap={10}>
+          {sortTransactions(
+            filteredTransactions,
+            props.sort,
+            props.sortDirection
+          )
+            .slice(
+              (page - 1) * itemsPerPage,
+              (page - 1) * itemsPerPage + itemsPerPage
+            )
+            .map((transaction) => (
+              <TransactionCard key={transaction.id} transaction={transaction} />
+            ))}
+        </Stack>
+      )}
       <Group justify="center">
         <Pagination
           value={page}
