@@ -14,7 +14,7 @@
     "@dnd-kit/modifiers": "^9.0.0",
     "@dnd-kit/sortable": "^10.0.0",
     "@mantine/carousel": "^7.17.0",
-    "@mantine/charts": "^7.17.0",
+    "@mantine/charts": "^7.17.1",
     "@mantine/code-highlight": "^7.17.0",
     "@mantine/core": "^7.17.0",
     "@mantine/dates": "^7.17.1",
@@ -61,5 +61,8 @@
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.1.0"
+  },
+  "resolutions": {
+    "react-is": "^19.0.0"
   }
 }

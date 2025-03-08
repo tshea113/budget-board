@@ -19,3 +19,10 @@ export const getProgress = (amount: number, total: number): number => {
   const percentage = (amount / total) * 100;
   return percentage > 100 ? 100 : percentage;
 };
+
+/**
+ * Returns the full name of a month given its index.
+ */
+export const months = [...Array(12).keys()].map((key) =>
+  new Date(0, key).toLocaleString("en", { month: "long" })
+);

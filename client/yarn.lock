@@ -638,10 +638,10 @@
   resolved "https://registry.yarnpkg.com/@mantine/carousel/-/carousel-7.17.0.tgz#1d70bc436de94b67f72e3225629b5f9659da1dfc"
   integrity sha512-NrgfUBa7tbtDFem6TAntZjQknymqhzZ/d52szheRu+3GIfd9d8qEPHV1sMFRQ3DkzMxiJfzI6G61GvW6yLOaGg==
 
-"@mantine/charts@^7.17.0":
-  version "7.17.0"
-  resolved "https://registry.yarnpkg.com/@mantine/charts/-/charts-7.17.0.tgz#cee52ecd4c85aadab85b1cef0bd0956fd289e484"
-  integrity sha512-nel/xKTrWBaMP6dTHHgUFSk/YYZa9/WKG/Rz0jfQRzuPpZhMtIFzbr5H3olPgip2/nfhkdK+bfZxxdJjc7W4rg==
+"@mantine/charts@^7.17.1":
+  version "7.17.1"
+  resolved "https://registry.yarnpkg.com/@mantine/charts/-/charts-7.17.1.tgz#987d77683065c91adb397eb1c827db86f53b49d1"
+  integrity sha512-qS6UOF1wayF86h+s1pI/rUJiZVkj4244JTgFToLsgvYIKoQaSibHjUjdBDfsMTLEIz4nunfPct0r75JR9YBBVQ==
 
 "@mantine/code-highlight@^7.17.0":
   version "7.17.0"
@@ -3329,15 +3329,10 @@ react-dropzone-esm@15.2.0:
   dependencies:
     prop-types "^15.8.1"
 
-react-is@^16.13.1:
-  version "16.13.1"
-  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
-  integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
-
-react-is@^18.3.1:
-  version "18.3.1"
-  resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.3.1.tgz#e83557dc12eae63a99e003a46388b1dcbb44db7e"
-  integrity sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==
+react-is@^16.13.1, react-is@^18.3.1, react-is@^19.0.0:
+  version "19.0.0"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-19.0.0.tgz#d6669fd389ff022a9684f708cf6fa4962d1fea7a"
+  integrity sha512-H91OHcwjZsbq3ClIDHMzBShc1rotbfACdWENsmEf0IFvZ3FgGPtdHMcsv45bQ1hAbgdfiA8SnxTKfDS+x/8m2g==
 
 react-number-format@^5.4.3:
   version "5.4.3"

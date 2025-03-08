@@ -1,6 +1,10 @@
 import { Sorts } from "@app/authorized/PageContent/Transactions/TransactionsHeader/SortMenu/SortMenuHelpers";
 import { SortDirection } from "@components/SortButton";
-import { Filters, ITransaction } from "@models/transaction";
+import {
+  Filters,
+  hiddenTransactionCategory,
+  ITransaction,
+} from "@models/transaction";
 import { areStringsEqual } from "./utils";
 import { getIsParentCategory } from "./category";
 import { getStandardDate } from "./datetime";
@@ -169,3 +173,131 @@ export const getDeletedTransactions = (
   transactions: ITransaction[]
 ): ITransaction[] =>
   transactions.filter((t: ITransaction) => t.deleted !== null);
+
+/**
+ * Builds a map from each month's timestamp to the sum of transaction amounts for that month.
+ *
+ * The function iterates over the provided months array, calculates the total
+ * transaction amounts within each month, and stores them in a map keyed by
+ * the month’s timestamp (from getTime()).
+ *
+ * @param {Date[]} months - Array of Date objects representing the months to evaluate.
+ * @param {ITransaction[]} transactions - Array of transaction objects.
+ * @returns {Map<number, number>} A map where each key is the timestamp of the month, and each value is the total transaction amount for that month.
+ */
+export const buildTimeToMonthlyTotalsMap = (
+  months: Date[],
+  transactions: ITransaction[]
+): Map<number, number> => {
+  const map = new Map<number, number>();
+  months.forEach((month: Date) => {
+    const total = transactions
+      .filter((t) => new Date(t.date).getMonth() === month.getMonth())
+      .reduce((n, { amount }) => n + amount, 0);
+    map.set(month.getTime(), total);
+  });
+  return map;
+};
+
+/**
+ * Filters out transactions with the hiddenTransactionCategory.
+ *
+ * The function filters the transactions array, excluding those with the hiddenTransactionCategory.
+ *
+ * @param {ITransaction[]} transactions - Array of transaction objects.
+ * @returns {ITransaction[]} The filtered array of transactions.
+ */
+export const filterHiddenTransactions = (transactions: ITransaction[]) =>
+  getVisibleTransactions(transactions).filter(
+    (t) => !areStringsEqual(t.category ?? "", hiddenTransactionCategory)
+  );
+
+/**
+ * Retrieves transactions for a specific month and year based on the provided date.
+ *
+ * The function filters the given transaction array, matching only those
+ * whose month and year coincide with the month and year of the specified date.
+ *
+ * @param {ITransaction[]} transactionData - The array of transactions to filter.
+ * @param {Date} date - The reference date used to match the month and year.
+ * @returns {ITransaction[]} An array of transactions occurring in the specified month and year.
+ */
+export const getTransactionsForMonth = (
+  transactionData: ITransaction[],
+  date: Date
+): ITransaction[] =>
+  transactionData.filter(
+    (t: ITransaction) =>
+      new Date(t.date).getMonth() === new Date(date).getMonth() &&
+      new Date(t.date).getUTCFullYear() === new Date(date).getUTCFullYear()
+  );
+
+export interface RollingTotalSpendingPerDay {
+  day: number;
+  amount: number;
+}
+
+/**
+ * Calculates daily cumulative spending for a specified month, excluding "Income."
+ * Transactions are sorted by date, their amounts are subtracted from a running total,
+ * and missing days carry over the previous day's total.
+ *
+ * @param {ITransaction[]} transactionsForMonth - The month's transactions
+ * @param {number} endDate - The last day of the month
+ * @returns {RollingTotalSpendingPerDay[]} Array of day-and-amount pairs
+ */
+export const getRollingTotalSpendingForMonth = (
+  transactionsForMonth: ITransaction[],
+  endDate: number
+): RollingTotalSpendingPerDay[] => {
+  const rollingTotalSpendingPerDay: RollingTotalSpendingPerDay[] = [];
+
+  const sortedSpending = transactionsForMonth
+    .filter((t) => !areStringsEqual(t.category ?? "", "Income"))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+  let total = 0;
+  const summedTransactionsPerMonth = sortedSpending.reduce(
+    (result: RollingTotalSpendingPerDay[], transaction: ITransaction) => {
+      const foundDay = result.find(
+        (t) => t.day === new Date(transaction.date).getDate()
+      );
+
+      // Transactions are negative and we want spending to be positive,
+      // so instead of multiplying by a negative, just subtract from total.
+      total -= transaction.amount;
+
+      if (foundDay == null) {
+        const newDay: RollingTotalSpendingPerDay = {
+          day: new Date(transaction.date).getDate(),
+          amount: total,
+        };
+        result.push(newDay);
+      } else {
+        foundDay.amount = total;
+      }
+      return result;
+    },
+    []
+  );
+
+  // If it is the current month, we need to continue the rolling total
+  for (let dayItr = 1; dayItr <= endDate; dayItr++) {
+    const amount = summedTransactionsPerMonth.find((t) => t.day === dayItr);
+    const dayAmount: RollingTotalSpendingPerDay = {
+      day: dayItr,
+      amount: 0,
+    };
+    if (!amount) {
+      if (dayItr > 1) {
+        // If there are no transactions for a day, we should just roll over the previous day.
+        dayAmount.amount = rollingTotalSpendingPerDay[dayItr - 2].amount;
+      }
+      rollingTotalSpendingPerDay.push(dayAmount);
+    } else {
+      rollingTotalSpendingPerDay.push(amount);
+    }
+  }
+
+  return rollingTotalSpendingPerDay;
+};

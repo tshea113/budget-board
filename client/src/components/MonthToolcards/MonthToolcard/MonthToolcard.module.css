@@ -1,0 +1,22 @@
+.root {
+  height: 62px;
+  width: 60px;
+  grow: 0;
+  shrink: 0;
+  padding: 0.125rem;
+  gap: 0;
+
+  &:hover {
+    outline: 1px solid var(--mantine-primary-color-filled);
+  }
+}
+
+.content {
+  gap: 0;
+  user-select: none;
+}
+
+.indicator {
+  height: 20px;
+  width: 100%;
+}

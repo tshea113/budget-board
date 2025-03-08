@@ -3,6 +3,7 @@ import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 import "@mantine/notifications/styles.layer.css";
 import "@mantine/dates/styles.css";
+import "@mantine/charts/styles.css";
 
 import { BrowserRouter, Route, Routes } from "react-router";
 import { Center, createTheme, MantineProvider } from "@mantine/core";
