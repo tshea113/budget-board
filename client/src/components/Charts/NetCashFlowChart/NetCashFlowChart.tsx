@@ -69,7 +69,7 @@ const NetCashFlowChart = (props: NetCashFlowChartProps): React.ReactNode => {
   if (props.months.length === 0) {
     return (
       <Group justify="center">
-        <Text>No data to display.</Text>
+        <Text>Select a month to display the chart.</Text>
       </Group>
     );
   }
