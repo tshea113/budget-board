@@ -4,6 +4,9 @@ import { Stack, Tabs } from "@mantine/core";
 import React from "react";
 import SpendingTab from "./SpendingTab/SpendingTab";
 import NetCashFlowTab from "./NetCashFlowTab/NetCashFlowTab";
+import AssetsTab from "./AssetsTab/AssetsTab";
+import LiabilitiesTab from "./LiabilitiesTab/LiabilitiesTab";
+import NetWorthTab from "./NetWorthTab/NetWorthTab";
 
 const Trends = (): React.ReactNode => {
   return (
@@ -22,9 +25,15 @@ const Trends = (): React.ReactNode => {
         <Tabs.Panel value="netCashFlow">
           <NetCashFlowTab />
         </Tabs.Panel>
-        <Tabs.Panel value="assets">Assets content</Tabs.Panel>
-        <Tabs.Panel value="liabilities">Liabilities content</Tabs.Panel>
-        <Tabs.Panel value="netWorth">Net Worth content</Tabs.Panel>
+        <Tabs.Panel value="assets">
+          <AssetsTab />
+        </Tabs.Panel>
+        <Tabs.Panel value="liabilities">
+          <LiabilitiesTab />
+        </Tabs.Panel>
+        <Tabs.Panel value="netWorth">
+          <NetWorthTab />
+        </Tabs.Panel>
       </Tabs>
     </Stack>
   );
