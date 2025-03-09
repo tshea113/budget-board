@@ -82,6 +82,7 @@ const SpendingTab = (): React.ReactNode => {
       <SpendingChart
         transactions={transactionsWithoutHidden}
         months={selectedMonths}
+        isPending={transactionsQuery.isPending}
         includeGrid
         includeYAxis
       />

@@ -37,11 +37,8 @@ const MonthToolcards = (props: MonthToolcardsProps): React.ReactNode => {
     if (props.allowSelectMultiple) {
       // When select multiple is on, we need to add/remove selected dates when clicked.
       if (
-        props.selectedDates.find((item) => {
-          return item.getTime() === date.getTime();
-        })
+        props.selectedDates.find((item) => item.getTime() === date.getTime())
       ) {
-        // If it is present, then we need to remove it.
         props.setSelectedDates(
           props.selectedDates.filter(
             (selectedDate: Date) => selectedDate.getTime() !== date.getTime()
