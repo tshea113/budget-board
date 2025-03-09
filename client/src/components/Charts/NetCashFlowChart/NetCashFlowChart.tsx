@@ -3,7 +3,7 @@ import { getMonthAndYearDateString } from "@helpers/datetime";
 import { getTransactionsForMonth } from "@helpers/transactions";
 import { areStringsEqual } from "@helpers/utils";
 import { CompositeChart } from "@mantine/charts";
-import { Skeleton } from "@mantine/core";
+import { Group, Skeleton, Text } from "@mantine/core";
 import { ITransaction } from "@models/transaction";
 import React from "react";
 
@@ -67,7 +67,11 @@ const NetCashFlowChart = (props: NetCashFlowChartProps): React.ReactNode => {
   }
 
   if (props.months.length === 0) {
-    return <div>No data to display.</div>;
+    return (
+      <Group justify="center">
+        <Text>No data to display.</Text>
+      </Group>
+    );
   }
 
   return (

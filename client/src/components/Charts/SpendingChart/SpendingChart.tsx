@@ -6,7 +6,7 @@ import {
   buildTransactionChartSeries,
 } from "@helpers/charts";
 import { convertNumberToCurrency } from "@helpers/currency";
-import { Skeleton } from "@mantine/core";
+import { Group, Skeleton, Text } from "@mantine/core";
 
 interface SpendingChartProps {
   transactions: ITransaction[];
@@ -21,6 +21,14 @@ const SpendingChart = (props: SpendingChartProps): React.ReactNode => {
 
   if (props.isPending) {
     return <Skeleton height={425} />;
+  }
+
+  if (props.months.length === 0) {
+    return (
+      <Group justify="center">
+        <Text>No data to display.</Text>
+      </Group>
+    );
   }
 
   return (
