@@ -11,7 +11,7 @@ import NetWorthTab from "./NetWorthTab/NetWorthTab";
 const Trends = (): React.ReactNode => {
   return (
     <Stack className={classes.root}>
-      <Tabs variant="outline" defaultValue="spending">
+      <Tabs variant="outline" defaultValue="spending" keepMounted={false}>
         <Tabs.List grow>
           <Tabs.Tab value="spending">Spending</Tabs.Tab>
           <Tabs.Tab value="netCashFlow">Net Cash Flow</Tabs.Tab>

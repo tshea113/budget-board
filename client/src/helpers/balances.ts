@@ -76,10 +76,10 @@ export const filterBalancesByDateRange = (
   startDate: Date,
   endDate: Date
 ): IBalance[] =>
-  balances.filter((balance) => {
-    const standardBalanceDate = getStandardDate(balance.dateTime);
-    return (
-      standardBalanceDate.getTime() >= startDate.getTime() &&
-      standardBalanceDate.getTime() <= endDate.getTime()
-    );
-  });
+  balances.filter(
+    (balance) =>
+      getStandardDate(balance.dateTime).getTime() >=
+        getStandardDate(startDate).getTime() &&
+      getStandardDate(balance.dateTime).getTime() <=
+        getStandardDate(endDate).getTime()
+  );
