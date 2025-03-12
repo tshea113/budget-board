@@ -4,7 +4,15 @@ import {
   getTransactionsForMonth,
   RollingTotalSpendingPerDay,
 } from "./transactions";
-import { getDaysInMonth, getMonthAndYearDateString } from "./datetime";
+import {
+  getDaysInMonth,
+  getMonthAndYearDateString,
+  getStandardDate,
+  getUniqueDates as getDistinctDates,
+} from "./datetime";
+import { IBalance } from "@models/balance";
+import { getSortedBalanceDates } from "./balances";
+import { IAccount } from "@models/account";
 
 export const chartColors = [
   "indigo.6",
@@ -80,5 +88,86 @@ export const buildTransactionChartSeries = (
 ): { name: string; color: string }[] =>
   months.map((month, i) => ({
     name: getMonthAndYearDateString(month),
-    color: chartColors[i % chartColors.length],
+    color: chartColors[i % chartColors.length] ?? "gray.6",
   }));
+
+interface ChartData {
+  date: Date;
+  dateString: string;
+  [key: string]: number | Date | string;
+}
+
+/**
+ * Builds data for an account balance chart based on provided balances and date range.
+ *
+ * @param balances An array of IBalance objects representing account balances.
+ * @param startDate The start date for the chart data.
+ * @param endDate The end date for the chart data.
+ * @param invertData Optional. If true, inverts the balance data (e.g., for representing expenses as negative values). Defaults to false.
+ * @returns An array of objects, where each object represents a date and the corresponding balance for each account on that date.
+ */
+export const buildAccountBalanceChartData = (
+  balances: IBalance[],
+  invertData = false
+) => {
+  const sortedBalances = balances.sort(
+    (a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
+  );
+
+  const accountIdToSortedBalancesMap = Map.groupBy(
+    sortedBalances,
+    (balance: IBalance) => balance.accountID
+  );
+
+  // When multiple accounts are selected, some dates might not be represented on all accounts.
+  // We need to aggregate all dates that have an associated balance for at least one account.
+  const distinctSortedBalanceDates: Date[] = getDistinctDates(
+    getSortedBalanceDates(balances)
+  );
+
+  const chartData: ChartData[] = [];
+
+  distinctSortedBalanceDates.forEach((date: Date, index: number) => {
+    // TODO: This is a hack to get around charts not liking non-string keys.
+    // It works with shadcn, so need to figure out how to make it work here.
+    const dateString = date.toLocaleDateString("en-US", {
+      month: "numeric",
+      day: "numeric",
+    });
+
+    const chartDataPoint: ChartData = { date, dateString };
+
+    accountIdToSortedBalancesMap.forEach((accountBalances, accountId) => {
+      const balancesForDate = accountBalances.filter(
+        (balance) =>
+          getStandardDate(new Date(balance.dateTime)).getTime() ===
+          getStandardDate(date).getTime()
+      );
+
+      if (balancesForDate.length > 0) {
+        chartDataPoint[accountId] =
+          (balancesForDate.reduce((acc, b) => acc + b.amount, 0) /
+            balancesForDate.length) *
+          (invertData ? -1 : 1);
+      } else if (index > 0) {
+        chartDataPoint[accountId] = chartData[index - 1]![accountId]!;
+      } else {
+        chartDataPoint[accountId] = 0;
+      }
+    });
+
+    chartData.push(chartDataPoint);
+  });
+
+  return chartData;
+};
+
+export const BuildAccountBalanceChartSeries = (accounts: IAccount[]) =>
+  accounts.map((account: IAccount) => {
+    return {
+      name: account.id,
+      label: account.name,
+      color:
+        chartColors[accounts.indexOf(account) % chartColors.length] ?? "gray.6",
+    };
+  });

@@ -40,6 +40,7 @@ const SpendingChart = (props: SpendingChartProps): React.ReactNode => {
       dataKey="day"
       valueFormatter={(value) => convertNumberToCurrency(value, true)}
       withLegend
+      tooltipAnimationDuration={200}
       curveType="monotone"
     />
   );

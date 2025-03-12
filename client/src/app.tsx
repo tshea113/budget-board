@@ -9,6 +9,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import { Center, createTheme, MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Notifications } from "@mantine/notifications";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import Welcome from "./app/unauthorized/Welcome";
 import AuthProvider from "./components/Auth/AuthProvider";
@@ -58,6 +59,7 @@ function App() {
               </Routes>
             </BrowserRouter>
           </Center>
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </AuthProvider>
     </MantineProvider>

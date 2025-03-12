@@ -93,6 +93,7 @@ const NetCashFlowChart = (props: NetCashFlowChartProps): React.ReactNode => {
         strokeOpacity: 1,
       }}
       lineProps={{ type: "linear" }}
+      tooltipAnimationDuration={200}
       valueFormatter={(value) => convertNumberToCurrency(value, true)}
     />
   );

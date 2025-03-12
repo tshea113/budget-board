@@ -114,3 +114,18 @@ export const getDaysInMonth = (month: number, year: number): number =>
 export const getMonthAndYearDateString = (date: Date): string => {
   return date.toLocaleString("default", { month: "long", year: "numeric" });
 };
+
+/**
+ * Returns an array of unique dates from an array of Date objects.
+ *
+ * The function filters the provided dates array, comparing the index of each
+ * date to the first index of that date. If the indexes match, the date is unique.
+ *
+ * @param {Date[]} dates - Array of Date objects from which to extract unique dates.
+ * @returns {Date[]} An array containing the unique dates from the provided dates.
+ */
+export const getUniqueDates = (dates: Date[]): Date[] =>
+  dates.filter(
+    (date, index, array) =>
+      array.findIndex((d) => d.getTime() === date.getTime()) === index
+  );
