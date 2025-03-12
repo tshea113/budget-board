@@ -17,13 +17,12 @@ interface BalanceChartProps {
   balances: IBalance[];
   dateRange: [DateValue, DateValue];
   isPending?: boolean;
-  includeGrid?: boolean;
-  includeYAxis?: boolean;
+  invertYAxis?: boolean;
 }
 
 const BalanceChart = (props: BalanceChartProps): React.ReactNode => {
   if (props.isPending) {
-    return <Skeleton height={425} />;
+    return <Skeleton height={425} radius="lg" />;
   }
 
   if (props.accounts?.length === 0 || props.balances?.length === 0) {
@@ -39,7 +38,8 @@ const BalanceChart = (props: BalanceChartProps): React.ReactNode => {
       props.balances,
       props.dateRange[0] ?? getDateFromMonthsAgo(1),
       props.dateRange[1] ?? new Date()
-    )
+    ),
+    props.invertYAxis
   );
 
   const chartSeries = BuildAccountBalanceChartSeries(props.accounts);

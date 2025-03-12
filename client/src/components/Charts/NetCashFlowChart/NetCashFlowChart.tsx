@@ -63,7 +63,7 @@ const NetCashFlowChart = (props: NetCashFlowChartProps): React.ReactNode => {
   };
 
   if (props.isPending) {
-    return <Skeleton height={425} />;
+    return <Skeleton height={425} radius="lg" />;
   }
 
   if (props.months.length === 0) {

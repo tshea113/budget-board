@@ -78,6 +78,7 @@ const AssetsTab = (): React.ReactNode => {
           selectedAccountIds.includes(a.id)
         )}
         dateRange={dateRange}
+        isPending={balancesQuery.isPending || accountsQuery.isPending}
       />
     </Stack>
   );

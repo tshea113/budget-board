@@ -20,7 +20,7 @@ const SpendingChart = (props: SpendingChartProps): React.ReactNode => {
   const sortedMonths = props.months.sort((a, b) => a.getTime() - b.getTime());
 
   if (props.isPending) {
-    return <Skeleton height={425} />;
+    return <Skeleton height={425} radius="lg" />;
   }
 
   if (props.months.length === 0) {
