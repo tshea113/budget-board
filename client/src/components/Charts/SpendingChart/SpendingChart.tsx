@@ -42,6 +42,8 @@ const SpendingChart = (props: SpendingChartProps): React.ReactNode => {
       withLegend
       tooltipAnimationDuration={200}
       curveType="monotone"
+      withYAxis={props.includeYAxis}
+      gridAxis={props.includeGrid ? "xy" : "none"}
     />
   );
 };

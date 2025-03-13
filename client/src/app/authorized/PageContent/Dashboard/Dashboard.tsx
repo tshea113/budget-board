@@ -5,6 +5,7 @@ import React from "react";
 import AccountsCard from "./AccountsCard/AccountsCard";
 import NetWorthCard from "./NetWorthCard/NetWorthCard";
 import Footer from "./Footer/Footer";
+import SpendingTrendsCard from "./SpendingTrendsCard/SpendingTrendsCard";
 
 const Dashboard = (): React.ReactNode => {
   return (
@@ -15,7 +16,7 @@ const Dashboard = (): React.ReactNode => {
           <NetWorthCard />
         </Stack>
         <Stack className={classes.feedColumn}>
-          <p>feed</p>
+          <SpendingTrendsCard />
         </Stack>
       </Flex>
       <Footer />
