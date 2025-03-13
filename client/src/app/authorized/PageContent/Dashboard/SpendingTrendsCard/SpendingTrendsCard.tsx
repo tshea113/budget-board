@@ -8,7 +8,7 @@ import {
   filterHiddenTransactions,
   getRollingTotalSpendingForMonth,
 } from "@helpers/transactions";
-import { Card, Stack, Text, Title } from "@mantine/core";
+import { Card, Skeleton, Stack, Text, Title } from "@mantine/core";
 import { ITransaction } from "@models/transaction";
 import { useQueries } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
@@ -50,7 +50,7 @@ const SpendingTrendsCard = (): React.ReactNode => {
   });
 
   if (transactionsQueries.isPending) {
-    return <Text>Loading...</Text>;
+    return <Skeleton height={500} radius="lg" />;
   }
 
   const getSpendingComparison = (): number => {

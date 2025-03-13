@@ -4,6 +4,7 @@ import {
   defaultTransactionCategories,
   Filters,
   ITransaction,
+  TransactionCardType,
 } from "@models/transaction";
 import { Sorts } from "../TransactionsHeader/SortMenu/SortMenuHelpers";
 import { SortDirection } from "@components/SortButton";

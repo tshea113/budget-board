@@ -291,7 +291,7 @@ export const getRollingTotalSpendingForMonth = (
     if (!amount) {
       if (dayItr > 1) {
         // If there are no transactions for a day, we should just roll over the previous day.
-        dayAmount.amount = rollingTotalSpendingPerDay[dayItr - 2].amount;
+        dayAmount.amount = rollingTotalSpendingPerDay[dayItr - 2]!.amount;
       }
       rollingTotalSpendingPerDay.push(dayAmount);
     } else {
@@ -301,3 +301,21 @@ export const getRollingTotalSpendingForMonth = (
 
   return rollingTotalSpendingPerDay;
 };
+
+/**
+ * Retrieves transactions for a specific category.
+ *
+ * The function filters the given transaction array, matching only those
+ * whose category or subcategory matches the provided categoryValue.
+ *
+ * @param {ITransaction[]} transactions - Array of transaction objects.
+ * @param {string} categoryValue - The category to match.
+ * @returns {ITransaction[]} An array of transactions for the specified category.
+ */
+export const getTransactionsByCategory = (
+  transactions: ITransaction[],
+  categoryValue: string
+) =>
+  transactions.filter((t: ITransaction) =>
+    areStringsEqual(t.category ?? "", categoryValue)
+  );

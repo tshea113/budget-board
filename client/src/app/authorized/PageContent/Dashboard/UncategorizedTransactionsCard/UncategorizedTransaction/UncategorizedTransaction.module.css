@@ -1,0 +1,28 @@
+.root {
+  padding: 0.5rem;
+  container-type: inline-size;
+  background-color: light-dark(
+    var(--mantine-color-gray-1),
+    var(--mantine-color-dark-7)
+  );
+}
+
+.container {
+  width: 100%;
+  gap: 0.5rem;
+  align-items: center;
+  flex-direction: row;
+
+  @container (max-width: 650px) {
+    flex-direction: column;
+  }
+}
+
+.subcontainer {
+  gap: 0.5rem;
+  align-items: center;
+
+  @container (max-width: 830px) {
+    width: 100%;
+  }
+}

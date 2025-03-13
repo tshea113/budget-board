@@ -1,0 +1,13 @@
+.root {
+  width: 100%;
+  padding: 6px;
+}
+
+.scrollArea {
+  padding: 6px;
+}
+
+.transactionList {
+  gap: 6px;
+  padding: 6px;
+}
