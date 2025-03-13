@@ -1,18 +1,15 @@
 import { filterBalancesByDateRange } from "@helpers/balances";
-import {
-  buildAccountBalanceChartData,
-  buildAccountBalanceChartSeries,
-} from "@helpers/charts";
+import { BuildNetWorthChartData } from "@helpers/charts";
 import { convertNumberToCurrency } from "@helpers/currency";
 import { getDateFromMonthsAgo } from "@helpers/datetime";
-import { BarChart } from "@mantine/charts";
+import { CompositeChart } from "@mantine/charts";
 import { Group, Skeleton, Text } from "@mantine/core";
 import { DateValue } from "@mantine/dates";
 import { IAccount } from "@models/account";
 import { IBalance } from "@models/balance";
 import React from "react";
 
-interface BalanceChartProps {
+interface NetWorthChartProps {
   accounts: IAccount[];
   balances: IBalance[];
   dateRange: [DateValue, DateValue];
@@ -20,7 +17,7 @@ interface BalanceChartProps {
   invertYAxis?: boolean;
 }
 
-const BalanceChart = (props: BalanceChartProps): React.ReactNode => {
+const NetWorthChart = (props: NetWorthChartProps): React.ReactNode => {
   if (props.isPending) {
     return <Skeleton height={425} radius="lg" />;
   }
@@ -34,25 +31,40 @@ const BalanceChart = (props: BalanceChartProps): React.ReactNode => {
   }
 
   return (
-    <BarChart
+    <CompositeChart
       h={400}
       w="100%"
-      data={buildAccountBalanceChartData(
+      data={BuildNetWorthChartData(
         filterBalancesByDateRange(
           props.balances,
           props.dateRange[0] ?? getDateFromMonthsAgo(1),
           props.dateRange[1] ?? new Date()
         ),
-        props.invertYAxis
+        props.accounts
       )}
-      series={buildAccountBalanceChartSeries(props.accounts)}
-      dataKey="dateString"
-      type="stacked"
+      series={[
+        { name: "assets", label: "Assets", color: "green.6", type: "bar" },
+        {
+          name: "liabilities",
+          label: "Liabilities",
+          color: "red.6",
+          type: "bar",
+        },
+        { name: "net", label: "Net", color: "gray.0", type: "line" },
+      ]}
       withLegend
+      dataKey="dateString"
+      composedChartProps={{ stackOffset: "sign" }}
+      barProps={{
+        stackId: "stack",
+        fillOpacity: 0.4,
+        strokeOpacity: 1,
+      }}
+      lineProps={{ type: "linear" }}
       tooltipAnimationDuration={200}
       valueFormatter={(value) => convertNumberToCurrency(value, true)}
     />
   );
 };
 
-export default BalanceChart;
+export default NetWorthChart;

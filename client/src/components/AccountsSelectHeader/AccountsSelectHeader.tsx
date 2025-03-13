@@ -57,6 +57,7 @@ const AccountsSelectHeader = (
               ?.filter(
                 (account: IAccount) =>
                   !account.hideAccount &&
+                  !account.deleted &&
                   (props.filters ? props.filters?.includes(account.type) : true)
               )
               ?.map((account) => account.id) ?? []

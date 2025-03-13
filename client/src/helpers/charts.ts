@@ -12,7 +12,7 @@ import {
 } from "./datetime";
 import { IBalance } from "@models/balance";
 import { getSortedBalanceDates } from "./balances";
-import { IAccount } from "@models/account";
+import { IAccount, liabilityAccountTypes } from "@models/account";
 
 export const chartColors = [
   "indigo.6",
@@ -91,7 +91,7 @@ export const buildTransactionChartSeries = (
     color: chartColors[i % chartColors.length] ?? "gray.6",
   }));
 
-interface ChartData {
+interface BalanceChartData {
   date: Date;
   dateString: string;
   [key: string]: number | Date | string;
@@ -125,7 +125,7 @@ export const buildAccountBalanceChartData = (
     getSortedBalanceDates(balances)
   );
 
-  const chartData: ChartData[] = [];
+  const chartData: BalanceChartData[] = [];
 
   distinctSortedBalanceDates.forEach((date: Date, index: number) => {
     // TODO: This is a hack to get around charts not liking non-string keys.
@@ -135,7 +135,7 @@ export const buildAccountBalanceChartData = (
       day: "numeric",
     });
 
-    const chartDataPoint: ChartData = { date, dateString };
+    const chartDataPoint: BalanceChartData = { date, dateString };
 
     accountIdToSortedBalancesMap.forEach((accountBalances, accountId) => {
       const balancesForDate = accountBalances.filter(
@@ -162,7 +162,13 @@ export const buildAccountBalanceChartData = (
   return chartData;
 };
 
-export const BuildAccountBalanceChartSeries = (accounts: IAccount[]) =>
+/**
+ * Builds the series for the account balance chart.
+ *
+ * @param accounts An array of IAccount objects representing accounts.
+ * @returns An array of objects containing the name of the account and the color to use.
+ */
+export const buildAccountBalanceChartSeries = (accounts: IAccount[]) =>
   accounts.map((account: IAccount) => {
     return {
       name: account.id,
@@ -171,3 +177,54 @@ export const BuildAccountBalanceChartSeries = (accounts: IAccount[]) =>
         chartColors[accounts.indexOf(account) % chartColors.length] ?? "gray.6",
     };
   });
+
+/**
+ * Represents a data point for net worth, including assets, liabilities, and net value on a specific date.
+ */
+export interface NetWorthChartData {
+  date: Date;
+  dateString: string;
+  assets: number;
+  liabilities: number;
+  net: number;
+}
+
+/**
+ * Builds data for a net worth chart based on provided balances and accounts.
+ *
+ * @param balances An array of IBalance objects representing account balances.
+ * @param accounts An array of IAccount objects representing accounts.
+ * @returns An array of objects, where each object represents a date and the corresponding net worth data.
+ */
+export const BuildNetWorthChartData = (
+  balances: IBalance[],
+  accounts: IAccount[]
+): NetWorthChartData[] => {
+  // Use the account balance chart data to build the net worth chart data.
+  const accountChartData = buildAccountBalanceChartData(balances);
+
+  const chartData: NetWorthChartData[] = [];
+  accountChartData.forEach((dataPoint) => {
+    const chartDataPoint: NetWorthChartData = {
+      date: dataPoint.date,
+      dateString: dataPoint.dateString,
+      assets: 0,
+      liabilities: 0,
+      net: 0,
+    };
+
+    accounts.forEach((account) => {
+      const chartIndex = liabilityAccountTypes.includes(account.type)
+        ? "liabilities"
+        : "assets";
+
+      chartDataPoint[chartIndex] += (dataPoint[account.id] as number) ?? 0;
+    });
+
+    chartDataPoint.net = chartDataPoint.assets + chartDataPoint.liabilities;
+
+    chartData.push(chartDataPoint);
+  });
+
+  return chartData;
+};
