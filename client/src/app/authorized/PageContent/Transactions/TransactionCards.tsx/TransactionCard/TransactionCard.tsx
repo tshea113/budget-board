@@ -14,9 +14,11 @@ import { translateAxiosError } from "@helpers/requests";
 import { notifications } from "@mantine/notifications";
 import { AxiosError } from "axios";
 import { TrashIcon } from "lucide-react";
+import { ICategory } from "@models/category";
 
 interface TransactionCardProps {
   transaction: ITransaction;
+  categories: ICategory[];
 }
 
 const TransactionCard = (props: TransactionCardProps): React.ReactNode => {
@@ -118,6 +120,7 @@ const TransactionCard = (props: TransactionCardProps): React.ReactNode => {
           >
             <EditableCategoryCell
               transaction={props.transaction}
+              categories={props.categories}
               isSelected={isSelected}
               editCell={doEditTransaction.mutate}
             />

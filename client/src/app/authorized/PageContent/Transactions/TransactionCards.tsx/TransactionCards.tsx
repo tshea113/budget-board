@@ -4,7 +4,6 @@ import {
   defaultTransactionCategories,
   Filters,
   ITransaction,
-  TransactionCardType,
 } from "@models/transaction";
 import { Sorts } from "../TransactionsHeader/SortMenu/SortMenuHelpers";
 import { SortDirection } from "@components/SortButton";
@@ -90,7 +89,11 @@ const TransactionCards = (props: TransactionCardsProps): React.ReactNode => {
               (page - 1) * itemsPerPage + itemsPerPage
             )
             .map((transaction) => (
-              <TransactionCard key={transaction.id} transaction={transaction} />
+              <TransactionCard
+                key={transaction.id}
+                transaction={transaction}
+                categories={transactionCategoriesWithCustom}
+              />
             ))}
         </Stack>
       )}

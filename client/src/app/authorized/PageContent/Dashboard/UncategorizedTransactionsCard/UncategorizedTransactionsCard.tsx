@@ -6,11 +6,15 @@ import {
   getVisibleTransactions,
 } from "@helpers/transactions";
 import { Card, Group, ScrollArea, Skeleton, Stack, Title } from "@mantine/core";
-import { ITransaction } from "@models/transaction";
+import {
+  defaultTransactionCategories,
+  ITransaction,
+} from "@models/transaction";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import React from "react";
 import UncategorizedTransaction from "./UncategorizedTransaction/UncategorizedTransaction";
+import { ICategoryResponse } from "@models/category";
 
 const UncategorizedTransactionsCard = (): React.ReactNode => {
   const { request } = React.useContext<any>(AuthContext);
@@ -29,6 +33,26 @@ const UncategorizedTransactionsCard = (): React.ReactNode => {
       return [];
     },
   });
+
+  const transactionCategoriesQuery = useQuery({
+    queryKey: ["transactionCategories"],
+    queryFn: async () => {
+      const res = await request({
+        url: "/api/transactionCategory",
+        method: "GET",
+      });
+
+      if (res.status === 200) {
+        return res.data as ICategoryResponse[];
+      }
+
+      return undefined;
+    },
+  });
+
+  const transactionCategoriesWithCustom = defaultTransactionCategories.concat(
+    transactionCategoriesQuery.data ?? []
+  );
 
   const filteredTransactions = getVisibleTransactions(
     getTransactionsByCategory(transactionsQuery.data ?? [], "")
@@ -57,6 +81,7 @@ const UncategorizedTransactionsCard = (): React.ReactNode => {
               <UncategorizedTransaction
                 key={transaction.id}
                 transaction={transaction}
+                categories={transactionCategoriesWithCustom}
               />
             ))}
           </Stack>

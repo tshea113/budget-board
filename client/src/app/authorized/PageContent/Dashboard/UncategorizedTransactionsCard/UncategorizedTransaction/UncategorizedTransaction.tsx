@@ -12,9 +12,11 @@ import EditableCategoryCell from "@app/authorized/PageContent/Transactions/Trans
 import EditableCurrencyCell from "@app/authorized/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableCurrencyCell/EditableCurrencyCell";
 import EditableMerchantCell from "@app/authorized/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableMerchantCell/EditableMerchantCell";
 import EditableDateCell from "@app/authorized/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableDateCell/EditableDateCell";
+import { ICategory } from "@models/category";
 
 interface TransactionCardProps {
   transaction: ITransaction;
+  categories: ICategory[];
 }
 
 const UncategorizedTransaction = (
@@ -92,7 +94,8 @@ const UncategorizedTransaction = (
           >
             <EditableCategoryCell
               transaction={props.transaction}
-              isSelected
+              categories={props.categories}
+              isSelected={false}
               editCell={doEditTransaction.mutate}
             />
             <EditableCurrencyCell

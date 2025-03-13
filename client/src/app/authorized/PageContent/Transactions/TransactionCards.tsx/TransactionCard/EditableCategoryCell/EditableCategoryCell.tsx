@@ -5,18 +5,14 @@ import {
 import classes from "./EditableCategoryCell.module.css";
 
 import { Flex, Group, Select, Text } from "@mantine/core";
-import {
-  defaultTransactionCategories,
-  ITransaction,
-} from "@models/transaction";
+import { ITransaction } from "@models/transaction";
 import React from "react";
-import { ICategoryResponse } from "@models/category";
-import { AuthContext } from "@components/Auth/AuthProvider";
-import { useQuery } from "@tanstack/react-query";
+import { ICategory } from "@models/category";
 import { getTransactionCategory } from "@helpers/transactions";
 
 interface EditableCategoryCellProps {
   transaction: ITransaction;
+  categories: ICategory[];
   isSelected: boolean;
   editCell: (newTransaction: ITransaction) => void;
   textClassName?: string;
@@ -25,27 +21,6 @@ interface EditableCategoryCellProps {
 const EditableCategoryCell = (
   props: EditableCategoryCellProps
 ): React.ReactNode => {
-  const { request } = React.useContext<any>(AuthContext);
-  const transactionCategoriesQuery = useQuery({
-    queryKey: ["transactionCategories"],
-    queryFn: async () => {
-      const res = await request({
-        url: "/api/transactionCategory",
-        method: "GET",
-      });
-
-      if (res.status === 200) {
-        return res.data as ICategoryResponse[];
-      }
-
-      return undefined;
-    },
-  });
-
-  const transactionCategoriesWithCustom = defaultTransactionCategories.concat(
-    transactionCategoriesQuery.data ?? []
-  );
-
   const [categoryDisplayValue, setCategoryDisplayValue] = React.useState(
     getTransactionCategory(
       props.transaction.category ?? "",
@@ -57,16 +32,12 @@ const EditableCategoryCell = (
     let newCategory = null;
     let newSubcategory = null;
 
-    const category = transactionCategoriesWithCustom.find(
-      (c) => c.value === newValue
-    );
+    const category = props.categories.find((c) => c.value === newValue);
 
     if (category != null) {
       setCategoryDisplayValue(category.value);
 
-      if (
-        getIsParentCategory(category.value, transactionCategoriesWithCustom)
-      ) {
+      if (getIsParentCategory(category.value, props.categories)) {
         newCategory = category.value.toLocaleLowerCase();
       } else {
         newCategory = category.parent.toLocaleLowerCase();
@@ -93,16 +64,13 @@ const EditableCategoryCell = (
           <Select
             w="100%"
             value={categoryDisplayValue}
-            data={transactionCategoriesWithCustom.map((c) => c.value)}
+            data={props.categories.map((c) => c.value)}
             onChange={onCategoryPick}
           />
         </Group>
       ) : (
         <Text>
-          {getFormattedCategoryValue(
-            categoryDisplayValue,
-            transactionCategoriesWithCustom
-          )}
+          {getFormattedCategoryValue(categoryDisplayValue, props.categories)}
         </Text>
       )}
     </Flex>
