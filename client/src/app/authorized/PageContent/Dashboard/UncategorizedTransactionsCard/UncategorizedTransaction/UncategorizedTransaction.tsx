@@ -95,7 +95,7 @@ const UncategorizedTransaction = (
             <EditableCategoryCell
               transaction={props.transaction}
               categories={props.categories}
-              isSelected={false}
+              isSelected
               editCell={doEditTransaction.mutate}
             />
             <EditableCurrencyCell
