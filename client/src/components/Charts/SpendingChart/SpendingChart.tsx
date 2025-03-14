@@ -31,12 +31,17 @@ const SpendingChart = (props: SpendingChartProps): React.ReactNode => {
     );
   }
 
+  const chartData = React.useMemo(
+    () => buildTransactionChartData(sortedMonths, props.transactions),
+    [sortedMonths, props.transactions]
+  );
+
   return (
     <AreaChart
       h={400}
       w="100%"
       series={buildTransactionChartSeries(sortedMonths)}
-      data={buildTransactionChartData(sortedMonths, props.transactions)}
+      data={chartData}
       dataKey="day"
       valueFormatter={(value) => convertNumberToCurrency(value, true)}
       withLegend
