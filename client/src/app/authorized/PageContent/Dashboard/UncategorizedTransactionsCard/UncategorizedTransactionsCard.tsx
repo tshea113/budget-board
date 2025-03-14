@@ -54,11 +54,15 @@ const UncategorizedTransactionsCard = (): React.ReactNode => {
     transactionCategoriesQuery.data ?? []
   );
 
-  const filteredTransactions = getVisibleTransactions(
-    getTransactionsByCategory(transactionsQuery.data ?? [], "")
+  const sortedFilteredTransactions = React.useMemo(
+    () =>
+      getVisibleTransactions(
+        getTransactionsByCategory(transactionsQuery.data ?? [], "")
+      ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
+    [transactionsQuery.data]
   );
 
-  if (filteredTransactions.length === 0) {
+  if (sortedFilteredTransactions.length === 0) {
     return null;
   }
 
@@ -77,7 +81,7 @@ const UncategorizedTransactionsCard = (): React.ReactNode => {
           offsetScrollbars
         >
           <Stack className={classes.transactionList}>
-            {filteredTransactions.map((transaction: ITransaction) => (
+            {sortedFilteredTransactions.map((transaction: ITransaction) => (
               <UncategorizedTransaction
                 key={transaction.id}
                 transaction={transaction}

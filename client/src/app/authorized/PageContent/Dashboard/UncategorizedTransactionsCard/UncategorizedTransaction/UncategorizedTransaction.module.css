@@ -5,6 +5,10 @@
     var(--mantine-color-gray-1),
     var(--mantine-color-dark-7)
   );
+
+  &:hover {
+    outline: 1px solid var(--mantine-primary-color-filled);
+  }
 }
 
 .container {
@@ -21,6 +25,7 @@
 .subcontainer {
   gap: 0.5rem;
   align-items: center;
+  justify-content: space-between;
 
   @container (max-width: 830px) {
     width: 100%;
