@@ -319,3 +319,39 @@ export const getTransactionsByCategory = (
   transactions.filter((t: ITransaction) =>
     areStringsEqual(t.category ?? "", categoryValue)
   );
+
+/**
+ * Builds a map of total transaction amounts keyed by category or subcategory.
+ *
+ * @param {ITransaction[]} transactions - Array of transaction objects
+ * @returns {Map<string, number>} A map with categories/subcategories as keys and summed transaction amounts as values
+ */
+export const buildCategoryToTransactionsTotalMap = (
+  transactions: ITransaction[]
+): Map<string, number> => {
+  const categoryToTransactionsTotalMap = new Map<string, number>();
+  transactions.forEach((transaction) => {
+    const category = getTransactionCategory(
+      transaction.category ?? "",
+      transaction.subcategory ?? ""
+    );
+    const currentTotal = categoryToTransactionsTotalMap.get(category) ?? 0;
+    categoryToTransactionsTotalMap.set(
+      category,
+      currentTotal + transaction.amount
+    );
+  });
+  return categoryToTransactionsTotalMap;
+};
+
+/**
+ * Calculates the sum of transaction amounts.
+ *
+ * @param {ITransaction[]} transactionData - Array of transaction objects
+ * @returns {number} The total sum of all amounts
+ */
+export const sumTransactionAmounts = (
+  transactionData: ITransaction[]
+): number => {
+  return transactionData.reduce((n, { amount }) => n + amount, 0);
+};

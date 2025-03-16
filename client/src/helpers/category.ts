@@ -76,3 +76,26 @@ export const getIsParentCategory = (
 ): boolean =>
   categories.find((c) => areStringsEqual(c.value, categoryValue))?.parent
     .length === 0;
+
+/**
+ * Retrieves the category's parent value, or returns the category's own value if it has no parent.
+ * If the category cannot be found, an empty string is returned.
+ *
+ * @param categoryValue - The category value to locate.
+ * @param categories - The list of available categories.
+ * @returns The parent category's value, the category's own value if it is a root, or an empty string if not found.
+ */
+export const getParentCategory = (
+  categoryValue: string,
+  categories: ICategory[]
+): string => {
+  const category = categories.find((c) =>
+    areStringsEqual(c.value, categoryValue)
+  );
+
+  if (category == null) {
+    return "";
+  }
+
+  return category.parent === "" ? category.value : category.parent;
+};
