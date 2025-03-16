@@ -1,7 +1,11 @@
 import { CashFlowValue, IBudget } from "@models/budget";
 import { ICategory } from "@models/category";
 import { areStringsEqual } from "./utils";
-import { getParentCategory } from "./category";
+import {
+  getIsParentCategory,
+  getParentCategory,
+  getSubCategories,
+} from "./category";
 
 export enum BudgetGroup {
   Income,
@@ -146,4 +150,38 @@ export const getBudgetValueColor = (
     return "green";
   }
   return "red";
+};
+
+/**
+ * Retrieves the total amount for the specified budget category by summing the category's own total
+ * with any child categories' totals (if the category is a parent).
+ *
+ * @param {string} budgetCategory - The category name to retrieve total for.
+ * @param {Map<string, number>} categoryToTransactionsTotalMap - A map from category name to transaction totals.
+ * @param {ICategory[]} categories - An array of all categories for lookups.
+ * @returns {number} The total amount for the given category (including child categories if applicable).
+ */
+export const getBudgetAmount = (
+  budgetCategory: string,
+  categoryToTransactionsTotalMap: Map<string, number>,
+  categories: ICategory[]
+): number => {
+  if (getIsParentCategory(budgetCategory, categories)) {
+    const children = getSubCategories(budgetCategory, categories);
+
+    const childrenTotal = children.reduce(
+      (acc, category) =>
+        acc +
+        (categoryToTransactionsTotalMap.get(
+          category.value.toLocaleLowerCase()
+        ) ?? 0),
+      0
+    );
+
+    return (
+      childrenTotal + (categoryToTransactionsTotalMap.get(budgetCategory) ?? 0)
+    );
+  }
+
+  return categoryToTransactionsTotalMap.get(budgetCategory) ?? 0;
 };

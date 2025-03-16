@@ -99,3 +99,18 @@ export const getParentCategory = (
 
   return category.parent === "" ? category.value : category.parent;
 };
+
+/**
+ * Retrieves the subcategories of a specified category by filtering
+ * the provided list of categories whose parent matches the given value,
+ * ignoring case differences.
+ *
+ * @param {string} categoryValue - The parent category value.
+ * @param {ICategory[]} categories - The list of categories to search.
+ * @returns {ICategory[]} An array of matching sub-category objects.
+ */
+export const getSubCategories = (
+  categoryValue: string,
+  categories: ICategory[]
+): ICategory[] =>
+  categories.filter((c) => areStringsEqual(c.parent, categoryValue));

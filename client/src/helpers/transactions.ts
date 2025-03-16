@@ -334,7 +334,8 @@ export const buildCategoryToTransactionsTotalMap = (
     const category = getTransactionCategory(
       transaction.category ?? "",
       transaction.subcategory ?? ""
-    );
+    ).toLocaleLowerCase();
+
     const currentTotal = categoryToTransactionsTotalMap.get(category) ?? 0;
     categoryToTransactionsTotalMap.set(
       category,

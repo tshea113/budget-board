@@ -9,7 +9,11 @@ import {
   getParentCategory,
 } from "@helpers/category";
 import { ICategory } from "@models/category";
-import { BudgetGroup, getBudgetGroupForCategory } from "@helpers/budgets";
+import {
+  BudgetGroup,
+  getBudgetAmount,
+  getBudgetGroupForCategory,
+} from "@helpers/budgets";
 
 interface BudgetsGroupProps {
   budgets: IBudget[];
@@ -32,11 +36,11 @@ const BudgetsGroup = (props: BudgetsGroupProps): React.ReactNode => {
             budget.category,
             props.categories
           )}
-          amount={
-            props.categoryToTransactionsTotalMap.get(
-              budget.category.toLocaleLowerCase()
-            ) ?? 0
-          }
+          amount={getBudgetAmount(
+            budget.category.toLocaleLowerCase(),
+            props.categoryToTransactionsTotalMap,
+            props.categories
+          )}
           isIncome={
             BudgetGroup.Income ===
             getBudgetGroupForCategory(
