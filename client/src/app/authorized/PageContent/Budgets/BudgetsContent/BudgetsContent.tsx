@@ -2,17 +2,14 @@ import classes from "./BudgetsContent.module.css";
 
 import { Group, Stack } from "@mantine/core";
 import { IBudget } from "@models/budget";
-import BudgetCard from "./BudgetCard/BudgetCard";
-import {
-  getFormattedCategoryValue,
-  getParentCategory,
-} from "@helpers/category";
+import { getParentCategory } from "@helpers/category";
 import { ICategory } from "@models/category";
 import { ITransaction } from "@models/transaction";
 import { buildCategoryToTransactionsTotalMap } from "@helpers/transactions";
 import { BudgetGroup, getBudgetGroupForCategory } from "@helpers/budgets";
-import BudgetGroupHeader from "./BudgetGroupHeader/BudgetGroupHeader";
+import BudgetsGroupHeader from "./BudgetGroupHeader/BudgetsGroupHeader";
 import BudgetTotalCard from "./BudgetTotalCard/BudgetTotalCard";
+import BudgetsGroup from "./BudgetsGroup/BudgetsGroup";
 
 interface BudgetsContentProps {
   budgets: IBudget[];
@@ -21,35 +18,40 @@ interface BudgetsContentProps {
 }
 
 const BudgetsContent = (props: BudgetsContentProps) => {
-  const categoryToTransactionsTotalMap = buildCategoryToTransactionsTotalMap(
-    props.transactions
-  );
+  const categoryToTransactionsTotalMap: Map<string, number> =
+    buildCategoryToTransactionsTotalMap(props.transactions);
 
   return (
     <Group className={classes.root}>
       <Stack w={{ base: "100%", md: "70%" }}>
-        <BudgetGroupHeader groupName="Income" />
-        {props.budgets.map((budget) => (
-          <BudgetCard
-            key={budget.id}
-            budgets={[budget]}
-            categoryDisplayString={getFormattedCategoryValue(
-              budget.category,
-              props.categories
+        <Stack className={classes.groupContainer}>
+          <BudgetsGroupHeader groupName="Income" />
+          <BudgetsGroup
+            budgets={props.budgets.filter(
+              (budget) =>
+                BudgetGroup.Income ===
+                getBudgetGroupForCategory(
+                  getParentCategory(budget.category, props.categories)
+                )
             )}
-            amount={
-              categoryToTransactionsTotalMap.get(
-                budget.category.toLocaleLowerCase()
-              ) ?? 0
-            }
-            isIncome={
-              BudgetGroup.Income ===
-              getBudgetGroupForCategory(
-                getParentCategory(budget.category, props.categories)
-              )
-            }
+            categoryToTransactionsTotalMap={categoryToTransactionsTotalMap}
+            categories={props.categories}
           />
-        ))}
+        </Stack>
+        <Stack className={classes.groupContainer}>
+          <BudgetsGroupHeader groupName="Expenses" />
+          <BudgetsGroup
+            budgets={props.budgets.filter(
+              (budget) =>
+                BudgetGroup.Spending ===
+                getBudgetGroupForCategory(
+                  getParentCategory(budget.category, props.categories)
+                )
+            )}
+            categoryToTransactionsTotalMap={categoryToTransactionsTotalMap}
+            categories={props.categories}
+          />
+        </Stack>
       </Stack>
       <Stack
         style={{ flexGrow: 1 }}
