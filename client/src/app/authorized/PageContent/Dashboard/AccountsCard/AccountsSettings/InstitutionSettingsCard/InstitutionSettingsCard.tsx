@@ -95,6 +95,9 @@ const InstitutionSettingsCard = (
                 onMove={({ activeIndex: from, overIndex: to }) => {
                   const newAccounts = [...sortedAccounts];
                   const [movedAccount] = newAccounts.splice(from, 1);
+                  if (movedAccount === undefined) {
+                    return;
+                  }
                   newAccounts.splice(to, 0, movedAccount);
                   setSortedAccounts(newAccounts);
                 }}

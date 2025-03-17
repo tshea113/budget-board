@@ -81,6 +81,9 @@ const AccountsSettings = (props: AccountsSettingsProps): React.ReactNode => {
             onMove={({ activeIndex: from, overIndex: to }) => {
               const newInstitutions = [...sortedInstitutions];
               const [movedInstitution] = newInstitutions.splice(from, 1);
+              if (movedInstitution === undefined) {
+                return;
+              }
               newInstitutions.splice(to, 0, movedInstitution);
               setSortedInstitutions(newInstitutions);
             }}

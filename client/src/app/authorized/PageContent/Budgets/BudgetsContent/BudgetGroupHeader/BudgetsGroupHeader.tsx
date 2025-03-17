@@ -1,4 +1,4 @@
-import cardClasses from "../BudgetCard/BudgetCard.module.css";
+import cardClasses from "../BudgetsGroup/BudgetCard/BudgetCard.module.css";
 import groupClasses from "./BudgetsGroupHeader.module.css";
 
 import { Flex, Group, Text } from "@mantine/core";
