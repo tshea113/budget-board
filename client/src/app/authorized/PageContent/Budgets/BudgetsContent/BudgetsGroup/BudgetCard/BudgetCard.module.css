@@ -1,5 +1,9 @@
 .root {
   padding: 0.5rem;
+
+  &:hover {
+    outline: 1px solid var(--mantine-primary-color-filled);
+  }
 }
 
 .budgetContainer {

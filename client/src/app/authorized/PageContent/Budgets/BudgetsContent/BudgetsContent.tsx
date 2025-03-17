@@ -17,6 +17,7 @@ interface BudgetsContentProps {
   budgets: IBudget[];
   categories: ICategory[];
   transactions: ITransaction[];
+  selectedDate?: Date;
 }
 
 const BudgetsContent = (props: BudgetsContentProps) => {
@@ -71,6 +72,8 @@ const BudgetsContent = (props: BudgetsContentProps) => {
           unbudgetedCategoryToTransactionsTotalMap={
             unbudgetedCategoryToTransactionsTotalMap
           }
+          categories={props.categories}
+          selectedDate={props.selectedDate}
         />
       </Stack>
       <Stack

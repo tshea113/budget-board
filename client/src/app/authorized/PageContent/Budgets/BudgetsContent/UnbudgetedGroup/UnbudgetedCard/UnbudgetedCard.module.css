@@ -1,13 +1,13 @@
 .root {
-  wrap: nowrap;
+  padding: 0.5rem;
   container-type: inline-size;
 }
 
 .labelContainer {
-  width: 49.5%;
+  width: 48%;
 
-  @container (max-width: 447px) {
-    width: 40%;
+  @container (max-width: 446px) {
+    width: 38%;
   }
 }
 
@@ -23,17 +23,11 @@
 
 .spacer {
   flex-grow: 1;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .text {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 600;
-
-  @container (max-width: 380px) {
-    font-size: 1rem;
-  }
-
-  @container (max-width: 300px) {
-    font-size: 0.8rem;
-  }
 }

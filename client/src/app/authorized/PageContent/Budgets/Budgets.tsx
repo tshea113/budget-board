@@ -123,6 +123,7 @@ const Budgets = (): React.ReactNode => {
         budgets={budgetsQuery.data ?? []}
         categories={transactionCategoriesWithCustom}
         transactions={transactionsWithoutHidden}
+        selectedDate={selectedDates.length === 1 ? selectedDates[0] : undefined}
       />
     </Stack>
   );

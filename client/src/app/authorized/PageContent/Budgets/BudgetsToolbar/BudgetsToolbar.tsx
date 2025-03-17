@@ -35,10 +35,6 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): React.ReactNode => {
     toggle();
   };
 
-  if (props.selectedDates.length !== 1) {
-    return null;
-  }
-
   return (
     <Stack>
       <Button
@@ -57,10 +53,12 @@ const BudgetsToolbar = (props: BudgetsToolbarProps): React.ReactNode => {
         allowSelectMultiple={canSelectMultiple}
       />
       <Group justify="flex-end">
-        <AddBudget
-          date={props.selectedDates[0]!}
-          categories={props.categories}
-        />
+        {props.selectedDates.length === 1 && (
+          <AddBudget
+            date={props.selectedDates[0]!}
+            categories={props.categories}
+          />
+        )}
       </Group>
     </Stack>
   );

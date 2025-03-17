@@ -3,7 +3,7 @@ import classes from "./BudgetsGroup.module.css";
 import { Stack } from "@mantine/core";
 import { IBudget } from "@models/budget";
 import React from "react";
-import BudgetCard from "../BudgetCard/BudgetCard";
+import BudgetCard from "./BudgetCard/BudgetCard";
 import {
   getFormattedCategoryValue,
   getParentCategory,
@@ -13,6 +13,7 @@ import {
   BudgetGroup,
   getBudgetAmount,
   getBudgetGroupForCategory,
+  groupBudgetsByCategory,
 } from "@helpers/budgets";
 
 interface BudgetsGroupProps {
@@ -22,35 +23,37 @@ interface BudgetsGroupProps {
 }
 
 const BudgetsGroup = (props: BudgetsGroupProps): React.ReactNode => {
-  const sortedBudgets = props.budgets.sort((a, b) =>
-    a.category.localeCompare(b.category)
-  );
+  const categoryToBudgetsMap = groupBudgetsByCategory(props.budgets);
 
-  return (
-    <Stack className={classes.root}>
-      {sortedBudgets.map((budget) => (
+  const buildCardsList = (): React.ReactNode[] => {
+    const cards: React.ReactNode[] = [];
+    categoryToBudgetsMap.forEach((budgets, category) =>
+      cards.push(
         <BudgetCard
-          key={budget.id}
-          budgets={[budget]}
+          key={category}
+          budgets={budgets}
           categoryDisplayString={getFormattedCategoryValue(
-            budget.category,
+            category,
             props.categories
           )}
           amount={getBudgetAmount(
-            budget.category.toLocaleLowerCase(),
+            category.toLocaleLowerCase(),
             props.categoryToTransactionsTotalMap,
             props.categories
           )}
           isIncome={
             BudgetGroup.Income ===
             getBudgetGroupForCategory(
-              getParentCategory(budget.category, props.categories)
+              getParentCategory(category, props.categories)
             )
           }
         />
-      ))}
-    </Stack>
-  );
+      )
+    );
+    return cards;
+  };
+
+  return <Stack className={classes.root}>{buildCardsList()}</Stack>;
 };
 
 export default BudgetsGroup;

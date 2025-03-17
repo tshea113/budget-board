@@ -185,3 +185,34 @@ export const getBudgetAmount = (
 
   return categoryToTransactionsTotalMap.get(budgetCategory) ?? 0;
 };
+
+/**
+ * Groups a list of budgets by their category (case-insensitive).
+ *
+ * The function first sorts the budgets alphabetically by category,
+ * then reduces them into a Map keyed by the lowercase category name,
+ * storing an array of budgets for each category.
+ *
+ * @param {IBudget[]} budgets - An array of budget objects.
+ * @returns {Map<string, IBudget[]>} - A map from category to list of budgets.
+ */
+export const groupBudgetsByCategory = (
+  budgets: IBudget[]
+): Map<string, IBudget[]> =>
+  budgets
+    .sort((a: IBudget, b: IBudget) => {
+      if (a.category.toUpperCase() < b.category.toUpperCase()) {
+        return -1;
+      } else if (a.category.toUpperCase() > b.category.toUpperCase()) {
+        return 1;
+      }
+      return 0;
+    })
+    .reduce(
+      (budgetMap: any, item: IBudget) =>
+        budgetMap.set(item.category.toLowerCase(), [
+          ...(budgetMap.get(item.category.toLowerCase()) || []),
+          item,
+        ]),
+      new Map()
+    );
