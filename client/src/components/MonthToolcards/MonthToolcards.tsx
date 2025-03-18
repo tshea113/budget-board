@@ -74,6 +74,7 @@ const MonthToolcards = (props: MonthToolcardsProps): React.ReactNode => {
                 return item.getTime() === date.getTime();
               })
             }
+            isPending={props.isPending}
             handleClick={handleClick}
           />
         ))}

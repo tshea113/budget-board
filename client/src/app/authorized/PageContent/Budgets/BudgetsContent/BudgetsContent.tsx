@@ -1,6 +1,6 @@
 import classes from "./BudgetsContent.module.css";
 
-import { Group, Stack } from "@mantine/core";
+import { Group, Skeleton, Stack } from "@mantine/core";
 import { IBudget } from "@models/budget";
 import { getParentCategory, getSubCategories } from "@helpers/category";
 import { ICategory } from "@models/category";
@@ -18,6 +18,7 @@ interface BudgetsContentProps {
   categories: ICategory[];
   transactions: ITransaction[];
   selectedDate?: Date;
+  isPending?: boolean;
 }
 
 const BudgetsContent = (props: BudgetsContentProps) => {
@@ -42,39 +43,51 @@ const BudgetsContent = (props: BudgetsContentProps) => {
       <Stack w={{ base: "100%", md: "70%" }}>
         <Stack className={classes.groupContainer}>
           <BudgetsGroupHeader groupName="Income" />
-          <BudgetsGroup
-            budgets={props.budgets.filter(
-              (budget) =>
-                BudgetGroup.Income ===
-                getBudgetGroupForCategory(
-                  getParentCategory(budget.category, props.categories)
-                )
-            )}
-            categoryToTransactionsTotalMap={categoryToTransactionsTotalMap}
-            categories={props.categories}
-          />
+          {props.isPending ? (
+            <Skeleton h={65} radius="md" />
+          ) : (
+            <BudgetsGroup
+              budgets={props.budgets.filter(
+                (budget) =>
+                  BudgetGroup.Income ===
+                  getBudgetGroupForCategory(
+                    getParentCategory(budget.category, props.categories)
+                  )
+              )}
+              categoryToTransactionsTotalMap={categoryToTransactionsTotalMap}
+              categories={props.categories}
+            />
+          )}
         </Stack>
         <Stack className={classes.groupContainer}>
           <BudgetsGroupHeader groupName="Expenses" />
-          <BudgetsGroup
-            budgets={props.budgets.filter(
-              (budget) =>
-                BudgetGroup.Spending ===
-                getBudgetGroupForCategory(
-                  getParentCategory(budget.category, props.categories)
-                )
-            )}
-            categoryToTransactionsTotalMap={categoryToTransactionsTotalMap}
-            categories={props.categories}
-          />
+          {props.isPending ? (
+            <Skeleton h={65} radius="md" />
+          ) : (
+            <BudgetsGroup
+              budgets={props.budgets.filter(
+                (budget) =>
+                  BudgetGroup.Spending ===
+                  getBudgetGroupForCategory(
+                    getParentCategory(budget.category, props.categories)
+                  )
+              )}
+              categoryToTransactionsTotalMap={categoryToTransactionsTotalMap}
+              categories={props.categories}
+            />
+          )}
         </Stack>
-        <UnbudgetedGroup
-          unbudgetedCategoryToTransactionsTotalMap={
-            unbudgetedCategoryToTransactionsTotalMap
-          }
-          categories={props.categories}
-          selectedDate={props.selectedDate}
-        />
+        {props.isPending ? (
+          <Skeleton h={65} radius="md" />
+        ) : (
+          <UnbudgetedGroup
+            unbudgetedCategoryToTransactionsTotalMap={
+              unbudgetedCategoryToTransactionsTotalMap
+            }
+            categories={props.categories}
+            selectedDate={props.selectedDate}
+          />
+        )}
       </Stack>
       <Stack
         style={{ flexGrow: 1 }}

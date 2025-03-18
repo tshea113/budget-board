@@ -124,6 +124,9 @@ const Budgets = (): React.ReactNode => {
         categories={transactionCategoriesWithCustom}
         transactions={transactionsWithoutHidden}
         selectedDate={selectedDates.length === 1 ? selectedDates[0] : undefined}
+        isPending={
+          budgetsQuery.isPending || transactionCategoriesQuery.isPending
+        }
       />
     </Stack>
   );

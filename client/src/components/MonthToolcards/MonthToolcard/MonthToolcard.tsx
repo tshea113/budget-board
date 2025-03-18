@@ -8,15 +8,21 @@ interface MonthToolcardProps {
   date: Date;
   cashFlowValue: CashFlowValue;
   isSelected: boolean;
+  isPending?: boolean;
   handleClick: (date: Date) => void;
 }
 
 const MonthToolcard = (props: MonthToolcardProps): React.ReactNode => {
   const getLightColor = (
     cashFlowValue: CashFlowValue,
-    isSelected: boolean
+    isSelected: boolean,
+    isPending?: boolean
   ): string => {
     if (isSelected) {
+      if (isPending) {
+        return "var(--mantine-color-dimmed)";
+      }
+
       switch (cashFlowValue) {
         case CashFlowValue.Positive:
           return "green";

@@ -1,6 +1,6 @@
 import classes from "./BudgetTotalCard.module.css";
 
-import { Card, Title } from "@mantine/core";
+import { Card, Skeleton, Title } from "@mantine/core";
 import React from "react";
 import BudgetTotalItem from "./BudgetTotalItem/BudgetTotalItem";
 import { IBudget } from "@models/budget";
@@ -46,28 +46,36 @@ const BudgetTotalCard = (props: BudgetTotalCardProps): React.ReactNode => {
   return (
     <Card className={classes.root} radius="md">
       <Title order={3}>Your Budget</Title>
-      <Card className={classes.group} radius="md">
-        <BudgetTotalItem
-          label="Income"
-          amount={incomeTransactionsTotal}
-          total={incomeBudgetsTotal}
-          isIncome
-        />
-        <BudgetTotalItem
-          label="Expenses"
-          amount={spendingTransactionsTotal}
-          total={spendingBudgetsTotal}
-          isIncome={false}
-        />
-      </Card>
-      <Card className={classes.group} radius="md">
-        <BudgetTotalItem
-          label="Total"
-          amount={totalTransactionsTotal}
-          total={totalBudgetsTotal}
-          isIncome
-        />
-      </Card>
+      {props.isPending ? (
+        <Skeleton h={105} radius="md" />
+      ) : (
+        <Card className={classes.group} radius="md">
+          <BudgetTotalItem
+            label="Income"
+            amount={incomeTransactionsTotal}
+            total={incomeBudgetsTotal}
+            isIncome
+          />
+          <BudgetTotalItem
+            label="Expenses"
+            amount={spendingTransactionsTotal}
+            total={spendingBudgetsTotal}
+            isIncome={false}
+          />
+        </Card>
+      )}
+      {props.isPending ? (
+        <Skeleton h={56} radius="md" />
+      ) : (
+        <Card className={classes.group} radius="md">
+          <BudgetTotalItem
+            label="Total"
+            amount={totalTransactionsTotal}
+            total={totalBudgetsTotal}
+            isIncome
+          />
+        </Card>
+      )}
     </Card>
   );
 };

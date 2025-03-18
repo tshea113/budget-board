@@ -1,8 +1,17 @@
-import { getBudgetValueColor } from "@helpers/budgets";
 import classes from "./BudgetCard.module.css";
 
 import { convertNumberToCurrency } from "@helpers/currency";
-import { Card, Flex, Group, Progress, Stack, Text } from "@mantine/core";
+import {
+  Button,
+  Card,
+  Flex,
+  Group,
+  LoadingOverlay,
+  NumberInput,
+  Progress,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { IBudget, IBudgetUpdateRequest } from "@models/budget";
 import React from "react";
 import { useDisclosure } from "@mantine/hooks";
@@ -11,6 +20,9 @@ import { AuthContext } from "@components/Auth/AuthProvider";
 import { translateAxiosError } from "@helpers/requests";
 import { AxiosError } from "axios";
 import { notifications } from "@mantine/notifications";
+import { useField } from "@mantine/form";
+import { Trash2Icon } from "lucide-react";
+import { getBudgetValueColor } from "@helpers/budgets";
 
 interface BudgetCardProps {
   budgets: IBudget[];
@@ -21,6 +33,11 @@ interface BudgetCardProps {
 
 const BudgetCard = (props: BudgetCardProps): React.ReactNode => {
   const [isSelected, { toggle }] = useDisclosure(false);
+
+  const newLimitField = useField<number | string>({
+    initialValue: props.budgets[0]?.limit ?? 0,
+    validate: (value) => (value !== "" ? null : "Invalid limit"),
+  });
 
   const { request } = React.useContext<any>(AuthContext);
   const queryClient = useQueryClient();
@@ -47,11 +64,22 @@ const BudgetCard = (props: BudgetCardProps): React.ReactNode => {
 
       return { previousBudgets };
     },
-    onError: (error: AxiosError, _variables: IBudget, context) => {
+    onError: (error: AxiosError, _variables: IBudgetUpdateRequest, context) => {
       queryClient.setQueryData(["budgets"], context?.previousBudgets ?? []);
       notifications.show({ message: translateAxiosError(error), color: "red" });
     },
     onSettled: () => queryClient.invalidateQueries({ queryKey: ["budgets"] }),
+  });
+
+  const doDeleteBudget = useMutation({
+    mutationFn: async (id: string) =>
+      await request({
+        url: "/api/budget",
+        method: "DELETE",
+        params: { guid: id },
+      }),
+    onSuccess: async () =>
+      await queryClient.invalidateQueries({ queryKey: ["budgets"] }),
   });
 
   const limit = React.useMemo(
@@ -63,6 +91,19 @@ const BudgetCard = (props: BudgetCardProps): React.ReactNode => {
     ((props.amount * (props.isIncome ? 1 : -1)) / limit) * 100
   );
 
+  const handleEdit = (newLimit?: number | string) => {
+    if (newLimit === "") {
+      return;
+    }
+    if (props.budgets.length === 0) {
+      return;
+    }
+    doEditBudget.mutate({
+      id: props.budgets[0]!.id,
+      limit: Number(newLimit),
+    });
+  };
+
   return (
     <Card
       className={classes.root}
@@ -70,15 +111,27 @@ const BudgetCard = (props: BudgetCardProps): React.ReactNode => {
       onClick={toggle}
       bg={isSelected ? "var(--mantine-primary-color-light)" : ""}
     >
+      <LoadingOverlay
+        visible={doEditBudget.isPending || doDeleteBudget.isPending}
+      />
       <Stack className={classes.budgetContainer}>
         <Group className={classes.dataContainer}>
           <Group className={classes.budgetNameContainer}>
-            {isSelected ? (
-              <div>test</div>
-            ) : (
-              <Text className={classes.text}>
-                {props.categoryDisplayString}
-              </Text>
+            <Text className={classes.text}>{props.categoryDisplayString}</Text>
+            {isSelected && (
+              <Button
+                size="compact-sm"
+                bg="red"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  doDeleteBudget.mutate(props.budgets[0]!.id);
+                }}
+              >
+                <Group gap="0.125rem">
+                  <Trash2Icon size={18} />
+                  <Text>Delete</Text>
+                </Group>
+              </Button>
             )}
           </Group>
           <Group className={classes.budgetValuesContainer}>
@@ -92,7 +145,25 @@ const BudgetCard = (props: BudgetCardProps): React.ReactNode => {
             </Flex>
             <Flex className={classes.numberContainer}>
               {isSelected ? (
-                <div>test</div>
+                <Flex onClick={(e) => e.stopPropagation()}>
+                  <NumberInput
+                    {...newLimitField.getInputProps()}
+                    onBlur={() => handleEdit(newLimitField.getValue())}
+                    min={0}
+                    max={999999}
+                    step={1}
+                    prefix="$"
+                    placeholder="Limit"
+                    radius="md"
+                    styles={{
+                      input: {
+                        padding: "0 10px",
+                        fontSize: "14px",
+                        lineHeight: "20px",
+                      },
+                    }}
+                  />
+                </Flex>
               ) : (
                 <Text className={classes.text}>
                   {convertNumberToCurrency(limit, false)}
