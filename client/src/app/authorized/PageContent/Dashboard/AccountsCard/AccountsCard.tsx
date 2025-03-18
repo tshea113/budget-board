@@ -1,6 +1,14 @@
 import classes from "./AccountsCard.module.css";
 
-import { ActionIcon, Card, Group, Skeleton, Stack, Title } from "@mantine/core";
+import {
+  ActionIcon,
+  Card,
+  Group,
+  Skeleton,
+  Stack,
+  Title,
+  Text,
+} from "@mantine/core";
 import { SettingsIcon } from "lucide-react";
 import React from "react";
 import { AuthContext } from "@components/Auth/AuthProvider";
@@ -60,7 +68,7 @@ const AccountsCard = (): React.ReactNode => {
       shadow="sm"
       withBorder
     >
-      <Group justify="space-between" align="center">
+      <Group className={classes.headerContainer}>
         <Title order={2}>Accounts</Title>
         <ActionIcon
           className={classes.settingsIcon}
@@ -76,13 +84,15 @@ const AccountsCard = (): React.ReactNode => {
           accounts={accountsQuery.data ?? []}
         />
       </Group>
-      <Stack gap={5}>
+      <Stack className={classes.accountsContainer}>
         {institutionQuery.isPending || accountsQuery.isPending ? (
           <Skeleton height={600} radius="lg" />
-        ) : (
+        ) : (sortedInstitutions ?? []).length > 0 ? (
           (sortedInstitutions ?? []).map((institution: IInstitution) => (
             <InstitutionItem key={institution.id} institution={institution} />
           ))
+        ) : (
+          <Text>No accounts found</Text>
         )}
       </Stack>
     </Card>

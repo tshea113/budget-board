@@ -17,3 +17,14 @@
     color: var(--mantine-color-primary);
   }
 }
+
+.headerContainer {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accountsContainer {
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
+}
