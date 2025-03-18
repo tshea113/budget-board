@@ -5,7 +5,15 @@ import {
   getTransactionsByCategory,
   getVisibleTransactions,
 } from "@helpers/transactions";
-import { Card, Group, ScrollArea, Skeleton, Stack, Title } from "@mantine/core";
+import {
+  Card,
+  Group,
+  Pagination,
+  ScrollArea,
+  Skeleton,
+  Stack,
+  Title,
+} from "@mantine/core";
 import {
   defaultTransactionCategories,
   ITransaction,
@@ -17,6 +25,9 @@ import UncategorizedTransaction from "./UncategorizedTransaction/UncategorizedTr
 import { ICategoryResponse } from "@models/category";
 
 const UncategorizedTransactionsCard = (): React.ReactNode => {
+  const itemsPerPage = 20;
+  const [activePage, setPage] = React.useState(1);
+
   const { request } = React.useContext<any>(AuthContext);
   const transactionsQuery = useQuery({
     queryKey: ["transactions"],
@@ -68,29 +79,41 @@ const UncategorizedTransactionsCard = (): React.ReactNode => {
 
   return (
     <Card className={classes.root} withBorder radius="md">
-      <Group justify="center">
-        <Title order={2}>Uncategorized Transactions</Title>
-      </Group>
-      {transactionsQuery.isPending ? (
-        <Skeleton height={350} radius="lg" />
-      ) : (
-        <ScrollArea.Autosize
-          className={classes.scrollArea}
-          mah={350}
-          type="auto"
-          offsetScrollbars
-        >
-          <Stack className={classes.transactionList}>
-            {sortedFilteredTransactions.map((transaction: ITransaction) => (
-              <UncategorizedTransaction
-                key={transaction.id}
-                transaction={transaction}
-                categories={transactionCategoriesWithCustom}
-              />
-            ))}
-          </Stack>
-        </ScrollArea.Autosize>
-      )}
+      <Stack gap="0.5rem" align="center" w="100%">
+        <Group justify="center">
+          <Title order={2}>Uncategorized Transactions</Title>
+        </Group>
+        <Pagination
+          value={activePage}
+          onChange={setPage}
+          total={Math.ceil(sortedFilteredTransactions.length / itemsPerPage)}
+        />
+        {transactionsQuery.isPending || transactionCategoriesQuery.isPending ? (
+          <Skeleton height={350} radius="lg" />
+        ) : (
+          <ScrollArea.Autosize
+            className={classes.scrollArea}
+            mah={350}
+            type="auto"
+            offsetScrollbars
+          >
+            <Stack className={classes.transactionList}>
+              {sortedFilteredTransactions
+                .slice(
+                  (activePage - 1) * itemsPerPage,
+                  (activePage - 1) * itemsPerPage + itemsPerPage
+                )
+                .map((transaction: ITransaction) => (
+                  <UncategorizedTransaction
+                    key={transaction.id}
+                    transaction={transaction}
+                    categories={transactionCategoriesWithCustom}
+                  />
+                ))}
+            </Stack>
+          </ScrollArea.Autosize>
+        )}
+      </Stack>
     </Card>
   );
 };
