@@ -1,7 +1,14 @@
-import { AuthContext } from "@components/Auth/AuthProvider";
 import classes from "./CustomCategoryCard.module.css";
+import parentClasses from "../CustomCategories.module.css";
 
-import { ActionIcon, Card, Group, LoadingOverlay, Text } from "@mantine/core";
+import {
+  ActionIcon,
+  Card,
+  Flex,
+  Group,
+  LoadingOverlay,
+  Text,
+} from "@mantine/core";
 import { ICategoryResponse } from "@models/category";
 import { TrashIcon } from "lucide-react";
 import React from "react";
@@ -9,6 +16,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { notifications } from "@mantine/notifications";
 import { translateAxiosError } from "@helpers/requests";
+import { AuthContext } from "@components/Auth/AuthProvider";
 
 interface CustomCategoryCardProps {
   category: ICategoryResponse;
@@ -38,11 +46,19 @@ const CustomCategoryCard = (
     <Card className={classes.card} shadow="xs" padding="md" radius="md">
       <LoadingOverlay visible={doDeleteCategory.isPending} />
       <Group className={classes.group}>
-        <Text>{props.category.value}</Text>
-        <Text>{props.category.parent}</Text>
-        <ActionIcon onClick={() => doDeleteCategory.mutate(props.category.id)}>
-          <TrashIcon />
-        </ActionIcon>
+        <Flex className={parentClasses.nameContainer}>
+          <Text>{props.category.value}</Text>
+        </Flex>
+        <Flex className={parentClasses.parentContainer}>
+          <Text>{props.category.parent}</Text>
+        </Flex>
+        <Flex className={parentClasses.deleteContainer}>
+          <ActionIcon
+            onClick={() => doDeleteCategory.mutate(props.category.id)}
+          >
+            <TrashIcon size="1.2rem" />
+          </ActionIcon>
+        </Flex>
       </Group>
     </Card>
   );

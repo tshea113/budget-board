@@ -48,7 +48,7 @@ const DeletedTransactionsCard = (
     <Card className={classes.card} shadow="xs" padding="md" radius="md">
       <LoadingOverlay visible={doRestoreTransaction.isPending} />
       <Group className={classes.container}>
-        <Stack>
+        <Stack className={classes.transactionDetails}>
           <Text className={classes.merchantName}>
             {props.deletedTransaction.merchantName}
           </Text>
@@ -66,7 +66,7 @@ const DeletedTransactionsCard = (
               doRestoreTransaction.mutate(props.deletedTransaction.id)
             }
           >
-            <Undo2Icon />
+            <Undo2Icon size="1.2rem" />
           </ActionIcon>
         </Group>
       </Group>

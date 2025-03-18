@@ -1,4 +1,6 @@
-import { Group, Stack, Text } from "@mantine/core";
+import classes from "./CustomCategories.module.css";
+
+import { Flex, Group, Stack, Text } from "@mantine/core";
 import React from "react";
 import AddCategory from "./AddCategory/AddCategory";
 import { AuthContext } from "@components/Auth/AuthProvider";
@@ -34,9 +36,15 @@ const CustomCategories = (): React.ReactNode => {
       <AddCategory categories={transactionCategoriesWithCustom} />
       <Stack>
         <Group px="0.5rem" justify="space-between">
-          <Text fw={600}>Name</Text>
-          <Text fw={600}>Parent</Text>
-          <Text w="2.5rem" />
+          <Flex className={classes.nameContainer}>
+            <Text fw={600}>Name</Text>
+          </Flex>
+          <Flex className={classes.parentContainer}>
+            <Text fw={600}>Parent</Text>
+          </Flex>
+          <Flex className={classes.deleteContainer}>
+            <Text />
+          </Flex>
         </Group>
         {(transactionCategoriesQuery.data ?? []).length > 0 ? (
           transactionCategoriesQuery.data?.map(

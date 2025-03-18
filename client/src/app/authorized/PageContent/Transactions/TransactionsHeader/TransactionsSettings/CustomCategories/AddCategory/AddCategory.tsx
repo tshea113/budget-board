@@ -1,7 +1,14 @@
 import { AuthContext } from "@components/Auth/AuthProvider";
 import CategorySelect from "@components/CategorySelect";
 import { translateAxiosError } from "@helpers/requests";
-import { Button, Card, LoadingOverlay, Stack, TextInput } from "@mantine/core";
+import {
+  Button,
+  Card,
+  LoadingOverlay,
+  Stack,
+  Text,
+  TextInput,
+} from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { ICategory, ICategoryCreateRequest } from "@models/category";
@@ -61,19 +68,15 @@ const AddCategory = (props: AddCategoryProps): React.ReactNode => {
             label="Category Name"
             w="100%"
           />
-          <CategorySelect
-            w="100%"
-            categories={parentCategories}
-            value={form.getValues().parent}
-            onChange={(value) => form.setFieldValue("parent", value)}
-            label="Parent Category"
-          />
-          <TextInput
-            {...form.getInputProps("parent")}
-            key={form.key("parent")}
-            label="Parent Category"
-            w="100%"
-          />
+          <Stack gap="0.25rem">
+            <Text size="0.875rem">Parent Category</Text>
+            <CategorySelect
+              w="100%"
+              categories={parentCategories}
+              value={form.getValues().parent}
+              onChange={(value) => form.setFieldValue("parent", value)}
+            />
+          </Stack>
           <Button w="100%" type="submit">
             Add Category
           </Button>

@@ -15,7 +15,6 @@ import React from "react";
 
 interface CategorySelectProps {
   w?: StyleProp<React.CSSProperties["width"]>;
-  label?: string;
   categories: ICategory[];
   value: string;
   onChange: (value: string) => void;

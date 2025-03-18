@@ -1,4 +1,5 @@
 .card {
+  padding: 0.5rem;
   background-color: light-dark(
     var(--mantine-color-gray-3),
     var(--mantine-color-dark-5)
@@ -7,5 +8,4 @@
 
 .group {
   align-items: center;
-  justify-content: space-between;
 }
