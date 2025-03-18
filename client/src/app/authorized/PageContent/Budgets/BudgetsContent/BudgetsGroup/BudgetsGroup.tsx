@@ -1,6 +1,6 @@
 import classes from "./BudgetsGroup.module.css";
 
-import { Stack } from "@mantine/core";
+import { Stack, Text } from "@mantine/core";
 import { IBudget } from "@models/budget";
 import React from "react";
 import BudgetCard from "./BudgetCard/BudgetCard";
@@ -53,7 +53,15 @@ const BudgetsGroup = (props: BudgetsGroupProps): React.ReactNode => {
     return cards;
   };
 
-  return <Stack className={classes.root}>{buildCardsList()}</Stack>;
+  return (
+    <Stack className={classes.root}>
+      {props.budgets.length > 0 ? (
+        buildCardsList()
+      ) : (
+        <Text size="sm">No budgets.</Text>
+      )}
+    </Stack>
+  );
 };
 
 export default BudgetsGroup;
