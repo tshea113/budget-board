@@ -11,7 +11,7 @@ import {
   getFilteredTransactions,
   sortTransactions,
 } from "@helpers/transactions";
-import { Group, Pagination, Skeleton, Stack } from "@mantine/core";
+import { Group, Pagination, Skeleton, Stack, Text } from "@mantine/core";
 import { AuthContext } from "@components/Auth/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
@@ -71,6 +71,12 @@ const TransactionCards = (props: TransactionCardsProps): React.ReactNode => {
     transactionCategoriesWithCustom
   );
 
+  const sortedFilteredTransactions = sortTransactions(
+    filteredTransactions,
+    props.sort,
+    props.sortDirection
+  );
+
   return (
     <Stack gap={10}>
       {transactionsQuery.isPending || transactionCategoriesQuery.isPending ? (
@@ -78,23 +84,23 @@ const TransactionCards = (props: TransactionCardsProps): React.ReactNode => {
           <Skeleton key={index} height={40} radius="md" />
         ))
       ) : (
-        <Stack gap={10}>
-          {sortTransactions(
-            filteredTransactions,
-            props.sort,
-            props.sortDirection
-          )
-            .slice(
-              (page - 1) * itemsPerPage,
-              (page - 1) * itemsPerPage + itemsPerPage
-            )
-            .map((transaction) => (
-              <TransactionCard
-                key={transaction.id}
-                transaction={transaction}
-                categories={transactionCategoriesWithCustom}
-              />
-            ))}
+        <Stack gap={10} align="center">
+          {sortedFilteredTransactions.length > 0 ? (
+            sortedFilteredTransactions
+              .slice(
+                (page - 1) * itemsPerPage,
+                (page - 1) * itemsPerPage + itemsPerPage
+              )
+              .map((transaction) => (
+                <TransactionCard
+                  key={transaction.id}
+                  transaction={transaction}
+                  categories={transactionCategoriesWithCustom}
+                />
+              ))
+          ) : (
+            <Text>No transactions</Text>
+          )}
         </Stack>
       )}
       <Group justify="center">
