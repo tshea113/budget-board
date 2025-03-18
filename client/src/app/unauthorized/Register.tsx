@@ -89,7 +89,7 @@ const Register = (props: RegisterProps): React.ReactNode => {
       <LoadingOverlay
         visible={loading}
         zIndex={1000}
-        overlayProps={{ radius: "sm", blur: 2 }}
+        overlayProps={{ blur: 2 }}
       />
       <form
         className={classes.form}

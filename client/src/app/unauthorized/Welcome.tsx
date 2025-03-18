@@ -7,7 +7,7 @@ import {
   Group,
   Anchor,
   useComputedColorScheme,
-  Paper,
+  Card,
 } from "@mantine/core";
 import Register from "./Register";
 import Login from "./Login";
@@ -59,9 +59,9 @@ const Welcome = (): React.ReactNode => {
         />
         <Text size="md">A simple app for managing monthly budgets.</Text>
       </Stack>
-      <Paper shadow="sm" withBorder mt="2em" w="100%" maw="500px" p={20}>
+      <Card shadow="sm" withBorder mt="2em" w="100%" maw="500px" p={20}>
         {getCardState()}
-      </Paper>
+      </Card>
       {loginCardState !== LoginCardState.Register && (
         <Group mt="xl" justify="center">
           <Text size="sm">Don't have an account?</Text>
