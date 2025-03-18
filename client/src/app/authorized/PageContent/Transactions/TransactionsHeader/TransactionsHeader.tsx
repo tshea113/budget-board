@@ -10,6 +10,7 @@ import { Sorts } from "./SortMenu/SortMenuHelpers";
 import FilterCard from "./FilterCard/FilterCard";
 import { useDisclosure } from "@mantine/hooks";
 import TransactionsSettings from "./TransactionsSettings/TransactionsSettings";
+import { ICategory } from "@models/category";
 
 interface TransactionsHeaderProps {
   sort: Sorts;
@@ -18,6 +19,7 @@ interface TransactionsHeaderProps {
   setSortDirection: (newSortDirection: SortDirection) => void;
   filters: Filters;
   setFilters: (newFilters: Filters) => void;
+  categories: ICategory[];
 }
 
 const TransactionsHeader = (
@@ -51,6 +53,7 @@ const TransactionsHeader = (
       </Flex>
       <FilterCard
         isOpen={isFilterCardOpen}
+        categories={props.categories}
         filters={props.filters}
         setFilters={props.setFilters}
       />

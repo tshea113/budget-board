@@ -1,14 +1,19 @@
 import { AuthContext } from "@components/Auth/AuthProvider";
+import CategorySelect from "@components/CategorySelect";
 import { translateAxiosError } from "@helpers/requests";
 import { Button, Card, LoadingOverlay, Stack, TextInput } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { ICategoryCreateRequest } from "@models/category";
+import { ICategory, ICategoryCreateRequest } from "@models/category";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import React from "react";
 
-const AddCategory = (): React.ReactNode => {
+interface AddCategoryProps {
+  categories: ICategory[];
+}
+
+const AddCategory = (props: AddCategoryProps): React.ReactNode => {
   const { request } = React.useContext<any>(AuthContext);
 
   const queryClient = useQueryClient();
@@ -36,6 +41,10 @@ const AddCategory = (): React.ReactNode => {
     },
   });
 
+  const parentCategories = props.categories.filter(
+    (category) => category.parent?.length === 0
+  );
+
   return (
     <Card withBorder shadow="xs">
       <LoadingOverlay visible={doAddCategory.isPending} />
@@ -52,7 +61,13 @@ const AddCategory = (): React.ReactNode => {
             label="Category Name"
             w="100%"
           />
-          {/* TODO: Create a category select input */}
+          <CategorySelect
+            w="100%"
+            categories={parentCategories}
+            value={form.getValues().parent}
+            onChange={(value) => form.setFieldValue("parent", value)}
+            label="Parent Category"
+          />
           <TextInput
             {...form.getInputProps("parent")}
             key={form.key("parent")}

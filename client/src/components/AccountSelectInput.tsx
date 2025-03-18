@@ -61,6 +61,7 @@ const AccountSelectInput = ({
       data={getFilteredAccounts().map((a) => {
         return { value: a.id, label: a.name };
       })}
+      placeholder="Select accounts"
       value={selectedAccountIds}
       onChange={setSelectedAccountIds}
       clearable

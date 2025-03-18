@@ -43,6 +43,7 @@ const DeleteAccountPopover = (
         <ActionIcon
           w={{ base: "100%", sm: "auto" }}
           onClick={() => doDeleteAccount.mutate(deleteTransactions)}
+          color="red"
         >
           <TrashIcon size={20} />
         </ActionIcon>

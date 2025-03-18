@@ -4,11 +4,12 @@ import {
 } from "@helpers/category";
 import classes from "./EditableCategoryCell.module.css";
 
-import { Flex, Group, Select, Text } from "@mantine/core";
+import { Flex, Group, Text } from "@mantine/core";
 import { ITransaction } from "@models/transaction";
 import React from "react";
 import { ICategory } from "@models/category";
 import { getTransactionCategory } from "@helpers/transactions";
+import CategorySelect from "@components/CategorySelect";
 
 interface EditableCategoryCellProps {
   transaction: ITransaction;
@@ -59,12 +60,11 @@ const EditableCategoryCell = (
   return (
     <Flex className={classes.container} w={{ base: "100%", xs: "190px" }}>
       {props.isSelected ? (
-        // TODO: Create a category selection input
-        <Group onClick={(e) => e.stopPropagation()}>
-          <Select
+        <Group onClick={(e) => e.stopPropagation()} w="100%">
+          <CategorySelect
             w="100%"
+            categories={props.categories}
             value={categoryDisplayValue}
-            data={props.categories.map((c) => c.value)}
             onChange={onCategoryPick}
           />
         </Group>

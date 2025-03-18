@@ -5,6 +5,7 @@ import { AuthContext } from "@components/Auth/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import { ICategoryResponse } from "@models/category";
 import CustomCategoryCard from "./CustomCategoryCard/CustomCategoryCard";
+import { defaultTransactionCategories } from "@models/transaction";
 
 const CustomCategories = (): React.ReactNode => {
   const { request } = React.useContext<any>(AuthContext);
@@ -24,9 +25,13 @@ const CustomCategories = (): React.ReactNode => {
     },
   });
 
+  const transactionCategoriesWithCustom = defaultTransactionCategories.concat(
+    transactionCategoriesQuery.data ?? []
+  );
+
   return (
     <Stack>
-      <AddCategory />
+      <AddCategory categories={transactionCategoriesWithCustom} />
       <Stack>
         <Group px="0.5rem" justify="space-between">
           <Text fw={600}>Name</Text>

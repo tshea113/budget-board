@@ -10,7 +10,6 @@ import {
   NumberInput,
   Popover,
   Stack,
-  useCombobox,
 } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
@@ -92,11 +91,11 @@ const AddBudget = (props: AddBudgetProps): React.ReactNode => {
         >
           <Stack gap="sm">
             <CategorySelect
-              combobox={useCombobox()}
-              categories={props.categories}
-              {...form.getInputProps("category")}
+              value={form.getValues().category}
+              onChange={(val) => form.setFieldValue("category", val)}
               key={form.key("category")}
               label="Category"
+              categories={props.categories}
             />
             <NumberInput
               {...form.getInputProps("limit")}

@@ -9,7 +9,6 @@ import {
   Flex,
   Group,
   LoadingOverlay,
-  Select,
   TextInput,
   useCombobox,
 } from "@mantine/core";
@@ -25,6 +24,8 @@ import { AxiosError } from "axios";
 import { GripVertical } from "lucide-react";
 import React from "react";
 import DeleteAccountPopover from "./DeleteAccountPopover/DeleteAccountPopover";
+import CategorySelect from "@components/CategorySelect";
+import { getIsParentCategory, getParentCategory } from "@helpers/category";
 
 interface AccountSettingsCardProps {
   account: IAccount;
@@ -39,8 +40,8 @@ const AccountSettingsCard = (
   });
 
   const [accountName, setAccountName] = React.useState(props.account.name);
-  const [accountType, _setAccountType] = React.useState(props.account.type);
-  const [accountSubType, _setAccountSubType] = React.useState(
+  const [accountType, setAccountType] = React.useState(props.account.type);
+  const [accountSubType, setAccountSubType] = React.useState(
     props.account.subtype
   );
   const [accountHideAccount, setAccountHideAccount] = React.useState(
@@ -115,16 +116,23 @@ const AccountSettingsCard = (
               gap={10}
             >
               <TextInput
-                w="100%"
-                label="Account Name"
+                w={{ base: "100%", sm: "60%" }}
+                placeholder="Account Name"
                 value={accountName}
                 onChange={(e) => setAccountName(e.currentTarget.value)}
                 onBlur={() => doUpdateAccount.mutate()}
               />
-              {/* TODO: Create component for parent child categories */}
-              <Select
-                label="Category"
-                data={accountCategories.map((c) => c.value)}
+              <CategorySelect
+                w={{ base: "100%", sm: "40%" }}
+                categories={accountCategories}
+                value={accountSubType.length > 0 ? accountSubType : accountType}
+                onChange={(val) => {
+                  const parent = getParentCategory(val, accountCategories);
+                  setAccountType(parent);
+                  getIsParentCategory(val, accountCategories)
+                    ? setAccountSubType("")
+                    : setAccountSubType(val);
+                }}
               />
             </Flex>
             <Flex
