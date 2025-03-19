@@ -14,7 +14,7 @@ import Welcome from "~/app/Unauthorized/Welcome";
 import AuthProvider from "~/components/AuthProvider/AuthProvider";
 import AuthorizedRoute from "~/components/AuthProvider/AuthorizedRoute";
 import UnauthorizedRoute from "~/components/AuthProvider/UnauthorizedRoute";
-import Authorized from "~/app/Authorize2/Authorized";
+import Authorized from "~/app/Authorized/Authorized";
 
 // Your theme configuration is merged with default theme
 const theme = createTheme({
