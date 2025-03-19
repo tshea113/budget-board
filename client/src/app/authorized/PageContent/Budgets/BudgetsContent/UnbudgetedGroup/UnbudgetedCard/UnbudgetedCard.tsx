@@ -50,7 +50,7 @@ const UnbudgetedCard = (props: UnbudgetedCardProps): React.ReactNode => {
             </Text>
           </Group>
           <Group className={classes.spacer}>
-            {props.selectedDate && (
+            {props.selectedDate && props.category !== "Uncategorized" && (
               <ActionIcon
                 size="sm"
                 onClick={() =>
@@ -58,7 +58,7 @@ const UnbudgetedCard = (props: UnbudgetedCardProps): React.ReactNode => {
                     {
                       date: props.selectedDate!,
                       category: props.category,
-                      limit: Math.abs(props.amount),
+                      limit: Math.round(Math.abs(props.amount)),
                     },
                   ])
                 }
