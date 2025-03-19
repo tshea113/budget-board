@@ -51,6 +51,9 @@ const EditableGoalTargetAmountCell = (
         >
           <NumberInput
             maw={100}
+            min={0}
+            prefix="$"
+            thousandSeparator=","
             onChange={setGoalAmountValue}
             onBlur={onInputBlur}
             value={goalAmountValue}

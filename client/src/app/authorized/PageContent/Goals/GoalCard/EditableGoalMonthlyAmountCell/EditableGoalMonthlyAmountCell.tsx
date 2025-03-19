@@ -93,6 +93,9 @@ const EditableGoalMonthlyAmountCell = (
         <Flex onClick={(e) => e.stopPropagation()}>
           <NumberInput
             maw={100}
+            min={0}
+            prefix="$"
+            thousandSeparator=","
             onChange={setGoalAmountValue}
             onBlur={onInputBlur}
             value={goalAmountValue}
