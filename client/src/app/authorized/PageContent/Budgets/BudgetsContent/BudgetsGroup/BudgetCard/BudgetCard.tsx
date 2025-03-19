@@ -110,6 +110,7 @@ const BudgetCard = (props: BudgetCardProps): React.ReactNode => {
       radius="md"
       onClick={toggle}
       bg={isSelected ? "var(--mantine-primary-color-light)" : ""}
+      shadow="md"
     >
       <LoadingOverlay
         visible={doEditBudget.isPending || doDeleteBudget.isPending}

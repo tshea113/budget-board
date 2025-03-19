@@ -44,7 +44,7 @@ const BudgetTotalCard = (props: BudgetTotalCardProps): React.ReactNode => {
   const totalBudgetsTotal = incomeBudgetsTotal - spendingBudgetsTotal;
 
   return (
-    <Card className={classes.root} radius="md">
+    <Card className={classes.root} radius="md" shadow="md">
       <Title order={3}>Your Budget</Title>
       {props.isPending ? (
         <Skeleton h={105} radius="md" />

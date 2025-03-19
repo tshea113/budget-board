@@ -91,6 +91,7 @@ const TransactionCard = (props: TransactionCardProps): React.ReactNode => {
       radius="md"
       withBorder={isSelected}
       bg={isSelected ? "var(--mantine-primary-color-light)" : ""}
+      shadow="md"
     >
       <LoadingOverlay
         visible={doEditTransaction.isPending || doDeleteTransaction.isPending}

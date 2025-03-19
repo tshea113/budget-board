@@ -1,6 +1,10 @@
 .root {
   padding: 0.5rem;
   container-type: inline-size;
+  background-color: light-dark(
+    var(--mantine-color-gray-2),
+    var(--mantine-color-dark-4)
+  );
 }
 
 .labelContainer {

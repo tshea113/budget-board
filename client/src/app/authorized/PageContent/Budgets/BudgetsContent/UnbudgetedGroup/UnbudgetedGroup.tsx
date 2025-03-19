@@ -20,7 +20,11 @@ const UnbudgetedGroup = (props: UnbudgetedGroupProps): React.ReactNode => {
 
   return (
     <Accordion variant="separated" radius="md">
-      <Accordion.Item key="unbudgeted" value="unbudgeted">
+      <Accordion.Item
+        className={classes.accordion}
+        key="unbudgeted"
+        value="unbudgeted"
+      >
         <Accordion.Control>
           <UnbudgetedGroupControl total={total} />
         </Accordion.Control>
