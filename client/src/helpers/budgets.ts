@@ -1,5 +1,5 @@
-import { CashFlowValue, IBudget } from "@models/budget";
-import { ICategory } from "@models/category";
+import { CashFlowValue, IBudget } from "$models/budget";
+import { ICategory } from "$models/category";
 import { areStringsEqual } from "./utils";
 import {
   getIsParentCategory,

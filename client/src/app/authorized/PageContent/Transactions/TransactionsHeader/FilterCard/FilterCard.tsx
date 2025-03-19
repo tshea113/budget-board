@@ -1,12 +1,12 @@
-import CategorySelect from "@components/CategorySelect";
+import CategorySelect from "$components/CategorySelect";
 import classes from "./FilterCard.module.css";
 
-import AccountSelectInput from "@components/AccountSelectInput";
+import AccountSelectInput from "$components/AccountSelectInput";
 import { Card, Flex, Stack, Title } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
-import { Filters } from "@models/transaction";
+import { Filters } from "$models/transaction";
 import React from "react";
-import { ICategory } from "@models/category";
+import { ICategory } from "$models/category";
 
 interface FilterCardProps {
   isOpen: boolean;

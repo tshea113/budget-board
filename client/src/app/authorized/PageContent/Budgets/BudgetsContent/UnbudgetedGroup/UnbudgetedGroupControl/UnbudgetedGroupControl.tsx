@@ -1,6 +1,6 @@
 import classes from "./UnbudgetedGroupControl.module.css";
 
-import { convertNumberToCurrency } from "@helpers/currency";
+import { convertNumberToCurrency } from "$helpers/currency";
 import { Group, Text } from "@mantine/core";
 
 interface UnbudgetedGroupControlProps {

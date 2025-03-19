@@ -1,6 +1,6 @@
 import classes from "./SortMenu.module.css";
 
-import SortButton, { SortDirection } from "@components/SortButton";
+import SortButton, { SortDirection } from "$components/SortButton";
 import { Flex, Group, Text } from "@mantine/core";
 import React from "react";
 import { SortOption, SortOptions, Sorts } from "./SortMenuHelpers";

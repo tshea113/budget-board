@@ -1,21 +1,21 @@
 import classes from "./NetCashFlowTab.module.css";
 
 import React from "react";
-import MonthToolcards from "@components/MonthToolcards/MonthToolcards";
+import MonthToolcards from "$components/MonthToolcards/MonthToolcards";
 import {
   getDateFromMonthsAgo,
   getUniqueYears,
   initCurrentMonth,
-} from "@helpers/datetime";
+} from "$helpers/datetime";
 import {
   buildTimeToMonthlyTotalsMap,
   filterHiddenTransactions,
-} from "@helpers/transactions";
-import { AuthContext } from "@components/Auth/AuthProvider";
+} from "$helpers/transactions";
+import { AuthContext } from "$components/Auth/AuthProvider";
 import { useQueries } from "@tanstack/react-query";
-import { ITransaction } from "@models/transaction";
+import { ITransaction } from "$models/transaction";
 import { AxiosResponse } from "axios";
-import NetCashFlowChart from "@components/Charts/NetCashFlowChart/NetCashFlowChart";
+import NetCashFlowChart from "$components/Charts/NetCashFlowChart/NetCashFlowChart";
 import { Button, Group, Stack } from "@mantine/core";
 
 const NetCashFlowTab = (): React.ReactNode => {

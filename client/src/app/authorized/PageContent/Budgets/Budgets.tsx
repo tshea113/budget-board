@@ -3,20 +3,20 @@ import classes from "./Budgets.module.css";
 import { Stack } from "@mantine/core";
 import React from "react";
 import BudgetsToolbar from "./BudgetsToolbar/BudgetsToolbar";
-import { initCurrentMonth } from "@helpers/datetime";
+import { initCurrentMonth } from "$helpers/datetime";
 import {
   buildTimeToMonthlyTotalsMap,
   filterHiddenTransactions,
-} from "@helpers/transactions";
+} from "$helpers/transactions";
 import { useQueries, useQuery } from "@tanstack/react-query";
-import { AuthContext } from "@components/Auth/AuthProvider";
-import { IBudget } from "@models/budget";
+import { AuthContext } from "$components/Auth/AuthProvider";
+import { IBudget } from "$models/budget";
 import { AxiosResponse } from "axios";
 import {
   defaultTransactionCategories,
   ITransaction,
-} from "@models/transaction";
-import { ICategoryResponse } from "@models/category";
+} from "$models/transaction";
+import { ICategoryResponse } from "$models/category";
 import BudgetsContent from "./BudgetsContent/BudgetsContent";
 
 const Budgets = (): React.ReactNode => {

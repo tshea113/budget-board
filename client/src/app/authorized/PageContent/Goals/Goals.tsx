@@ -1,9 +1,9 @@
 import classes from "./Goals.module.css";
 
-import { AuthContext } from "@components/Auth/AuthProvider";
+import { AuthContext } from "$components/Auth/AuthProvider";
 import { Skeleton, Stack } from "@mantine/core";
 import { useDidUpdate, useDisclosure } from "@mantine/hooks";
-import { IGoalResponse } from "@models/goal";
+import { IGoalResponse } from "$models/goal";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import React from "react";

@@ -3,11 +3,11 @@ import classes from "./CustomCategories.module.css";
 import { Flex, Group, Stack, Text } from "@mantine/core";
 import React from "react";
 import AddCategory from "./AddCategory/AddCategory";
-import { AuthContext } from "@components/Auth/AuthProvider";
+import { AuthContext } from "$components/Auth/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
-import { ICategoryResponse } from "@models/category";
+import { ICategoryResponse } from "$models/category";
 import CustomCategoryCard from "./CustomCategoryCard/CustomCategoryCard";
-import { defaultTransactionCategories } from "@models/transaction";
+import { defaultTransactionCategories } from "$models/transaction";
 
 const CustomCategories = (): React.ReactNode => {
   const { request } = React.useContext<any>(AuthContext);

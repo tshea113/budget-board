@@ -1,7 +1,7 @@
-import { AuthContext } from "@components/Auth/AuthProvider";
+import { AuthContext } from "$components/Auth/AuthProvider";
 import classes from "./DeletedTransactionsCard.module.css";
 
-import { getDaysSinceDate } from "@helpers/datetime";
+import { getDaysSinceDate } from "$helpers/datetime";
 import {
   ActionIcon,
   Card,
@@ -10,13 +10,13 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
-import { ITransaction } from "@models/transaction";
+import { ITransaction } from "$models/transaction";
 import { Undo2Icon } from "lucide-react";
 import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { notifications } from "@mantine/notifications";
-import { translateAxiosError } from "@helpers/requests";
+import { translateAxiosError } from "$helpers/requests";
 
 interface DeletedTransactionCardProps {
   deletedTransaction: ITransaction;

@@ -1,10 +1,10 @@
-import MonthToolcards from "@components/MonthToolcards/MonthToolcards";
-import { initCurrentMonth } from "@helpers/datetime";
+import MonthToolcards from "$components/MonthToolcards/MonthToolcards";
+import { initCurrentMonth } from "$helpers/datetime";
 import { Button, Group, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import React from "react";
 import AddBudget from "./AddBudget/AddBudget";
-import { ICategory } from "@models/category";
+import { ICategory } from "$models/category";
 
 interface BudgetsToolbarProps {
   categories: ICategory[];

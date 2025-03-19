@@ -9,14 +9,14 @@ import {
   LoadingOverlay,
   Text,
 } from "@mantine/core";
-import { ICategoryResponse } from "@models/category";
+import { ICategoryResponse } from "$models/category";
 import { TrashIcon } from "lucide-react";
 import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { notifications } from "@mantine/notifications";
-import { translateAxiosError } from "@helpers/requests";
-import { AuthContext } from "@components/Auth/AuthProvider";
+import { translateAxiosError } from "$helpers/requests";
+import { AuthContext } from "$components/Auth/AuthProvider";
 
 interface CustomCategoryCardProps {
   category: ICategoryResponse;

@@ -1,20 +1,20 @@
 import classes from "./TransactionCard.module.css";
 
-import EditableCurrencyCell from "@app/authorized/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableCurrencyCell/EditableCurrencyCell";
-import EditableDateCell from "@app/authorized/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableDateCell/EditableDateCell";
-import EditableMerchantCell from "@app/authorized/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableMerchantCell/EditableMerchantCell";
+import EditableCurrencyCell from "$app/authorized/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableCurrencyCell/EditableCurrencyCell";
+import EditableDateCell from "$app/authorized/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableDateCell/EditableDateCell";
+import EditableMerchantCell from "$app/authorized/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableMerchantCell/EditableMerchantCell";
 import { ActionIcon, Card, Flex, Group, LoadingOverlay } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { ITransaction, ITransactionUpdateRequest } from "@models/transaction";
+import { ITransaction, ITransactionUpdateRequest } from "$models/transaction";
 import React from "react";
 import EditableCategoryCell from "./EditableCategoryCell/EditableCategoryCell";
-import { AuthContext } from "@components/Auth/AuthProvider";
+import { AuthContext } from "$components/Auth/AuthProvider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { translateAxiosError } from "@helpers/requests";
+import { translateAxiosError } from "$helpers/requests";
 import { notifications } from "@mantine/notifications";
 import { AxiosError } from "axios";
 import { TrashIcon } from "lucide-react";
-import { ICategory } from "@models/category";
+import { ICategory } from "$models/category";
 
 interface TransactionCardProps {
   transaction: ITransaction;

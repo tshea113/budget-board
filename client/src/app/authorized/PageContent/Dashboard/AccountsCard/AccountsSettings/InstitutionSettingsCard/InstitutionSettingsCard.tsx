@@ -8,19 +8,19 @@ import {
   Stack,
   Title,
 } from "@mantine/core";
-import { IInstitution } from "@models/institution";
+import { IInstitution } from "$models/institution";
 
 import React from "react";
 import AccountSettingsCard from "./AccountSettingsCard/AccountSettingsCard";
 import { GripVertical } from "lucide-react";
-import SortableItem from "@components/Sortable/SortableItem";
-import SortableHandle from "@components/Sortable/SortableHandle";
-import Sortable from "@components/Sortable/Sortable";
-import { IAccount, IAccountIndexRequest } from "@models/account";
-import { AuthContext } from "@components/Auth/AuthProvider";
+import SortableItem from "$components/Sortable/SortableItem";
+import SortableHandle from "$components/Sortable/SortableHandle";
+import Sortable from "$components/Sortable/Sortable";
+import { IAccount, IAccountIndexRequest } from "$models/account";
+import { AuthContext } from "$components/Auth/AuthProvider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
-import { translateAxiosError } from "@helpers/requests";
+import { translateAxiosError } from "$helpers/requests";
 import { AxiosError } from "axios";
 import { useDidUpdate } from "@mantine/hooks";
 

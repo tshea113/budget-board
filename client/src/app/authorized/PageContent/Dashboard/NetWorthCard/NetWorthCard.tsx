@@ -3,10 +3,10 @@ import classes from "./NetWorthCard.module.css";
 import { Card, Skeleton, Stack, Title } from "@mantine/core";
 import React from "react";
 import NetWorthItem from "./NetWorthItem/NetWorthItem";
-import { filterVisibleAccounts } from "@helpers/accounts";
-import { AuthContext } from "@components/Auth/AuthProvider";
+import { filterVisibleAccounts } from "$helpers/accounts";
+import { AuthContext } from "$components/Auth/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
-import { IAccount } from "@models/account";
+import { IAccount } from "$models/account";
 import { AxiosResponse } from "axios";
 
 const NetWorthCard = (): React.ReactNode => {

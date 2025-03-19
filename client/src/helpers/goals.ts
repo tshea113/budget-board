@@ -1,5 +1,5 @@
-import { IGoalResponse } from "@models/goal";
-import { ITransaction } from "@models/transaction";
+import { IGoalResponse } from "$models/goal";
+import { ITransaction } from "$models/transaction";
 
 /**
  * Determines the target amount for a financial goal based on the specified amount and initial amount.

@@ -1,11 +1,11 @@
 import { Accordion, Modal, Stack } from "@mantine/core";
 import React from "react";
 import CustomCategories from "./CustomCategories/CustomCategories";
-import { AuthContext } from "@components/Auth/AuthProvider";
+import { AuthContext } from "$components/Auth/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
-import { ITransaction } from "@models/transaction";
+import { ITransaction } from "$models/transaction";
 import { AxiosResponse } from "axios";
-import { getDeletedTransactions } from "@helpers/transactions";
+import { getDeletedTransactions } from "$helpers/transactions";
 import DeletedTransactionsCard from "./DeletedTransactionCard/DeletedTransactionsCard";
 
 interface TransactionsSettingsProps {

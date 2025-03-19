@@ -1,12 +1,12 @@
 import classes from "./MonthToolcards.module.css";
 
-import { getDateFromMonthsAgo } from "@helpers/datetime";
+import { getDateFromMonthsAgo } from "$helpers/datetime";
 import { ActionIcon, Group } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import React from "react";
 import MonthToolcard from "./MonthToolcard/MonthToolcard";
-import { getCashFlowValue } from "@helpers/budgets";
+import { getCashFlowValue } from "$helpers/budgets";
 
 interface MonthToolcardsProps {
   selectedDates: Date[];

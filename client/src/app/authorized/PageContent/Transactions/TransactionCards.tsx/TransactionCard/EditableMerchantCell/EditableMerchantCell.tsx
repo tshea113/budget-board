@@ -1,7 +1,7 @@
 import classes from "./EditableMerchantCell.module.css";
 
 import React from "react";
-import { ITransaction } from "@models/transaction";
+import { ITransaction } from "$models/transaction";
 import { Flex, Text, TextInput } from "@mantine/core";
 
 interface EditableMerchantCellProps {

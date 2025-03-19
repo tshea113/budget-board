@@ -1,19 +1,19 @@
 import classes from "./SpendingTab.module.css";
 
-import { AuthContext } from "@components/Auth/AuthProvider";
-import SpendingChart from "@components/Charts/SpendingChart/SpendingChart";
-import MonthToolcards from "@components/MonthToolcards/MonthToolcards";
+import { AuthContext } from "$components/Auth/AuthProvider";
+import SpendingChart from "$components/Charts/SpendingChart/SpendingChart";
+import MonthToolcards from "$components/MonthToolcards/MonthToolcards";
 import {
   getDateFromMonthsAgo,
   getUniqueYears,
   initCurrentMonth,
-} from "@helpers/datetime";
+} from "$helpers/datetime";
 import {
   buildTimeToMonthlyTotalsMap,
   filterHiddenTransactions,
-} from "@helpers/transactions";
+} from "$helpers/transactions";
 import { Button, Group, Stack } from "@mantine/core";
-import { ITransaction } from "@models/transaction";
+import { ITransaction } from "$models/transaction";
 import { useQueries } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import React from "react";

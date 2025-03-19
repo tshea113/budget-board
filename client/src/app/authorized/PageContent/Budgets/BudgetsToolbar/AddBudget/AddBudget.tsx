@@ -1,8 +1,8 @@
 import classes from "./AddBudget.module.css";
 
-import { AuthContext } from "@components/Auth/AuthProvider";
-import CategorySelect from "@components/CategorySelect";
-import { translateAxiosError } from "@helpers/requests";
+import { AuthContext } from "$components/Auth/AuthProvider";
+import CategorySelect from "$components/CategorySelect";
+import { translateAxiosError } from "$helpers/requests";
 import {
   ActionIcon,
   Button,
@@ -13,8 +13,8 @@ import {
 } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { IBudgetCreateRequest } from "@models/budget";
-import { ICategory } from "@models/category";
+import { IBudgetCreateRequest } from "$models/budget";
+import { ICategory } from "$models/category";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { PlusIcon, SendIcon } from "lucide-react";

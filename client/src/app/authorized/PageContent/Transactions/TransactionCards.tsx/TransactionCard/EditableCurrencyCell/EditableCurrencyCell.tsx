@@ -1,8 +1,8 @@
 import classes from "./EditableCurrencyCell.module.css";
 
-import { convertNumberToCurrency } from "@helpers/currency";
+import { convertNumberToCurrency } from "$helpers/currency";
 import { Flex, Group, NumberInput, Text } from "@mantine/core";
-import { ITransaction } from "@models/transaction";
+import { ITransaction } from "$models/transaction";
 import React from "react";
 
 interface EditableCurrencyCellProps {

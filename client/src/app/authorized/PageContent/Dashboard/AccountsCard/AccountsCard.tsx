@@ -11,14 +11,14 @@ import {
 } from "@mantine/core";
 import { SettingsIcon } from "lucide-react";
 import React from "react";
-import { AuthContext } from "@components/Auth/AuthProvider";
+import { AuthContext } from "$components/Auth/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
-import { IInstitution } from "@models/institution";
+import { IInstitution } from "$models/institution";
 import InstitutionItem from "./InstitutionItems/InstitutionItem";
 import AccountsSettings from "./AccountsSettings/AccountsSettings";
 import { useDisclosure } from "@mantine/hooks";
-import { IAccount } from "@models/account";
+import { IAccount } from "$models/account";
 
 const AccountsCard = (): React.ReactNode => {
   const { request } = React.useContext<any>(AuthContext);

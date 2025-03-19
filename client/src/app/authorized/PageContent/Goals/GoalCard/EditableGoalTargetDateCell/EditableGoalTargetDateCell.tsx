@@ -2,7 +2,7 @@ import classes from "./EditableGoalTargetDateCell.module.css";
 
 import { Flex, Text } from "@mantine/core";
 import { DatePickerInput, DateValue } from "@mantine/dates";
-import { IGoalResponse, IGoalUpdateRequest } from "@models/goal";
+import { IGoalResponse, IGoalUpdateRequest } from "$models/goal";
 import React from "react";
 
 interface EditableGoalTargetDateCellProps {

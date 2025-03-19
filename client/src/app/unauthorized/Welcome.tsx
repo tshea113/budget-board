@@ -1,5 +1,5 @@
 import React from "react";
-import BudgetBoardLogo from "@assets/budget-board-logo";
+import BudgetBoardLogo from "$assets/budget-board-logo";
 import {
   Container,
   Text,
