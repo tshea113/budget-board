@@ -213,7 +213,7 @@ public class GoalService(ILogger<IGoalService> logger, UserDataContext userDataC
             // The initial amount is the account balance at the time the goal was created.
             // If a user wishes to include the starting balance in the goal,
             // the initial amount will be set to zero.
-            amountLeft = goal.Amount - goal.InitialAmount - totalBalance;
+            amountLeft = goal.Amount - (totalBalance - goal.InitialAmount);
         }
 
         var numberOfMonthsLeft = (goal.CompleteDate.Value.Year - DateTime.Now.Year) * 12 +
