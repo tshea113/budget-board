@@ -8,7 +8,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { ITransaction, ITransactionUpdateRequest } from "~/models/transaction";
 import React from "react";
 import EditableCategoryCell from "./EditableCategoryCell/EditableCategoryCell";
-import { AuthContext } from "~/components/Auth/AuthProvider";
+import { AuthContext } from "~/components/AuthProvider/AuthProvider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { translateAxiosError } from "~/helpers/requests";
 import { notifications } from "@mantine/notifications";

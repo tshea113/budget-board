@@ -16,7 +16,7 @@ import { IBudget, IBudgetUpdateRequest } from "~/models/budget";
 import React from "react";
 import { useDisclosure } from "@mantine/hooks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AuthContext } from "~/components/Auth/AuthProvider";
+import { AuthContext } from "~/components/AuthProvider/AuthProvider";
 import { translateAxiosError } from "~/helpers/requests";
 import { AxiosError } from "axios";
 import { notifications } from "@mantine/notifications";

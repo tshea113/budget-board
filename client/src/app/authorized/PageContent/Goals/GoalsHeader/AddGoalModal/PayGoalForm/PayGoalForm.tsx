@@ -1,5 +1,5 @@
 import AccountSelectInput from "~/components/AccountSelectInput";
-import { AuthContext } from "~/components/Auth/AuthProvider";
+import { AuthContext } from "~/components/AuthProvider/AuthProvider";
 import { translateAxiosError } from "~/helpers/requests";
 import {
   Button,

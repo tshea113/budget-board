@@ -1,4 +1,4 @@
-import { AuthContext } from "~/components/Auth/AuthProvider";
+import { AuthContext } from "~/components/AuthProvider/AuthProvider";
 import CategorySelect from "~/components/CategorySelect";
 import { translateAxiosError } from "~/helpers/requests";
 import {

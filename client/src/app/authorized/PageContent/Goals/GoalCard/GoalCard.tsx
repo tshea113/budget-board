@@ -13,7 +13,7 @@ import {
 import React from "react";
 import EditableGoalNameCell from "./EditableGoalNameCell/EditableGoalNameCell";
 import { IGoalResponse, IGoalUpdateRequest } from "~/models/goal";
-import { AuthContext } from "~/components/Auth/AuthProvider";
+import { AuthContext } from "~/components/AuthProvider/AuthProvider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { notifications } from "@mantine/notifications";

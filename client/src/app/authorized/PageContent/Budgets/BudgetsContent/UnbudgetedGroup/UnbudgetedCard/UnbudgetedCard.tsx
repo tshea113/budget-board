@@ -8,7 +8,7 @@ import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { PlusIcon } from "lucide-react";
 import React from "react";
-import { AuthContext } from "~/components/Auth/AuthProvider";
+import { AuthContext } from "~/components/AuthProvider/AuthProvider";
 import { translateAxiosError } from "~/helpers/requests";
 
 interface UnbudgetedCardProps {

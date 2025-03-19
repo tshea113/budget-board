@@ -17,7 +17,7 @@ import SortableItem from "~/components/Sortable/SortableItem";
 import SortableHandle from "~/components/Sortable/SortableHandle";
 import Sortable from "~/components/Sortable/Sortable";
 import { IAccount, IAccountIndexRequest } from "~/models/account";
-import { AuthContext } from "~/components/Auth/AuthProvider";
+import { AuthContext } from "~/components/AuthProvider/AuthProvider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { translateAxiosError } from "~/helpers/requests";

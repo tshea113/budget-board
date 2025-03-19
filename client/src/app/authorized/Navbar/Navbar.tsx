@@ -13,7 +13,7 @@ import {
 import NavbarLink from "./NavbarLink";
 import { Pages } from "../PageContent/PageContent";
 import { useQueryClient } from "@tanstack/react-query";
-import { AuthContext } from "~/components/Auth/AuthProvider";
+import { AuthContext } from "~/components/AuthProvider/AuthProvider";
 import React from "react";
 import { AxiosError } from "axios";
 import { translateAxiosError } from "~/helpers/requests";

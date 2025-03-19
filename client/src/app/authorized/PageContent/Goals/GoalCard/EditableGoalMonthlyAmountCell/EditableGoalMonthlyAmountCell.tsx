@@ -9,7 +9,7 @@ import { getVisibleTransactions } from "~/helpers/transactions";
 import { useQuery } from "@tanstack/react-query";
 import { ITransaction } from "~/models/transaction";
 import { AxiosResponse } from "axios";
-import { AuthContext } from "~/components/Auth/AuthProvider";
+import { AuthContext } from "~/components/AuthProvider/AuthProvider";
 
 interface EditableGoalMonthlyAmountCellProps {
   goal: IGoalResponse;

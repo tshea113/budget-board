@@ -1,6 +1,6 @@
 import { MultiSelect } from "@mantine/core";
 import React from "react";
-import { AuthContext } from "~/components/Auth/AuthProvider";
+import { AuthContext } from "~/components/AuthProvider/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import { IAccount } from "~/models/account";
 import { AxiosResponse } from "axios";

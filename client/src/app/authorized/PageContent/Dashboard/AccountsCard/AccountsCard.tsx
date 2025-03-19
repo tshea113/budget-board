@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import { SettingsIcon } from "lucide-react";
 import React from "react";
-import { AuthContext } from "~/components/Auth/AuthProvider";
+import { AuthContext } from "~/components/AuthProvider/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import { IInstitution } from "~/models/institution";

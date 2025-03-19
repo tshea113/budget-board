@@ -12,7 +12,7 @@ import {
   sortTransactions,
 } from "~/helpers/transactions";
 import { Group, Pagination, Skeleton, Stack, Text } from "@mantine/core";
-import { AuthContext } from "~/components/Auth/AuthProvider";
+import { AuthContext } from "~/components/AuthProvider/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import { ICategoryResponse } from "~/models/category";
