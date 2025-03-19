@@ -1,6 +1,6 @@
-import { convertNumberToCurrency } from "$helpers/currency";
+import { convertNumberToCurrency } from "$/helpers/currency";
 import { Group, Stack, Text } from "@mantine/core";
-import { IAccount } from "$models/account";
+import { IAccount } from "$/models/account";
 import React from "react";
 
 interface AccountItemProps {

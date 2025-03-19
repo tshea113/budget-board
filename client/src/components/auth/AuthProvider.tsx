@@ -1,4 +1,4 @@
-import { getProjectEnvVariables } from "$shared/projectEnvVariables";
+import { getProjectEnvVariables } from "$/shared/projectEnvVariables";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import React, { createContext, useState } from "react";
 

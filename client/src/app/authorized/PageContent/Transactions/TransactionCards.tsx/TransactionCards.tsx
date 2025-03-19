@@ -4,18 +4,18 @@ import {
   defaultTransactionCategories,
   Filters,
   ITransaction,
-} from "$models/transaction";
+} from "$/models/transaction";
 import { Sorts } from "../TransactionsHeader/SortMenu/SortMenuHelpers";
-import { SortDirection } from "$components/SortButton";
+import { SortDirection } from "$/components/SortButton";
 import {
   getFilteredTransactions,
   sortTransactions,
-} from "$helpers/transactions";
+} from "$/helpers/transactions";
 import { Group, Pagination, Skeleton, Stack, Text } from "@mantine/core";
-import { AuthContext } from "$components/Auth/AuthProvider";
+import { AuthContext } from "$/components/Auth/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
-import { ICategoryResponse } from "$models/category";
+import { ICategoryResponse } from "$/models/category";
 
 interface TransactionCardsProps {
   filters: Filters;

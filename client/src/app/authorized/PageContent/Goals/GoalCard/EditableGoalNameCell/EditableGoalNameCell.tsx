@@ -1,7 +1,7 @@
 import classes from "./EditableGoalNameCell.module.css";
 
 import { Flex, TextInput, Text } from "@mantine/core";
-import { IGoalResponse, IGoalUpdateRequest } from "$models/goal";
+import { IGoalResponse, IGoalUpdateRequest } from "$/models/goal";
 import React from "react";
 
 interface EditableGoalNameCellProps {

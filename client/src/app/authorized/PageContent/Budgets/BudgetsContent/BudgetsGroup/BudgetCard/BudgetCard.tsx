@@ -1,6 +1,6 @@
 import classes from "./BudgetCard.module.css";
 
-import { convertNumberToCurrency } from "$helpers/currency";
+import { convertNumberToCurrency } from "$/helpers/currency";
 import {
   Button,
   Card,
@@ -12,17 +12,17 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
-import { IBudget, IBudgetUpdateRequest } from "$models/budget";
+import { IBudget, IBudgetUpdateRequest } from "$/models/budget";
 import React from "react";
 import { useDisclosure } from "@mantine/hooks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AuthContext } from "$components/Auth/AuthProvider";
-import { translateAxiosError } from "$helpers/requests";
+import { AuthContext } from "$/components/Auth/AuthProvider";
+import { translateAxiosError } from "$/helpers/requests";
 import { AxiosError } from "axios";
 import { notifications } from "@mantine/notifications";
 import { useField } from "@mantine/form";
 import { Trash2Icon } from "lucide-react";
-import { getBudgetValueColor } from "$helpers/budgets";
+import { getBudgetValueColor } from "$/helpers/budgets";
 
 interface BudgetCardProps {
   budgets: IBudget[];

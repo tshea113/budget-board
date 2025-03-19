@@ -1,4 +1,4 @@
-import { IAccount } from "$models/account";
+import { IAccount } from "$/models/account";
 
 /**
  * Filters out accounts that are either hidden or marked as deleted.

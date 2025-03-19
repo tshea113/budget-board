@@ -1,4 +1,4 @@
-import { IBalance } from "$models/balance";
+import { IBalance } from "$/models/balance";
 import { getStandardDate } from "./datetime";
 
 /**

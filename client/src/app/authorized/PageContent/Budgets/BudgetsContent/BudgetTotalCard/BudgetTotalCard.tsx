@@ -3,16 +3,16 @@ import classes from "./BudgetTotalCard.module.css";
 import { Card, Skeleton, Title } from "@mantine/core";
 import React from "react";
 import BudgetTotalItem from "./BudgetTotalItem/BudgetTotalItem";
-import { IBudget } from "$models/budget";
-import { ITransaction } from "$models/transaction";
-import { ICategory } from "$models/category";
+import { IBudget } from "$/models/budget";
+import { ITransaction } from "$/models/transaction";
+import { ICategory } from "$/models/category";
 import {
   BudgetGroup,
   getBudgetsForGroup,
   sumBudgetAmounts,
-} from "$helpers/budgets";
-import { areStringsEqual } from "$helpers/utils";
-import { sumTransactionAmounts } from "$helpers/transactions";
+} from "$/helpers/budgets";
+import { areStringsEqual } from "$/helpers/utils";
+import { sumTransactionAmounts } from "$/helpers/transactions";
 
 interface BudgetTotalCardProps {
   budgets: IBudget[];

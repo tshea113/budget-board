@@ -24,12 +24,7 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "$app/*": ["./src/app/*"],
-      "$assets/*": ["./src/assets/*"],
-      "$components/*": ["./src/components/*"],
-      "$helpers/*": ["./src/helpers/*"],
-      "$models/*": ["./src/models/*"],
-      "$shared/*": ["./src/shared/*"]
+      "$/*": ["./src/*"]
     }
   },
   "include": ["src"],

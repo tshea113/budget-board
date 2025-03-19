@@ -1,9 +1,12 @@
 import classes from "./NetWorthItem.module.css";
 
 import { Group, Text } from "@mantine/core";
-import { IAccount } from "$models/account";
-import { convertNumberToCurrency } from "$helpers/currency";
-import { getAccountsOfTypes, sumAccountsTotalBalance } from "$helpers/accounts";
+import { IAccount } from "$/models/account";
+import { convertNumberToCurrency } from "$/helpers/currency";
+import {
+  getAccountsOfTypes,
+  sumAccountsTotalBalance,
+} from "$/helpers/accounts";
 import React from "react";
 
 interface NetWorthItemProps {

@@ -1,4 +1,4 @@
-import { ITransaction } from "$models/transaction";
+import { ITransaction } from "$/models/transaction";
 import {
   getRollingTotalSpendingForMonth,
   getTransactionsForMonth,
@@ -10,9 +10,9 @@ import {
   getStandardDate,
   getUniqueDates as getDistinctDates,
 } from "./datetime";
-import { IBalance } from "$models/balance";
+import { IBalance } from "$/models/balance";
 import { getSortedBalanceDates } from "./balances";
-import { IAccount, liabilityAccountTypes } from "$models/account";
+import { IAccount, liabilityAccountTypes } from "$/models/account";
 
 export const chartColors = [
   "indigo.6",

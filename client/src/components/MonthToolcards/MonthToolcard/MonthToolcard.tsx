@@ -1,8 +1,8 @@
-import { months } from "$helpers/utils";
+import { months } from "$/helpers/utils";
 import classes from "./MonthToolcard.module.css";
 
 import { Card, Paper, Stack, Text } from "@mantine/core";
-import { CashFlowValue } from "$models/budget";
+import { CashFlowValue } from "$/models/budget";
 
 interface MonthToolcardProps {
   date: Date;

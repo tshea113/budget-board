@@ -1,17 +1,17 @@
 import classes from "./BudgetsContent.module.css";
 
 import { Group, Skeleton, Stack } from "@mantine/core";
-import { IBudget } from "$models/budget";
-import { getParentCategory, getSubCategories } from "$helpers/category";
-import { ICategory } from "$models/category";
-import { ITransaction } from "$models/transaction";
-import { buildCategoryToTransactionsTotalMap } from "$helpers/transactions";
-import { BudgetGroup, getBudgetGroupForCategory } from "$helpers/budgets";
+import { IBudget } from "$/models/budget";
+import { getParentCategory, getSubCategories } from "$/helpers/category";
+import { ICategory } from "$/models/category";
+import { ITransaction } from "$/models/transaction";
+import { buildCategoryToTransactionsTotalMap } from "$/helpers/transactions";
+import { BudgetGroup, getBudgetGroupForCategory } from "$/helpers/budgets";
 import BudgetsGroupHeader from "./BudgetGroupHeader/BudgetsGroupHeader";
 import BudgetTotalCard from "./BudgetTotalCard/BudgetTotalCard";
 import BudgetsGroup from "./BudgetsGroup/BudgetsGroup";
 import UnbudgetedGroup from "./UnbudgetedGroup/UnbudgetedGroup";
-import { areStringsEqual } from "$helpers/utils";
+import { areStringsEqual } from "$/helpers/utils";
 
 interface BudgetsContentProps {
   budgets: IBudget[];

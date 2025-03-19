@@ -1,10 +1,10 @@
 import classes from "./UncategorizedTransactionsCard.module.css";
 
-import { AuthContext } from "$components/Auth/AuthProvider";
+import { AuthContext } from "$/components/Auth/AuthProvider";
 import {
   getTransactionsByCategory,
   getVisibleTransactions,
-} from "$helpers/transactions";
+} from "$/helpers/transactions";
 import {
   Card,
   Group,
@@ -17,12 +17,12 @@ import {
 import {
   defaultTransactionCategories,
   ITransaction,
-} from "$models/transaction";
+} from "$/models/transaction";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import React from "react";
 import UncategorizedTransaction from "./UncategorizedTransaction/UncategorizedTransaction";
-import { ICategoryResponse } from "$models/category";
+import { ICategoryResponse } from "$/models/category";
 
 const UncategorizedTransactionsCard = (): React.ReactNode => {
   const itemsPerPage = 20;

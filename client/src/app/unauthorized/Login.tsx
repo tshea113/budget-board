@@ -10,10 +10,10 @@ import { hasLength, isEmail, useForm } from "@mantine/form";
 import React from "react";
 import classes from "./Welcome.module.css";
 import { LoginCardState } from "./Welcome";
-import { AuthContext } from "$components/Auth/AuthProvider";
+import { AuthContext } from "$/components/Auth/AuthProvider";
 import { useQueryClient } from "@tanstack/react-query";
 import { AxiosError, AxiosResponse } from "axios";
-import { translateAxiosError } from "$helpers/requests";
+import { translateAxiosError } from "$/helpers/requests";
 import { notifications } from "@mantine/notifications";
 
 interface LoginProps {

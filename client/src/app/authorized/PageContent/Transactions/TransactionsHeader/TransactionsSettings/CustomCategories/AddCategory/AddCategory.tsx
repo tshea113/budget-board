@@ -1,6 +1,6 @@
-import { AuthContext } from "$components/Auth/AuthProvider";
-import CategorySelect from "$components/CategorySelect";
-import { translateAxiosError } from "$helpers/requests";
+import { AuthContext } from "$/components/Auth/AuthProvider";
+import CategorySelect from "$/components/CategorySelect";
+import { translateAxiosError } from "$/helpers/requests";
 import {
   Button,
   Card,
@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { ICategory, ICategoryCreateRequest } from "$models/category";
+import { ICategory, ICategoryCreateRequest } from "$/models/category";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import React from "react";

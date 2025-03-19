@@ -10,9 +10,9 @@ import React from "react";
 import { LoginCardState } from "./Welcome";
 
 import classes from "./Welcome.module.css";
-import { AuthContext } from "$components/Auth/AuthProvider";
+import { AuthContext } from "$/components/Auth/AuthProvider";
 import { AxiosError } from "axios";
-import { translateAxiosError } from "$helpers/requests";
+import { translateAxiosError } from "$/helpers/requests";
 import { notifications } from "@mantine/notifications";
 
 interface ResetPasswordProps {

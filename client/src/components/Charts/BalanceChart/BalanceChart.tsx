@@ -1,15 +1,15 @@
-import { filterBalancesByDateRange } from "$helpers/balances";
+import { filterBalancesByDateRange } from "$/helpers/balances";
 import {
   buildAccountBalanceChartData,
   buildAccountBalanceChartSeries,
-} from "$helpers/charts";
-import { convertNumberToCurrency } from "$helpers/currency";
-import { getDateFromMonthsAgo } from "$helpers/datetime";
+} from "$/helpers/charts";
+import { convertNumberToCurrency } from "$/helpers/currency";
+import { getDateFromMonthsAgo } from "$/helpers/datetime";
 import { BarChart } from "@mantine/charts";
 import { Group, Skeleton, Text } from "@mantine/core";
 import { DateValue } from "@mantine/dates";
-import { IAccount } from "$models/account";
-import { IBalance } from "$models/balance";
+import { IAccount } from "$/models/account";
+import { IBalance } from "$/models/balance";
 import React from "react";
 
 interface BalanceChartProps {

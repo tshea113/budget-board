@@ -1,11 +1,11 @@
-import { convertNumberToCurrency } from "$helpers/currency";
+import { convertNumberToCurrency } from "$/helpers/currency";
 import classes from "./EditableGoalTargetAmountCell.module.css";
 
 import { Flex, NumberInput, Text } from "@mantine/core";
-import { IGoalResponse, IGoalUpdateRequest } from "$models/goal";
+import { IGoalResponse, IGoalUpdateRequest } from "$/models/goal";
 import React from "react";
-import { getGoalTargetAmount } from "$helpers/goals";
-import { sumAccountsTotalBalance } from "$helpers/accounts";
+import { getGoalTargetAmount } from "$/helpers/goals";
+import { sumAccountsTotalBalance } from "$/helpers/accounts";
 
 interface EditableGoalTargetAmountCellProps {
   goal: IGoalResponse;

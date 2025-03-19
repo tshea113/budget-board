@@ -1,6 +1,6 @@
-import AccountSelectInput from "$components/AccountSelectInput";
-import { AuthContext } from "$components/Auth/AuthProvider";
-import { translateAxiosError } from "$helpers/requests";
+import AccountSelectInput from "$/components/AccountSelectInput";
+import { AuthContext } from "$/components/Auth/AuthProvider";
+import { translateAxiosError } from "$/helpers/requests";
 import {
   Button,
   LoadingOverlay,
@@ -14,7 +14,7 @@ import {
 import { DatePickerInput, DateValue } from "@mantine/dates";
 import { hasLength, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { IGoalCreateRequest } from "$models/goal";
+import { IGoalCreateRequest } from "$/models/goal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 

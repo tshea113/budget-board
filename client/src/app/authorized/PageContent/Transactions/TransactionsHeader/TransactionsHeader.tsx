@@ -4,13 +4,13 @@ import { ActionIcon, Button, Flex, Group, Stack } from "@mantine/core";
 import { FilterIcon, SettingsIcon } from "lucide-react";
 import React from "react";
 import SortMenu from "./SortMenu/SortMenu";
-import { SortDirection } from "$components/SortButton";
-import { Filters } from "$models/transaction";
+import { SortDirection } from "$/components/SortButton";
+import { Filters } from "$/models/transaction";
 import { Sorts } from "./SortMenu/SortMenuHelpers";
 import FilterCard from "./FilterCard/FilterCard";
 import { useDisclosure } from "@mantine/hooks";
 import TransactionsSettings from "./TransactionsSettings/TransactionsSettings";
-import { ICategory } from "$models/category";
+import { ICategory } from "$/models/category";
 
 interface TransactionsHeaderProps {
   sort: Sorts;

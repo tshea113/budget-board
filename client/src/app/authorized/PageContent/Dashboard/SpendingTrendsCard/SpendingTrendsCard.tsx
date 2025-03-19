@@ -1,15 +1,15 @@
 import classes from "./SpendingTrendsCard.module.css";
 
-import { AuthContext } from "$components/Auth/AuthProvider";
-import SpendingChart from "$components/Charts/SpendingChart/SpendingChart";
-import { convertNumberToCurrency } from "$helpers/currency";
-import { getDateFromMonthsAgo, getDaysInMonth } from "$helpers/datetime";
+import { AuthContext } from "$/components/Auth/AuthProvider";
+import SpendingChart from "$/components/Charts/SpendingChart/SpendingChart";
+import { convertNumberToCurrency } from "$/helpers/currency";
+import { getDateFromMonthsAgo, getDaysInMonth } from "$/helpers/datetime";
 import {
   filterHiddenTransactions,
   getRollingTotalSpendingForMonth,
-} from "$helpers/transactions";
+} from "$/helpers/transactions";
 import { Card, Skeleton, Stack, Text, Title } from "@mantine/core";
-import { ITransaction } from "$models/transaction";
+import { ITransaction } from "$/models/transaction";
 import { useQueries } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import React from "react";

@@ -3,14 +3,14 @@ import classes from "./AssetsTab.module.css";
 import { Stack } from "@mantine/core";
 import React from "react";
 import { DateValue } from "@mantine/dates";
-import { getDateFromMonthsAgo } from "$helpers/datetime";
-import AccountsSelectHeader from "$components/AccountsSelectHeader/AccountsSelectHeader";
-import BalanceChart from "$components/Charts/BalanceChart/BalanceChart";
-import { AuthContext } from "$components/Auth/AuthProvider";
+import { getDateFromMonthsAgo } from "$/helpers/datetime";
+import AccountsSelectHeader from "$/components/AccountsSelectHeader/AccountsSelectHeader";
+import BalanceChart from "$/components/Charts/BalanceChart/BalanceChart";
+import { AuthContext } from "$/components/Auth/AuthProvider";
 import { useQueries, useQuery } from "@tanstack/react-query";
-import { IBalance } from "$models/balance";
+import { IBalance } from "$/models/balance";
 import { AxiosResponse } from "axios";
-import { IAccount } from "$models/account";
+import { IAccount } from "$/models/account";
 
 const AssetsTab = (): React.ReactNode => {
   const [selectedAccountIds, setSelectedAccountIds] = React.useState<string[]>(

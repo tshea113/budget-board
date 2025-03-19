@@ -1,5 +1,5 @@
 import { Accordion, Stack } from "@mantine/core";
-import { IAccount } from "$models/account";
+import { IAccount } from "$/models/account";
 import React from "react";
 import DeletedAccountCard from "./DeletedAccountCard/DeletedAccountCard";
 
