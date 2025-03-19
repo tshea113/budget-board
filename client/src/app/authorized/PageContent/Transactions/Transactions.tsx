@@ -3,13 +3,13 @@ import classes from "./Transactions.module.css";
 import { Stack } from "@mantine/core";
 import TransactionsHeader from "./TransactionsHeader/TransactionsHeader";
 import React from "react";
-import { SortDirection } from "$/components/SortButton";
-import { defaultTransactionCategories, Filters } from "$/models/transaction";
+import { SortDirection } from "~/components/SortButton";
+import { defaultTransactionCategories, Filters } from "~/models/transaction";
 import { Sorts } from "./TransactionsHeader/SortMenu/SortMenuHelpers";
 import TransactionCards from "./TransactionCards.tsx/TransactionCards";
-import { AuthContext } from "$/components/Auth/AuthProvider";
+import { AuthContext } from "~/components/Auth/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
-import { ICategoryResponse } from "$/models/category";
+import { ICategoryResponse } from "~/models/category";
 
 const Transactions = (): React.ReactNode => {
   const [sort, setSort] = React.useState(Sorts.Date);

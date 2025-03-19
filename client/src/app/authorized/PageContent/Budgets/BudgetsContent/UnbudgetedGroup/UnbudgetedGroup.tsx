@@ -4,8 +4,8 @@ import { Accordion, Stack } from "@mantine/core";
 import React from "react";
 import UnbudgetedGroupControl from "./UnbudgetedGroupControl/UnbudgetedGroupControl";
 import UnbudgetedCard from "./UnbudgetedCard/UnbudgetedCard";
-import { getFormattedCategoryValue } from "$/helpers/category";
-import { ICategory } from "$/models/category";
+import { getFormattedCategoryValue } from "~/helpers/category";
+import { ICategory } from "~/models/category";
 
 interface UnbudgetedGroupProps {
   unbudgetedCategoryToTransactionsTotalMap: Map<string, number>;

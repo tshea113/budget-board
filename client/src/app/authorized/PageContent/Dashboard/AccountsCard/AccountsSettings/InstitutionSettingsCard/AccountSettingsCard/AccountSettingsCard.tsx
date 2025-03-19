@@ -1,7 +1,7 @@
-import { AuthContext } from "$/components/Auth/AuthProvider";
-import SortableHandle from "$/components/Sortable/SortableHandle";
-import SortableItem from "$/components/Sortable/SortableItem";
-import { translateAxiosError } from "$/helpers/requests";
+import { AuthContext } from "~/components/Auth/AuthProvider";
+import SortableHandle from "~/components/Sortable/SortableHandle";
+import SortableItem from "~/components/Sortable/SortableItem";
+import { translateAxiosError } from "~/helpers/requests";
 import {
   Button,
   Card,
@@ -18,14 +18,14 @@ import {
   accountCategories,
   IAccount,
   IAccountUpdateRequest,
-} from "$/models/account";
+} from "~/models/account";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { GripVertical } from "lucide-react";
 import React from "react";
 import DeleteAccountPopover from "./DeleteAccountPopover/DeleteAccountPopover";
-import CategorySelect from "$/components/CategorySelect";
-import { getIsParentCategory, getParentCategory } from "$/helpers/category";
+import CategorySelect from "~/components/CategorySelect";
+import { getIsParentCategory, getParentCategory } from "~/helpers/category";
 
 interface AccountSettingsCardProps {
   account: IAccount;

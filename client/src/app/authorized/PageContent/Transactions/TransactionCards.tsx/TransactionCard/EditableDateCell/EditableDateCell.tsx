@@ -2,7 +2,7 @@ import classes from "./EditableDateCell.module.css";
 
 import { Flex, Group, Text } from "@mantine/core";
 import { DatePickerInput, DateValue } from "@mantine/dates";
-import { ITransaction } from "$/models/transaction";
+import { ITransaction } from "~/models/transaction";
 import React from "react";
 
 interface EditableDateCellProps {

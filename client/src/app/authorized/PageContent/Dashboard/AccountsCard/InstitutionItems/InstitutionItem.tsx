@@ -1,9 +1,9 @@
 import classes from "./InstitutionItem.module.css";
 
-import { filterVisibleAccounts } from "$/helpers/accounts";
+import { filterVisibleAccounts } from "~/helpers/accounts";
 import { Card, Divider, Stack, Title } from "@mantine/core";
-import { IAccount } from "$/models/account";
-import { IInstitution } from "$/models/institution";
+import { IAccount } from "~/models/account";
+import { IInstitution } from "~/models/institution";
 import { DndContext } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
 

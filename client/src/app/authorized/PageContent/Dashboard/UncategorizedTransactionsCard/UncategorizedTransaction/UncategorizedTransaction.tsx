@@ -1,16 +1,16 @@
 import classes from "./UncategorizedTransaction.module.css";
 
 import { Card, Flex, Group, LoadingOverlay, Text } from "@mantine/core";
-import { ITransaction, ITransactionUpdateRequest } from "$/models/transaction";
+import { ITransaction, ITransactionUpdateRequest } from "~/models/transaction";
 import React from "react";
-import { AuthContext } from "$/components/Auth/AuthProvider";
+import { AuthContext } from "~/components/Auth/AuthProvider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { translateAxiosError } from "$/helpers/requests";
+import { translateAxiosError } from "~/helpers/requests";
 import { notifications } from "@mantine/notifications";
 import { AxiosError } from "axios";
-import EditableCategoryCell from "$/app/authorized/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableCategoryCell/EditableCategoryCell";
-import { ICategory } from "$/models/category";
-import { convertNumberToCurrency } from "$/helpers/currency";
+import EditableCategoryCell from "~/app/authorized/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableCategoryCell/EditableCategoryCell";
+import { ICategory } from "~/models/category";
+import { convertNumberToCurrency } from "~/helpers/currency";
 import { useDisclosure } from "@mantine/hooks";
 
 interface TransactionCardProps {

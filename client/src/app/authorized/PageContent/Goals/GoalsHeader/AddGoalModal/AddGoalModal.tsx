@@ -1,5 +1,5 @@
 import { Modal, Select } from "@mantine/core";
-import { GoalType } from "$/models/goal";
+import { GoalType } from "~/models/goal";
 import React from "react";
 import SaveGoalForm from "./SaveGoalForm/SaveGoalForm";
 import PayGoalForm from "./PayGoalForm/PayGoalForm";

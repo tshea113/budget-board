@@ -1,7 +1,7 @@
 import classes from "./BudgetTotalItem.module.css";
 
-import { getBudgetValueColor } from "$/helpers/budgets";
-import { convertNumberToCurrency } from "$/helpers/currency";
+import { getBudgetValueColor } from "~/helpers/budgets";
+import { convertNumberToCurrency } from "~/helpers/currency";
 import { Flex, Group, Progress, Stack, Text } from "@mantine/core";
 
 interface BudgetTotalItemProps {

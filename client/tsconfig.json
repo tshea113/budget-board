@@ -22,9 +22,9 @@
     "noUncheckedSideEffectImports": true,
     "noUncheckedIndexedAccess": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
-      "$/*": ["./src/*"]
+      "~/*": ["./src/*"]
     }
   },
   "include": ["src"],

@@ -1,15 +1,15 @@
 import classes from "./UnbudgetedCard.module.css";
 
-import { convertNumberToCurrency } from "$/helpers/currency";
+import { convertNumberToCurrency } from "~/helpers/currency";
 import { ActionIcon, Card, Group, LoadingOverlay, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { IBudgetCreateRequest } from "$/models/budget";
+import { IBudgetCreateRequest } from "~/models/budget";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { PlusIcon } from "lucide-react";
 import React from "react";
-import { AuthContext } from "$/components/Auth/AuthProvider";
-import { translateAxiosError } from "$/helpers/requests";
+import { AuthContext } from "~/components/Auth/AuthProvider";
+import { translateAxiosError } from "~/helpers/requests";
 
 interface UnbudgetedCardProps {
   selectedDate?: Date;

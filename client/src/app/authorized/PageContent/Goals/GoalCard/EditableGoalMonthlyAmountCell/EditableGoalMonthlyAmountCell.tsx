@@ -1,15 +1,15 @@
-import { sumTransactionsForGoalForMonth } from "$/helpers/goals";
+import { sumTransactionsForGoalForMonth } from "~/helpers/goals";
 import classes from "./EditableGoalMonthlyAmountCell.module.css";
 
-import { convertNumberToCurrency } from "$/helpers/currency";
+import { convertNumberToCurrency } from "~/helpers/currency";
 import { Flex, NumberInput, Text } from "@mantine/core";
-import { IGoalResponse, IGoalUpdateRequest } from "$/models/goal";
+import { IGoalResponse, IGoalUpdateRequest } from "~/models/goal";
 import React from "react";
-import { getVisibleTransactions } from "$/helpers/transactions";
+import { getVisibleTransactions } from "~/helpers/transactions";
 import { useQuery } from "@tanstack/react-query";
-import { ITransaction } from "$/models/transaction";
+import { ITransaction } from "~/models/transaction";
 import { AxiosResponse } from "axios";
-import { AuthContext } from "$/components/Auth/AuthProvider";
+import { AuthContext } from "~/components/Auth/AuthProvider";
 
 interface EditableGoalMonthlyAmountCellProps {
   goal: IGoalResponse;

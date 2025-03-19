@@ -1,6 +1,6 @@
 import { Button, Flex, Popover, Stack, Text } from "@mantine/core";
-import { IAccount } from "$/models/account";
-import { IGoalResponse } from "$/models/goal";
+import { IAccount } from "~/models/account";
+import { IGoalResponse } from "~/models/goal";
 import React from "react";
 
 interface GoalDetailsProps {

@@ -1,20 +1,20 @@
 import classes from "./BudgetsGroup.module.css";
 
 import { Stack, Text } from "@mantine/core";
-import { IBudget } from "$/models/budget";
+import { IBudget } from "~/models/budget";
 import React from "react";
 import BudgetCard from "./BudgetCard/BudgetCard";
 import {
   getFormattedCategoryValue,
   getParentCategory,
-} from "$/helpers/category";
-import { ICategory } from "$/models/category";
+} from "~/helpers/category";
+import { ICategory } from "~/models/category";
 import {
   BudgetGroup,
   getBudgetAmount,
   getBudgetGroupForCategory,
   groupBudgetsByCategory,
-} from "$/helpers/budgets";
+} from "~/helpers/budgets";
 
 interface BudgetsGroupProps {
   budgets: IBudget[];

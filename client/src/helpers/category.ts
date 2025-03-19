@@ -1,4 +1,4 @@
-import { CategoryNode, ICategory } from "$/models/category";
+import { CategoryNode, ICategory } from "~/models/category";
 import { areStringsEqual } from "./utils";
 
 /**

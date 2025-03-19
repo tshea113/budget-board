@@ -1,11 +1,11 @@
-import { ITransaction } from "$/models/transaction";
+import { ITransaction } from "~/models/transaction";
 import { AreaChart } from "@mantine/charts";
 import React from "react";
 import {
   buildTransactionChartData,
   buildTransactionChartSeries,
-} from "$/helpers/charts";
-import { convertNumberToCurrency } from "$/helpers/currency";
+} from "~/helpers/charts";
+import { convertNumberToCurrency } from "~/helpers/currency";
 import { Group, Skeleton, Text } from "@mantine/core";
 
 interface SpendingChartProps {

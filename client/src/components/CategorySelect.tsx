@@ -1,5 +1,5 @@
-import { getIsParentCategory } from "$/helpers/category";
-import { areStringsEqual } from "$/helpers/utils";
+import { getIsParentCategory } from "~/helpers/category";
+import { areStringsEqual } from "~/helpers/utils";
 import {
   CheckIcon,
   Combobox,
@@ -10,7 +10,7 @@ import {
   Text,
   useCombobox,
 } from "@mantine/core";
-import { ICategory } from "$/models/category";
+import { ICategory } from "~/models/category";
 import React from "react";
 
 interface CategorySelectProps {

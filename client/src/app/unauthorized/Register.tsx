@@ -10,10 +10,10 @@ import React from "react";
 import { LoginCardState } from "./Welcome";
 
 import classes from "./Welcome.module.css";
-import { AuthContext } from "$/components/Auth/AuthProvider";
+import { AuthContext } from "~/components/Auth/AuthProvider";
 import { notifications } from "@mantine/notifications";
 import { AxiosError } from "axios";
-import { translateAxiosError, ValidationError } from "$/helpers/requests";
+import { translateAxiosError, ValidationError } from "~/helpers/requests";
 
 interface RegisterProps {
   setLoginCardState: React.Dispatch<React.SetStateAction<LoginCardState>>;

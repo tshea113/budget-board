@@ -1,15 +1,15 @@
 import {
   getFormattedCategoryValue,
   getIsParentCategory,
-} from "$/helpers/category";
+} from "~/helpers/category";
 import classes from "./EditableCategoryCell.module.css";
 
 import { Flex, Group, Text } from "@mantine/core";
-import { ITransaction } from "$/models/transaction";
+import { ITransaction } from "~/models/transaction";
 import React from "react";
-import { ICategory } from "$/models/category";
-import { getTransactionCategory } from "$/helpers/transactions";
-import CategorySelect from "$/components/CategorySelect";
+import { ICategory } from "~/models/category";
+import { getTransactionCategory } from "~/helpers/transactions";
+import CategorySelect from "~/components/CategorySelect";
 
 interface EditableCategoryCellProps {
   transaction: ITransaction;
