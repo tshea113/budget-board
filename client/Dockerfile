@@ -1,8 +1,10 @@
-FROM node:lts-alpine AS build-stage
+FROM node:23 AS build-stage
 
 WORKDIR /app
 
-COPY ./package.json .
+RUN corepack enable
+
+COPY ["./package.json", "./yarn.lock", "./"]
 RUN yarn install
 
 COPY . .

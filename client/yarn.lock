@@ -716,7 +716,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/js@npm:9.22.0, @eslint/js@npm:^9.21.0":
+"@eslint/js@npm:9.22.0, @eslint/js@npm:^9.22.0":
   version: 9.22.0
   resolution: "@eslint/js@npm:9.22.0"
   checksum: 10c0/5bcd009bb579dc6c6ed760703bdd741e08a48cd9decd677aa2cf67fe66236658cb09a00185a0369f3904e5cffba9e6e0f2ff4d9ba4fdf598fcd81d34c49213a5
@@ -895,7 +895,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mantine/carousel@npm:^7.17.0":
+"@mantine/carousel@npm:^7.17.2":
   version: 7.17.2
   resolution: "@mantine/carousel@npm:7.17.2"
   peerDependencies:
@@ -908,7 +908,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mantine/charts@npm:^7.17.1":
+"@mantine/charts@npm:^7.17.2":
   version: 7.17.2
   resolution: "@mantine/charts@npm:7.17.2"
   peerDependencies:
@@ -921,7 +921,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mantine/code-highlight@npm:^7.17.0":
+"@mantine/code-highlight@npm:^7.17.2":
   version: 7.17.2
   resolution: "@mantine/code-highlight@npm:7.17.2"
   dependencies:
@@ -936,7 +936,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mantine/core@npm:^7.17.0":
+"@mantine/core@npm:^7.17.2":
   version: 7.17.2
   resolution: "@mantine/core@npm:7.17.2"
   dependencies:
@@ -954,7 +954,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mantine/dates@npm:^7.17.1":
+"@mantine/dates@npm:^7.17.2":
   version: 7.17.2
   resolution: "@mantine/dates@npm:7.17.2"
   dependencies:
@@ -969,7 +969,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mantine/dropzone@npm:^7.17.0":
+"@mantine/dropzone@npm:^7.17.2":
   version: 7.17.2
   resolution: "@mantine/dropzone@npm:7.17.2"
   dependencies:
@@ -983,7 +983,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mantine/form@npm:^7.17.0":
+"@mantine/form@npm:^7.17.2":
   version: 7.17.2
   resolution: "@mantine/form@npm:7.17.2"
   dependencies:
@@ -995,7 +995,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mantine/hooks@npm:^7.17.0":
+"@mantine/hooks@npm:^7.17.2":
   version: 7.17.2
   resolution: "@mantine/hooks@npm:7.17.2"
   peerDependencies:
@@ -1004,7 +1004,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mantine/modals@npm:^7.17.0":
+"@mantine/modals@npm:^7.17.2":
   version: 7.17.2
   resolution: "@mantine/modals@npm:7.17.2"
   peerDependencies:
@@ -1016,7 +1016,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mantine/notifications@npm:^7.17.0":
+"@mantine/notifications@npm:^7.17.2":
   version: 7.17.2
   resolution: "@mantine/notifications@npm:7.17.2"
   dependencies:
@@ -1031,7 +1031,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mantine/nprogress@npm:^7.17.0":
+"@mantine/nprogress@npm:^7.17.2":
   version: 7.17.2
   resolution: "@mantine/nprogress@npm:7.17.2"
   dependencies:
@@ -1045,7 +1045,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mantine/spotlight@npm:^7.17.0":
+"@mantine/spotlight@npm:^7.17.2":
   version: 7.17.2
   resolution: "@mantine/spotlight@npm:7.17.2"
   dependencies:
@@ -1068,7 +1068,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mantine/tiptap@npm:^7.17.0":
+"@mantine/tiptap@npm:^7.17.2":
   version: 7.17.2
   resolution: "@mantine/tiptap@npm:7.17.2"
   peerDependencies:
@@ -1329,7 +1329,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/eslint-plugin-query@npm:^5.66.1":
+"@tanstack/eslint-plugin-query@npm:^5.68.0":
   version: 5.68.0
   resolution: "@tanstack/eslint-plugin-query@npm:5.68.0"
   dependencies:
@@ -1354,7 +1354,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-query-devtools@npm:^5.67.3":
+"@tanstack/react-query-devtools@npm:^5.69.0":
   version: 5.69.0
   resolution: "@tanstack/react-query-devtools@npm:5.69.0"
   dependencies:
@@ -1366,7 +1366,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:^5.67.3":
+"@tanstack/react-query@npm:^5.69.0":
   version: 5.69.0
   resolution: "@tanstack/react-query@npm:5.69.0"
   dependencies:
@@ -1835,7 +1835,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^22.13.5":
+"@types/node@npm:^22.13.10":
   version: 22.13.10
   resolution: "@types/node@npm:22.13.10"
   dependencies:
@@ -1844,7 +1844,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^19.0.3":
+"@types/react-dom@npm:^19.0.4":
   version: 19.0.4
   resolution: "@types/react-dom@npm:19.0.4"
   peerDependencies:
@@ -1862,7 +1862,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^19.0.8":
+"@types/react@npm:^19.0.12":
   version: 19.0.12
   resolution: "@types/react@npm:19.0.12"
   dependencies:
@@ -2220,7 +2220,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.7.9":
+"axios@npm:^1.8.3":
   version: 1.8.3
   resolution: "axios@npm:1.8.3"
   dependencies:
@@ -2395,53 +2395,53 @@ __metadata:
     "@dnd-kit/core": "npm:^6.3.1"
     "@dnd-kit/modifiers": "npm:^9.0.0"
     "@dnd-kit/sortable": "npm:^10.0.0"
-    "@eslint/js": "npm:^9.21.0"
-    "@mantine/carousel": "npm:^7.17.0"
-    "@mantine/charts": "npm:^7.17.1"
-    "@mantine/code-highlight": "npm:^7.17.0"
-    "@mantine/core": "npm:^7.17.0"
-    "@mantine/dates": "npm:^7.17.1"
-    "@mantine/dropzone": "npm:^7.17.0"
-    "@mantine/form": "npm:^7.17.0"
-    "@mantine/hooks": "npm:^7.17.0"
-    "@mantine/modals": "npm:^7.17.0"
-    "@mantine/notifications": "npm:^7.17.0"
-    "@mantine/nprogress": "npm:^7.17.0"
-    "@mantine/spotlight": "npm:^7.17.0"
-    "@mantine/tiptap": "npm:^7.17.0"
-    "@tanstack/eslint-plugin-query": "npm:^5.66.1"
-    "@tanstack/react-query": "npm:^5.67.3"
-    "@tanstack/react-query-devtools": "npm:^5.67.3"
+    "@eslint/js": "npm:^9.22.0"
+    "@mantine/carousel": "npm:^7.17.2"
+    "@mantine/charts": "npm:^7.17.2"
+    "@mantine/code-highlight": "npm:^7.17.2"
+    "@mantine/core": "npm:^7.17.2"
+    "@mantine/dates": "npm:^7.17.2"
+    "@mantine/dropzone": "npm:^7.17.2"
+    "@mantine/form": "npm:^7.17.2"
+    "@mantine/hooks": "npm:^7.17.2"
+    "@mantine/modals": "npm:^7.17.2"
+    "@mantine/notifications": "npm:^7.17.2"
+    "@mantine/nprogress": "npm:^7.17.2"
+    "@mantine/spotlight": "npm:^7.17.2"
+    "@mantine/tiptap": "npm:^7.17.2"
+    "@tanstack/eslint-plugin-query": "npm:^5.68.0"
+    "@tanstack/react-query": "npm:^5.69.0"
+    "@tanstack/react-query-devtools": "npm:^5.69.0"
     "@tiptap/extension-link": "npm:^2.11.5"
     "@tiptap/pm": "npm:^2.11.5"
     "@tiptap/react": "npm:^2.11.5"
     "@tiptap/starter-kit": "npm:^2.11.5"
-    "@types/node": "npm:^22.13.5"
-    "@types/react": "npm:^19.0.8"
-    "@types/react-dom": "npm:^19.0.3"
+    "@types/node": "npm:^22.13.10"
+    "@types/react": "npm:^19.0.12"
+    "@types/react-dom": "npm:^19.0.4"
     "@vitejs/plugin-react": "npm:^4.3.4"
-    axios: "npm:^1.7.9"
+    axios: "npm:^1.8.3"
     dayjs: "npm:^1.11.13"
-    embla-carousel-react: "npm:7.1.0"
-    eslint: "npm:^9.21.0"
+    embla-carousel-react: "npm:8.5.2"
+    eslint: "npm:^9.22.0"
     eslint-config-mantine: "npm:^4.0.3"
     eslint-plugin-jsx-a11y: "npm:^6.10.2"
     eslint-plugin-react: "npm:^7.37.4"
-    eslint-plugin-react-hooks: "npm:^5.0.0"
-    eslint-plugin-react-refresh: "npm:^0.4.18"
-    globals: "npm:^15.14.0"
-    lucide-react: "npm:^0.475.0"
+    eslint-plugin-react-hooks: "npm:^5.2.0"
+    eslint-plugin-react-refresh: "npm:^0.4.19"
+    globals: "npm:^16.0.0"
+    lucide-react: "npm:^0.483.0"
     postcss: "npm:^8.5.3"
     postcss-preset-mantine: "npm:^1.17.0"
     postcss-simple-vars: "npm:^7.0.1"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
-    react-router: "npm:^7.2.0"
-    react-scan: "npm:^0.2.8"
-    recharts: "npm:2"
+    react-router: "npm:^7.4.0"
+    react-scan: "npm:^0.3.2"
+    recharts: "npm:2.15.1"
     typescript: "npm:^5.8.2"
-    typescript-eslint: "npm:^8.24.1"
-    vite: "npm:^6.1.0"
+    typescript-eslint: "npm:^8.26.1"
+    vite: "npm:^6.2.2"
   languageName: unknown
   linkType: soft
 
@@ -2778,21 +2778,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"embla-carousel-react@npm:7.1.0":
-  version: 7.1.0
-  resolution: "embla-carousel-react@npm:7.1.0"
+"embla-carousel-react@npm:8.5.2":
+  version: 8.5.2
+  resolution: "embla-carousel-react@npm:8.5.2"
   dependencies:
-    embla-carousel: "npm:7.1.0"
+    embla-carousel: "npm:8.5.2"
+    embla-carousel-reactive-utils: "npm:8.5.2"
   peerDependencies:
-    react: ^16.8.0 || ^17.0.1 || ^18.0.0
-  checksum: 10c0/05e33fdb1062fde0164a0685163a5212f8e8f343fbe28e9a8e2348c989d8825d80fdcecfed485c7617d27f8f5d72b393612a3dd13ef9cffc02ef0cf21109ba51
+    react: ^16.8.0 || ^17.0.1 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+  checksum: 10c0/8e55a2bc562aed2c55d9debf2523dbd4f2524b0ecea62cf51f8f096ed993af608890084b5f35e1694a8aada087602a12cc4b8a68aeee12b4a33cc8361636c63d
   languageName: node
   linkType: hard
 
-"embla-carousel@npm:7.1.0":
-  version: 7.1.0
-  resolution: "embla-carousel@npm:7.1.0"
-  checksum: 10c0/3fcfe5b287c5d09d35dac76b6612567cf6f15abdae0bbf7d10754db9f732dd90cdfdf5bc7405d8fb3f65542bdead09971e93e024a0db9b3f1fcc653a70e733bc
+"embla-carousel-reactive-utils@npm:8.5.2":
+  version: 8.5.2
+  resolution: "embla-carousel-reactive-utils@npm:8.5.2"
+  peerDependencies:
+    embla-carousel: 8.5.2
+  checksum: 10c0/aa4870539d9090f9ac02338c3ca3e1710a6f0e6890cd2f6fbf6afcc1eeac48192406f92bf042fe9429cc61709338124baf1514c75227a7a16b19b83e9f376274
+  languageName: node
+  linkType: hard
+
+"embla-carousel@npm:8.5.2":
+  version: 8.5.2
+  resolution: "embla-carousel@npm:8.5.2"
+  checksum: 10c0/4bbb04c08616d560a7b47b1897794a077baa5aa27642420b35b3be58ab7b0dc000ef073b6e47d0029b0791c046e0cd39d295704faecb1957d2c315df51be58e6
   languageName: node
   linkType: hard
 
@@ -3202,7 +3212,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-hooks@npm:^5.0.0":
+"eslint-plugin-react-hooks@npm:^5.2.0":
   version: 5.2.0
   resolution: "eslint-plugin-react-hooks@npm:5.2.0"
   peerDependencies:
@@ -3211,7 +3221,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-refresh@npm:^0.4.18":
+"eslint-plugin-react-refresh@npm:^0.4.19":
   version: 0.4.19
   resolution: "eslint-plugin-react-refresh@npm:0.4.19"
   peerDependencies:
@@ -3272,7 +3282,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^9.21.0":
+"eslint@npm:^9.22.0":
   version: 9.22.0
   resolution: "eslint@npm:9.22.0"
   dependencies:
@@ -3716,10 +3726,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globals@npm:^15.14.0":
-  version: 15.15.0
-  resolution: "globals@npm:15.15.0"
-  checksum: 10c0/f9ae80996392ca71316495a39bec88ac43ae3525a438b5626cd9d5ce9d5500d0a98a266409605f8cd7241c7acf57c354a48111ea02a767ba4f374b806d6861fe
+"globals@npm:^16.0.0":
+  version: 16.0.0
+  resolution: "globals@npm:16.0.0"
+  checksum: 10c0/8906d5f01838df64a81d6c2a7b7214312e2216cf65c5ed1546dc9a7d0febddf55ffa906cf04efd5b01eec2534d6f14859a89535d1a68241832810e41ef3fd5bb
   languageName: node
   linkType: hard
 
@@ -4377,12 +4387,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-react@npm:^0.475.0":
-  version: 0.475.0
-  resolution: "lucide-react@npm:0.475.0"
+"lucide-react@npm:^0.483.0":
+  version: 0.483.0
+  resolution: "lucide-react@npm:0.483.0"
   peerDependencies:
     react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/9cb17bd4e70da4db104874b6b2e9d9c7e2be9438e9d1c0b2565df0c4d0bdd1add41b7dff3cb60840699ecbd29870c453878b42b69a7c46480def0c9370a852a9
+  checksum: 10c0/de38ca2c57bcd65aedf750fa101ddcdc24e4a828ae4fa873299fb26a5dfc60ff65582a9cf7d8dfd2fbf8a6db18c69dfbfcf955b2320537da80f7193a4e967596
   languageName: node
   linkType: hard
 
@@ -5297,7 +5307,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router@npm:^7.2.0":
+"react-router@npm:^7.4.0":
   version: 7.4.0
   resolution: "react-router@npm:7.4.0"
   dependencies:
@@ -5315,9 +5325,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-scan@npm:^0.2.8":
-  version: 0.2.14
-  resolution: "react-scan@npm:0.2.14"
+"react-scan@npm:^0.3.2":
+  version: 0.3.2
+  resolution: "react-scan@npm:0.3.2"
   dependencies:
     "@babel/core": "npm:^7.26.0"
     "@babel/generator": "npm:^7.26.2"
@@ -5358,7 +5368,7 @@ __metadata:
       optional: true
   bin:
     react-scan: bin/cli.js
-  checksum: 10c0/07a693d486b9effcc61b9b8e97a1de3c8ca61921ab234fc20d73f366b85a5fe32910e62e1d291e626f24af095d404e98d9e4f9628aee535f57e7752d1571bfad
+  checksum: 10c0/aae7689e809b6c2240a364ef06df91eeeae67bd262acc1afd4ecef1f559175c855a12e9d7b484777867f4136c1e8421bd844a695024be69d16f4cb71d23e77fb
   languageName: node
   linkType: hard
 
@@ -5436,7 +5446,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"recharts@npm:2":
+"recharts@npm:2.15.1":
   version: 2.15.1
   resolution: "recharts@npm:2.15.1"
   dependencies:
@@ -6190,7 +6200,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript-eslint@npm:^8.24.1":
+"typescript-eslint@npm:^8.26.1":
   version: 8.26.1
   resolution: "typescript-eslint@npm:8.26.1"
   dependencies:
@@ -6415,7 +6425,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^6.1.0":
+"vite@npm:^6.2.2":
   version: 6.2.2
   resolution: "vite@npm:6.2.2"
   dependencies:
