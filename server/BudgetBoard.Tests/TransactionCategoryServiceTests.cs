@@ -172,16 +172,20 @@ public class TransactionCategoryServiceTests
 
         var transactionCategoryFaker = new TransactionCategoryFaker();
         var transactionCategories = transactionCategoryFaker.Generate(5);
+        for (var i = 1; i < transactionCategories.Count; i++)
+        {
+            transactionCategories[i].Parent = transactionCategories.First().Value;
+        }
         transactionCategories.ForEach(c => c.UserID = helper.demoUser.Id);
 
         helper.UserDataContext.TransactionCategories.AddRange(transactionCategories);
         helper.UserDataContext.SaveChanges();
 
         // Act
-        await transactionCategoryService.DeleteTransactionCategoryAsync(helper.demoUser.Id, transactionCategories.First().ID);
+        await transactionCategoryService.DeleteTransactionCategoryAsync(helper.demoUser.Id, transactionCategories.Last().ID);
 
         // Assert
-        helper.UserDataContext.TransactionCategories.Should().NotContainEquivalentOf(transactionCategories.First());
+        helper.UserDataContext.TransactionCategories.Should().NotContainEquivalentOf(transactionCategories.Last());
     }
 
     [Fact]

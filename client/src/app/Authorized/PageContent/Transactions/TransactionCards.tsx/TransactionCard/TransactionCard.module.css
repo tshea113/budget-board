@@ -1,0 +1,29 @@
+.card {
+  padding: 0.5rem;
+  container-type: inline-size;
+  width: 100%;
+
+  &:hover {
+    outline: 1px solid var(--mantine-primary-color-filled);
+  }
+}
+
+.container {
+  width: 100%;
+  gap: 0.5rem;
+  align-items: center;
+  flex-direction: row;
+
+  @container (max-width: 830px) {
+    flex-direction: column;
+  }
+}
+
+.subcontainer {
+  gap: 0.5rem;
+  align-items: center;
+
+  @container (max-width: 830px) {
+    width: 100%;
+  }
+}

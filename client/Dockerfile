@@ -1,14 +1,10 @@
-FROM node:lts-alpine AS build-stage
+FROM node:23 AS build-stage
 
-ENV NODE_ENV=development
-ENV NODE_OPTIONS="--max-old-space-size=4096"
 WORKDIR /app
 
-COPY .yarnrc.yml .
-COPY .yarn ./.yarn
-RUN yarn set version stable
+RUN corepack enable
 
-COPY ["./package.json", "./yarn.lock", "./"]
+COPY ["./package.json", "./yarn.lock", "./.yarnrc.yml", "./"]
 RUN yarn install
 
 COPY . .
