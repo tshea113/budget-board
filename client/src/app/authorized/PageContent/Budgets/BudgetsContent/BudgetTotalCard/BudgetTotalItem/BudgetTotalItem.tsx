@@ -15,6 +15,7 @@ const BudgetTotalItem = (props: BudgetTotalItemProps): React.ReactNode => {
   const percentComplete = Math.round(
     ((props.amount * (props.isIncome ? 1 : -1)) / props.total) * 100
   );
+
   return (
     <Stack className={classes.root}>
       <Group className={classes.dataContainer}>
@@ -39,7 +40,7 @@ const BudgetTotalItem = (props: BudgetTotalItemProps): React.ReactNode => {
       </Group>
       <Progress.Root size={16} radius="xl">
         <Progress.Section
-          value={percentComplete}
+          value={percentComplete > 100 ? 100 : percentComplete}
           color={getBudgetValueColor(percentComplete, props.isIncome)}
         >
           <Progress.Label>{percentComplete.toFixed(0)}%</Progress.Label>
