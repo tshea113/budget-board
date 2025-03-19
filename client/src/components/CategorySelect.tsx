@@ -77,6 +77,7 @@ const CategorySelect = (props: CategorySelectProps): React.ReactNode => {
         }
         combobox.closeDropdown();
       }}
+      withinPortal={false}
     >
       <Combobox.Target>
         <InputBase
