@@ -8,7 +8,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { translateAxiosError } from "~/helpers/requests";
 import { notifications } from "@mantine/notifications";
 import { AxiosError } from "axios";
-import EditableCategoryCell from "~/app/authorized/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableCategoryCell/EditableCategoryCell";
+import EditableCategoryCell from "~/app/Authorize2/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableCategoryCell/EditableCategoryCell";
 import { ICategory } from "~/models/category";
 import { convertNumberToCurrency } from "~/helpers/currency";
 import { useDisclosure } from "@mantine/hooks";

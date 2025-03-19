@@ -1,8 +1,8 @@
 import classes from "./TransactionCard.module.css";
 
-import EditableCurrencyCell from "~/app/authorized/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableCurrencyCell/EditableCurrencyCell";
-import EditableDateCell from "~/app/authorized/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableDateCell/EditableDateCell";
-import EditableMerchantCell from "~/app/authorized/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableMerchantCell/EditableMerchantCell";
+import EditableCurrencyCell from "~/app/Authorize2/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableCurrencyCell/EditableCurrencyCell";
+import EditableDateCell from "~/app/Authorize2/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableDateCell/EditableDateCell";
+import EditableMerchantCell from "~/app/Authorize2/PageContent/Transactions/TransactionCards.tsx/TransactionCard/EditableMerchantCell/EditableMerchantCell";
 import { ActionIcon, Card, Flex, Group, LoadingOverlay } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { ITransaction, ITransactionUpdateRequest } from "~/models/transaction";
