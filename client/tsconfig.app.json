@@ -6,7 +6,6 @@
     "lib": ["ES2024", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "baseUrl": ".",
     "paths": {
       "$app/*": ["./src/app/*"],
       "$assets/*": ["./src/assets/*"],
