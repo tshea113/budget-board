@@ -1,4 +1,4 @@
-import { Sorts } from "~/app/Authorize2/PageContent/Transactions/TransactionsHeader/SortMenu/SortMenuHelpers";
+import { Sorts } from "~/app/Authorized/PageContent/Transactions/TransactionsHeader/SortMenu/SortMenuHelpers";
 import { SortDirection } from "~/components/SortButton";
 import {
   Filters,
