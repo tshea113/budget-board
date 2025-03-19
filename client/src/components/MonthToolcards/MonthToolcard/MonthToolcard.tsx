@@ -37,7 +37,7 @@ const MonthToolcard = (props: MonthToolcardProps): React.ReactNode => {
 
   return (
     <Card
-      className={classes.root}
+      className={props.isSelected ? classes.rootSelected : classes.root}
       radius="md"
       withBorder
       onClick={() => props.handleClick(props.date)}
