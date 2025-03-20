@@ -2,7 +2,7 @@ services:
   budget-board-server:
     container_name: budget-board-server
     restart: unless-stopped
-    image: ghcr.io/tshea113/budget-board/server:release
+    image: ghcr.io/tshea113/budget-board/server:v1
     build: ./server
     environment:
       Logging__LogLevel__Default: Information
@@ -14,7 +14,7 @@ services:
   budget-board-client:
     container_name: budget-board-client
     restart: unless-stopped
-    image: ghcr.io/tshea113/budget-board/client:release
+    image: ghcr.io/tshea113/budget-board/client:v1
     build: ./client
     environment:
       VITE_API_URL: budget-board-client
