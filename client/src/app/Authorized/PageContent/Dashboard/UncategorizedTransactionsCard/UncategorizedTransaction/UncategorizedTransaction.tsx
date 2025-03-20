@@ -89,9 +89,7 @@ const UncategorizedTransaction = (
                 day: "numeric",
               })}
             </Text>
-            <Text w={{ base: "100%", xs: "200px" }}>
-              {props.transaction.merchantName}
-            </Text>
+            <Text w="100%">{props.transaction.merchantName}</Text>
           </Flex>
           <Flex
             className={classes.subcontainer}
