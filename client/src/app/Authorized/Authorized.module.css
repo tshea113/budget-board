@@ -10,7 +10,7 @@
 }
 
 .header {
-  padding: 5px;
+  padding: 12px;
   background-color: light-dark(
     var(--mantine-color-gray-2),
     var(--mantine-color-dark-8)
