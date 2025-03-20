@@ -1,6 +1,6 @@
 import classes from "./UncategorizedTransaction.module.css";
 
-import { Card, Flex, Group, LoadingOverlay, Text } from "@mantine/core";
+import { Card, Flex, LoadingOverlay, Text } from "@mantine/core";
 import { ITransaction, ITransactionUpdateRequest } from "~/models/transaction";
 import React from "react";
 import { AuthContext } from "~/components/AuthProvider/AuthProvider";
@@ -77,23 +77,25 @@ const UncategorizedTransaction = (
       <LoadingOverlay visible={doEditTransaction.isPending} />
       <Flex className={classes.container}>
         <Flex
-          className={classes.subcontainer}
+          className={classes.leftSubContainer}
           direction={{ base: "column", xs: "row" }}
-          style={{ flexGrow: 1 }}
         >
-          <Text w={{ base: "100%", xs: "160px" }}>
-            {new Date(props.transaction.date).toLocaleDateString([], {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          </Text>
-          <Text w="100%">{props.transaction.merchantName}</Text>
+          <Flex w={{ base: "100%", xs: "160px" }}>
+            <Text>
+              {new Date(props.transaction.date).toLocaleDateString([], {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </Text>
+          </Flex>
+          <Flex w="100%">
+            <Text>{props.transaction.merchantName}</Text>
+          </Flex>
         </Flex>
         <Flex
-          className={classes.subcontainer}
+          className={classes.rightSubContainer}
           direction={{ base: "column", xs: "row" }}
-          style={{ flexShrink: 1 }}
         >
           <EditableCategoryCell
             transaction={props.transaction}
@@ -101,18 +103,19 @@ const UncategorizedTransaction = (
             isSelected={opened}
             editCell={doEditTransaction.mutate}
           />
-          <Text
-            w={{ base: "100%", xs: "90px" }}
-            style={{
-              color:
-                props.transaction.amount < 0
-                  ? "var(--mantine-color-red-6)"
-                  : "var(--mantine-color-green-6)",
-              fontWeight: 600,
-            }}
-          >
-            {convertNumberToCurrency(props.transaction.amount, true)}
-          </Text>
+          <Flex w={{ base: "100%", xs: "90px" }}>
+            <Text
+              style={{
+                color:
+                  props.transaction.amount < 0
+                    ? "var(--mantine-color-red-6)"
+                    : "var(--mantine-color-green-6)",
+                fontWeight: 600,
+              }}
+            >
+              {convertNumberToCurrency(props.transaction.amount, true)}
+            </Text>
+          </Flex>
         </Flex>
       </Flex>
     </Card>

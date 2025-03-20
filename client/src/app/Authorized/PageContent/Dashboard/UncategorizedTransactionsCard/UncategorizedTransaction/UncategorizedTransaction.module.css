@@ -22,12 +22,21 @@
   }
 }
 
-.subcontainer {
+.leftSubContainer {
   gap: 0.5rem;
   align-items: center;
-  justify-content: space-between;
+  flex: 1 1 auto;
 
-  @container (max-width: 830px) {
+  @container (max-width: 650px) {
+    width: 100%;
+  }
+}
+
+.rightSubContainer {
+  gap: 0.5rem;
+  align-items: center;
+
+  @container (max-width: 650px) {
     width: 100%;
   }
 }
