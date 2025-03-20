@@ -133,6 +133,7 @@ const AccountSettingsCard = (
                     ? setAccountSubType("")
                     : setAccountSubType(val);
                 }}
+                withinPortal
               />
             </Flex>
             <Flex

@@ -18,6 +18,7 @@ interface CategorySelectProps {
   categories: ICategory[];
   value: string;
   onChange: (value: string) => void;
+  withinPortal?: boolean;
   [key: string]: any;
 }
 
@@ -77,7 +78,7 @@ const CategorySelect = (props: CategorySelectProps): React.ReactNode => {
         }
         combobox.closeDropdown();
       }}
-      withinPortal={false}
+      withinPortal={props.withinPortal ?? false}
     >
       <Combobox.Target>
         <InputBase

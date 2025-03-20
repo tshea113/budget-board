@@ -60,6 +60,7 @@ const FilterCard = (props: FilterCardProps): React.ReactNode => {
             onChange={(val) =>
               props.setFilters({ ...props.filters, category: val })
             }
+            withinPortal
           />
         </Flex>
       </Stack>

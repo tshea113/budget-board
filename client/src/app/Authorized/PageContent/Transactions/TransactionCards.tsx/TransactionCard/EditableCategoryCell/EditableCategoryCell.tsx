@@ -66,6 +66,7 @@ const EditableCategoryCell = (
             categories={props.categories}
             value={categoryDisplayValue}
             onChange={onCategoryPick}
+            withinPortal
           />
         </Group>
       ) : (

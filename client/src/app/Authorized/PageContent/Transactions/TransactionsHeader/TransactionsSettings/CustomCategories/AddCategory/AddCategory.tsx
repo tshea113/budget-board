@@ -75,6 +75,7 @@ const AddCategory = (props: AddCategoryProps): React.ReactNode => {
               categories={parentCategories}
               value={form.getValues().parent}
               onChange={(value) => form.setFieldValue("parent", value)}
+              withinPortal
             />
           </Stack>
           <Button w="100%" type="submit">
