@@ -1,6 +1,6 @@
 import classes from "./UncategorizedTransaction.module.css";
 
-import { Card, Flex, Group, LoadingOverlay, Text } from "@mantine/core";
+import { Card, Flex, LoadingOverlay, Text } from "@mantine/core";
 import { ITransaction, ITransactionUpdateRequest } from "~/models/transaction";
 import React from "react";
 import { AuthContext } from "~/components/AuthProvider/AuthProvider";
@@ -75,35 +75,36 @@ const UncategorizedTransaction = (
       bg={opened ? "var(--mantine-primary-color-light)" : ""}
     >
       <LoadingOverlay visible={doEditTransaction.isPending} />
-      <Group wrap="nowrap">
-        <Flex className={classes.container}>
-          <Flex
-            className={classes.subcontainer}
-            direction={{ base: "column", xs: "row" }}
-            style={{ flexGrow: 1 }}
-          >
-            <Text w={{ base: "100%", xs: "160px" }}>
+      <Flex className={classes.container}>
+        <Flex
+          className={classes.leftSubContainer}
+          direction={{ base: "column", xs: "row" }}
+        >
+          <Flex w={{ base: "100%", xs: "160px" }}>
+            <Text>
               {new Date(props.transaction.date).toLocaleDateString([], {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
               })}
             </Text>
-            <Text w="100%">{props.transaction.merchantName}</Text>
           </Flex>
-          <Flex
-            className={classes.subcontainer}
-            direction={{ base: "column", xs: "row" }}
-            style={{ flexShrink: 1 }}
-          >
-            <EditableCategoryCell
-              transaction={props.transaction}
-              categories={props.categories}
-              isSelected={opened}
-              editCell={doEditTransaction.mutate}
-            />
+          <Flex w="100%">
+            <Text>{props.transaction.merchantName}</Text>
+          </Flex>
+        </Flex>
+        <Flex
+          className={classes.rightSubContainer}
+          direction={{ base: "column", xs: "row" }}
+        >
+          <EditableCategoryCell
+            transaction={props.transaction}
+            categories={props.categories}
+            isSelected={opened}
+            editCell={doEditTransaction.mutate}
+          />
+          <Flex w={{ base: "100%", xs: "90px" }}>
             <Text
-              w={{ base: "100%", xs: "90px" }}
               style={{
                 color:
                   props.transaction.amount < 0
@@ -116,7 +117,7 @@ const UncategorizedTransaction = (
             </Text>
           </Flex>
         </Flex>
-      </Group>
+      </Flex>
     </Card>
   );
 };
