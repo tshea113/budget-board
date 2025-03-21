@@ -71,7 +71,7 @@ jobs:
             type=semver,pattern=v{{major}}.{{minor}}
             type=semver,pattern=v{{major}}
             type=sha
-            raw,value=release,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            raw,value=release,enable=${{ startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'beta') }}
 
       - name: Build and push Docker image
         id: push
