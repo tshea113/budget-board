@@ -27,19 +27,11 @@ public class TransactionCategoryController(ILogger<TransactionCategoryController
         }
         catch (BudgetBoardServiceException bbex)
         {
-            var errorObjectResult = new ObjectResult(bbex.Message)
-            {
-                StatusCode = StatusCodes.Status500InternalServerError
-            };
-            return errorObjectResult;
+            return Helpers.BuildErrorResponse(bbex.Message);
         }
         catch
         {
-            var errorObjectResult = new ObjectResult("There was an internal server error.")
-            {
-                StatusCode = StatusCodes.Status500InternalServerError
-            };
-            return errorObjectResult;
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -51,9 +43,13 @@ public class TransactionCategoryController(ILogger<TransactionCategoryController
         {
             return Ok(await _transactionCategoryService.ReadTransactionCategoriesAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty)));
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -66,9 +62,13 @@ public class TransactionCategoryController(ILogger<TransactionCategoryController
             await _transactionCategoryService.UpdateTransactionCategoryAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), category);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -81,9 +81,13 @@ public class TransactionCategoryController(ILogger<TransactionCategoryController
             await _transactionCategoryService.DeleteTransactionCategoryAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), guid);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 }
