@@ -15,6 +15,31 @@ public class TransactionCategoryService(ILogger<ITransactionCategoryService> log
     public async Task CreateTransactionCategoryAsync(Guid userGuid, ICategoryCreateRequest request)
     {
         var userData = await GetCurrentUserAsync(userGuid.ToString());
+
+        if (userData.TransactionCategories.Any(c => c.Value.Equals(request.Value, StringComparison.OrdinalIgnoreCase)))
+        {
+            _logger.LogError("Attempt to create a duplicate transaction category.");
+            throw new Exception("Transaction category already exists.");
+        }
+
+        if (string.IsNullOrEmpty(request.Value))
+        {
+            _logger.LogError("Attempt to create a transaction category without a value.");
+            throw new Exception("Transaction category must have a name.");
+        }
+
+        if (request.Value.Equals(request.Parent, StringComparison.OrdinalIgnoreCase))
+        {
+            _logger.LogError("Attempt to create a transaction category with the same name as its parent category.");
+            throw new Exception("Transaction category cannot have the same name as its parent category.");
+        }
+
+        if (!string.IsNullOrEmpty(request.Parent) && !userData.TransactionCategories.Any(c => c.Value.Equals(request.Parent, StringComparison.OrdinalIgnoreCase)))
+        {
+            _logger.LogError("Attempt to create a transaction category with a parent that does not exist.");
+            throw new Exception("Parent category does not exist.");
+        }
+
         var newCategory = new Category
         {
             Value = request.Value,
