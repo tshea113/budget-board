@@ -19,7 +19,7 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         if (account == null)
         {
             _logger.LogError("Attempt to add transaction to account that does not exist.");
-            throw new Exception("The account you are trying to add a transaction to does not exist.");
+            throw new BudgetBoardServiceException("The account you are trying to add a transaction to does not exist.");
         }
 
         var newTransaction = new Transaction
@@ -61,7 +61,7 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
             if (transaction == null)
             {
                 _logger.LogError("Attempt to access transaction that does not exist.");
-                throw new Exception("The transaction you are trying to access does not exist.");
+                throw new BudgetBoardServiceException("The transaction you are trying to access does not exist.");
             }
 
             return [new TransactionResponse(transaction)];
@@ -79,7 +79,7 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         if (transaction == null)
         {
             _logger.LogError("Attempt to edit transaction that does not exist.");
-            throw new Exception("The transaction you are trying to edit does not exist.");
+            throw new BudgetBoardServiceException("The transaction you are trying to edit does not exist.");
         }
 
         transaction.Amount = editedTransaction.Amount;
@@ -100,7 +100,7 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         if (transaction == null)
         {
             _logger.LogError("Attempt to delete transaction that does not exist.");
-            throw new Exception("The transaction you are trying to delete does not exist.");
+            throw new BudgetBoardServiceException("The transaction you are trying to delete does not exist.");
         }
 
         transaction.Deleted = DateTime.Now.ToUniversalTime();
@@ -116,7 +116,7 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         if (transaction == null)
         {
             _logger.LogError("Attempt to restore transaction that does not exist.");
-            throw new Exception("The transaction you are trying to restore does not exist.");
+            throw new BudgetBoardServiceException("The transaction you are trying to restore does not exist.");
         }
 
         transaction.Deleted = null;
@@ -139,13 +139,13 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         catch (Exception ex)
         {
             _logger.LogError("An error occurred while retrieving the user data: {ExceptionMessage}", ex.Message);
-            throw new Exception("An error occurred while retrieving the user data.");
+            throw new BudgetBoardServiceException("An error occurred while retrieving the user data.");
         }
 
         if (foundUser == null)
         {
             _logger.LogError("Attempt to create an account for an invalid user.");
-            throw new Exception("Provided user not found.");
+            throw new BudgetBoardServiceException("Provided user not found.");
         }
 
         return foundUser;

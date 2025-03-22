@@ -87,7 +87,7 @@ public class SimpleFinService(
         if (simpleFinData == null)
         {
             _logger.LogError("SimpleFin data not found.");
-            throw new Exception("SimpleFin data not found.");
+            throw new BudgetBoardServiceException("SimpleFin data not found.");
         }
 
         await SyncInstitutionsAsync(userData, simpleFinData.Accounts);
@@ -110,7 +110,7 @@ public class SimpleFinService(
         if (!decodeAccessTokenResponse.IsSuccessStatusCode)
         {
             _logger.LogError("Attempt to decode setup token was unsuccessful.");
-            throw new Exception("There was an issue decoding the setup token.");
+            throw new BudgetBoardServiceException("There was an issue decoding the setup token.");
         }
 
         var accessToken = await decodeAccessTokenResponse.Content.ReadAsStringAsync();
@@ -118,7 +118,7 @@ public class SimpleFinService(
         if (!await IsAccessTokenValid(accessToken))
         {
             _logger.LogError("Attempt to update user with invalid access token.");
-            throw new Exception("Invalid access token.");
+            throw new BudgetBoardServiceException("Invalid access token.");
         }
 
         userData.AccessToken = accessToken;
@@ -161,13 +161,13 @@ public class SimpleFinService(
         catch (Exception ex)
         {
             _logger.LogError("An error occurred while retrieving the user data: {ExceptionMessage}", ex.Message);
-            throw new Exception("An error occurred while retrieving the user data.");
+            throw new BudgetBoardServiceException("An error occurred while retrieving the user data.");
         }
 
         if (foundUser == null)
         {
             _logger.LogError("Attempt to create an account for an invalid user.");
-            throw new Exception("Provided user not found.");
+            throw new BudgetBoardServiceException("Provided user not found.");
         }
 
         return foundUser;

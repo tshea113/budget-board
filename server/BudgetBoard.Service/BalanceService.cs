@@ -19,7 +19,7 @@ public class BalanceService(ILogger<IBalanceService> logger, UserDataContext use
         if (account == null)
         {
             _logger.LogError("Attempt to add balance to account that does not exist.");
-            throw new Exception("The account you are trying to add a balance to does not exist.");
+            throw new BudgetBoardServiceException("The account you are trying to add a balance to does not exist.");
         }
 
         Balance newBalance = new()
@@ -40,7 +40,7 @@ public class BalanceService(ILogger<IBalanceService> logger, UserDataContext use
         if (account == null)
         {
             _logger.LogError("Attempt to read balance from account that does not exist.");
-            throw new Exception("The account you are trying to read a balance from does not exist.");
+            throw new BudgetBoardServiceException("The account you are trying to read a balance from does not exist.");
         }
 
         return account.Balances.Select(b => new BalanceResponse(b));
@@ -53,7 +53,7 @@ public class BalanceService(ILogger<IBalanceService> logger, UserDataContext use
         if (balance == null)
         {
             _logger.LogError("Attempt to update balance that does not exist.");
-            throw new Exception("The balance you are trying to update does not exist.");
+            throw new BudgetBoardServiceException("The balance you are trying to update does not exist.");
         }
 
         balance.DateTime = updatedBalance.DateTime;
@@ -69,7 +69,7 @@ public class BalanceService(ILogger<IBalanceService> logger, UserDataContext use
         if (balance == null)
         {
             _logger.LogError("Attempt to delete balance that does not exist.");
-            throw new Exception("The balance you are trying to delete does not exist.");
+            throw new BudgetBoardServiceException("The balance you are trying to delete does not exist.");
         }
 
         _userDataContext.Balances.Remove(balance);
@@ -92,13 +92,13 @@ public class BalanceService(ILogger<IBalanceService> logger, UserDataContext use
         catch (Exception ex)
         {
             _logger.LogError("An error occurred while retrieving the user data: {ExceptionMessage}", ex.Message);
-            throw new Exception("An error occurred while retrieving the user data.");
+            throw new BudgetBoardServiceException("An error occurred while retrieving the user data.");
         }
 
         if (foundUser == null)
         {
             _logger.LogError("Attempt to create an account for an invalid user.");
-            throw new Exception("Provided user not found.");
+            throw new BudgetBoardServiceException("Provided user not found.");
         }
 
         return foundUser;

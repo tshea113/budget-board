@@ -35,7 +35,7 @@ public class InstitutionService(ILogger<IInstitutionService> logger, UserDataCon
             if (insitution == null)
             {
                 _logger.LogError("Attempt to access non-existent institution.");
-                throw new Exception("The institution you are trying to access does not exist.");
+                throw new BudgetBoardServiceException("The institution you are trying to access does not exist.");
             }
 
             return [new InstitutionResponse(insitution)];
@@ -51,7 +51,7 @@ public class InstitutionService(ILogger<IInstitutionService> logger, UserDataCon
         if (institution == null)
         {
             _logger.LogError("Attempt to update non-existent institution.");
-            throw new Exception("The institution you are trying to update does not exist.");
+            throw new BudgetBoardServiceException("The institution you are trying to update does not exist.");
         }
 
         institution.Name = request.Name;
@@ -68,7 +68,7 @@ public class InstitutionService(ILogger<IInstitutionService> logger, UserDataCon
         if (institution == null)
         {
             _logger.LogError("Attempt to delete non-existent institution.");
-            throw new Exception("The institution you are trying to delete does not exist.");
+            throw new BudgetBoardServiceException("The institution you are trying to delete does not exist.");
         }
 
         if (deleteTransactions)
@@ -92,7 +92,7 @@ public class InstitutionService(ILogger<IInstitutionService> logger, UserDataCon
             if (insitution == null)
             {
                 _logger.LogError("Attempt to order non-existent institution.");
-                throw new Exception("The institution you are trying to order does not exist.");
+                throw new BudgetBoardServiceException("The institution you are trying to order does not exist.");
             }
 
             insitution.Index = institution.Index;
@@ -117,13 +117,13 @@ public class InstitutionService(ILogger<IInstitutionService> logger, UserDataCon
         catch (Exception ex)
         {
             _logger.LogError("An error occurred while retrieving the user data: {ExceptionMessage}", ex.Message);
-            throw new Exception("An error occurred while retrieving the user data.");
+            throw new BudgetBoardServiceException("An error occurred while retrieving the user data.");
         }
 
         if (foundUser == null)
         {
             _logger.LogError("Attempt to create an account for an invalid user.");
-            throw new Exception("Provided user not found.");
+            throw new BudgetBoardServiceException("Provided user not found.");
         }
 
         return foundUser;

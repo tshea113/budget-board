@@ -14,12 +14,12 @@ namespace BudgetBoard.IntegrationTests;
 public class TransactionCategoryServiceTests
 {
     private readonly Faker<CategoryCreateRequest> _categoryCreateRequestFaker = new Faker<CategoryCreateRequest>()
-        .RuleFor(c => c.Value, f => f.Lorem.Word())
-        .RuleFor(c => c.Parent, f => f.Lorem.Word());
+        .RuleFor(c => c.Value, f => f.Random.String(20))
+        .RuleFor(c => c.Parent, f => f.Random.String(20));
 
     private readonly Faker<CategoryUpdateRequest> _categoryUpdateRequestFaker = new Faker<CategoryUpdateRequest>()
-        .RuleFor(c => c.Value, f => f.Lorem.Word())
-        .RuleFor(c => c.Parent, f => f.Lorem.Word());
+        .RuleFor(c => c.Value, f => f.Random.String(20))
+        .RuleFor(c => c.Parent, f => f.Random.String(20));
 
     [Fact]
     public async Task CreateTransactionCategoryAsync_InvalidUserId_ThrowsError()
@@ -34,7 +34,7 @@ public class TransactionCategoryServiceTests
         Func<Task> act = async () => await transactionCategoryService.CreateTransactionCategoryAsync(Guid.NewGuid(), categoryCreateRequest);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("Provided user not found.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("Provided user not found.");
     }
 
     [Fact]
@@ -81,7 +81,7 @@ public class TransactionCategoryServiceTests
         Func<Task> act = async () => await transactionCategoryService.CreateTransactionCategoryAsync(helper.demoUser.Id, categoryCreateRequest);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("Transaction category already exists.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("Transaction category already exists.");
     }
 
     [Fact]
@@ -98,7 +98,7 @@ public class TransactionCategoryServiceTests
         Func<Task> act = async () => await transactionCategoryService.CreateTransactionCategoryAsync(helper.demoUser.Id, categoryCreateRequest);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("Transaction category cannot have the same name as its parent category.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("Transaction category cannot have the same name as its parent category.");
     }
 
     [Theory]
@@ -117,7 +117,7 @@ public class TransactionCategoryServiceTests
         Func<Task> act = async () => await transactionCategoryService.CreateTransactionCategoryAsync(helper.demoUser.Id, categoryCreateRequest);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("Transaction category must have a name.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("Transaction category must have a name.");
     }
 
     [Fact]
@@ -180,7 +180,7 @@ public class TransactionCategoryServiceTests
         Func<Task> act = async () => await transactionCategoryService.ReadTransactionCategoriesAsync(helper.demoUser.Id, Guid.NewGuid());
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("The transaction category you are trying to access does not exist.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The transaction category you are trying to access does not exist.");
     }
 
     [Fact]
@@ -228,7 +228,7 @@ public class TransactionCategoryServiceTests
         Func<Task> act = async () => await transactionCategoryService.UpdateTransactionCategoryAsync(helper.demoUser.Id, categoryUpdateRequest);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("The transaction category you are trying to access does not exist.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The transaction category you are trying to access does not exist.");
     }
 
     [Fact]
@@ -274,7 +274,7 @@ public class TransactionCategoryServiceTests
         Func<Task> act = async () => await transactionCategoryService.DeleteTransactionCategoryAsync(helper.demoUser.Id, Guid.NewGuid());
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("The transaction category you are trying to delete does not exist.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The transaction category you are trying to delete does not exist.");
     }
 
     [Fact]
@@ -307,7 +307,7 @@ public class TransactionCategoryServiceTests
         Func<Task> act = async () => await transactionCategoryService.DeleteTransactionCategoryAsync(helper.demoUser.Id, transactionCategories.First().ID);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("Category is in use by transaction(s) and cannot be deleted.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("Category is in use by transaction(s) and cannot be deleted.");
     }
 
     [Fact]
@@ -340,7 +340,7 @@ public class TransactionCategoryServiceTests
         Func<Task> act = async () => await transactionCategoryService.DeleteTransactionCategoryAsync(helper.demoUser.Id, transactionCategories.First().ID);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("Category is in use by transaction(s) and cannot be deleted.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("Category is in use by transaction(s) and cannot be deleted.");
     }
 
     [Fact]
@@ -367,7 +367,7 @@ public class TransactionCategoryServiceTests
         Func<Task> act = async () => await transactionCategoryService.DeleteTransactionCategoryAsync(helper.demoUser.Id, transactionCategories.First().ID);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("Category is in use by budget(s) and cannot be deleted.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("Category is in use by budget(s) and cannot be deleted.");
     }
 
     [Fact]
@@ -389,6 +389,6 @@ public class TransactionCategoryServiceTests
         Func<Task> act = async () => await transactionCategoryService.DeleteTransactionCategoryAsync(helper.demoUser.Id, transactionCategories.First().ID);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("Transaction category has subcategories associated with it and cannot be deleted.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("Transaction category has subcategories associated with it and cannot be deleted.");
     }
 }
