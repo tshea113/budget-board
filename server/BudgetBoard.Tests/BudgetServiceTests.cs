@@ -35,7 +35,7 @@ public class BudgetServiceTests
         Func<Task> act = async () => await budgetService.CreateBudgetsAsync(Guid.NewGuid(), [budget]);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("Provided user not found.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("Provided user not found.");
     }
 
     [Fact]
@@ -69,7 +69,7 @@ public class BudgetServiceTests
         // Act
         Func<Task> act = async () => await budgetService.CreateBudgetsAsync(helper.demoUser.Id, [budget, budget]);
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("Budget category already exists for this month!");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("Budget category already exists for this month!");
     }
 
     [Fact]
@@ -139,7 +139,7 @@ public class BudgetServiceTests
         Func<Task> act = async () => await budgetService.UpdateBudgetAsync(helper.demoUser.Id, updatedBudget);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("The budget you are trying to update does not exist.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The budget you are trying to update does not exist.");
     }
 
     [Fact]
@@ -177,6 +177,6 @@ public class BudgetServiceTests
         Func<Task> act = async () => await budgetService.DeleteBudgetAsync(helper.demoUser.Id, Guid.NewGuid());
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("The budget you are trying to delete does not exist.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The budget you are trying to delete does not exist.");
     }
 }

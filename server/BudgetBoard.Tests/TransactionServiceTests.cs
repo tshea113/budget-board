@@ -34,7 +34,7 @@ public class TransactionServiceTests
         Func<Task> act = async () => await transactionService.CreateTransactionAsync(Guid.NewGuid(), transaction);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("Provided user not found.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("Provided user not found.");
     }
 
     [Fact]
@@ -75,7 +75,7 @@ public class TransactionServiceTests
         Func<Task> act = async () => await transactionService.CreateTransactionAsync(helper.demoUser.Id, transaction);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("The account you are trying to add a transaction to does not exist.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The account you are trying to add a transaction to does not exist.");
     }
 
     [Fact]
@@ -116,7 +116,7 @@ public class TransactionServiceTests
         Func<Task> act = async () => await transactionService.ReadTransactionsAsync(helper.demoUser.Id, null, null, false, Guid.NewGuid());
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("The transaction you are trying to access does not exist.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The transaction you are trying to access does not exist.");
     }
 
     [Fact]
@@ -288,7 +288,7 @@ public class TransactionServiceTests
         Func<Task> act = async () => await transactionService.UpdateTransactionAsync(helper.demoUser.Id, editedTransaction);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("The transaction you are trying to edit does not exist.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The transaction you are trying to edit does not exist.");
     }
 
     [Fact]
@@ -330,7 +330,7 @@ public class TransactionServiceTests
         Func<Task> act = async () => await transactionService.DeleteTransactionAsync(helper.demoUser.Id, Guid.NewGuid());
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("The transaction you are trying to delete does not exist.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The transaction you are trying to delete does not exist.");
     }
 
     [Fact]
@@ -373,7 +373,7 @@ public class TransactionServiceTests
         Func<Task> act = async () => await transactionService.RestoreTransactionAsync(helper.demoUser.Id, Guid.NewGuid());
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("The transaction you are trying to restore does not exist.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The transaction you are trying to restore does not exist.");
     }
 
     [Fact]

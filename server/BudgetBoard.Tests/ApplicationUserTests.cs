@@ -36,7 +36,7 @@ public class ApplicationUserTests
         Func<Task> act = async () => await applicationUserService.ReadApplicationUserAsync(Guid.NewGuid());
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("Provided user not found.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("Provided user not found.");
     }
 
     [Fact]
@@ -73,6 +73,6 @@ public class ApplicationUserTests
         Func<Task> act = async () => await applicationUserService.UpdateApplicationUserAsync(Guid.NewGuid(), userUpdateRequest);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("Provided user not found.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("Provided user not found.");
     }
 }

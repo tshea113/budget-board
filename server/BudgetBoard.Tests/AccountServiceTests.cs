@@ -2,6 +2,7 @@ using Bogus;
 using BudgetBoard.IntegrationTests.Fakers;
 using BudgetBoard.Service;
 using BudgetBoard.Service.Interfaces;
+using BudgetBoard.Service.Models;
 using BudgetBoard.Service.Types;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -43,7 +44,7 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         var createAccountAct = () => accountService.CreateAccountAsync(Guid.NewGuid(), account);
 
         // Assert
-        await createAccountAct.Should().ThrowAsync<Exception>().WithMessage("Provided user not found.");
+        await createAccountAct.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("Provided user not found.");
     }
 
     [Fact]
@@ -129,7 +130,7 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         var readAccountAct = () => accountService.ReadAccountsAsync(helper.demoUser.Id, invalidGuid);
 
         // Assert
-        await readAccountAct.Should().ThrowAsync<Exception>().WithMessage("The account you are trying to access does not exist.");
+        await readAccountAct.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The account you are trying to access does not exist.");
     }
 
     [Fact]
@@ -178,7 +179,7 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         var updateAccountAct = () => accountService.UpdateAccountAsync(helper.demoUser.Id, editedAccount);
 
         // Assert
-        await updateAccountAct.Should().ThrowAsync<Exception>().WithMessage("The account you are trying to edit does not exist.");
+        await updateAccountAct.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The account you are trying to edit does not exist.");
     }
 
     [Fact]
@@ -221,7 +222,7 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         var deleteAccountAct = () => accountService.DeleteAccountAsync(helper.demoUser.Id, invalidGuid);
 
         // Assert
-        await deleteAccountAct.Should().ThrowAsync<Exception>().WithMessage("The account you are trying to delete does not exist.");
+        await deleteAccountAct.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The account you are trying to delete does not exist.");
     }
 
     [Fact]
@@ -354,7 +355,7 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         var restoreAccountAct = () => accountService.RestoreAccountAsync(helper.demoUser.Id, invalidGuid);
 
         // Assert
-        await restoreAccountAct.Should().ThrowAsync<Exception>().WithMessage("The account you are trying to restore does not exist.");
+        await restoreAccountAct.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The account you are trying to restore does not exist.");
     }
 
     [Fact]
@@ -484,6 +485,6 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         var orderAccountsAct = () => accountService.OrderAccountsAsync(helper.demoUser.Id, orderedAccounts);
 
         // Assert
-        await orderAccountsAct.Should().ThrowAsync<Exception>().WithMessage("The account you are trying to set the index for does not exist.");
+        await orderAccountsAct.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The account you are trying to set the index for does not exist.");
     }
 }

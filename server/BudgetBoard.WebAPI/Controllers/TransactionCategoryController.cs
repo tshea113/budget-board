@@ -25,9 +25,13 @@ public class TransactionCategoryController(ILogger<TransactionCategoryController
             await _transactionCategoryService.CreateTransactionCategoryAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), category);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -39,9 +43,13 @@ public class TransactionCategoryController(ILogger<TransactionCategoryController
         {
             return Ok(await _transactionCategoryService.ReadTransactionCategoriesAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty)));
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -54,9 +62,13 @@ public class TransactionCategoryController(ILogger<TransactionCategoryController
             await _transactionCategoryService.UpdateTransactionCategoryAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), category);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -69,9 +81,13 @@ public class TransactionCategoryController(ILogger<TransactionCategoryController
             await _transactionCategoryService.DeleteTransactionCategoryAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), guid);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 }

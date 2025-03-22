@@ -24,7 +24,7 @@ public class BudgetService(ILogger<IBudgetService> logger, UserDataContext userD
             && b.Category.Equals(budget.Category, StringComparison.CurrentCultureIgnoreCase)))
             {
                 _logger.LogError("Attempt to create duplicate budget category.");
-                throw new Exception("Budget category already exists for this month!");
+                throw new BudgetBoardServiceException("Budget category already exists for this month!");
             }
 
             Budget newBudget = new()
@@ -57,7 +57,7 @@ public class BudgetService(ILogger<IBudgetService> logger, UserDataContext userD
         if (budget == null)
         {
             _logger.LogError("Attempt to update budget that does not exist.");
-            throw new Exception("The budget you are trying to update does not exist.");
+            throw new BudgetBoardServiceException("The budget you are trying to update does not exist.");
         }
 
         budget.Limit = updatedBudget.Limit;
@@ -72,7 +72,7 @@ public class BudgetService(ILogger<IBudgetService> logger, UserDataContext userD
         if (budget == null)
         {
             _logger.LogError("Attempt to delete budget that does not exist.");
-            throw new Exception("The budget you are trying to delete does not exist.");
+            throw new BudgetBoardServiceException("The budget you are trying to delete does not exist.");
         }
 
         _userDataContext.Budgets.Remove(budget);
@@ -93,13 +93,13 @@ public class BudgetService(ILogger<IBudgetService> logger, UserDataContext userD
         catch (Exception ex)
         {
             _logger.LogError("An error occurred while retrieving the user data: {ExceptionMessage}", ex.Message);
-            throw new Exception("An error occurred while retrieving the user data.");
+            throw new BudgetBoardServiceException("An error occurred while retrieving the user data.");
         }
 
         if (foundUser == null)
         {
             _logger.LogError("Attempt to create an account for an invalid user.");
-            throw new Exception("Provided user not found.");
+            throw new BudgetBoardServiceException("Provided user not found.");
         }
 
         return foundUser;

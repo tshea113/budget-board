@@ -1,5 +1,6 @@
 ﻿using BudgetBoard.Database.Models;
 using BudgetBoard.Service.Interfaces;
+using BudgetBoard.Service.Models;
 using BudgetBoard.Service.Types;
 using BudgetBoard.WebAPI.Utils;
 using Microsoft.AspNetCore.Authorization;
@@ -25,9 +26,21 @@ public class AccountController(ILogger<AccountController> logger, UserManager<Ap
             await _accountService.CreateAccountAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), account);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            var errorObjectResult = new ObjectResult(bbex.Message)
+            {
+                StatusCode = StatusCodes.Status500InternalServerError
+            };
+            return errorObjectResult;
+        }
+        catch
+        {
+            var errorObjectResult = new ObjectResult("There was an internal server error.")
+            {
+                StatusCode = StatusCodes.Status500InternalServerError
+            };
+            return errorObjectResult;
         }
     }
 
@@ -39,9 +52,21 @@ public class AccountController(ILogger<AccountController> logger, UserManager<Ap
         {
             return Ok(await _accountService.ReadAccountsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty)));
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            var errorObjectResult = new ObjectResult(bbex.Message)
+            {
+                StatusCode = StatusCodes.Status500InternalServerError
+            };
+            return errorObjectResult;
+        }
+        catch
+        {
+            var errorObjectResult = new ObjectResult("There was an internal server error.")
+            {
+                StatusCode = StatusCodes.Status500InternalServerError
+            };
+            return errorObjectResult;
         }
     }
 
@@ -53,9 +78,21 @@ public class AccountController(ILogger<AccountController> logger, UserManager<Ap
         {
             return Ok(await _accountService.ReadAccountsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), guid));
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            var errorObjectResult = new ObjectResult(bbex.Message)
+            {
+                StatusCode = StatusCodes.Status500InternalServerError
+            };
+            return errorObjectResult;
+        }
+        catch
+        {
+            var errorObjectResult = new ObjectResult("There was an internal server error.")
+            {
+                StatusCode = StatusCodes.Status500InternalServerError
+            };
+            return errorObjectResult;
         }
     }
 
@@ -68,9 +105,13 @@ public class AccountController(ILogger<AccountController> logger, UserManager<Ap
             await _accountService.UpdateAccountAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), editedAccount);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -83,9 +124,13 @@ public class AccountController(ILogger<AccountController> logger, UserManager<Ap
             await _accountService.DeleteAccountAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), guid, deleteTransactions);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -99,9 +144,13 @@ public class AccountController(ILogger<AccountController> logger, UserManager<Ap
             await _accountService.RestoreAccountAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), guid);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -115,9 +164,13 @@ public class AccountController(ILogger<AccountController> logger, UserManager<Ap
             await _accountService.OrderAccountsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), accounts);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 }

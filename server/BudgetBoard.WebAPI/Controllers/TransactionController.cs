@@ -25,9 +25,13 @@ public class TransactionController(ILogger<TransactionController> logger, UserMa
             await _transactionService.CreateTransactionAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), transaction);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -40,9 +44,13 @@ public class TransactionController(ILogger<TransactionController> logger, UserMa
         {
             return Ok(await _transactionService.ReadTransactionsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), year, month, getHidden));
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -54,9 +62,13 @@ public class TransactionController(ILogger<TransactionController> logger, UserMa
         {
             return Ok(await _transactionService.ReadTransactionsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), null, null, false, guid));
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -69,9 +81,13 @@ public class TransactionController(ILogger<TransactionController> logger, UserMa
             await _transactionService.UpdateTransactionAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), newTransaction);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -84,10 +100,13 @@ public class TransactionController(ILogger<TransactionController> logger, UserMa
             await _transactionService.DeleteTransactionAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), guid);
             return Ok();
         }
-
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -101,9 +120,13 @@ public class TransactionController(ILogger<TransactionController> logger, UserMa
             await _transactionService.RestoreTransactionAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), guid);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 }

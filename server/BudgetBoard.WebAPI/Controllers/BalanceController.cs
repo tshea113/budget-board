@@ -25,9 +25,13 @@ public class BalanceController(ILogger<BalanceController> logger, UserManager<Ap
             await _balanceService.CreateBalancesAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), balance);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -39,9 +43,13 @@ public class BalanceController(ILogger<BalanceController> logger, UserManager<Ap
         {
             return Ok(await _balanceService.ReadBalancesAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), accountId));
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -54,9 +62,13 @@ public class BalanceController(ILogger<BalanceController> logger, UserManager<Ap
             await _balanceService.UpdateBalanceAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), updatedBalance);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -69,9 +81,13 @@ public class BalanceController(ILogger<BalanceController> logger, UserManager<Ap
             await _balanceService.DeleteBalanceAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), id);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 }

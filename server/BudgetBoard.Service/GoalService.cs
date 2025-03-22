@@ -23,7 +23,7 @@ public class GoalService(ILogger<IGoalService> logger, UserDataContext userDataC
             if (account == null)
             {
                 _logger.LogError("Attempt to create goal with invalid account.");
-                throw new Exception("The account you are trying to use does not exist.");
+                throw new BudgetBoardServiceException("The account you are trying to use does not exist.");
             }
 
             runningBalance += account.Balances.OrderByDescending(b => b.DateTime).FirstOrDefault()?.Amount ?? 0;
@@ -89,7 +89,7 @@ public class GoalService(ILogger<IGoalService> logger, UserDataContext userDataC
         if (goal == null)
         {
             _logger.LogError("Attempt to update goal that does not exist.");
-            throw new Exception("The goal you are trying to update does not exist.");
+            throw new BudgetBoardServiceException("The goal you are trying to update does not exist.");
         }
 
         goal.Name = updatedGoal.Name;
@@ -107,7 +107,7 @@ public class GoalService(ILogger<IGoalService> logger, UserDataContext userDataC
         if (goal == null)
         {
             _logger.LogError("Attempt to delete goal that does not exist.");
-            throw new Exception("The goal you are trying to delete does not exist.");
+            throw new BudgetBoardServiceException("The goal you are trying to delete does not exist.");
         }
 
         _userDataContext.Goals.Remove(goal);
@@ -133,13 +133,13 @@ public class GoalService(ILogger<IGoalService> logger, UserDataContext userDataC
         catch (Exception ex)
         {
             _logger.LogError("An error occurred while retrieving the user data: {ExceptionMessage}", ex.Message);
-            throw new Exception("An error occurred while retrieving the user data.");
+            throw new BudgetBoardServiceException("An error occurred while retrieving the user data.");
         }
 
         if (foundUser == null)
         {
             _logger.LogError("Attempt to create an account for an invalid user.");
-            throw new Exception("Provided user not found.");
+            throw new BudgetBoardServiceException("Provided user not found.");
         }
 
         return foundUser;
@@ -152,7 +152,7 @@ public class GoalService(ILogger<IGoalService> logger, UserDataContext userDataC
         if (goal.MonthlyContribution == null || goal.MonthlyContribution == 0)
         {
             // If a complete date has not been set, then a monthly contribution is required.
-            throw new ArgumentException("A target date cannot be estimated without a monthly contribution.");
+            throw new BudgetBoardServiceException("A target date cannot be estimated without a monthly contribution.");
         }
 
         decimal totalBalance = goal.Accounts.Sum(a => a.Balances.OrderByDescending(b => b.DateTime).FirstOrDefault()?.Amount ?? 0);
@@ -198,7 +198,7 @@ public class GoalService(ILogger<IGoalService> logger, UserDataContext userDataC
         // If a monthly contribution has not been set, then a complete date is required.
         if (!goal.CompleteDate.HasValue)
         {
-            throw new ArgumentException("A monthly contribution cannot be estimated without a target date.");
+            throw new BudgetBoardServiceException("A monthly contribution cannot be estimated without a target date.");
         }
 
         decimal totalBalance = goal.Accounts.Sum(a => a.Balances.OrderByDescending(b => b.DateTime).FirstOrDefault()?.Amount ?? 0);

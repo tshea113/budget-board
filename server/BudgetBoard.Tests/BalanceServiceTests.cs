@@ -33,7 +33,7 @@ public class BalanceServiceTests
         Func<Task> act = async () => await balanceService.CreateBalancesAsync(Guid.NewGuid(), balanceCreateRequest);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("Provided user not found.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("Provided user not found.");
     }
 
     [Fact]
@@ -74,7 +74,7 @@ public class BalanceServiceTests
         Func<Task> act = async () => await balanceService.CreateBalancesAsync(helper.demoUser.Id, balanceCreateRequest);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("The account you are trying to add a balance to does not exist.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The account you are trying to add a balance to does not exist.");
     }
 
     [Fact]
@@ -115,7 +115,7 @@ public class BalanceServiceTests
         Func<Task> act = async () => await balanceService.ReadBalancesAsync(helper.demoUser.Id, Guid.NewGuid());
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("The account you are trying to read a balance from does not exist.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The account you are trying to read a balance from does not exist.");
     }
 
     [Fact]
@@ -162,7 +162,7 @@ public class BalanceServiceTests
         Func<Task> act = async () => await balanceService.UpdateBalanceAsync(helper.demoUser.Id, balanceUpdateRequest);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("The balance you are trying to update does not exist.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The balance you are trying to update does not exist.");
     }
 
     [Fact]
@@ -203,6 +203,6 @@ public class BalanceServiceTests
         Func<Task> act = async () => await balanceService.DeleteBalanceAsync(helper.demoUser.Id, Guid.NewGuid());
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("The balance you are trying to delete does not exist.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The balance you are trying to delete does not exist.");
     }
 }

@@ -31,7 +31,7 @@ public class InstitutionServiceTests
         Func<Task> act = async () => await institutionService.CreateInstitutionAsync(Guid.NewGuid(), institutionCreateRequest);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("Provided user not found.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("Provided user not found.");
     }
 
     [Fact]
@@ -114,7 +114,7 @@ public class InstitutionServiceTests
         var act = async () => await institutionService.ReadInstitutionsAsync(helper.demoUser.Id, Guid.NewGuid());
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("The institution you are trying to access does not exist.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The institution you are trying to access does not exist.");
     }
 
     [Fact]
@@ -157,7 +157,7 @@ public class InstitutionServiceTests
         Func<Task> act = async () => await institutionService.UpdateInstitutionAsync(helper.demoUser.Id, institutionUpdateRequest);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("The institution you are trying to update does not exist.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The institution you are trying to update does not exist.");
     }
 
     [Fact]
@@ -244,7 +244,7 @@ public class InstitutionServiceTests
         Func<Task> act = async () => await institutionService.DeleteInstitutionAsync(helper.demoUser.Id, Guid.NewGuid(), false);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("The institution you are trying to delete does not exist.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The institution you are trying to delete does not exist.");
     }
 
     [Fact]
@@ -303,6 +303,6 @@ public class InstitutionServiceTests
         Func<Task> act = async () => await institutionService.OrderInstitutionsAsync(helper.demoUser.Id, orderedInstitutions);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("The institution you are trying to order does not exist.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The institution you are trying to order does not exist.");
     }
 }

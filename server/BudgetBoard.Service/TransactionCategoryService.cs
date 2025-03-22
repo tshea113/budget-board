@@ -15,6 +15,32 @@ public class TransactionCategoryService(ILogger<ITransactionCategoryService> log
     public async Task CreateTransactionCategoryAsync(Guid userGuid, ICategoryCreateRequest request)
     {
         var userData = await GetCurrentUserAsync(userGuid.ToString());
+
+        if (userData.TransactionCategories.Any(c => c.Value.Equals(request.Value, StringComparison.OrdinalIgnoreCase)) ||
+            TransactionCategoriesConstants.DefaultTransactionCategories.Any(c => c.Value.Equals(request.Value, StringComparison.OrdinalIgnoreCase)))
+        {
+            _logger.LogError("Attempt to create a duplicate transaction category.");
+            throw new BudgetBoardServiceException("Transaction category already exists.");
+        }
+
+        if (string.IsNullOrEmpty(request.Value))
+        {
+            _logger.LogError("Attempt to create a transaction category without a value.");
+            throw new BudgetBoardServiceException("Transaction category must have a name.");
+        }
+
+        if (request.Value.Equals(request.Parent, StringComparison.OrdinalIgnoreCase))
+        {
+            _logger.LogError("Attempt to create a transaction category with the same name as its parent category.");
+            throw new BudgetBoardServiceException("Transaction category cannot have the same name as its parent category.");
+        }
+
+        if (!string.IsNullOrEmpty(request.Parent) && !userData.TransactionCategories.Any(c => c.Value.Equals(request.Parent, StringComparison.OrdinalIgnoreCase)))
+        {
+            _logger.LogError("Attempt to create a transaction category with a parent that does not exist.");
+            throw new BudgetBoardServiceException("Parent category does not exist.");
+        }
+
         var newCategory = new Category
         {
             Value = request.Value,
@@ -35,7 +61,7 @@ public class TransactionCategoryService(ILogger<ITransactionCategoryService> log
             if (transactionCategory == null)
             {
                 _logger.LogError("Attempt to access transaction category that does not exist.");
-                throw new Exception("The transaction category you are trying to access does not exist.");
+                throw new BudgetBoardServiceException("The transaction category you are trying to access does not exist.");
             }
 
             return [new CategoryResponse(transactionCategory)];
@@ -51,7 +77,7 @@ public class TransactionCategoryService(ILogger<ITransactionCategoryService> log
         if (transactionCategory == null)
         {
             _logger.LogError("Attempt to access transaction category that does not exist.");
-            throw new Exception("The transaction category you are trying to access does not exist.");
+            throw new BudgetBoardServiceException("The transaction category you are trying to access does not exist.");
         }
 
         transactionCategory.Value = updatedCategory.Value;
@@ -67,7 +93,7 @@ public class TransactionCategoryService(ILogger<ITransactionCategoryService> log
         if (transactionCategory == null)
         {
             _logger.LogError("Attempt to delete transaction category that does not exist.");
-            throw new Exception("The transaction category you are trying to delete does not exist.");
+            throw new BudgetBoardServiceException("The transaction category you are trying to delete does not exist.");
         }
 
         // We want to preserve the category in the database if it is in use. 
@@ -81,17 +107,17 @@ public class TransactionCategoryService(ILogger<ITransactionCategoryService> log
             )
         {
             _logger.LogError("Attempt to delete transaction category that is in use by transaction(s).");
-            throw new Exception("Category is in use by transaction(s) and cannot be deleted.");
+            throw new BudgetBoardServiceException("Category is in use by transaction(s) and cannot be deleted.");
         }
         else if (userData.Budgets.Any(b => b.Category == transactionCategory.Value))
         {
             _logger.LogError("Attempt to delete transaction category that is in use by budget(s).");
-            throw new Exception("Category is in use by budget(s) and cannot be deleted.");
+            throw new BudgetBoardServiceException("Category is in use by budget(s) and cannot be deleted.");
         }
         else if (userData.TransactionCategories.Any(c => c.Parent == transactionCategory.Value))
         {
             _logger.LogError("Attempt to delete transaction category that is a parent category.");
-            throw new Exception("Transaction category has subcategories associated with it and cannot be deleted.");
+            throw new BudgetBoardServiceException("Transaction category has subcategories associated with it and cannot be deleted.");
         }
         else
         {
@@ -118,13 +144,13 @@ public class TransactionCategoryService(ILogger<ITransactionCategoryService> log
         catch (Exception ex)
         {
             _logger.LogError("An error occurred while retrieving the user data: {ExceptionMessage}", ex.Message);
-            throw new Exception("An error occurred while retrieving the user data.");
+            throw new BudgetBoardServiceException("An error occurred while retrieving the user data.");
         }
 
         if (foundUser == null)
         {
             _logger.LogError("Attempt to create an account for an invalid user.");
-            throw new Exception("Provided user not found.");
+            throw new BudgetBoardServiceException("Provided user not found.");
         }
 
         return foundUser;

@@ -7,12 +7,14 @@ public static class Helpers
     public const long UNIX_MONTH = 2629743;
     public const long UNIX_WEEK = 604800;
 
-    public static IActionResult BuildErrorResponse(ILogger logger, string message)
-    {
-        logger.LogError(message);
+    public const string DEFAULT_ERROR_STRING = "There was an internal server error.";
 
-        var errorObjectResult = new ObjectResult("There was an internal server error.");
-        errorObjectResult.StatusCode = StatusCodes.Status500InternalServerError;
+    public static IActionResult BuildErrorResponse(string message = DEFAULT_ERROR_STRING)
+    {
+        var errorObjectResult = new ObjectResult(message)
+        {
+            StatusCode = StatusCodes.Status500InternalServerError
+        };
 
         return errorObjectResult;
     }

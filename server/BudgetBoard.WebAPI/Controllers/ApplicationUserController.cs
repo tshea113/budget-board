@@ -32,9 +32,13 @@ public class ApplicationUserController(ILogger<ApplicationUserController> logger
         {
             return Ok(await _applicationUserService.ReadApplicationUserAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty)));
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -47,9 +51,13 @@ public class ApplicationUserController(ILogger<ApplicationUserController> logger
             await _applicationUserService.UpdateApplicationUserAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), newUser);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
