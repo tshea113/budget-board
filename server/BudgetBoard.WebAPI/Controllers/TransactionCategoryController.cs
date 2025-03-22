@@ -25,9 +25,21 @@ public class TransactionCategoryController(ILogger<TransactionCategoryController
             await _transactionCategoryService.CreateTransactionCategoryAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), category);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            var errorObjectResult = new ObjectResult(bbex.Message)
+            {
+                StatusCode = StatusCodes.Status500InternalServerError
+            };
+            return errorObjectResult;
+        }
+        catch
+        {
+            var errorObjectResult = new ObjectResult("There was an internal server error.")
+            {
+                StatusCode = StatusCodes.Status500InternalServerError
+            };
+            return errorObjectResult;
         }
     }
 
