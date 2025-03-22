@@ -8,13 +8,17 @@ interface DeletedAccountsProps {
 }
 
 const DeletedAccounts = (props: DeletedAccountsProps): React.ReactNode => {
+  const sortedDeletedAccounts = props.deletedAccounts.sort(
+    (a, b) =>
+      new Date(b.deleted ?? 0).getTime() - new Date(a.deleted ?? 0).getTime()
+  );
   return (
     <Accordion variant="filled">
       <Accordion.Item value="deleted-account">
         <Accordion.Control>Deleted Accounts</Accordion.Control>
         <Accordion.Panel>
           <Stack>
-            {props.deletedAccounts.map((deletedAccount) => (
+            {sortedDeletedAccounts.map((deletedAccount) => (
               <DeletedAccountCard
                 key={deletedAccount.id}
                 deletedAccount={deletedAccount}

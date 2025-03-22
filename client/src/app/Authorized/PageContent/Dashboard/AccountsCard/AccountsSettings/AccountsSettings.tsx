@@ -15,19 +15,21 @@ import { AxiosError } from "axios";
 interface AccountsSettingsProps {
   modalOpened: boolean;
   closeModal: () => void;
-  institutions: IInstitution[];
+  sortedFilteredInstitutions: IInstitution[];
   accounts: IAccount[];
 }
 
 const AccountsSettings = (props: AccountsSettingsProps): React.ReactNode => {
   const [sortedInstitutions, setSortedInstitutions] = React.useState<
     IInstitution[]
-  >(props.institutions.sort((a, b) => a.index - b.index));
+  >(props.sortedFilteredInstitutions);
   const [isSortable, { toggle }] = useDisclosure(false);
 
   React.useEffect(() => {
-    setSortedInstitutions(props.institutions.sort((a, b) => a.index - b.index));
-  }, [props.institutions]);
+    setSortedInstitutions(
+      props.sortedFilteredInstitutions.sort((a, b) => a.index - b.index)
+    );
+  }, [props.sortedFilteredInstitutions]);
 
   const { request } = React.useContext<any>(AuthContext);
   const queryClient = useQueryClient();

@@ -52,7 +52,6 @@ const TransactionCard = (props: TransactionCardProps): React.ReactNode => {
                   category: variables.category,
                   subcategory: variables.subcategory,
                   merchantName: variables.merchantName,
-                  deleted: variables.deleted,
                 }
               : oldTransaction
           )

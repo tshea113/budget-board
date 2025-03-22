@@ -56,9 +56,9 @@ const AccountsCard = (): React.ReactNode => {
 
   const [opened, { open, close }] = useDisclosure(false);
 
-  const sortedInstitutions = institutionQuery.data?.sort(
-    (a, b) => a.index - b.index
-  );
+  const sortedFilteredInstitutions = (institutionQuery.data ?? [])
+    .filter((i) => i.deleted === null)
+    .sort((a, b) => a.index - b.index);
 
   return (
     <Card
@@ -80,17 +80,19 @@ const AccountsCard = (): React.ReactNode => {
         <AccountsSettings
           modalOpened={opened}
           closeModal={close}
-          institutions={institutionQuery.data ?? []}
+          sortedFilteredInstitutions={sortedFilteredInstitutions}
           accounts={accountsQuery.data ?? []}
         />
       </Group>
       <Stack className={classes.accountsContainer}>
         {institutionQuery.isPending || accountsQuery.isPending ? (
           <Skeleton height={600} radius="lg" />
-        ) : (sortedInstitutions ?? []).length > 0 ? (
-          (sortedInstitutions ?? []).map((institution: IInstitution) => (
-            <InstitutionItem key={institution.id} institution={institution} />
-          ))
+        ) : (sortedFilteredInstitutions ?? []).length > 0 ? (
+          (sortedFilteredInstitutions ?? []).map(
+            (institution: IInstitution) => (
+              <InstitutionItem key={institution.id} institution={institution} />
+            )
+          )
         ) : (
           <Text>No accounts found</Text>
         )}

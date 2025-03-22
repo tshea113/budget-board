@@ -1,4 +1,4 @@
-import { ICategory } from './category';
+import { ICategory } from "./category";
 
 export interface IAccountCreateRequest {
   syncId?: string;
@@ -35,93 +35,99 @@ export interface IAccount {
   balanceDate: Date;
   hideTransactions: boolean;
   hideAccount: boolean;
-  deleted: Date;
+  deleted: Date | null;
   index: number;
   userID: string;
 }
 
-export const liabilityAccountTypes = ['Loan', 'Mortgage', 'Credit Card'];
-export const assetAccountTypes = ['Checking', 'Savings', 'Investment', 'Cash', 'Other'];
+export const liabilityAccountTypes = ["Loan", "Mortgage", "Credit Card"];
+export const assetAccountTypes = [
+  "Checking",
+  "Savings",
+  "Investment",
+  "Cash",
+  "Other",
+];
 
 export const accountCategories: ICategory[] = [
   {
-    value: 'Checking',
-    parent: '',
+    value: "Checking",
+    parent: "",
   },
   {
-    value: 'Savings',
-    parent: '',
+    value: "Savings",
+    parent: "",
   },
   {
-    value: 'Money Market',
-    parent: 'Savings',
+    value: "Money Market",
+    parent: "Savings",
   },
   {
-    value: 'Certificate of Deposit',
-    parent: 'Savings',
+    value: "Certificate of Deposit",
+    parent: "Savings",
   },
   {
-    value: 'Loan',
-    parent: '',
+    value: "Loan",
+    parent: "",
   },
   {
-    value: 'Auto',
-    parent: 'Loan',
+    value: "Auto",
+    parent: "Loan",
   },
   {
-    value: 'Student',
-    parent: 'Loan',
+    value: "Student",
+    parent: "Loan",
   },
   {
-    value: 'Personal',
-    parent: 'Loan',
+    value: "Personal",
+    parent: "Loan",
   },
   {
-    value: 'Home Equity',
-    parent: 'Loan',
+    value: "Home Equity",
+    parent: "Loan",
   },
   {
-    value: 'Credit Card',
-    parent: '',
+    value: "Credit Card",
+    parent: "",
   },
   {
-    value: 'Investment',
-    parent: '',
+    value: "Investment",
+    parent: "",
   },
   {
-    value: '401k',
-    parent: 'Investment',
+    value: "401k",
+    parent: "Investment",
   },
   {
-    value: 'Roth IRA',
-    parent: 'Investment',
+    value: "Roth IRA",
+    parent: "Investment",
   },
   {
-    value: 'Rollover IRA',
-    parent: 'Investment',
+    value: "Rollover IRA",
+    parent: "Investment",
   },
   {
-    value: 'ESPP',
-    parent: 'Investment',
+    value: "ESPP",
+    parent: "Investment",
   },
   {
-    value: 'Trust',
-    parent: 'Investment',
+    value: "Trust",
+    parent: "Investment",
   },
   {
-    value: 'Taxable',
-    parent: 'Investment',
+    value: "Taxable",
+    parent: "Investment",
   },
   {
-    value: 'Mortgage',
-    parent: '',
+    value: "Mortgage",
+    parent: "",
   },
   {
-    value: 'Cash',
-    parent: '',
+    value: "Cash",
+    parent: "",
   },
   {
-    value: 'Other',
-    parent: '',
+    value: "Other",
+    parent: "",
   },
 ];
