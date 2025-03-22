@@ -18,7 +18,6 @@ export interface ITransactionUpdateRequest {
   category: string | null;
   subcategory: string | null;
   merchantName: string | null;
-  deleted: Date | null;
 }
 
 export interface ITransaction {
