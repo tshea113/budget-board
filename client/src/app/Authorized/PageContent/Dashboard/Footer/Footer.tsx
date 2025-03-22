@@ -1,7 +1,8 @@
 import classes from "./Footer.module.css";
 
-import { Group, Text } from "@mantine/core";
+import { ActionIcon, Group, Text } from "@mantine/core";
 import React from "react";
+import { SiGithub } from "@icons-pack/react-simple-icons";
 
 const Footer = (): React.ReactNode => {
   return (
@@ -9,6 +10,14 @@ const Footer = (): React.ReactNode => {
       <Text size="xs" fw={600}>
         {import.meta.env.VITE_VERSION}
       </Text>
+      <ActionIcon
+        component="a"
+        href="https://github.com/tshea113/budget-board"
+        variant="subtle"
+        color="var(--mantine-color-text)"
+      >
+        <SiGithub />
+      </ActionIcon>
     </Group>
   );
 };
