@@ -88,7 +88,7 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
             }
         }
 
-        if (account.Institution.Accounts.All(a => a.Deleted != null))
+        if (account.Institution?.Accounts.All(a => a.Deleted != null) ?? false)
         {
             account.Institution.Deleted = DateTime.Now.ToUniversalTime();
             account.Institution.Index = 0;
@@ -117,7 +117,10 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
             }
         }
 
-        account.Institution.Deleted = null;
+        if (account.Institution != null)
+        {
+            account.Institution.Deleted = null;
+        }
 
         await _userDataContext.SaveChangesAsync();
     }
