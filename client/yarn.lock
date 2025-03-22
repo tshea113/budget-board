@@ -830,6 +830,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@icons-pack/react-simple-icons@npm:^12.3.0":
+  version: 12.3.0
+  resolution: "@icons-pack/react-simple-icons@npm:12.3.0"
+  peerDependencies:
+    react: ^16.13 || ^17 || ^18 || ^19
+  checksum: 10c0/fa5b2723611a0d47cd5afe106cc8d3c6361b6122d2b88fd52f8e87f72f99f793a1d45db053e29bd3ed71bd5bc467e421adabf4d7d2cc3c1a608b5d8da7c79cb5
+  languageName: node
+  linkType: hard
+
 "@isaacs/cliui@npm:^8.0.2":
   version: 8.0.2
   resolution: "@isaacs/cliui@npm:8.0.2"
@@ -2396,6 +2405,7 @@ __metadata:
     "@dnd-kit/modifiers": "npm:^9.0.0"
     "@dnd-kit/sortable": "npm:^10.0.0"
     "@eslint/js": "npm:^9.22.0"
+    "@icons-pack/react-simple-icons": "npm:^12.3.0"
     "@mantine/carousel": "npm:^7.17.2"
     "@mantine/charts": "npm:^7.17.2"
     "@mantine/code-highlight": "npm:^7.17.2"
