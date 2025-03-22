@@ -5,10 +5,12 @@ import { Skeleton, Stack } from "@mantine/core";
 import { useDidUpdate, useDisclosure } from "@mantine/hooks";
 import { IGoalResponse } from "~/models/goal";
 import { useQuery } from "@tanstack/react-query";
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import React from "react";
 import GoalCard from "./GoalCard/GoalCard";
 import GoalsHeader from "./GoalsHeader/GoalsHeader";
+import { notifications } from "@mantine/notifications";
+import { translateAxiosError } from "~/helpers/requests";
 
 const Goals = (): React.ReactNode => {
   const [includeInterest, { toggle }] = useDisclosure();
@@ -30,6 +32,15 @@ const Goals = (): React.ReactNode => {
       return [];
     },
   });
+
+  React.useEffect(() => {
+    if (goalsQuery.isError) {
+      notifications.show({
+        color: "red",
+        message: translateAxiosError(goalsQuery.error as AxiosError),
+      });
+    }
+  }, [goalsQuery.isError]);
 
   useDidUpdate(() => {
     goalsQuery.refetch();

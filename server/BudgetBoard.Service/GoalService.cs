@@ -15,6 +15,25 @@ public class GoalService(ILogger<IGoalService> logger, UserDataContext userDataC
     public async Task CreateGoalAsync(Guid userGuid, IGoalCreateRequest createdGoal)
     {
         var userData = await GetCurrentUserAsync(userGuid.ToString());
+
+        if ((createdGoal.MonthlyContribution == 0 || !createdGoal.MonthlyContribution.HasValue) && !createdGoal.CompleteDate.HasValue)
+        {
+            _logger.LogError("Attempt to create goal without a monthly contribution and target date.");
+            throw new BudgetBoardServiceException("A goal must have a monthly contribution or target date.");
+        }
+
+        if (createdGoal.CompleteDate.HasValue && createdGoal.CompleteDate.Value < DateTime.Now)
+        {
+            _logger.LogError("Attempt to create goal with a target date in the past.");
+            throw new BudgetBoardServiceException("A goal cannot have a target date in the past.");
+        }
+
+        if (!createdGoal.AccountIds.Any())
+        {
+            _logger.LogError("Attempt to create goal without any accounts.");
+            throw new BudgetBoardServiceException("A goal must be associated with at least one account.");
+        }
+
         decimal runningBalance = 0.0M;
         var accounts = new List<Account>();
         foreach (var accountId in createdGoal.AccountIds)
@@ -92,6 +111,18 @@ public class GoalService(ILogger<IGoalService> logger, UserDataContext userDataC
             throw new BudgetBoardServiceException("The goal you are trying to update does not exist.");
         }
 
+        if (updatedGoal.CompleteDate.HasValue && updatedGoal.IsCompleteDateEditable && updatedGoal.CompleteDate.Value < DateTime.Now)
+        {
+            _logger.LogError("Attempt to update goal with a target date in the past.");
+            throw new BudgetBoardServiceException("A goal cannot have a target date in the past.");
+        }
+
+        if (((updatedGoal.MonthlyContribution ?? -1) <= 0) && updatedGoal.IsMonthlyContributionEditable)
+        {
+            _logger.LogError("Attempt to update goal without a monthly contribution.");
+            throw new BudgetBoardServiceException("A goal must have a monthly contribution greater than 0.");
+        }
+
         goal.Name = updatedGoal.Name;
         goal.Amount = updatedGoal.Amount;
         goal.CompleteDate = updatedGoal.IsCompleteDateEditable ? updatedGoal.CompleteDate : goal.CompleteDate;
@@ -145,14 +176,15 @@ public class GoalService(ILogger<IGoalService> logger, UserDataContext userDataC
         return foundUser;
     }
 
-    private static DateTime EstimateGoalCompleteDate(Goal goal, bool includeInterest = false)
+    private DateTime EstimateGoalCompleteDate(Goal goal, bool includeInterest = false)
     {
         if (goal.CompleteDate.HasValue) return goal.CompleteDate.Value;
 
         if (goal.MonthlyContribution == null || goal.MonthlyContribution == 0)
         {
             // If a complete date has not been set, then a monthly contribution is required.
-            throw new BudgetBoardServiceException("A target date cannot be estimated without a monthly contribution.");
+            _logger.LogError("A target date cannot be estimated without a monthly contribution.");
+            return DateTime.UnixEpoch;
         }
 
         decimal totalBalance = goal.Accounts.Sum(a => a.Balances.OrderByDescending(b => b.DateTime).FirstOrDefault()?.Amount ?? 0);
@@ -191,14 +223,15 @@ public class GoalService(ILogger<IGoalService> logger, UserDataContext userDataC
             .AddMonths((int)numberOfMonthsLeftWithoutInterest);
     }
 
-    private static decimal EstimateGoalMonthlyContribution(Goal goal, bool includeInterest = false)
+    private decimal EstimateGoalMonthlyContribution(Goal goal, bool includeInterest = false)
     {
         if (goal.MonthlyContribution.HasValue) return goal.MonthlyContribution.Value;
 
         // If a monthly contribution has not been set, then a complete date is required.
         if (!goal.CompleteDate.HasValue)
         {
-            throw new BudgetBoardServiceException("A monthly contribution cannot be estimated without a target date.");
+            _logger.LogError("A monthly contribution cannot be estimated without a target date.");
+            return 0;
         }
 
         decimal totalBalance = goal.Accounts.Sum(a => a.Balances.OrderByDescending(b => b.DateTime).FirstOrDefault()?.Amount ?? 0);
@@ -218,6 +251,12 @@ public class GoalService(ILogger<IGoalService> logger, UserDataContext userDataC
 
         var numberOfMonthsLeft = (goal.CompleteDate.Value.Year - DateTime.Now.Year) * 12 +
             (goal.CompleteDate.Value.Month - DateTime.Now.Month);
+
+        if (numberOfMonthsLeft <= 0)
+        {
+            // The goal is already past due, so you need to contribute the rest of the goal.
+            return amountLeft;
+        }
 
         var monthlyPaymentsWithoutInterest = amountLeft / numberOfMonthsLeft;
 
