@@ -1,5 +1,6 @@
 ﻿using BudgetBoard.Database.Models;
 using BudgetBoard.Service.Interfaces;
+using BudgetBoard.Service.Models;
 using BudgetBoard.WebAPI.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -23,9 +24,13 @@ public class SimpleFinController(ILogger<SimpleFinController> logger, UserManage
         {
             return Ok(await _simpleFinService.SyncAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty)));
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -38,9 +43,13 @@ public class SimpleFinController(ILogger<SimpleFinController> logger, UserManage
             await _simpleFinService.UpdateAccessTokenFromSetupToken(new Guid(_userManager.GetUserId(User) ?? string.Empty), setupToken);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 }

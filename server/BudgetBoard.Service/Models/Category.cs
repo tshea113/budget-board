@@ -3,11 +3,29 @@ using System.Text.Json.Serialization;
 
 namespace BudgetBoard.Service.Models;
 
-public interface ICategoryCreateRequest
+public interface ICategory
 {
-    string Value { get; set; }
-    string Parent { get; set; }
+    public string Value { get; set; }
+    public string Parent { get; set; }
 }
+
+public class CategoryBase : ICategory
+{
+    public string Value { get; set; }
+    public string Parent { get; set; }
+
+    [JsonConstructor]
+    public CategoryBase()
+    {
+        Value = string.Empty;
+        Parent = string.Empty;
+    }
+}
+
+public interface ICategoryCreateRequest : ICategory
+{
+}
+
 public class CategoryCreateRequest : ICategoryCreateRequest
 {
     public string Value { get; set; }

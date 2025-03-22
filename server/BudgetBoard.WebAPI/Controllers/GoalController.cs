@@ -25,9 +25,13 @@ public class GoalController(ILogger<GoalController> logger, UserManager<Applicat
             await _goalService.CreateGoalAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), newGoal);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -39,9 +43,13 @@ public class GoalController(ILogger<GoalController> logger, UserManager<Applicat
         {
             return Ok(await _goalService.ReadGoalsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), includeInterest));
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -54,9 +62,13 @@ public class GoalController(ILogger<GoalController> logger, UserManager<Applicat
             await _goalService.UpdateGoalAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), editedGoal);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -69,9 +81,13 @@ public class GoalController(ILogger<GoalController> logger, UserManager<Applicat
             await _goalService.DeleteGoalAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), guid);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 }

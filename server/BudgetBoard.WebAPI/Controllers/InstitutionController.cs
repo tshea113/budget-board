@@ -25,9 +25,13 @@ public class InstitutionController(ILogger<InstitutionController> logger, UserMa
             await _institutionService.CreateInstitutionAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), createdInstitution);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -39,9 +43,13 @@ public class InstitutionController(ILogger<InstitutionController> logger, UserMa
         {
             return Ok(await _institutionService.ReadInstitutionsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty)));
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -53,9 +61,13 @@ public class InstitutionController(ILogger<InstitutionController> logger, UserMa
         {
             return Ok(await _institutionService.ReadInstitutionsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), guid));
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -68,9 +80,13 @@ public class InstitutionController(ILogger<InstitutionController> logger, UserMa
             await _institutionService.UpdateInstitutionAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), updatedInstitution);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -83,9 +99,13 @@ public class InstitutionController(ILogger<InstitutionController> logger, UserMa
             await _institutionService.DeleteInstitutionAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), guid, deleteTransactions);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 
@@ -99,9 +119,13 @@ public class InstitutionController(ILogger<InstitutionController> logger, UserMa
             await _institutionService.OrderInstitutionsAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), institutions);
             return Ok();
         }
-        catch (Exception ex)
+        catch (BudgetBoardServiceException bbex)
         {
-            return Helpers.BuildErrorResponse(_logger, ex.Message);
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
         }
     }
 }

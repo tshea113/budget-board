@@ -39,7 +39,7 @@ public class GoalServiceTests
         Func<Task> act = async () => await goalService.CreateGoalAsync(Guid.NewGuid(), goal);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("Provided user not found.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("Provided user not found.");
     }
 
     [Fact]
@@ -83,7 +83,7 @@ public class GoalServiceTests
         Func<Task> act = async () => await goalService.CreateGoalAsync(helper.demoUser.Id, goal);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("The account you are trying to use does not exist.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The account you are trying to use does not exist.");
     }
 
     [Fact]
@@ -285,7 +285,7 @@ public class GoalServiceTests
         Func<Task> act = async () => await goalService.UpdateGoalAsync(helper.demoUser.Id, updatedGoal);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("The goal you are trying to update does not exist.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The goal you are trying to update does not exist.");
     }
 
     [Fact]
@@ -392,7 +392,7 @@ public class GoalServiceTests
         Func<Task> act = async () => await goalService.DeleteGoalAsync(helper.demoUser.Id, Guid.NewGuid());
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("The goal you are trying to delete does not exist.");
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The goal you are trying to delete does not exist.");
     }
 
 }
