@@ -74,6 +74,7 @@ public class InstitutionResponse : IInstitutionResponse
     public Guid ID { get; set; }
     public string Name { get; set; }
     public int Index { get; set; }
+    public DateTime? Deleted { get; set; }
     public Guid UserID { get; set; }
     public IEnumerable<IAccountResponse> Accounts { get; set; }
 
@@ -83,6 +84,7 @@ public class InstitutionResponse : IInstitutionResponse
         ID = Guid.NewGuid();
         Name = string.Empty;
         Index = 0;
+        Deleted = null;
         UserID = Guid.NewGuid();
         Accounts = [];
     }
@@ -92,6 +94,7 @@ public class InstitutionResponse : IInstitutionResponse
         ID = institution.ID;
         Name = institution.Name;
         Index = institution.Index;
+        Deleted = institution.Deleted;
         UserID = institution.UserID;
         Accounts = institution.Accounts.Select(a => new AccountResponse(a));
     }
