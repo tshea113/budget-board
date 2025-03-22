@@ -89,6 +89,12 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
             }
         }
 
+        if (account.Institution?.Accounts.All(a => a.Deleted != null) ?? false)
+        {
+            account.Institution.Deleted = DateTime.Now.ToUniversalTime();
+            account.Institution.Index = 0;
+        }
+
         await _userDataContext.SaveChangesAsync();
     }
 
@@ -110,6 +116,11 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
             {
                 transaction.Deleted = null;
             }
+        }
+
+        if (account.Institution != null)
+        {
+            account.Institution.Deleted = null;
         }
 
         await _userDataContext.SaveChangesAsync();
@@ -144,6 +155,8 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
                 .ThenInclude(a => a.Transactions)
                 .Include(u => u.Accounts)
                 .ThenInclude(a => a.Balances)
+                .Include(u => u.Accounts)
+                .ThenInclude(a => a.Institution)
                 .AsSplitQuery()
                 .ToListAsync();
             foundUser = users.FirstOrDefault(u => u.Id == new Guid(id));

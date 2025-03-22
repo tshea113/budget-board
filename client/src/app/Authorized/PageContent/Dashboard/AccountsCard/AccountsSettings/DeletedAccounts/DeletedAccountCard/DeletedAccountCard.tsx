@@ -42,7 +42,9 @@ const DeletedAccountCard = (
     <Card className={classes.card} shadow="xs" radius="lg">
       <Text className={classes.column}>{props.deletedAccount.name}</Text>
       <Text className={classes.column} size="sm">
-        {`${getDaysSinceDate(props.deletedAccount.deleted)} days since deleted`}
+        {`${getDaysSinceDate(
+          props.deletedAccount.deleted!
+        )} days since deleted`}
       </Text>
       <Group className={classes.button}>
         <Button

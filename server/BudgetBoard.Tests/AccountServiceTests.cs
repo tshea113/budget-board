@@ -254,6 +254,65 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
     }
 
     [Fact]
+    public async Task DeleteAccountAsync_DeleteLastAccount_ShouldDeleteInstitution()
+    {
+        // Arrange
+        var helper = new TestHelper();
+        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
+
+        var institutionFaker = new InstitutionFaker();
+        var institution = institutionFaker.Generate();
+        institution.UserID = helper.demoUser.Id;
+
+        var accountFaker = new AccountFaker();
+        var account = accountFaker.Generate();
+        account.UserID = helper.demoUser.Id;
+        account.InstitutionID = institution.ID;
+
+        helper.UserDataContext.Institutions.Add(institution);
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
+
+        // Act
+        await accountService.DeleteAccountAsync(helper.demoUser.Id, account.ID);
+
+        // Assert
+        helper.demoUser.Institutions.Single(i => i.ID == institution.ID).Deleted.Should().BeCloseTo(DateTime.Now.ToUniversalTime(), TimeSpan.FromMinutes(1));
+    }
+
+    [Fact]
+    public async Task DeleteAccountAsync_DeleteNotLastAccount_ShouldNotDeleteInstitution()
+    {
+        // Arrange
+        var helper = new TestHelper();
+        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
+
+        var institutionFaker = new InstitutionFaker();
+        var institution = institutionFaker.Generate();
+        institution.UserID = helper.demoUser.Id;
+
+        var accountFaker = new AccountFaker();
+        var account = accountFaker.Generate();
+        account.UserID = helper.demoUser.Id;
+        account.InstitutionID = institution.ID;
+
+        var secondAccount = accountFaker.Generate();
+        secondAccount.UserID = helper.demoUser.Id;
+        secondAccount.InstitutionID = institution.ID;
+
+        helper.UserDataContext.Institutions.Add(institution);
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.Accounts.Add(secondAccount);
+        helper.UserDataContext.SaveChanges();
+
+        // Act
+        await accountService.DeleteAccountAsync(helper.demoUser.Id, account.ID);
+
+        // Assert
+        helper.demoUser.Institutions.Single(i => i.ID == institution.ID).Deleted.Should().BeNull();
+    }
+
+    [Fact]
     public async Task RestoreAccountAsync_ExistingAccount_HappyPath()
     {
         // Arrange
@@ -327,6 +386,34 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         // Assert
         helper.demoUser.Accounts.Single(a => a.ID == account.ID).Deleted.Should().BeNull();
         helper.demoUser.Accounts.Single(a => a.ID == account.ID).Transactions.Single(t => t.ID == transaction.ID).Deleted.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task RestoreAccountAsync_RestoreAccount_ShouldRestoreInstitution()
+    {
+        // Arrange
+        var helper = new TestHelper();
+        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
+
+        var institutionFaker = new InstitutionFaker();
+        var institution = institutionFaker.Generate();
+        institution.UserID = helper.demoUser.Id;
+        institution.Deleted = DateTime.Now.ToUniversalTime();
+
+        var accountFaker = new AccountFaker();
+        var account = accountFaker.Generate();
+        account.UserID = helper.demoUser.Id;
+        account.InstitutionID = institution.ID;
+
+        helper.UserDataContext.Institutions.Add(institution);
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
+
+        // Act
+        await accountService.RestoreAccountAsync(helper.demoUser.Id, account.ID);
+
+        // Assert
+        helper.demoUser.Institutions.Single(i => i.ID == institution.ID).Deleted.Should().BeNull();
     }
 
     [Fact]
