@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using BudgetBoard.Database.Models;
 using BudgetBoard.IntegrationTests.Fakers;
 using BudgetBoard.Service;
 using BudgetBoard.Service.Interfaces;
@@ -43,13 +44,80 @@ public class TransactionCategoryServiceTests
         var helper = new TestHelper();
         var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.UserDataContext);
 
+        var transactionCategoryFaker = new TransactionCategoryFaker();
+        var parentCategory = transactionCategoryFaker.Generate();
+        parentCategory.UserID = helper.demoUser.Id;
+
+        helper.UserDataContext.TransactionCategories.Add(parentCategory);
+        helper.UserDataContext.SaveChanges();
+
         var categoryCreateRequest = _categoryCreateRequestFaker.Generate();
+        categoryCreateRequest.Parent = parentCategory.Value;
 
         // Act
         await transactionCategoryService.CreateTransactionCategoryAsync(helper.demoUser.Id, categoryCreateRequest);
 
         // Assert
-        helper.UserDataContext.TransactionCategories.Should().ContainSingle();
+        helper.UserDataContext.TransactionCategories.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public async Task CreateTransactionCategoryAsync_WhenCreatingDuplicate_ShouldThrowError()
+    {
+        // Arrange
+        var helper = new TestHelper();
+        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.UserDataContext);
+
+        var categoryCreateRequest = _categoryCreateRequestFaker.Generate();
+        helper.UserDataContext.TransactionCategories.Add(new Category
+        {
+            Value = categoryCreateRequest.Value,
+            Parent = categoryCreateRequest.Parent,
+            UserID = helper.demoUser.Id
+        });
+        helper.UserDataContext.SaveChanges();
+
+        // Act
+        Func<Task> act = async () => await transactionCategoryService.CreateTransactionCategoryAsync(helper.demoUser.Id, categoryCreateRequest);
+
+        // Assert
+        await act.Should().ThrowAsync<Exception>().WithMessage("Transaction category already exists.");
+    }
+
+    [Fact]
+    public async Task CreateTransactionCategoryAsync_WhenParentSameAsValue_ShouldThrowError()
+    {
+        // Arrange
+        var helper = new TestHelper();
+        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.UserDataContext);
+
+        var categoryCreateRequest = _categoryCreateRequestFaker.Generate();
+        categoryCreateRequest.Parent = categoryCreateRequest.Value;
+
+        // Act
+        Func<Task> act = async () => await transactionCategoryService.CreateTransactionCategoryAsync(helper.demoUser.Id, categoryCreateRequest);
+
+        // Assert
+        await act.Should().ThrowAsync<Exception>().WithMessage("Transaction category cannot have the same name as its parent category.");
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public async Task CreateTransactionCategoryAsync_WhenValueNullOrEmpty_ShouldThrowError(string value)
+    {
+        // Arrange
+        var helper = new TestHelper();
+        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.UserDataContext);
+
+        var categoryCreateRequest = _categoryCreateRequestFaker.Generate();
+        categoryCreateRequest.Value = value;
+
+        // Act
+        Func<Task> act = async () => await transactionCategoryService.CreateTransactionCategoryAsync(helper.demoUser.Id, categoryCreateRequest);
+
+        // Assert
+        await act.Should().ThrowAsync<Exception>().WithMessage("Transaction category must have a name.");
     }
 
     [Fact]
