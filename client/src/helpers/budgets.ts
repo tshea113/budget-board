@@ -137,16 +137,18 @@ export const sumBudgetAmounts = (budgetData: IBudget[]): number => {
  * @returns {string} - The color ("red" or "green") to visually represent the budget status.
  */
 export const getBudgetValueColor = (
-  percentComplete: number,
+  amount: number,
+  total: number,
   isIncome: boolean
 ) => {
   if (isIncome) {
-    if (percentComplete < 100) {
+    if (amount < total) {
       return "red";
     }
     return "green";
   }
-  if (percentComplete <= 100) {
+
+  if (amount * -1 <= total) {
     return "green";
   }
   return "red";

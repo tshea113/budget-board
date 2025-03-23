@@ -73,6 +73,7 @@ const BudgetTotalCard = (props: BudgetTotalCardProps): React.ReactNode => {
             amount={totalTransactionsTotal}
             total={totalBudgetsTotal}
             isIncome
+            hideProgress
           />
         </Card>
       )}
