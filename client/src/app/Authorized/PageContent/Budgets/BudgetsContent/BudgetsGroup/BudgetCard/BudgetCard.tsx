@@ -174,7 +174,7 @@ const BudgetCard = (props: BudgetCardProps): React.ReactNode => {
             <Flex className={classes.numberContainer}>
               <Text
                 className={classes.text}
-                c={getBudgetValueColor(percentComplete, props.isIncome)}
+                c={getBudgetValueColor(props.amount, limit, props.isIncome)}
               >
                 {convertNumberToCurrency(
                   Math.round(limit - props.amount * (props.isIncome ? 1 : -1)),
@@ -187,7 +187,7 @@ const BudgetCard = (props: BudgetCardProps): React.ReactNode => {
         <Progress.Root size={16} radius="xl">
           <Progress.Section
             value={percentComplete}
-            color={getBudgetValueColor(percentComplete, props.isIncome)}
+            color={getBudgetValueColor(props.amount, limit, props.isIncome)}
           >
             <Progress.Label>{percentComplete.toFixed(0)}%</Progress.Label>
           </Progress.Section>

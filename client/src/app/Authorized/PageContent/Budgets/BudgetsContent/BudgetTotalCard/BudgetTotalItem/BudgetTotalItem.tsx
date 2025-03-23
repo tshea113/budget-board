@@ -9,6 +9,7 @@ interface BudgetTotalItemProps {
   amount: number;
   total: number;
   isIncome: boolean;
+  hideProgress?: boolean;
 }
 
 const BudgetTotalItem = (props: BudgetTotalItemProps): React.ReactNode => {
@@ -25,7 +26,7 @@ const BudgetTotalItem = (props: BudgetTotalItemProps): React.ReactNode => {
         <Flex gap="0.25rem">
           <Text
             className={classes.text}
-            c={getBudgetValueColor(percentComplete, props.isIncome)}
+            c={getBudgetValueColor(props.amount, props.total, props.isIncome)}
           >
             {convertNumberToCurrency(
               props.amount * (props.isIncome ? 1 : -1),
@@ -38,14 +39,20 @@ const BudgetTotalItem = (props: BudgetTotalItemProps): React.ReactNode => {
           </Text>
         </Flex>
       </Group>
-      <Progress.Root size={16} radius="xl">
-        <Progress.Section
-          value={percentComplete > 100 ? 100 : percentComplete}
-          color={getBudgetValueColor(percentComplete, props.isIncome)}
-        >
-          <Progress.Label>{percentComplete.toFixed(0)}%</Progress.Label>
-        </Progress.Section>
-      </Progress.Root>
+      {!props.hideProgress && props.total > 0 && (
+        <Progress.Root size={16} radius="xl">
+          <Progress.Section
+            value={percentComplete > 100 ? 100 : percentComplete}
+            color={getBudgetValueColor(
+              props.amount,
+              props.total,
+              props.isIncome
+            )}
+          >
+            <Progress.Label>{percentComplete.toFixed(0)}%</Progress.Label>
+          </Progress.Section>
+        </Progress.Root>
+      )}
     </Stack>
   );
 };
