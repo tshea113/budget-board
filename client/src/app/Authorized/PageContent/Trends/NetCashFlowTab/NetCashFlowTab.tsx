@@ -68,8 +68,7 @@ const NetCashFlowTab = (): React.ReactNode => {
           selectedMonths,
           transactionsWithoutHidden
         )}
-        showCopy={false}
-        isPending={false}
+        isPending={transactionsQuery.isPending}
         allowSelectMultiple
       />
       <Group w="100%" justify="end">

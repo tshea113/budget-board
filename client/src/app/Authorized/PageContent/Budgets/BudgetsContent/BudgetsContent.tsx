@@ -98,7 +98,7 @@ const BudgetsContent = (props: BudgetsContentProps) => {
           budgets={props.budgets}
           categories={props.categories}
           transactions={props.transactions}
-          isPending={false}
+          isPending={props.isPending ?? false}
         />
       </Stack>
     </Group>
