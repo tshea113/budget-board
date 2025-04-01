@@ -57,7 +57,7 @@ const MonthToolcards = (props: MonthToolcardsProps): React.ReactNode => {
     <Group className={classes.root} ref={ref}>
       <ActionIcon
         className={classes.pageButton}
-        variant="default"
+        variant="light"
         onClick={() => setIndex(index + 1)}
       >
         <ChevronLeftIcon />
@@ -80,7 +80,8 @@ const MonthToolcards = (props: MonthToolcardsProps): React.ReactNode => {
       </Group>
       <ActionIcon
         className={classes.pageButton}
-        variant="default"
+        variant="light"
+        disabled={index <= 0}
         onClick={() => setIndex(index - 1)}
       >
         <ChevronRightIcon />
