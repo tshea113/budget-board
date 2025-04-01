@@ -12,7 +12,6 @@ interface MonthToolcardsProps {
   selectedDates: Date[];
   setSelectedDates: React.Dispatch<React.SetStateAction<Date[]>>;
   timeToMonthlyTotalsMap: Map<number, number>;
-  showCopy: boolean;
   isPending: boolean;
   allowSelectMultiple: boolean;
 }
