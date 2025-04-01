@@ -98,12 +98,13 @@ export const getUniqueYears = (dates: Date[]): number[] =>
 /**
  * Returns the total number of days in a specified month and year.
  *
- * @param {number} month - The month (1-12).
+ * @param {number} monthIndex - The month index (0-11).
  * @param {number} year - The full year (e.g., 2023).
  * @returns {number} The number of days in the given month of that year.
  */
-export const getDaysInMonth = (month: number, year: number): number =>
-  new Date(year, month, 0).getDate();
+export const getDaysInMonth = (monthIndex: number, year: number): number =>
+  // Setting the date to 0 of the next month gives us the last day of the current month.
+  new Date(year, monthIndex + 1, 0).getDate();
 
 /**
  * Returns a localized month and year string for the provided date.
