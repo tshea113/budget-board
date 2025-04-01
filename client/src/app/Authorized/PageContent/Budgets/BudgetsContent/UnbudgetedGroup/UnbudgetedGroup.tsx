@@ -1,6 +1,6 @@
 import classes from "./UnbudgetedGroup.module.css";
 
-import { Accordion, Stack } from "@mantine/core";
+import { Accordion, Stack, Text } from "@mantine/core";
 import React from "react";
 import UnbudgetedGroupControl from "./UnbudgetedGroupControl/UnbudgetedGroupControl";
 import UnbudgetedCard from "./UnbudgetedCard/UnbudgetedCard";
@@ -18,6 +18,10 @@ const UnbudgetedGroup = (props: UnbudgetedGroupProps): React.ReactNode => {
     props.unbudgetedCategoryToTransactionsTotalMap.values()
   ).reduce((acc, val) => acc + val, 0);
 
+  const unbudgets = Array.from(
+    props.unbudgetedCategoryToTransactionsTotalMap
+  ).filter((unbudget) => Math.round(unbudget[1]) !== 0);
+
   return (
     <Accordion variant="separated" radius="md">
       <Accordion.Item
@@ -30,9 +34,8 @@ const UnbudgetedGroup = (props: UnbudgetedGroupProps): React.ReactNode => {
         </Accordion.Control>
         <Accordion.Panel className={classes.content}>
           <Stack className={classes.unbudgetCards}>
-            {Array.from(props.unbudgetedCategoryToTransactionsTotalMap)
-              .filter((unbudget) => Math.round(unbudget[1]) !== 0)
-              .map(([category, total]) => (
+            {unbudgets.length > 0 ? (
+              unbudgets.map(([category, total]) => (
                 <UnbudgetedCard
                   key={category}
                   category={getFormattedCategoryValue(
@@ -42,7 +45,10 @@ const UnbudgetedGroup = (props: UnbudgetedGroupProps): React.ReactNode => {
                   amount={total}
                   selectedDate={props.selectedDate}
                 />
-              ))}
+              ))
+            ) : (
+              <Text>No unbudgeted transactions found.</Text>
+            )}
           </Stack>
         </Accordion.Panel>
       </Accordion.Item>
