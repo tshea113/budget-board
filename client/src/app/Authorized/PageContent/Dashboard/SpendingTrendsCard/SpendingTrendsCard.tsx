@@ -75,6 +75,18 @@ const SpendingTrendsCard = (): React.ReactNode => {
       getDaysInMonth(months[1]?.getMonth() ?? 0, months[1]?.getFullYear() ?? 0)
     );
 
+    if (
+      today >
+      getDaysInMonth(months[1]?.getMonth() ?? 0, months[1]?.getFullYear() ?? 0)
+    ) {
+      // If today is greater than the last day of the last month, we need to compare to the
+      // last day of the last month.
+      return (
+        (thisMonthRollingTotal.at(today - 1)?.amount ?? 0) -
+        (lastMonthRollingTotal.at(-1)?.amount ?? 0)
+      );
+    }
+
     return (
       (thisMonthRollingTotal.at(today - 1)?.amount ?? 0) -
       (lastMonthRollingTotal.at(today - 1)?.amount ?? 0)
