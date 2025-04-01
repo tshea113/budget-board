@@ -116,7 +116,11 @@ const Budgets = (): React.ReactNode => {
         selectedDates={selectedDates}
         setSelectedDates={setSelectedDates}
         timeToMonthlyTotalsMap={timeToMonthlyTotalsMap}
-        showCopy={budgetsQuery.data.length === 0 && selectedDates.length === 1}
+        showCopy={
+          !budgetsQuery.isPending &&
+          budgetsQuery.data.length === 0 &&
+          selectedDates.length === 1
+        }
         isPending={
           budgetsQuery.isPending || transactionCategoriesQuery.isPending
         }
