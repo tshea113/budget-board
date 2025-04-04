@@ -3,6 +3,7 @@ import SortableHandle from "~/components/Sortable/SortableHandle";
 import SortableItem from "~/components/Sortable/SortableItem";
 import { translateAxiosError } from "~/helpers/requests";
 import {
+  Badge,
   Button,
   Card,
   Checkbox,
@@ -144,6 +145,9 @@ const AccountSettingsCard = (
               w="100%"
               gap={10}
             >
+              <Badge>
+                {props.account.syncID?.length > 0 ? "SimpleFIN" : "Manual"}
+              </Badge>
               <Checkbox
                 label="Hide Account?"
                 checked={accountHideAccount}

@@ -1,7 +1,7 @@
 import { ICategory } from "./category";
 
 export interface IAccountCreateRequest {
-  syncId?: string;
+  syncID?: string;
   name: string;
   institutionID?: string;
   type: string;
@@ -26,7 +26,7 @@ export interface IAccountIndexRequest {
 
 export interface IAccount {
   id: string;
-  syncId: string;
+  syncID: string;
   name: string;
   institutionID: string;
   type: string;
