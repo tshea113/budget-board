@@ -1,7 +1,6 @@
 ﻿using BudgetBoard.Database.Models;
 using BudgetBoard.Service.Interfaces;
 using BudgetBoard.Service.Models;
-using BudgetBoard.Service.Types;
 using BudgetBoard.WebAPI.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

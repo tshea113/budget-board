@@ -18,7 +18,6 @@ public class InstitutionService(ILogger<IInstitutionService> logger, UserDataCon
         var institution = new Institution
         {
             Name = request.Name,
-            Index = request.Index,
             UserID = userGuid
         };
 

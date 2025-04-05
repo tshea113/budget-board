@@ -1,5 +1,4 @@
 ﻿using BudgetBoard.Database.Models;
-using BudgetBoard.Service.Types;
 using System.Text.Json.Serialization;
 
 namespace BudgetBoard.Service.Models;
@@ -7,21 +6,15 @@ namespace BudgetBoard.Service.Models;
 public interface IInstitutionCreateRequest
 {
     string Name { get; set; }
-    int Index { get; set; }
-    Guid UserID { get; set; }
 }
 public class InstitutionCreateRequest : IInstitutionCreateRequest
 {
     public string Name { get; set; }
-    public int Index { get; set; }
-    public Guid UserID { get; set; }
 
     [JsonConstructor]
     public InstitutionCreateRequest()
     {
         Name = string.Empty;
-        Index = 0;
-        UserID = Guid.NewGuid();
 
     }
 }

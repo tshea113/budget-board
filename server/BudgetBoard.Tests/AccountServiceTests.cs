@@ -3,7 +3,6 @@ using BudgetBoard.IntegrationTests.Fakers;
 using BudgetBoard.Service;
 using BudgetBoard.Service.Interfaces;
 using BudgetBoard.Service.Models;
-using BudgetBoard.Service.Types;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;

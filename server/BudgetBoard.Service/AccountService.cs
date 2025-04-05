@@ -2,7 +2,6 @@
 using BudgetBoard.Database.Models;
 using BudgetBoard.Service.Interfaces;
 using BudgetBoard.Service.Models;
-using BudgetBoard.Service.Types;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -16,6 +15,27 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
     public async Task CreateAccountAsync(Guid userGuid, IAccountCreateRequest account)
     {
         var userData = await GetCurrentUserAsync(userGuid.ToString());
+
+        if (userData.Accounts.Any(a => a.Name.Equals(account.Name, StringComparison.OrdinalIgnoreCase)))
+        {
+            _logger.LogError("Attempted to create an account with a duplicate name.");
+            throw new BudgetBoardServiceException("An account with this name already exists!");
+        }
+
+        if (!userData.Institutions.Any(i => i.ID == account.InstitutionID))
+        {
+            _logger.LogError("Attempted to create an account with an invalid institution ID.");
+            throw new BudgetBoardServiceException("Invalid Institution ID.");
+        }
+
+        var institution = userData.Institutions.Single(i => i.ID == account.InstitutionID);
+
+        if (institution.Deleted.HasValue)
+        {
+            // If the institution is deleted, we need to restore it.
+            institution.Deleted = null;
+        }
+
         var newAccount = new Account
         {
             SyncID = account.SyncID,
@@ -25,6 +45,7 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
             Subtype = account.Subtype,
             HideTransactions = account.HideTransactions,
             HideAccount = account.HideAccount,
+            Source = AccountSource.Manual,
             UserID = userData.Id
         };
 
@@ -157,6 +178,7 @@ public class AccountService(ILogger<IAccountService> logger, UserDataContext use
                 .ThenInclude(a => a.Balances)
                 .Include(u => u.Accounts)
                 .ThenInclude(a => a.Institution)
+                .Include(u => u.Institutions)
                 .AsSplitQuery()
                 .ToListAsync();
             foundUser = users.FirstOrDefault(u => u.Id == new Guid(id));

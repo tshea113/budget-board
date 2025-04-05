@@ -1,5 +1,4 @@
 ﻿using BudgetBoard.Database.Models;
-using BudgetBoard.Service.Types;
 using System.Text.Json.Serialization;
 
 namespace BudgetBoard.Service.Models;
