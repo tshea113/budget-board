@@ -1,5 +1,10 @@
 import { ICategory } from "./category";
 
+export enum AccountSource {
+  Manual = "Manual",
+  SimpleFIN = "SimpleFIN",
+}
+
 export interface IAccountCreateRequest {
   syncID?: string;
   name: string;
