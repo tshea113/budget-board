@@ -6,6 +6,7 @@ import React from "react";
 import AccountsSettingsModal from "./AccountsSettingsModal/AccountsSettingsModal";
 import { IInstitution } from "~/models/institution";
 import { IAccount } from "~/models/account";
+import CreateAccountModal from "./CreateAccountModal/CreateAccountModal";
 
 interface AccountsSettingsProps {
   sortedFilteredInstitutions: IInstitution[];
@@ -13,7 +14,7 @@ interface AccountsSettingsProps {
 }
 
 const AccountsSettings = (props: AccountsSettingsProps): React.ReactNode => {
-  const stack = useModalsStack(["settings"]);
+  const stack = useModalsStack(["settings", "createAccount"]);
 
   return (
     <>
@@ -27,8 +28,10 @@ const AccountsSettings = (props: AccountsSettingsProps): React.ReactNode => {
       <AccountsSettingsModal
         sortedFilteredInstitutions={props.sortedFilteredInstitutions}
         accounts={props.accounts}
+        onCreateAccountClick={() => stack.open("createAccount")}
         {...stack.register("settings")}
       />
+      <CreateAccountModal {...stack.register("createAccount")} />
     </>
   );
 };

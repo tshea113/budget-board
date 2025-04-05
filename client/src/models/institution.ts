@@ -13,3 +13,7 @@ export interface InstitutionIndexRequest {
   id: string;
   index: number;
 }
+
+export interface IInstitutionCreateRequest {
+  name: string;
+}

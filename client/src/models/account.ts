@@ -37,6 +37,7 @@ export interface IAccount {
   hideAccount: boolean;
   deleted: Date | null;
   index: number;
+  source: string;
   userID: string;
 }
 

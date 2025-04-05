@@ -1,4 +1,6 @@
-import { Button, Group, Modal, Stack } from "@mantine/core";
+import classes from "./AccountsSettingsModal.module.css";
+
+import { Button, Flex, Group, Modal, Stack } from "@mantine/core";
 import React from "react";
 import DeletedAccounts from "./DeletedAccounts/DeletedAccounts";
 import { IAccount } from "~/models/account";
@@ -16,6 +18,7 @@ interface AccountsSettingsProps<T extends string> {
   opened: boolean;
   onClose: () => void;
   stackId: T;
+  onCreateAccountClick: () => void;
   sortedFilteredInstitutions: IInstitution[];
   accounts: IAccount[];
 }
@@ -75,15 +78,21 @@ const AccountsSettingsModal = <T extends string>(
     >
       <Stack gap={20}>
         <Group w="100%" gap={10} justify="space-between">
-          <Button w="49%">Create Account</Button>
-          <Button
-            w="49%"
-            onClick={onReorderClick}
-            color={isSortable ? "green" : ""}
-            loading={doIndexInstitutions.isPending}
-          >
-            {isSortable ? "Save Changes" : "Reorder"}
-          </Button>
+          <Flex className={classes.button}>
+            <Button w="100%" onClick={props.onCreateAccountClick}>
+              Create Account
+            </Button>
+          </Flex>
+          <Flex className={classes.button}>
+            <Button
+              w="100%"
+              onClick={onReorderClick}
+              color={isSortable ? "green" : ""}
+              loading={doIndexInstitutions.isPending}
+            >
+              {isSortable ? "Save Changes" : "Reorder"}
+            </Button>
+          </Flex>
         </Group>
         <Stack gap={10}>
           <Sortable

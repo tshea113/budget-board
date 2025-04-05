@@ -145,9 +145,9 @@ const AccountSettingsCard = (
               w="100%"
               gap={10}
             >
-              <Badge>
-                {props.account.syncID?.length > 0 ? "SimpleFIN" : "Manual"}
-              </Badge>
+              {props.account.source?.length > 0 && (
+                <Badge>{props.account.source}</Badge>
+              )}
               <Checkbox
                 label="Hide Account?"
                 checked={accountHideAccount}
