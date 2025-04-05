@@ -4,3 +4,9 @@ export interface IBalance {
   dateTime: Date;
   accountID: string;
 }
+
+export interface IBalanceCreateRequest {
+  amount: number;
+  dateTime: Date;
+  accountID: string;
+}

@@ -35,6 +35,22 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         };
 
         account.Transactions.Add(newTransaction);
+
+        // Manual accounts need to manually update the balance
+        if (account.Source == AccountSource.Manual)
+        {
+            var currentBalance = account.Balances.OrderByDescending(b => b.DateTime).FirstOrDefault()?.Amount ?? 0;
+
+            var newBalance = new Balance
+            {
+                Amount = transaction.Amount + currentBalance,
+                DateTime = transaction.Date,
+                AccountID = account.ID
+            };
+
+            account.Balances.Add(newBalance);
+        }
+
         await _userDataContext.SaveChangesAsync();
     }
 
@@ -104,6 +120,37 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         }
 
         transaction.Deleted = DateTime.Now.ToUniversalTime();
+
+        var account = userData.Accounts.FirstOrDefault(a => a.ID == transaction.AccountID);
+        if (account == null)
+        {
+            _logger.LogError("Transaction has no associated account.");
+            throw new BudgetBoardServiceException("The transaction you are deleting has no associated account.");
+        }
+
+        // Manual accounts need to manually update the balance
+        if (account.Source == AccountSource.Manual)
+        {
+            var balances = account.Balances.OrderByDescending(b => b.DateTime);
+
+            // First, delete the balance for the deleted transaction.
+            var balanceForTransaction = balances.FirstOrDefault(b => b.DateTime == transaction.Date);
+            if (balanceForTransaction == default(Balance))
+            {
+                _logger.LogError("No balance for the date of the deleted transaction");
+                throw new BudgetBoardServiceException("The transaction you are deleting has no associated balance.");
+            }
+
+            account.Balances.Remove(balanceForTransaction);
+
+            // Then, update all following balances to not include the deleted transaction.
+            var balancesAfterDeleted = balances.Where(b => b.DateTime > transaction.Date).ToList();
+            foreach (var balance in balancesAfterDeleted)
+            {
+                balance.Amount -= transaction.Amount;
+            }
+        }
+
         await _userDataContext.SaveChangesAsync();
     }
 
@@ -132,6 +179,8 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
             users = await _userDataContext.ApplicationUsers
                 .Include(u => u.Accounts)
                 .ThenInclude(a => a.Transactions)
+                .Include(u => u.Accounts)
+                .ThenInclude(a => a.Balances)
                 .AsSplitQuery()
                 .ToListAsync();
             foundUser = users.FirstOrDefault(u => u.Id == new Guid(id));
