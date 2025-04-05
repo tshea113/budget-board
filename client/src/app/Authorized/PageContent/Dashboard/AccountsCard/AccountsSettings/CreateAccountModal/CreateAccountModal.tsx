@@ -128,7 +128,7 @@ const CreateAccountModal = (props: CreateAccountModalProps) => {
   };
 
   if (institutionQuery.isPending) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   return (
