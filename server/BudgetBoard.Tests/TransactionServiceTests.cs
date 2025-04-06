@@ -79,6 +79,74 @@ public class TransactionServiceTests
     }
 
     [Fact]
+    public async Task CreateTransactionAsync_WhenNewTransaction_ShouldUpdateBalance()
+    {
+        // Arrange
+        var helper = new TestHelper();
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
+
+        var accountFaker = new AccountFaker();
+        var account = accountFaker.Generate();
+        account.UserID = helper.demoUser.Id;
+        account.Source = AccountSource.Manual;
+
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
+
+        var transaction = _transactionCreateRequestFaker.Generate();
+        transaction.AccountID = account.ID;
+
+        // Act
+        await transactionService.CreateTransactionAsync(helper.demoUser.Id, transaction);
+        // Assert
+        helper.UserDataContext.Balances.Should().ContainSingle();
+        helper.UserDataContext.Balances.Single().DateTime.Should().Be(transaction.Date);
+        helper.UserDataContext.Balances.Single().Amount.Should().Be(transaction.Amount);
+    }
+
+    [Fact]
+    public async Task CreateTransactionAsync_WhenNewTransactionIsNotLatest_ShouldUpdateAllSubsequentBalances()
+    {
+        // Arrange
+        var helper = new TestHelper();
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
+
+        var accountFaker = new AccountFaker();
+        var account = accountFaker.Generate();
+        account.UserID = helper.demoUser.Id;
+        account.Source = AccountSource.Manual;
+
+        var balanceFaker = new BalanceFaker() { AccountIds = [account.ID] };
+        var balances = balanceFaker.Generate(5);
+
+        balances[0].DateTime = DateTime.Now.AddDays(-10);
+        balances[1].DateTime = DateTime.Now.AddDays(-5);
+        balances[2].DateTime = DateTime.Now.AddDays(-3);
+        balances[3].DateTime = DateTime.Now.AddDays(-1);
+        balances[4].DateTime = DateTime.Now;
+
+        account.Balances = balances;
+
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
+
+        var transaction = _transactionCreateRequestFaker.Generate();
+        transaction.AccountID = account.ID;
+        transaction.Date = DateTime.Now.AddDays(-2);
+
+        var oldBalance = balances[4].Amount;
+
+        // Act
+        await transactionService.CreateTransactionAsync(helper.demoUser.Id, transaction);
+
+        // Assert
+        helper.UserDataContext.Balances.Should().HaveCount(6);
+        helper.UserDataContext.Balances.ToList().ElementAt(4).Should().NotBeNull();
+        helper.UserDataContext.Balances.ToList().ElementAt(4).DateTime.Should().Be(balances[4].DateTime);
+        helper.UserDataContext.Balances.ToList().ElementAt(4).Amount.Should().Be(oldBalance + transaction.Amount);
+    }
+
+    [Fact]
     public async Task ReadTransactionsAsync_ShouldReturnTransactions()
     {
         // Arrange
@@ -331,6 +399,51 @@ public class TransactionServiceTests
 
         // Assert
         await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The transaction you are trying to delete does not exist.");
+    }
+
+    [Fact]
+    public async Task DeleteTransactionAsync_WhenDeleteTransaction_ShouldUpdateBalance()
+    {
+        // Arrange
+        var helper = new TestHelper();
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
+
+        var accountFaker = new AccountFaker();
+        var account = accountFaker.Generate();
+        account.UserID = helper.demoUser.Id;
+        account.Source = AccountSource.Manual;
+
+        var balanceFaker = new BalanceFaker() { AccountIds = [account.ID] };
+        var balances = balanceFaker.Generate(5);
+
+        balances[0].DateTime = DateTime.Now.AddDays(-10);
+        balances[1].DateTime = DateTime.Now.AddDays(-5);
+        balances[2].DateTime = DateTime.Now.AddDays(-3);
+        balances[3].DateTime = DateTime.Now.AddDays(-1);
+        balances[4].DateTime = DateTime.Now;
+
+        account.Balances = balances;
+
+        var transactionFaker = new TransactionFaker() { AccountIds = [account.ID] };
+        var transactions = transactionFaker.Generate(2);
+        transactions[0].Date = balances[0].DateTime;
+
+        account.Transactions = transactions;
+
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
+
+        var transactionToDelete = transactions.First();
+
+        var oldBalance = balances.Last().Amount;
+        // Act
+        await transactionService.DeleteTransactionAsync(helper.demoUser.Id, transactionToDelete.ID);
+
+        // Assert
+        helper.UserDataContext.Balances.Should().HaveCount(4);
+        helper.UserDataContext.Balances.ToList().Last().Should().NotBeNull();
+        helper.UserDataContext.Balances.ToList().Last().DateTime.Should().Be(balances.Last().DateTime);
+        helper.UserDataContext.Balances.ToList().Last().Amount.Should().Be(oldBalance - transactionToDelete.Amount);
     }
 
     [Fact]

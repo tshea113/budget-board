@@ -39,8 +39,9 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         // Manual accounts need to manually update the balance
         if (account.Source == AccountSource.Manual)
         {
-            var currentBalance = account.Balances.OrderByDescending(b => b.DateTime).FirstOrDefault()?.Amount ?? 0;
+            var currentBalance = account.Balances.Where(b => b.DateTime <= transaction.Date).OrderByDescending(b => b.DateTime).FirstOrDefault()?.Amount ?? 0;
 
+            // First, add the new balance for the new transaction.
             var newBalance = new Balance
             {
                 Amount = transaction.Amount + currentBalance,
@@ -49,6 +50,13 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
             };
 
             account.Balances.Add(newBalance);
+
+            // Then, update all following balances to include the new transaction.
+            var balancesAfterNew = account.Balances.Where(b => b.DateTime > transaction.Date).ToList();
+            foreach (var balance in balancesAfterNew)
+            {
+                balance.Amount += transaction.Amount;
+            }
         }
 
         await _userDataContext.SaveChangesAsync();
