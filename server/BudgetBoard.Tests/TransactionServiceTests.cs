@@ -360,6 +360,63 @@ public class TransactionServiceTests
     }
 
     [Fact]
+    public async Task UpdateTransactionAsync_WhenAmountUpdated_ShouldUpdateBalance()
+    {
+        // Arrange
+        var helper = new TestHelper();
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
+
+        var accountFaker = new AccountFaker();
+        var account = accountFaker.Generate();
+        account.UserID = helper.demoUser.Id;
+        account.Source = AccountSource.Manual;
+
+        var balanceFaker = new BalanceFaker() { AccountIds = [account.ID] };
+        var balances = balanceFaker.Generate(5);
+
+        balances[0].DateTime = DateTime.Now.AddDays(-10);
+        balances[1].DateTime = DateTime.Now.AddDays(-5);
+        balances[2].DateTime = DateTime.Now.AddDays(-3);
+        balances[3].DateTime = DateTime.Now.AddDays(-1);
+        balances[4].DateTime = DateTime.Now;
+
+        account.Balances = balances;
+
+        var transactionFaker = new TransactionFaker() { AccountIds = [account.ID] };
+        var transactions = transactionFaker.Generate(2);
+
+        transactions.First().Date = balances.First().DateTime;
+        transactions.First().Amount = 50.0M;
+
+        account.Transactions = transactions;
+
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
+
+        var editedTransaction = new TransactionUpdateRequest
+        {
+            ID = transactions.First().ID,
+            Amount = 100.0M,
+            Date = transactions.First().Date,
+            Category = transactions.First().Category,
+            Subcategory = transactions.First().Subcategory,
+            MerchantName = transactions.First().MerchantName,
+        };
+
+        var oldBalance = balances.Last().Amount;
+
+        // Act
+        await transactionService.UpdateTransactionAsync(helper.demoUser.Id, editedTransaction);
+
+        // Assert
+        helper.UserDataContext.Balances.Should().HaveCount(5);
+        helper.UserDataContext.Balances.ToList().Last().Should().NotBeNull();
+        helper.UserDataContext.Balances.ToList().Last().DateTime.Should().Be(balances.Last().DateTime);
+        helper.UserDataContext.Balances.ToList().Last().Amount.Should().Be(oldBalance - 50.0M + 100.0M);
+    }
+
+
+    [Fact]
     public async Task DeleteTransactionAsync_ShouldDeleteTransaction()
     {
         // Arrange
@@ -440,7 +497,7 @@ public class TransactionServiceTests
         await transactionService.DeleteTransactionAsync(helper.demoUser.Id, transactionToDelete.ID);
 
         // Assert
-        helper.UserDataContext.Balances.Should().HaveCount(4);
+        helper.UserDataContext.Balances.Should().HaveCount(5);
         helper.UserDataContext.Balances.ToList().Last().Should().NotBeNull();
         helper.UserDataContext.Balances.ToList().Last().DateTime.Should().Be(balances.Last().DateTime);
         helper.UserDataContext.Balances.ToList().Last().Amount.Should().Be(oldBalance - transactionToDelete.Amount);

@@ -106,11 +106,23 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
             throw new BudgetBoardServiceException("The transaction you are trying to edit does not exist.");
         }
 
+        var amountDifference = editedTransaction.Amount - transaction.Amount;
+
         transaction.Amount = editedTransaction.Amount;
         transaction.Date = editedTransaction.Date;
         transaction.Category = editedTransaction.Category;
         transaction.Subcategory = editedTransaction.Subcategory;
         transaction.MerchantName = editedTransaction.MerchantName;
+
+        if (transaction.Account?.Source == AccountSource.Manual)
+        {
+            // Update all following balances to include the edited transaction.
+            var balancesAfterEdited = transaction.Account.Balances.Where(b => b.DateTime >= transaction.Date).ToList();
+            foreach (var balance in balancesAfterEdited)
+            {
+                balance.Amount += amountDifference;
+            }
+        }
 
         await _userDataContext.SaveChangesAsync();
     }
@@ -139,20 +151,8 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         // Manual accounts need to manually update the balance
         if (account.Source == AccountSource.Manual)
         {
-            var balances = account.Balances.OrderByDescending(b => b.DateTime);
-
-            // First, delete the balance for the deleted transaction.
-            var balanceForTransaction = balances.FirstOrDefault(b => b.DateTime == transaction.Date);
-            if (balanceForTransaction == default(Balance))
-            {
-                _logger.LogError("No balance for the date of the deleted transaction");
-                throw new BudgetBoardServiceException("The transaction you are deleting has no associated balance.");
-            }
-
-            account.Balances.Remove(balanceForTransaction);
-
-            // Then, update all following balances to not include the deleted transaction.
-            var balancesAfterDeleted = balances.Where(b => b.DateTime > transaction.Date).ToList();
+            // Update all following balances to not include the deleted transaction.
+            var balancesAfterDeleted = account.Balances.Where(b => b.DateTime >= transaction.Date).ToList();
             foreach (var balance in balancesAfterDeleted)
             {
                 balance.Amount -= transaction.Amount;
