@@ -2,7 +2,7 @@ import { MultiSelect } from "@mantine/core";
 import React from "react";
 import { AuthContext } from "~/components/AuthProvider/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
-import { IAccount } from "~/models/account";
+import { AccountSource, IAccount } from "~/models/account";
 import { AxiosResponse } from "axios";
 
 interface AccountSelectInputProps {
@@ -10,6 +10,8 @@ interface AccountSelectInputProps {
   setSelectedAccountIds?: (accountIds: string[]) => void;
   hideHidden?: boolean;
   filterTypes?: string[];
+  manualOnly?: boolean;
+  maxSelectedValues?: number;
   [x: string]: any;
 }
 
@@ -18,6 +20,8 @@ const AccountSelectInput = ({
   setSelectedAccountIds,
   hideHidden = false,
   filterTypes,
+  manualOnly = false,
+  maxSelectedValues = undefined,
   ...props
 }: AccountSelectInputProps): React.ReactNode => {
   const { request } = React.useContext<any>(AuthContext);
@@ -53,6 +57,12 @@ const AccountSelectInput = ({
       );
     }
 
+    if (manualOnly) {
+      filteredAccounts = filteredAccounts.filter(
+        (a) => a.source === AccountSource.Manual
+      );
+    }
+
     return filteredAccounts;
   };
 
@@ -65,6 +75,7 @@ const AccountSelectInput = ({
       value={selectedAccountIds}
       onChange={setSelectedAccountIds}
       clearable
+      maxValues={maxSelectedValues}
       {...props}
     />
   );

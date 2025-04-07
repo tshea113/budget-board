@@ -1,8 +1,13 @@
 ﻿using BudgetBoard.Database.Models;
 using System.Text.Json.Serialization;
 
-namespace BudgetBoard.Service.Types;
+namespace BudgetBoard.Service.Models;
 
+public static class AccountSource
+{
+    public const string Manual = "Manual";
+    public const string SimpleFIN = "SimpleFIN";
+}
 public interface IAccountCreateRequest
 {
     public string? SyncID { get; set; }
@@ -12,6 +17,7 @@ public interface IAccountCreateRequest
     public string Subtype { get; set; }
     public bool HideTransactions { get; set; }
     public bool HideAccount { get; set; }
+    public string Source { get; set; }
 }
 public class AccountCreateRequest() : IAccountCreateRequest
 {
@@ -22,6 +28,7 @@ public class AccountCreateRequest() : IAccountCreateRequest
     public string Subtype { get; set; } = string.Empty;
     public bool HideTransactions { get; set; } = false;
     public bool HideAccount { get; set; } = false;
+    public string Source { get; set; } = string.Empty;
 }
 
 public interface IAccountUpdateRequest
@@ -78,6 +85,7 @@ public interface IAccountResponse
     public bool HideAccount { get; set; }
     public DateTime? Deleted { get; set; }
     public int Index { get; set; }
+    public string Source { get; set; }
     public Guid UserID { get; set; }
 }
 public class AccountResponse : IAccountResponse
@@ -94,6 +102,7 @@ public class AccountResponse : IAccountResponse
     public bool HideAccount { get; set; }
     public DateTime? Deleted { get; set; }
     public int Index { get; set; }
+    public string Source { get; set; }
     public Guid UserID { get; set; }
 
     [JsonConstructor]
@@ -111,6 +120,7 @@ public class AccountResponse : IAccountResponse
         HideAccount = false;
         Deleted = null;
         Index = 0;
+        Source = string.Empty;
         UserID = Guid.NewGuid();
     }
 
@@ -128,6 +138,7 @@ public class AccountResponse : IAccountResponse
         HideAccount = account.HideAccount;
         Deleted = account.Deleted;
         Index = account.Index;
+        Source = account.Source;
         UserID = account.UserID;
     }
 }

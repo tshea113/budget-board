@@ -68,6 +68,9 @@ const TransactionCard = (props: TransactionCardProps): React.ReactNode => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["balances"] });
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      queryClient.invalidateQueries({ queryKey: ["institutions"] });
     },
   });
 
@@ -80,6 +83,9 @@ const TransactionCard = (props: TransactionCardProps): React.ReactNode => {
       }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["balances"] });
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      queryClient.invalidateQueries({ queryKey: ["institutions"] });
     },
   });
 

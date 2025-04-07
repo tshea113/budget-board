@@ -2,7 +2,6 @@
 using BudgetBoard.Database.Models;
 using BudgetBoard.Service.Interfaces;
 using BudgetBoard.Service.Models;
-using BudgetBoard.Service.Types;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
@@ -221,7 +220,6 @@ public class SimpleFinService(
             var newInstitution = new InstitutionCreateRequest
             {
                 Name = institution.Name ?? string.Empty,
-                UserID = userData.Id,
             };
 
             await _institutionService.CreateInstitutionAsync(userData.Id, newInstitution);
@@ -238,6 +236,7 @@ public class SimpleFinService(
             if (foundAccount != null)
             {
                 foundAccount.InstitutionID = institutionId;
+                foundAccount.Source = AccountSource.SimpleFIN;
                 _userDataContext.SaveChanges();
             }
             else
@@ -247,6 +246,7 @@ public class SimpleFinService(
                     SyncID = accountData.Id,
                     Name = accountData.Name,
                     InstitutionID = institutionId,
+                    Source = AccountSource.SimpleFIN,
                 };
 
                 await _accountService.CreateAccountAsync(userData.Id, newAccount);

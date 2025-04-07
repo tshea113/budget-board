@@ -12,10 +12,11 @@ public class Account
     public bool HideTransactions { get; set; } = false;
     public bool HideAccount { get; set; } = false;
     public DateTime? Deleted { get; set; } = null;
-    public int Index { get; set; }
-    public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
-    public ICollection<Goal> Goals { get; set; } = new List<Goal>();
-    public ICollection<Balance> Balances { get; set; } = new List<Balance>();
+    public int Index { get; set; } = 0;
+    public string Source { get; set; } = string.Empty;
+    public ICollection<Transaction> Transactions { get; set; } = [];
+    public ICollection<Goal> Goals { get; set; } = [];
+    public ICollection<Balance> Balances { get; set; } = [];
     public required Guid UserID { get; set; }
     public ApplicationUser? User { get; set; } = null!;
 }

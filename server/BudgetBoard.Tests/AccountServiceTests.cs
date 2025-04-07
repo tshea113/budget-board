@@ -3,7 +3,6 @@ using BudgetBoard.IntegrationTests.Fakers;
 using BudgetBoard.Service;
 using BudgetBoard.Service.Interfaces;
 using BudgetBoard.Service.Models;
-using BudgetBoard.Service.Types;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -23,7 +22,8 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         .RuleFor(a => a.Type, f => f.Finance.TransactionType())
         .RuleFor(a => a.Subtype, f => f.Finance.TransactionType())
         .RuleFor(a => a.HideTransactions, f => false)
-        .RuleFor(a => a.HideAccount, f => false);
+        .RuleFor(a => a.HideAccount, f => false)
+        .RuleFor(a => a.Source, f => AccountSource.Manual);
 
     private readonly Faker<AccountUpdateRequest> _accountUpdateRequestFaker = new Faker<AccountUpdateRequest>()
         .RuleFor(a => a.Name, f => f.Finance.AccountName())
@@ -38,7 +38,17 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
         // Arrange
         var helper = new TestHelper();
         var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
+
+        var institutionFaker = new InstitutionFaker();
+        var institution = institutionFaker.Generate();
+
+        institution.UserID = helper.demoUser.Id;
+
+        helper.UserDataContext.Institutions.Add(institution);
+        helper.UserDataContext.SaveChanges();
+
         var account = _accountCreateRequestFaker.Generate();
+        account.InstitutionID = institution.ID;
 
         // Act
         var createAccountAct = () => accountService.CreateAccountAsync(Guid.NewGuid(), account);
@@ -48,18 +58,78 @@ public class AccountServiceTests(ITestOutputHelper testOutputHelper)
     }
 
     [Fact]
+    public async Task CreateAccountAsync_InvalidInstitutionId_ThrowsError()
+    {
+        // Arrange
+        var helper = new TestHelper();
+        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
+
+        var account = _accountCreateRequestFaker.Generate();
+        account.InstitutionID = Guid.NewGuid();
+
+        // Act
+        var createAccountAct = () => accountService.CreateAccountAsync(helper.demoUser.Id, account);
+
+        // Assert
+        await createAccountAct.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("Invalid Institution ID.");
+    }
+
+    [Fact]
+    public async Task CreateAccountAsync_DuplicateName_ThrowsError()
+    {
+        // Arrange
+        var helper = new TestHelper();
+        var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
+
+        var institutionFaker = new InstitutionFaker();
+        var institution = institutionFaker.Generate();
+
+        institution.UserID = helper.demoUser.Id;
+        helper.UserDataContext.Institutions.Add(institution);
+
+        var accountFaker = new AccountFaker();
+        var firstAccount = accountFaker.Generate();
+        firstAccount.UserID = helper.demoUser.Id;
+        firstAccount.InstitutionID = institution.ID;
+        firstAccount.Name = "Test Account";
+
+        helper.UserDataContext.Accounts.Add(firstAccount);
+
+        var account = _accountCreateRequestFaker.Generate();
+        account.InstitutionID = institution.ID;
+        account.Name = "Test Account";
+
+        // Act
+        var createAccountAct = () => accountService.CreateAccountAsync(helper.demoUser.Id, account);
+
+        // Assert
+        await createAccountAct.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("An account with this name already exists!");
+    }
+
+    [Fact]
     public async Task CreateAccountAsync_NewAccount_HappyPath()
     {
         // Arrange
         var helper = new TestHelper();
         var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
+
+        var institutionFaker = new InstitutionFaker();
+        var institution = institutionFaker.Generate();
+
+        institution.UserID = helper.demoUser.Id;
+
+        helper.UserDataContext.Institutions.Add(institution);
+        helper.UserDataContext.SaveChanges();
+
         var account = _accountCreateRequestFaker.Generate();
+        account.InstitutionID = institution.ID;
 
         // Act
         await accountService.CreateAccountAsync(helper.demoUser.Id, account);
 
         // Assert
         helper.demoUser.Accounts.Should().HaveCount(1);
+
         helper.demoUser.Accounts.Single().Should().BeEquivalentTo(account);
     }
 

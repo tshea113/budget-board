@@ -1,7 +1,12 @@
 import { ICategory } from "./category";
 
+export enum AccountSource {
+  Manual = "Manual",
+  SimpleFIN = "SimpleFIN",
+}
+
 export interface IAccountCreateRequest {
-  syncId?: string;
+  syncID?: string;
   name: string;
   institutionID?: string;
   type: string;
@@ -26,7 +31,7 @@ export interface IAccountIndexRequest {
 
 export interface IAccount {
   id: string;
-  syncId: string;
+  syncID: string;
   name: string;
   institutionID: string;
   type: string;
@@ -37,6 +42,7 @@ export interface IAccount {
   hideAccount: boolean;
   deleted: Date | null;
   index: number;
+  source: string;
   userID: string;
 }
 

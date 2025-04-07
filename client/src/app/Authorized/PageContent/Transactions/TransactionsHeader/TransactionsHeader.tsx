@@ -11,6 +11,7 @@ import FilterCard from "./FilterCard/FilterCard";
 import { useDisclosure } from "@mantine/hooks";
 import TransactionsSettings from "./TransactionsSettings/TransactionsSettings";
 import { ICategory } from "~/models/category";
+import CreateTransactionModal from "./CreateTransactionModal/CreateTransactionModal";
 
 interface TransactionsHeaderProps {
   sort: Sorts;
@@ -45,6 +46,7 @@ const TransactionsHeader = (
           >
             Filter
           </Button>
+          <CreateTransactionModal />
           <ActionIcon size="input-sm" onClick={open}>
             <SettingsIcon />
           </ActionIcon>

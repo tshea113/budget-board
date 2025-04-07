@@ -35,6 +35,30 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         };
 
         account.Transactions.Add(newTransaction);
+
+        // Manual accounts need to manually update the balance
+        if (account.Source == AccountSource.Manual)
+        {
+            var currentBalance = account.Balances.Where(b => b.DateTime <= transaction.Date).OrderByDescending(b => b.DateTime).FirstOrDefault()?.Amount ?? 0;
+
+            // First, add the new balance for the new transaction.
+            var newBalance = new Balance
+            {
+                Amount = transaction.Amount + currentBalance,
+                DateTime = transaction.Date,
+                AccountID = account.ID
+            };
+
+            account.Balances.Add(newBalance);
+
+            // Then, update all following balances to include the new transaction.
+            var balancesAfterNew = account.Balances.Where(b => b.DateTime > transaction.Date).ToList();
+            foreach (var balance in balancesAfterNew)
+            {
+                balance.Amount += transaction.Amount;
+            }
+        }
+
         await _userDataContext.SaveChangesAsync();
     }
 
@@ -82,11 +106,23 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
             throw new BudgetBoardServiceException("The transaction you are trying to edit does not exist.");
         }
 
+        var amountDifference = editedTransaction.Amount - transaction.Amount;
+
         transaction.Amount = editedTransaction.Amount;
         transaction.Date = editedTransaction.Date;
         transaction.Category = editedTransaction.Category;
         transaction.Subcategory = editedTransaction.Subcategory;
         transaction.MerchantName = editedTransaction.MerchantName;
+
+        if (transaction.Account?.Source == AccountSource.Manual)
+        {
+            // Update all following balances to include the edited transaction.
+            var balancesAfterEdited = transaction.Account.Balances.Where(b => b.DateTime >= transaction.Date).ToList();
+            foreach (var balance in balancesAfterEdited)
+            {
+                balance.Amount += amountDifference;
+            }
+        }
 
         await _userDataContext.SaveChangesAsync();
     }
@@ -104,6 +140,25 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         }
 
         transaction.Deleted = DateTime.Now.ToUniversalTime();
+
+        var account = userData.Accounts.FirstOrDefault(a => a.ID == transaction.AccountID);
+        if (account == null)
+        {
+            _logger.LogError("Transaction has no associated account.");
+            throw new BudgetBoardServiceException("The transaction you are deleting has no associated account.");
+        }
+
+        // Manual accounts need to manually update the balance
+        if (account.Source == AccountSource.Manual)
+        {
+            // Update all following balances to not include the deleted transaction.
+            var balancesAfterDeleted = account.Balances.Where(b => b.DateTime >= transaction.Date).ToList();
+            foreach (var balance in balancesAfterDeleted)
+            {
+                balance.Amount -= transaction.Amount;
+            }
+        }
+
         await _userDataContext.SaveChangesAsync();
     }
 
@@ -132,6 +187,8 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
             users = await _userDataContext.ApplicationUsers
                 .Include(u => u.Accounts)
                 .ThenInclude(a => a.Transactions)
+                .Include(u => u.Accounts)
+                .ThenInclude(a => a.Balances)
                 .AsSplitQuery()
                 .ToListAsync();
             foundUser = users.FirstOrDefault(u => u.Id == new Guid(id));

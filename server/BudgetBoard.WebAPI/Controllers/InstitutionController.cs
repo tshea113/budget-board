@@ -18,7 +18,7 @@ public class InstitutionController(ILogger<InstitutionController> logger, UserMa
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> Create([FromBody] IInstitutionCreateRequest createdInstitution)
+    public async Task<IActionResult> Create([FromBody] InstitutionCreateRequest createdInstitution)
     {
         try
         {
@@ -73,7 +73,7 @@ public class InstitutionController(ILogger<InstitutionController> logger, UserMa
 
     [HttpPut]
     [Authorize]
-    public async Task<IActionResult> Update([FromBody] IInstitutionUpdateRequest updatedInstitution)
+    public async Task<IActionResult> Update([FromBody] InstitutionUpdateRequest updatedInstitution)
     {
         try
         {

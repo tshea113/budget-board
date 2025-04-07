@@ -42,7 +42,6 @@ public class InstitutionServiceTests
         var institutionService = new InstitutionService(Mock.Of<ILogger<IInstitutionService>>(), helper.UserDataContext);
 
         var institutionCreateRequest = _institutionCreateRequestFaker.Generate();
-        institutionCreateRequest.UserID = helper.demoUser.Id;
 
         // Act
         await institutionService.CreateInstitutionAsync(helper.demoUser.Id, institutionCreateRequest);

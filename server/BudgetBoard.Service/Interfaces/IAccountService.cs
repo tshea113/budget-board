@@ -1,4 +1,4 @@
-﻿using BudgetBoard.Service.Types;
+﻿using BudgetBoard.Service.Models;
 
 namespace BudgetBoard.Service.Interfaces;
 
