@@ -1,4 +1,7 @@
-import { getIsParentCategory } from "~/helpers/category";
+import {
+  getFormattedCategoryValue,
+  getIsParentCategory,
+} from "~/helpers/category";
 import { areStringsEqual } from "~/helpers/utils";
 import {
   CheckIcon,
@@ -93,7 +96,9 @@ const CategorySelect = (props: CategorySelectProps): React.ReactNode => {
           multiline
         >
           {props.value ? (
-            <Text fz="sm">{props.value}</Text>
+            <Text fz="sm">
+              {getFormattedCategoryValue(props.value, props.categories)}
+            </Text>
           ) : (
             <Input.Placeholder>Pick value</Input.Placeholder>
           )}
