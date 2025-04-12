@@ -20,6 +20,13 @@ export interface ITransactionUpdateRequest {
   merchantName: string | null;
 }
 
+export interface ITransactionSplitRequest {
+  id: string;
+  amount: number;
+  category: string;
+  subcategory: string;
+}
+
 export interface ITransaction {
   id: string;
   syncID: string | null;

@@ -129,4 +129,24 @@ public class TransactionController(ILogger<TransactionController> logger, UserMa
             return Helpers.BuildErrorResponse();
         }
     }
+
+    [HttpPost]
+    [Authorize]
+    [Route("[action]")]
+    public async Task<IActionResult> Split([FromBody] TransactionSplitRequest splitTransaction)
+    {
+        try
+        {
+            await _transactionService.SplitTransactionAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), splitTransaction);
+            return Ok();
+        }
+        catch (BudgetBoardServiceException bbex)
+        {
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
+        }
+    }
 }

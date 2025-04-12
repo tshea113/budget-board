@@ -87,6 +87,31 @@ public class TransactionUpdateRequest : ITransactionUpdateRequest
     }
 }
 
+public interface ITransactionSplitRequest
+{
+    public Guid ID { get; set; }
+    public decimal Amount { get; set; }
+    public string Category { get; set; }
+    public string Subcategory { get; set; }
+}
+
+public class TransactionSplitRequest : ITransactionSplitRequest
+{
+    public Guid ID { get; set; }
+    public decimal Amount { get; set; }
+    public string Category { get; set; }
+    public string Subcategory { get; set; }
+
+    [JsonConstructor]
+    public TransactionSplitRequest()
+    {
+        ID = Guid.NewGuid();
+        Amount = 0.0M;
+        Category = string.Empty;
+        Subcategory = string.Empty;
+    }
+}
+
 public interface ITransactionResponse
 {
     Guid ID { get; set; }

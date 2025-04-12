@@ -15,6 +15,7 @@ import { notifications } from "@mantine/notifications";
 import { AxiosError } from "axios";
 import { TrashIcon } from "lucide-react";
 import { ICategory } from "~/models/category";
+import SplitTransaction from "./SplitTransaction/SplitTransaction";
 
 interface TransactionCardProps {
   transaction: ITransaction;
@@ -138,7 +139,14 @@ const TransactionCard = (props: TransactionCardProps): React.ReactNode => {
           </Flex>
         </Flex>
         {isSelected && (
-          <Group style={{ alignSelf: "stretch" }}>
+          <Group gap={5} style={{ alignSelf: "stretch", flexWrap: "nowrap" }}>
+            <Flex onClick={(e) => e.stopPropagation()} h="100%">
+              <SplitTransaction
+                categories={props.categories}
+                id={props.transaction.id}
+                originalAmount={props.transaction.amount}
+              />
+            </Flex>
             <ActionIcon
               color="red"
               onClick={(e) => {
