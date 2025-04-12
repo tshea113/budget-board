@@ -72,10 +72,10 @@ const SelectedTransactionCard = (
       await queryClient.cancelQueries({ queryKey: ["transactions"] });
 
       const previousTransactions: ITransaction[] =
-        queryClient.getQueryData(["transactions"]) ?? [];
+        queryClient.getQueryData(["transactions", { getHidden: false }]) ?? [];
 
       queryClient.setQueryData(
-        ["transactions"],
+        ["transactions", { getHidden: false }],
         (oldTransactions: ITransaction[]) =>
           oldTransactions.map((oldTransaction) =>
             oldTransaction.id === variables.id
@@ -99,7 +99,7 @@ const SelectedTransactionCard = (
       context
     ) => {
       queryClient.setQueryData(
-        ["transactions"],
+        ["transactions", { getHidden: false }],
         context?.previousTransactions ?? []
       );
       notifications.show({ color: "red", message: translateAxiosError(error) });
