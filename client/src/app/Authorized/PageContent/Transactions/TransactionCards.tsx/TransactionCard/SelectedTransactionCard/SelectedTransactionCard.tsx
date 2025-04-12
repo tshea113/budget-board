@@ -127,19 +127,6 @@ const SelectedTransactionCard = (
     },
   });
 
-  // const handleEditTransaction = (values: FormValues) => {
-  //   doEditTransaction.mutate({
-  //     id: props.transaction.id,
-  //     date: values.date,
-  //     amount: values.amount,
-  //     category: getParentCategory(values.category ?? "", props.categories),
-  //     subcategory: getIsParentCategory(values.category ?? "", props.categories)
-  //       ? ""
-  //       : values.category,
-  //     merchantName: values.merchantName,
-  //   });
-  // };
-
   const handleSubmit = (values: FormValues) => {
     doEditTransaction.mutate({
       ...props.transaction,
