@@ -37,11 +37,11 @@ const UncategorizedTransaction = (
       await queryClient.cancelQueries({ queryKey: ["transactions"] });
 
       const previousTransactions: ITransaction[] =
-        queryClient.getQueryData(["transactions"]) ?? [];
+        queryClient.getQueryData(["transactions", { getHidden: false }]) ?? [];
 
       queryClient.setQueryData(
-        ["transactions"],
-        (oldTransactions: ITransaction[]) =>
+        ["transactions", { getHidden: false }],
+        (oldTransactions: ITransaction[]) => {
           oldTransactions.map((oldTransaction) =>
             oldTransaction.id === variables.id
               ? {
@@ -50,20 +50,28 @@ const UncategorizedTransaction = (
                   subcategory: variables.subcategory,
                 }
               : oldTransaction
-          )
+          );
+        }
       );
 
       return { previousTransactions };
     },
-    onError: (error: AxiosError, _variables: ITransaction, context) => {
+    onError: (
+      error: AxiosError,
+      _variables: ITransactionUpdateRequest,
+      context
+    ) => {
       queryClient.setQueryData(
-        ["transactions"],
+        ["transactions", { getHidden: false }],
         context?.previousTransactions ?? []
       );
       notifications.show({ color: "red", message: translateAxiosError(error) });
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["balances"] });
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      queryClient.invalidateQueries({ queryKey: ["institutions"] });
     },
   });
 
