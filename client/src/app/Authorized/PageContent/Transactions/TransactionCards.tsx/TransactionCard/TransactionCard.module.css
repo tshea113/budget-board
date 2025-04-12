@@ -27,3 +27,25 @@
     width: 100%;
   }
 }
+
+.dateContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.merchantContainer {
+  flex: 1 1 auto;
+}
+
+.categoryContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.amountContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+}

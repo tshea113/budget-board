@@ -178,6 +178,49 @@ public class TransactionService(ILogger<ITransactionService> logger, UserDataCon
         await _userDataContext.SaveChangesAsync();
     }
 
+    public async Task SplitTransactionAsync(Guid userGuid, ITransactionSplitRequest transactionSplitRequest)
+    {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
+        var transaction = userData.Accounts
+            .SelectMany(t => t.Transactions)
+            .FirstOrDefault(t => t.ID == transactionSplitRequest.ID);
+        if (transaction == null)
+        {
+            _logger.LogError("Attempt to split transaction that does not exist.");
+            throw new BudgetBoardServiceException("The transaction you are trying to split does not exist.");
+        }
+
+        if (Math.Abs(transaction.Amount) <= Math.Abs(transactionSplitRequest.Amount))
+        {
+            _logger.LogError("Attempt to split transaction with amount less than or equal to the split amount.");
+            throw new BudgetBoardServiceException("The split amount must be less than the transaction amount.");
+        }
+
+        var splitTransaction = new Transaction
+        {
+            SyncID = transaction.SyncID,
+            Amount = transactionSplitRequest.Amount,
+            Date = transaction.Date,
+            Category = transactionSplitRequest.Category,
+            Subcategory = transactionSplitRequest.Subcategory,
+            MerchantName = transaction.MerchantName,
+            Source = transaction.Source ?? TransactionSource.Manual.Value,
+            AccountID = transaction.AccountID
+        };
+
+        transaction.Amount -= transactionSplitRequest.Amount;
+
+        var account = userData.Accounts.FirstOrDefault(a => a.ID == transaction.AccountID);
+        if (account == null)
+        {
+            _logger.LogError("Transaction has no associated account.");
+            throw new BudgetBoardServiceException("The transaction you are splitting has no associated account.");
+        }
+
+        account.Transactions.Add(splitTransaction);
+        await _userDataContext.SaveChangesAsync();
+    }
+
     private async Task<IApplicationUser> GetCurrentUserAsync(string id)
     {
         List<ApplicationUser> users;

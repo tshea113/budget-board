@@ -573,4 +573,110 @@ public class TransactionServiceTests
         // Assert
         helper.UserDataContext.Transactions.Single(t => t.ID == transactionToRestore.ID).Deleted.Should().BeNull();
     }
+
+    [Fact]
+    public async Task SplitTransactionAsync_WhenSplitTransaction_ShouldSplitTransaction()
+    {
+        // Arrange
+        var helper = new TestHelper();
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
+
+        var accountFaker = new AccountFaker();
+        var account = accountFaker.Generate();
+
+        account.UserID = helper.demoUser.Id;
+
+        var transactionFaker = new TransactionFaker() { AccountIds = [account.ID] };
+        var transactions = transactionFaker.Generate(5);
+
+        transactions.First().Amount = 100.0M;
+
+        account.Transactions = transactions;
+
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
+
+        var transactionToSplit = transactions.First();
+        var transactionToSplitAmount = transactionToSplit.Amount;
+        var splitTransactionRequest = new TransactionSplitRequest
+        {
+            ID = transactionToSplit.ID,
+            Amount = 20.0M,
+            Category = "test",
+            Subcategory = "test2",
+        };
+
+        // Act
+        await transactionService.SplitTransactionAsync(helper.demoUser.Id, splitTransactionRequest);
+
+        // Assert
+        helper.UserDataContext.Transactions.Should().HaveCount(6);
+        helper.UserDataContext.Transactions.Last().Should().NotBeNull();
+        helper.UserDataContext.Transactions.Last().ID.Should().NotBe(transactionToSplit.ID);
+        helper.UserDataContext.Transactions.Last().Amount.Should().Be(splitTransactionRequest.Amount);
+        helper.UserDataContext.Transactions.Last().Category.Should().Be(splitTransactionRequest.Category);
+        helper.UserDataContext.Transactions.Last().Subcategory.Should().Be(splitTransactionRequest.Subcategory);
+        helper.UserDataContext.Transactions.First().Amount.Should().Be(transactionToSplitAmount - splitTransactionRequest.Amount);
+    }
+
+    [Fact]
+    public async Task SplitTransactionAsync_WhenTransactionDoesNotExist_ShouldThrowError()
+    {
+        // Arrange
+        var helper = new TestHelper();
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
+
+        var splitTransactionRequest = new TransactionSplitRequest
+        {
+            ID = Guid.NewGuid(),
+            Amount = 20.0M,
+            Category = "test",
+            Subcategory = "test2",
+        };
+
+        // Act
+        Func<Task> act = async () => await transactionService.SplitTransactionAsync(helper.demoUser.Id, splitTransactionRequest);
+
+        // Assert
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The transaction you are trying to split does not exist.");
+    }
+
+    [Theory]
+    [InlineData(100.0, 200.0)]
+    [InlineData(-100.0, -150.0)]
+    public async Task SplitTransactionAsync_WhenSplitAmountTooLarge_ShouldThrowError(decimal originalAmount, decimal splitAmount)
+    {
+        // Arrange
+        var helper = new TestHelper();
+        var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
+
+        var accountFaker = new AccountFaker();
+        var account = accountFaker.Generate();
+
+        account.UserID = helper.demoUser.Id;
+
+        var transactionFaker = new TransactionFaker() { AccountIds = [account.ID] };
+        var transactions = transactionFaker.Generate(5);
+
+        transactions.First().Amount = originalAmount;
+        account.Transactions = transactions;
+
+        helper.UserDataContext.Accounts.Add(account);
+        helper.UserDataContext.SaveChanges();
+
+        var transactionToSplit = transactions.First();
+        var splitTransactionRequest = new TransactionSplitRequest
+        {
+            ID = transactionToSplit.ID,
+            Amount = splitAmount,
+            Category = "test",
+            Subcategory = "test2",
+        };
+
+        // Act
+        Func<Task> act = async () => await transactionService.SplitTransactionAsync(helper.demoUser.Id, splitTransactionRequest);
+
+        // Assert
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The split amount must be less than the transaction amount.");
+    }
 }

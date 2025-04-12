@@ -58,7 +58,7 @@ const EditableCategoryCell = (
   };
 
   return (
-    <Flex className={classes.container} w={{ base: "100%", xs: "190px" }}>
+    <Flex className={classes.container} w={{ base: "100%", xs: "180px" }}>
       {props.isSelected ? (
         <Group onClick={(e) => e.stopPropagation()} w="100%">
           <CategorySelect

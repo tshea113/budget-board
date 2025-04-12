@@ -14,7 +14,7 @@ export interface ValidationError {
  * @returns {string} A string error message if available, or a default error message.
  */
 const getErrorString = (error: AxiosResponse | undefined): string => {
-  if (typeof error?.data === "string") {
+  if (typeof error?.data === "string" && error?.data.length > 0) {
     return error.data;
   }
   return "There was an error with your request.";

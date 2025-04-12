@@ -30,7 +30,7 @@ const UncategorizedTransactionsCard = (): React.ReactNode => {
 
   const { request } = React.useContext<any>(AuthContext);
   const transactionsQuery = useQuery({
-    queryKey: ["transactions"],
+    queryKey: ["transactions", { getHidden: false }],
     queryFn: async (): Promise<ITransaction[]> => {
       const res: AxiosResponse = await request({
         url: "/api/transaction",
