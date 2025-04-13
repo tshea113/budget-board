@@ -32,7 +32,7 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <MantineProvider theme={theme} defaultColorScheme="light">
+    <MantineProvider theme={theme} defaultColorScheme="dark">
       <AuthProvider>
         <QueryClientProvider client={queryClient}>
           <Notifications />
