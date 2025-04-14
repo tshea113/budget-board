@@ -7,6 +7,11 @@ services:
     environment:
       Logging__LogLevel__Default: Information
       CLIENT_URL: budget-board-client
+      POSTGRES_HOST: budget-board-db
+      POSTGRES_DATABASE: budgetboard
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: superSecretPassword
+      AUTO_UPDATE_DB: true
     networks:
       - budget-board-network
     depends_on:
@@ -14,7 +19,7 @@ services:
   budget-board-client:
     container_name: budget-board-client
     restart: unless-stopped
-    image: ghcr.io/tshea113/budget-board/client:release
+    image: ghcr.io/teelur/budget-board/client:release
     build: ./client
     environment:
       VITE_API_URL: budget-board-client
@@ -29,6 +34,10 @@ services:
     container_name: postgres-db
     image: postgres:16
     restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: superSecretPassword
+      POSTGRES_DB: budgetboard
     ports:
       - "6252:5432"
     volumes:
