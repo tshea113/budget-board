@@ -22,9 +22,9 @@ jobs:
       matrix:
         include:
           - dockerfile: ./client
-            image: ghcr.io/tshea113/budget-board/client
+            image: ghcr.io/teelur/budget-board/client
           - dockerfile: ./server
-            image: ghcr.io/tshea113/budget-board/server
+            image: ghcr.io/teelur/budget-board/server
 
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
