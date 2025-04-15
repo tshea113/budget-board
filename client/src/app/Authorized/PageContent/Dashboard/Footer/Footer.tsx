@@ -12,7 +12,8 @@ const Footer = (): React.ReactNode => {
       </Text>
       <ActionIcon
         component="a"
-        href="https://github.com/tshea113/budget-board"
+        href="https://github.com/teelur/budget-board"
+        target="_blank"
         variant="subtle"
         color="var(--mantine-color-text)"
       >
