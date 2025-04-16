@@ -11,6 +11,7 @@ import GoalCard from "./GoalCard/GoalCard";
 import GoalsHeader from "./GoalsHeader/GoalsHeader";
 import { notifications } from "@mantine/notifications";
 import { translateAxiosError } from "~/helpers/requests";
+import CompletedGoalsAccordion from "./CompletedGoalsAccordion/CompletedGoalsAccordion";
 
 const Goals = (): React.ReactNode => {
   const [includeInterest, { toggle }] = useDisclosure();
@@ -46,6 +47,16 @@ const Goals = (): React.ReactNode => {
     goalsQuery.refetch();
   }, [includeInterest]);
 
+  const activeGoals = React.useMemo(
+    () => (goalsQuery.data ?? []).filter((goal) => goal.completed == null),
+    [goalsQuery.data]
+  );
+
+  const completedGoals = React.useMemo(
+    () => (goalsQuery.data ?? []).filter((goal) => goal.completed != null),
+    [goalsQuery.data]
+  );
+
   return (
     <Stack className={classes.root}>
       <GoalsHeader
@@ -56,7 +67,7 @@ const Goals = (): React.ReactNode => {
         {goalsQuery.isPending ? (
           <Skeleton h={100} w="100%" radius="lg" />
         ) : (
-          (goalsQuery.data ?? []).map((goal: IGoalResponse) => (
+          activeGoals.map((goal: IGoalResponse) => (
             <GoalCard
               key={goal.id}
               goal={goal}
@@ -65,6 +76,9 @@ const Goals = (): React.ReactNode => {
           ))
         )}
       </Stack>
+      {completedGoals.length > 0 && (
+        <CompletedGoalsAccordion compeltedGoals={completedGoals} />
+      )}
     </Stack>
   );
 };
