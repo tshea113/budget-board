@@ -3,6 +3,7 @@ using System;
 using BudgetBoard.Database.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BudgetBoard.Database.Migrations
 {
     [DbContext(typeof(UserDataContext))]
-    partial class UserDataContextModelSnapshot : ModelSnapshot
+    [Migration("20250415230451_AddGoalCompleted")]
+    partial class AddGoalCompleted
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace BudgetBoard.Database.Migrations
 
                     b.HasIndex("GoalsID");
 
-                    b.ToTable("AccountGoal", (string)null);
+                    b.ToTable("AccountGoal");
                 });
 
             modelBuilder.Entity("BudgetBoard.Database.Models.Account", b =>

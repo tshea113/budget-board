@@ -75,6 +75,7 @@ public interface IGoalResponse
     decimal MonthlyContribution { get; set; }
     bool IsMonthlyContributionEditable { get; set; }
     decimal? EstimatedInterestRate { get; set; }
+    DateTime? Completed { get; set; }
     IEnumerable<IAccountResponse> Accounts { get; set; }
     Guid UserID { get; set; }
 }
@@ -89,6 +90,7 @@ public class GoalResponse : IGoalResponse
     public decimal MonthlyContribution { get; set; }
     public bool IsMonthlyContributionEditable { get; set; }
     public decimal? EstimatedInterestRate { get; set; }
+    public DateTime? Completed { get; set; }
     public IEnumerable<IAccountResponse> Accounts { get; set; }
     public Guid UserID { get; set; }
 
@@ -104,6 +106,7 @@ public class GoalResponse : IGoalResponse
         MonthlyContribution = 0;
         IsMonthlyContributionEditable = false;
         EstimatedInterestRate = null;
+        Completed = null;
         Accounts = [];
         UserID = Guid.NewGuid();
     }
@@ -119,6 +122,7 @@ public class GoalResponse : IGoalResponse
         MonthlyContribution = goal.MonthlyContribution ?? 0;
         IsMonthlyContributionEditable = goal.MonthlyContribution != null;
         EstimatedInterestRate = null;
+        Completed = goal.Completed;
         Accounts = goal.Accounts.Select(a => new AccountResponse(a));
         UserID = goal.UserID;
     }
