@@ -8,4 +8,5 @@ public interface IGoalService
     Task<IEnumerable<IGoalResponse>> ReadGoalsAsync(Guid userGuid, bool includeInterest);
     Task UpdateGoalAsync(Guid userGuid, IGoalUpdateRequest request);
     Task DeleteGoalAsync(Guid userGuid, Guid guid);
+    Task CompleteGoalAsync(Guid userGuid, Guid goalID, DateTime completedDate);
 }

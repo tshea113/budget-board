@@ -532,4 +532,83 @@ public class GoalServiceTests
         await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The goal you are trying to delete does not exist.");
     }
 
+    [Fact]
+    public async Task CompleteGoalAsync_WhenIncomplete_ShouldMarkComplete()
+    {
+        // Arrange
+        var helper = new TestHelper();
+        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.UserDataContext);
+
+        var accountFaker = new AccountFaker();
+        var accounts = accountFaker.Generate(5);
+
+        accounts.ForEach(a => a.UserID = helper.demoUser.Id);
+
+        helper.UserDataContext.Accounts.AddRange(accounts);
+
+        var goalFaker = new GoalFaker();
+        var goal = goalFaker.Generate();
+        goal.UserID = helper.demoUser.Id;
+        goal.Accounts = accounts;
+
+        helper.UserDataContext.Goals.Add(goal);
+        helper.UserDataContext.SaveChanges();
+
+        var completedDate = DateTime.Now.AddDays(-1);
+
+        // Act
+        await goalService.CompleteGoalAsync(helper.demoUser.Id, goal.ID, completedDate);
+
+        // Assert
+        helper.UserDataContext.Goals.Should().ContainSingle();
+        helper.UserDataContext.Goals.Single().Completed.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task CompleteGoalAsync_WhenAlreadyComplete_ShouldThrowError()
+    {
+        // Arrange
+        var helper = new TestHelper();
+        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.UserDataContext);
+
+        var accountFaker = new AccountFaker();
+        var accounts = accountFaker.Generate(5);
+
+        accounts.ForEach(a => a.UserID = helper.demoUser.Id);
+
+        helper.UserDataContext.Accounts.AddRange(accounts);
+
+        var goalFaker = new GoalFaker();
+        var goal = goalFaker.Generate();
+        goal.UserID = helper.demoUser.Id;
+        goal.Accounts = accounts;
+        goal.Completed = DateTime.Now;
+
+        helper.UserDataContext.Goals.Add(goal);
+        helper.UserDataContext.SaveChanges();
+
+        var completedDate = DateTime.Now.AddDays(-1);
+
+        // Act
+        Func<Task> act = async () => await goalService.CompleteGoalAsync(helper.demoUser.Id, goal.ID, completedDate);
+
+        // Assert
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The goal you are trying to complete has already been completed.");
+    }
+
+    [Fact]
+    public async Task CompleteGoalAsync_WhenInvalidGoal_ShouldThrowError()
+    {
+        // Arrange
+        var helper = new TestHelper();
+        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.UserDataContext);
+
+        var completedDate = DateTime.Now.AddDays(-1);
+
+        // Act
+        Func<Task> act = async () => await goalService.CompleteGoalAsync(helper.demoUser.Id, Guid.NewGuid(), completedDate);
+
+        // Assert
+        await act.Should().ThrowAsync<BudgetBoardServiceException>().WithMessage("The goal you are trying to complete does not exist.");
+    }
 }

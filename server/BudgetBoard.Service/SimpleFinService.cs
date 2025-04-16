@@ -19,6 +19,7 @@ public class SimpleFinService(
     IInstitutionService institutionService,
     ITransactionService transactionService,
     IBalanceService balanceService,
+    IGoalService goalService,
     IApplicationUserService applicationUserService) : ISimpleFinService
 {
     public const long UNIX_MONTH = 2629743;
@@ -62,6 +63,7 @@ public class SimpleFinService(
     private readonly IInstitutionService _institutionService = institutionService;
     private readonly ITransactionService _transactionService = transactionService;
     private readonly IBalanceService _balanceService = balanceService;
+    private readonly IGoalService _goalService = goalService;
     private readonly IApplicationUserService _applicationUserService = applicationUserService;
 
     public async Task<IEnumerable<string>> SyncAsync(Guid userGuid)
@@ -91,6 +93,8 @@ public class SimpleFinService(
 
         await SyncInstitutionsAsync(userData, simpleFinData.Accounts);
         await SyncAccountsAsync(userData, simpleFinData.Accounts);
+
+        await SyncGoalsAsync(userData);
 
         await _applicationUserService.UpdateApplicationUserAsync(userData.Id, new ApplicationUserUpdateRequest
         {
@@ -153,6 +157,8 @@ public class SimpleFinService(
                 .Include(u => u.Accounts)
                     .ThenInclude(a => a.Balances)
                 .Include(u => u.Institutions)
+                .Include(u => u.Goals)
+                    .ThenInclude(g => g.Accounts)
                 .AsSplitQuery()
                 .ToListAsync();
             foundUser = users.FirstOrDefault(u => u.Id == new Guid(id));
@@ -315,6 +321,53 @@ public class SimpleFinService(
                 };
 
                 await _balanceService.CreateBalancesAsync(userData.Id, newBalance);
+            }
+        }
+    }
+
+    private async Task SyncGoalsAsync(ApplicationUser userData)
+    {
+        var userGoals = userData.Goals.ToList();
+
+        foreach (var goal in userGoals)
+        {
+            // Skip goals that are already completed
+            if (goal.Completed.HasValue)
+            {
+                continue;
+            }
+
+            var accountsTotalBalance = goal.Accounts
+                .Sum(a => a.Balances
+                    .OrderByDescending(b => b.DateTime)
+                    .FirstOrDefault()?.Amount ?? 0);
+
+            var completeDate = goal.Accounts
+                .SelectMany(a => a.Balances)
+                .OrderByDescending(b => b.DateTime)
+                .FirstOrDefault()?.DateTime;
+
+            if (!completeDate.HasValue)
+            {
+                _logger.LogError("No balance found for goal {GoalName}", goal.Name);
+                continue;
+            }
+
+            if (goal.Amount == 0)
+            {
+                // Debt payoff goal: complete when balance is zero or negative
+                if (accountsTotalBalance >= 0)
+                {
+                    await _goalService.CompleteGoalAsync(userData.Id, goal.ID, completeDate.Value);
+                }
+            }
+            else
+            {
+                // Savings goal: complete when balance reaches or exceeds target
+                if ((accountsTotalBalance - goal.InitialAmount) >= goal.Amount)
+                {
+                    await _goalService.CompleteGoalAsync(userData.Id, goal.ID, completeDate.Value);
+                }
             }
         }
     }

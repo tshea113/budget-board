@@ -32,6 +32,7 @@ public class SimpleFinServiceTests
             Mock.Of<IInstitutionService>(),
             Mock.Of<ITransactionService>(),
             Mock.Of<IBalanceService>(),
+            Mock.Of<IGoalService>(),
             Mock.Of<IApplicationUserService>());
 
         // This is a demo token provided by SimpleFIN for dev.
@@ -62,6 +63,7 @@ public class SimpleFinServiceTests
         var accountService = new AccountService(Mock.Of<ILogger<IAccountService>>(), helper.UserDataContext);
         var transactionService = new TransactionService(Mock.Of<ILogger<ITransactionService>>(), helper.UserDataContext);
         var balanceService = new BalanceService(Mock.Of<ILogger<IBalanceService>>(), helper.UserDataContext);
+        var goalService = new GoalService(Mock.Of<ILogger<IGoalService>>(), helper.UserDataContext);
         var applicationUserService = new ApplicationUserService(Mock.Of<ILogger<IApplicationUserService>>(), helper.UserDataContext);
 
         var simpleFinService = new SimpleFinService(
@@ -72,6 +74,7 @@ public class SimpleFinServiceTests
             institutionService,
             transactionService,
             balanceService,
+            goalService,
             applicationUserService);
 
         // This is a demo token provided by SimpleFIN for dev.

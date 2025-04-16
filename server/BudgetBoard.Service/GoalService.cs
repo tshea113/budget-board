@@ -145,6 +145,26 @@ public class GoalService(ILogger<IGoalService> logger, UserDataContext userDataC
         await _userDataContext.SaveChangesAsync();
     }
 
+    public async Task CompleteGoalAsync(Guid userGuid, Guid goalID, DateTime completedDate)
+    {
+        var userData = await GetCurrentUserAsync(userGuid.ToString());
+        var goal = userData.Goals.FirstOrDefault(g => g.ID == goalID);
+        if (goal == null)
+        {
+            _logger.LogError("Attempt to complete goal that does not exist.");
+            throw new BudgetBoardServiceException("The goal you are trying to complete does not exist.");
+        }
+
+        if (goal.Completed.HasValue)
+        {
+            _logger.LogError("Attempt to complete goal that has already been completed.");
+            throw new BudgetBoardServiceException("The goal you are trying to complete has already been completed.");
+        }
+
+        goal.Completed = completedDate;
+        await _userDataContext.SaveChangesAsync();
+    }
+
     private async Task<ApplicationUser> GetCurrentUserAsync(string id)
     {
         List<ApplicationUser> users;
