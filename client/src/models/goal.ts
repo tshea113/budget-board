@@ -1,4 +1,4 @@
-import { IAccount } from './account';
+import { IAccount } from "./account";
 
 export interface IGoalCreateRequest {
   name: string;
@@ -29,22 +29,23 @@ export interface IGoalResponse {
   monthlyContribution: number;
   isMonthlyContributionEditable: boolean;
   estimatedInterestRate: number | null;
+  completed: Date | null;
   accounts: IAccount[];
   userID: string;
 }
 
 export enum GoalType {
-  None = '',
-  SaveGoal = 'saveGoal',
-  PayGoal = 'payGoal',
+  None = "",
+  SaveGoal = "saveGoal",
+  PayGoal = "payGoal",
 }
 
 export enum GoalCondition {
-  TimedGoal = 'timedGoal',
-  MonthlyGoal = 'monthlyGoal',
+  TimedGoal = "timedGoal",
+  MonthlyGoal = "monthlyGoal",
 }
 
 export enum GoalTarget {
-  TargetBalanceGoal = 'targetBalanceGoal',
-  TargetAmountGoal = 'targetAmountGoal',
+  TargetBalanceGoal = "targetBalanceGoal",
+  TargetAmountGoal = "targetAmountGoal",
 }
