@@ -3,6 +3,7 @@ import classes from "./GoalCard.module.css";
 import {
   ActionIcon,
   Badge,
+  Button,
   Card,
   Flex,
   Group,
@@ -97,7 +98,27 @@ const GoalCard = (props: GoalCardProps): React.ReactNode => {
       }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["goals", { includeInterest: props.includeInterest }],
+        queryKey: ["goals"],
+      });
+    },
+    onError: (error: AxiosError) => {
+      notifications.show({
+        color: "red",
+        message: translateAxiosError(error),
+      });
+    },
+  });
+
+  const doCompleteGoal = useMutation({
+    mutationFn: async (id: string) =>
+      await request({
+        url: "/api/goal/complete",
+        method: "POST",
+        params: { goalID: id },
+      }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["goals"],
       });
     },
     onError: (error: AxiosError) => {
@@ -142,6 +163,20 @@ const GoalCard = (props: GoalCardProps): React.ReactNode => {
                   })}{" "}
                   APR
                 </Badge>
+              )}
+              {/* This is an escape hatch in case the sync does not catch it */}
+              {isSelected && percentComplete >= 100 && (
+                <Button
+                  size="compact-xs"
+                  bg="green"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    doCompleteGoal.mutate(props.goal.id);
+                  }}
+                  loading={doCompleteGoal.isPending}
+                >
+                  Complete Goal
+                </Button>
               )}
             </Group>
             <EditableGoalTargetAmountCell

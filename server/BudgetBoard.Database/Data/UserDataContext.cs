@@ -26,6 +26,14 @@ namespace BudgetBoard.Database.Data
                 .WithOne(e => e.User)
                 .HasForeignKey(e => e.UserID);
 
+                u.HasMany(e => e.Goals)
+                .WithOne(e => e.User)
+                .HasForeignKey(e => e.UserID);
+
+                u.HasMany(e => e.TransactionCategories)
+                .WithOne(e => e.User)
+                .HasForeignKey(e => e.UserID);
+
                 u.ToTable("User");
             });
 
@@ -52,11 +60,17 @@ namespace BudgetBoard.Database.Data
                 i.ToTable("Institution");
             });
 
+            modelBuilder.Entity<Goal>((g) =>
+            {
+                g.HasMany(e => e.Accounts)
+                .WithMany(e => e.Goals);
+
+                g.ToTable("Goal");
+            });
+
             modelBuilder.Entity<Transaction>().ToTable("Transaction");
 
             modelBuilder.Entity<Budget>().ToTable("Budget");
-
-            modelBuilder.Entity<Goal>().ToTable("Goal");
 
             modelBuilder.Entity<Balance>().ToTable("Balance");
 
