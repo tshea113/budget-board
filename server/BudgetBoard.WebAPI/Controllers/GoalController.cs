@@ -90,4 +90,24 @@ public class GoalController(ILogger<GoalController> logger, UserManager<Applicat
             return Helpers.BuildErrorResponse();
         }
     }
+
+    [HttpPost]
+    [Authorize]
+    [Route("[action]")]
+    public async Task<IActionResult> Complete(Guid goalID)
+    {
+        try
+        {
+            await _goalService.CompleteGoalAsync(new Guid(_userManager.GetUserId(User) ?? string.Empty), goalID, DateTime.UtcNow);
+            return Ok();
+        }
+        catch (BudgetBoardServiceException bbex)
+        {
+            return Helpers.BuildErrorResponse(bbex.Message);
+        }
+        catch
+        {
+            return Helpers.BuildErrorResponse();
+        }
+    }
 }
