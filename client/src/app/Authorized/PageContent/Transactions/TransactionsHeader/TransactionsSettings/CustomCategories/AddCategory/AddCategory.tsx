@@ -20,6 +20,11 @@ interface AddCategoryProps {
   categories: ICategory[];
 }
 
+interface FormValues {
+  name: string;
+  parent: string;
+}
+
 const AddCategory = (props: AddCategoryProps): React.ReactNode => {
   const { request } = React.useContext<any>(AuthContext);
 
@@ -44,7 +49,6 @@ const AddCategory = (props: AddCategoryProps): React.ReactNode => {
     initialValues: { name: "", parent: "" },
     validate: {
       name: isNotEmpty("Name is required"),
-      parent: isNotEmpty("Parent is required"),
     },
   });
 
@@ -52,15 +56,18 @@ const AddCategory = (props: AddCategoryProps): React.ReactNode => {
     (category) => category.parent?.length === 0
   );
 
+  const handleSubmit = (values: FormValues) => {
+    doAddCategory.mutate({
+      value: values.name,
+      parent: values.parent,
+    });
+    form.reset();
+  };
+
   return (
     <Card withBorder shadow="xs">
       <LoadingOverlay visible={doAddCategory.isPending} />
-      <form
-        style={{ width: "100%" }}
-        onSubmit={form.onSubmit((values: { name: string; parent: string }) => {
-          doAddCategory.mutate({ value: values.name, parent: values.parent });
-        })}
-      >
+      <form style={{ width: "100%" }} onSubmit={form.onSubmit(handleSubmit)}>
         <Stack>
           <TextInput
             {...form.getInputProps("name")}
