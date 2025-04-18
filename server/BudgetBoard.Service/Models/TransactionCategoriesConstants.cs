@@ -1,6 +1,6 @@
 ﻿namespace BudgetBoard.Service.Models;
 
-static class TransactionCategoriesConstants
+public static class TransactionCategoriesConstants
 {
     public static readonly IEnumerable<ICategory> DefaultTransactionCategories = new List<ICategory>([
         new CategoryBase {Value = "Auto & Transport", Parent = ""},

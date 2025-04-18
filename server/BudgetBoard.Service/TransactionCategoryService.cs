@@ -35,7 +35,9 @@ public class TransactionCategoryService(ILogger<ITransactionCategoryService> log
             throw new BudgetBoardServiceException("Transaction category cannot have the same name as its parent category.");
         }
 
-        if (!string.IsNullOrEmpty(request.Parent) && !userData.TransactionCategories.Any(c => c.Value.Equals(request.Parent, StringComparison.OrdinalIgnoreCase)))
+        if (!string.IsNullOrEmpty(request.Parent) &&
+            !userData.TransactionCategories.Any(c => c.Value.Equals(request.Parent, StringComparison.OrdinalIgnoreCase)) &&
+            !TransactionCategoriesConstants.DefaultTransactionCategories.Any(c => c.Value.Equals(request.Parent, StringComparison.OrdinalIgnoreCase)))
         {
             _logger.LogError("Attempt to create a transaction category with a parent that does not exist.");
             throw new BudgetBoardServiceException("Parent category does not exist.");
