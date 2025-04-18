@@ -15,17 +15,17 @@ export interface ICategoryResponse extends ICategory {
 }
 
 export interface ICategoryNode extends ICategory {
-  subCategories: ICategory[];
+  subCategories: ICategoryNode[];
 }
 
 export class CategoryNode implements ICategoryNode {
-  subCategories: ICategory[];
+  subCategories: ICategoryNode[];
   value: string;
   parent: string;
 
   constructor(category?: ICategory) {
-    this.value = category?.value ?? '';
-    this.parent = category?.parent ?? '';
+    this.value = category?.value ?? "";
+    this.parent = category?.parent ?? "";
     this.subCategories = [];
   }
 }
