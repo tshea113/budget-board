@@ -121,6 +121,24 @@ public class TransactionCategoryServiceTests
     }
 
     [Fact]
+    public async Task CreateTransactionCategoryAsync_WhenParentIsDefaultCategory_ShouldNotThrowError()
+    {
+        // Arrange
+        var helper = new TestHelper();
+        var transactionCategoryService = new TransactionCategoryService(Mock.Of<ILogger<ITransactionCategoryService>>(), helper.UserDataContext);
+
+        var categoryCreateRequest = _categoryCreateRequestFaker.Generate();
+        categoryCreateRequest.Parent = TransactionCategoriesConstants.DefaultTransactionCategories.Where(tc => tc.Parent.Length == 0).First().Value;
+
+        // Act
+        await transactionCategoryService.CreateTransactionCategoryAsync(helper.demoUser.Id, categoryCreateRequest);
+
+        // Assert
+        helper.UserDataContext.TransactionCategories.Should().HaveCount(1);
+        helper.UserDataContext.TransactionCategories.Single().Parent.Should().Be(categoryCreateRequest.Parent);
+    }
+
+    [Fact]
     public async Task ReadTransactionCategoriesAsync_WhenCalledWithValidData_ShouldReturnCategories()
     {
         // Arrange
