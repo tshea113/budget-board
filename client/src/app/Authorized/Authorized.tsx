@@ -34,6 +34,7 @@ const Authorized = (): React.ReactNode => {
       header={{
         height: 60,
       }}
+      padding={12}
     >
       <AppShellHeader className={classes.header}>
         <Header isNavbarOpen={isNavbarOpen} toggleNavbar={toggle} />

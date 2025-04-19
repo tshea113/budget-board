@@ -1,16 +1,12 @@
 .navbar {
-  height: 100vh;
+  height: 100%;
   background-color: light-dark(
     var(--mantine-primary-color-3),
     var(--mantine-color-dark-9)
   );
-  padding: 5px;
-  display: flex;
-  flex-direction: column;
 }
 
 .header {
-  padding: 12px;
   background-color: light-dark(
     var(--mantine-color-gray-2),
     var(--mantine-color-dark-8)
@@ -18,10 +14,6 @@
 }
 
 .main {
-  width: 100vw;
-  display: flex;
-  align-content: flex-start;
-  justify-content: center;
   background-color: light-dark(
     var(--mantine-color-gray-1),
     var(--mantine-color-dark-8)
