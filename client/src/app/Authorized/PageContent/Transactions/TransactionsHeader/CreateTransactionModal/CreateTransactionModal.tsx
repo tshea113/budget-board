@@ -131,7 +131,18 @@ const CreateTransactionModal = (): React.ReactNode => {
       <ActionIcon size="input-sm" onClick={open}>
         <PlusIcon />
       </ActionIcon>
-      <Modal opened={opened} onClose={close} title="Create Transaction">
+      <Modal
+        opened={opened}
+        onClose={close}
+        title="Create Transaction"
+        styles={{
+          inner: {
+            left: "0",
+            right: "0",
+            padding: "0 !important",
+          },
+        }}
+      >
         <form onSubmit={form.onSubmit(onSubmit)}>
           <Stack gap={5}>
             <DatePickerInput

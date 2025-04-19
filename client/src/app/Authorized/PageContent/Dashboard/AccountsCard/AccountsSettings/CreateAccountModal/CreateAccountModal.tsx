@@ -137,6 +137,13 @@ const CreateAccountModal = (props: CreateAccountModalProps) => {
       onClose={props.onClose}
       stackId={props.stackId}
       title="Create Account"
+      styles={{
+        inner: {
+          left: "0",
+          right: "0",
+          padding: "0 !important",
+        },
+      }}
     >
       <Stack>
         <form

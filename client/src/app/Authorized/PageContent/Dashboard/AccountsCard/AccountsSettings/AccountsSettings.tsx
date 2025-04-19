@@ -17,14 +17,7 @@ const AccountsSettings = (props: AccountsSettingsProps): React.ReactNode => {
   const stack = useModalsStack(["settings", "createAccount"]);
 
   return (
-    <>
-      <ActionIcon
-        className={classes.settingsIcon}
-        variant="subtle"
-        onClick={() => stack.open("settings")}
-      >
-        <SettingsIcon />
-      </ActionIcon>
+    <div>
       <AccountsSettingsModal
         sortedFilteredInstitutions={props.sortedFilteredInstitutions}
         accounts={props.accounts}
@@ -32,7 +25,14 @@ const AccountsSettings = (props: AccountsSettingsProps): React.ReactNode => {
         {...stack.register("settings")}
       />
       <CreateAccountModal {...stack.register("createAccount")} />
-    </>
+      <ActionIcon
+        className={classes.settingsIcon}
+        variant="subtle"
+        onClick={() => stack.open("settings")}
+      >
+        <SettingsIcon />
+      </ActionIcon>
+    </div>
   );
 };
 export default AccountsSettings;

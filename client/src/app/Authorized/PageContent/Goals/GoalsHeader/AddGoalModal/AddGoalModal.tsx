@@ -19,7 +19,18 @@ const AddGoalModal = (props: AddGoalModalProps): React.ReactNode => {
     null
   );
   return (
-    <Modal opened={props.isOpen} onClose={props.onClose} title="Add Goal">
+    <Modal
+      opened={props.isOpen}
+      onClose={props.onClose}
+      title="Add Goal"
+      styles={{
+        inner: {
+          left: "0",
+          right: "0",
+          padding: "0 !important",
+        },
+      }}
+    >
       <Select
         data={goalTypes}
         placeholder="I want to set a goal to..."

@@ -6,7 +6,7 @@ import "@mantine/dates/styles.css";
 import "@mantine/charts/styles.css";
 
 import { BrowserRouter, Route, Routes } from "react-router";
-import { Center, createTheme, MantineProvider } from "@mantine/core";
+import { createTheme, MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Notifications } from "@mantine/notifications";
 
@@ -36,28 +36,26 @@ function App() {
       <AuthProvider>
         <QueryClientProvider client={queryClient}>
           <Notifications />
-          <Center>
-            <BrowserRouter>
-              <Routes>
-                <Route
-                  path="/"
-                  element={
-                    <UnauthorizedRoute>
-                      <Welcome />
-                    </UnauthorizedRoute>
-                  }
-                />
-                <Route
-                  path="/dashboard"
-                  element={
-                    <AuthorizedRoute>
-                      <Authorized />
-                    </AuthorizedRoute>
-                  }
-                />
-              </Routes>
-            </BrowserRouter>
-          </Center>
+          <BrowserRouter>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <UnauthorizedRoute>
+                    <Welcome />
+                  </UnauthorizedRoute>
+                }
+              />
+              <Route
+                path="/dashboard"
+                element={
+                  <AuthorizedRoute>
+                    <Authorized />
+                  </AuthorizedRoute>
+                }
+              />
+            </Routes>
+          </BrowserRouter>
           {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </QueryClientProvider>
       </AuthProvider>
