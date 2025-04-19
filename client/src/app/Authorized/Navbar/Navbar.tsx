@@ -71,32 +71,28 @@ const Navbar = (props: NavbarProps) => {
   ));
 
   return (
-    <>
-      <div className={classes.navbarMain}>
-        <Stack justify="center" align="center" gap={5}>
-          <Burger
-            opened={props.isNavbarOpen}
-            className={classes.burger}
-            mb={10}
-            onClick={props.toggleNavbar}
-            hiddenFrom="xs"
-            size="md"
-          />
-          {links}
-        </Stack>
-      </div>
-      <div className={classes.navbarFooter}>
-        <Stack justify="center" align="center" gap={5}>
-          <NavbarLink
-            icon={<SettingsIcon />}
-            label="Settings"
-            active={props.currentPage === Pages.Settings}
-            onClick={() => props.setCurrentPage(Pages.Settings)}
-          />
-          <NavbarLink icon={<LogOutIcon />} label="Logout" onClick={Logout} />
-        </Stack>
-      </div>
-    </>
+    <Stack justify="space-between" h="100%" p="6px">
+      <Stack justify="center" align="center" gap={5}>
+        <Burger
+          opened={props.isNavbarOpen}
+          className={classes.burger}
+          mb={10}
+          onClick={props.toggleNavbar}
+          hiddenFrom="xs"
+          size="md"
+        />
+        {links}
+      </Stack>
+      <Stack justify="center" align="center" gap={5}>
+        <NavbarLink
+          icon={<SettingsIcon />}
+          label="Settings"
+          active={props.currentPage === Pages.Settings}
+          onClick={() => props.setCurrentPage(Pages.Settings)}
+        />
+        <NavbarLink icon={<LogOutIcon />} label="Logout" onClick={Logout} />
+      </Stack>
+    </Stack>
   );
 };
 

@@ -11,7 +11,6 @@
   align-items: flex-start;
   flex-grow: 1;
   flex-wrap: nowrap;
-  padding: 12px;
   gap: 12px;
 
   @media (max-width: $mantine-breakpoint-sm) {

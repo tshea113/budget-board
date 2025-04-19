@@ -75,6 +75,13 @@ const AccountsSettingsModal = <T extends string>(
       onClose={props.onClose}
       stackId={props.stackId}
       title="Accounts Settings"
+      styles={{
+        inner: {
+          left: "0",
+          right: "0",
+          padding: "0 !important",
+        },
+      }}
     >
       <Stack gap={20}>
         <Group w="100%" gap={10} justify="space-between">

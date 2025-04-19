@@ -23,7 +23,6 @@ const Authorized = (): React.ReactNode => {
 
   return (
     <AppShell
-      className={classes.appShell}
       layout="alt"
       withBorder
       navbar={{
@@ -34,6 +33,7 @@ const Authorized = (): React.ReactNode => {
       header={{
         height: 60,
       }}
+      padding={12}
     >
       <AppShellHeader className={classes.header}>
         <Header isNavbarOpen={isNavbarOpen} toggleNavbar={toggle} />
