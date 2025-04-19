@@ -23,7 +23,6 @@ const Authorized = (): React.ReactNode => {
 
   return (
     <AppShell
-      className={classes.appShell}
       layout="alt"
       withBorder
       navbar={{
