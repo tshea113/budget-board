@@ -1,5 +1,3 @@
-import classes from "./BudgetsContent.module.css";
-
 import { Group, Skeleton, Stack } from "@mantine/core";
 import { IBudget } from "~/models/budget";
 import { getParentCategory, getSubCategories } from "~/helpers/category";
@@ -39,9 +37,9 @@ const BudgetsContent = (props: BudgetsContentProps) => {
   );
 
   return (
-    <Group className={classes.root}>
+    <Group gap="0.5rem" align="flex-start">
       <Stack w={{ base: "100%", md: "70%" }}>
-        <Stack className={classes.groupContainer}>
+        <Stack gap="0.5rem">
           <BudgetsGroupHeader groupName="Income" />
           {props.isPending ? (
             <Skeleton h={65} radius="md" />
@@ -59,7 +57,7 @@ const BudgetsContent = (props: BudgetsContentProps) => {
             />
           )}
         </Stack>
-        <Stack className={classes.groupContainer}>
+        <Stack gap="0.5rem">
           <BudgetsGroupHeader groupName="Expenses" />
           {props.isPending ? (
             <Skeleton h={65} radius="md" />
