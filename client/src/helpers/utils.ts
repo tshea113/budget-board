@@ -26,3 +26,12 @@ export const getProgress = (amount: number, total: number): number => {
 export const months = [...Array(12).keys()].map((key) =>
   new Date(0, key).toLocaleString("en", { month: "long" })
 );
+
+/**
+ * Rounds a number away from zero. For positive numbers, it behaves like Math.round.
+ * For negative numbers, it rounds away from zero instead of towards zero.
+ *
+ * @param {number} value - The number to round.
+ */
+export const roundAwayFromZero = (value: number): number =>
+  value >= 0 ? Math.round(value) : Math.round(value * -1) * -1;
