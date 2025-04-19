@@ -23,6 +23,7 @@ import { notifications } from "@mantine/notifications";
 import { useField } from "@mantine/form";
 import { Trash2Icon } from "lucide-react";
 import { getBudgetValueColor } from "~/helpers/budgets";
+import { roundAwayFromZero } from "~/helpers/utils";
 
 interface BudgetCardProps {
   budgets: IBudget[];
@@ -87,7 +88,7 @@ const BudgetCard = (props: BudgetCardProps): React.ReactNode => {
     [props.budgets]
   );
 
-  const percentComplete = Math.round(
+  const percentComplete = roundAwayFromZero(
     ((props.amount * (props.isIncome ? 1 : -1)) / limit) * 100
   );
 
@@ -174,10 +175,16 @@ const BudgetCard = (props: BudgetCardProps): React.ReactNode => {
             <Flex className={classes.numberContainer}>
               <Text
                 className={classes.text}
-                c={getBudgetValueColor(props.amount, limit, props.isIncome)}
+                c={getBudgetValueColor(
+                  roundAwayFromZero(props.amount),
+                  limit,
+                  props.isIncome
+                )}
               >
                 {convertNumberToCurrency(
-                  Math.round(limit - props.amount * (props.isIncome ? 1 : -1)),
+                  roundAwayFromZero(
+                    limit - props.amount * (props.isIncome ? 1 : -1)
+                  ),
                   false
                 )}
               </Text>
@@ -187,7 +194,11 @@ const BudgetCard = (props: BudgetCardProps): React.ReactNode => {
         <Progress.Root size={16} radius="xl">
           <Progress.Section
             value={percentComplete}
-            color={getBudgetValueColor(props.amount, limit, props.isIncome)}
+            color={getBudgetValueColor(
+              roundAwayFromZero(props.amount),
+              limit,
+              props.isIncome
+            )}
           >
             <Progress.Label>{percentComplete.toFixed(0)}%</Progress.Label>
           </Progress.Section>
