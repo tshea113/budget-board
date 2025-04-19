@@ -140,7 +140,7 @@ export const getBudgetValueColor = (
   amount: number,
   total: number,
   isIncome: boolean
-) => {
+): string => {
   if (isIncome) {
     if (amount < total) {
       return "red";
