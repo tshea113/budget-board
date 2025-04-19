@@ -88,8 +88,9 @@ const BudgetCard = (props: BudgetCardProps): React.ReactNode => {
     [props.budgets]
   );
 
-  const percentComplete =
-    ((props.amount * (props.isIncome ? 1 : -1)) / limit) * 100;
+  const percentComplete = roundAwayFromZero(
+    ((props.amount * (props.isIncome ? 1 : -1)) / limit) * 100
+  );
 
   const handleEdit = (newLimit?: number | string) => {
     if (newLimit === "") {
