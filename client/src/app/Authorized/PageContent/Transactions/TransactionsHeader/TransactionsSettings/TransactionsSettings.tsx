@@ -49,6 +49,13 @@ const TransactionsSettings = (
       opened={props.modalOpened}
       onClose={props.closeModal}
       title="Transactions Settings"
+      styles={{
+        inner: {
+          left: "0",
+          right: "0",
+          padding: "0 !important",
+        },
+      }}
     >
       <Accordion variant="filled" multiple defaultValue={["custom categories"]}>
         <Accordion.Item value="custom categories">
